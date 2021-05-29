@@ -1,8 +1,13 @@
 import express from "express"
+import ExampleDataSource from "./ExampleDataSource";
 
 const app = express();
+const exampleDataSource = new ExampleDataSource("file.txt");
+
+
 app.listen(3001, () => {
     console.log('Started Server');
+    console.log('Using file', exampleDataSource.getFileName());
 })
 
 app.get('/', (req,res) =>{
