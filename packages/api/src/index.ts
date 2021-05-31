@@ -11,14 +11,13 @@ app.listen(3001, () => {
 })
 
 app.get('/', (req,res) =>{
-    add(6);
-    res.send( "Hello world!");
+    let six : number = add(6);
+    res.send( `Hello world! ${six}`);
     console.log('Root Accessed');
    })
 
 
 /**
- *
  * @param {number} a - The primary value
  * @param {number} b - The optional secondary value
  * @returns {number} - returns either the sum of a and b or the sum of a and 2
