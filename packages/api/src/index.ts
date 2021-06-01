@@ -11,14 +11,13 @@ app.listen(3001, () => {
 })
 
 app.get('/', (req,res) =>{
-    add(6);
-    res.send( "Hello world!");
+    let nine : number = add(9);
+    res.send( `Hello world! This Is It! Or is it? ${nine}`);
     console.log('Root Accessed');
    })
 
 
 /**
- *
  * @param {number} a - The primary value
  * @param {number} b - The optional secondary value
  * @returns {number} - returns either the sum of a and b or the sum of a and 2
@@ -29,7 +28,7 @@ function add (a: number, b?: number): number {
     if(b){
         return a + b;
     }else {
-        return a + 2;
+        return a;
     }
     
 }
