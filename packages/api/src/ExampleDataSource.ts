@@ -4,7 +4,6 @@
 export default class ExampleDataSource {
 
     filename: string;
-
     constructor (filename: string) {
         this.filename = filename;
     }

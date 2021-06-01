@@ -1,1 +1,1 @@
-Init
+[![Build Status](https://travis-ci.com/github/COS301-SE-2021/Custom-Data-Source-Search.png)](https://travis-ci.com/github/COS301-SE-2021/Custom-Data-Source-Search)
