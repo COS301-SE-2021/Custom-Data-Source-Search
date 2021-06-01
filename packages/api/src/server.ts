@@ -45,18 +45,6 @@ app.listen(PORT , () => {
     console.log(`Listening on port ${PORT}`);
 })
 
-
-/*
-app.get('/', (req,res) =>{
-    let six : number = add(6);
-    res.send( `Hello world! ${six}`);
-    console.log('Root Accessed');
-   })
-
-   */
-
-
-
 /**
  * @param {number} a - The primary value
  * @param {number} b - The optional secondary value
