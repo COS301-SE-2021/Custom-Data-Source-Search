@@ -12,25 +12,25 @@
 
 <div class="sidebar">
 
-    <a href="#" >Data Sources</a>
-    <a href="#">Add Data Source</a>
+    <a href="home.html" >Home</a>
+    <a href="#">Add Data Source</a> <!--Must produce a pop-up -->
+
 
     <a id = "settings" href="#">Settings</a>
 </div>
 
 <div class = "flex-container main">
     <div class="header">
-        <h1>App Name</h1>
-        <p>Custom Data Source</p>
+        <p>Available Data Source</p>
 
     </div>
 
     <div class = "d-flex flex-row boxes" id = "dataSourceBox">
-        <a href="editFolderDS.html">
-            <div class ="item bg-info col-12"  v-for="item in items" >
-               {{item.text}}
-            </div>
-        </a>
+        <div class ="item bg-info col-12"  v-for="item in items" >
+            <a href="editFolderDS.html">
+            {{item.text}}
+            </a>
+        </div>
     </div>
 </div>
 <script src="vue_script_test.js"></script>

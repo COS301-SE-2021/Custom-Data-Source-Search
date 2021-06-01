@@ -58,6 +58,10 @@ h1{
     padding: 30px;
 }
 
+/*.boxes a:hover:not(.active) {*/
+/*    background-color: cornflowerblue;*/
+/*}*/
+
 .item{
     padding: 10px;
     margin-bottom: 10px;
