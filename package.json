@@ -2,25 +2,20 @@
   "name": "cdss",
   "version": "1.0.0",
   "description": "Init",
-  "main": "index.js",
+  "author": "",
   "scripts": {
-    "start-dev": "ts-node-dev --respawn packages/api/src/index.ts",
-    "start": "ts-node packages/api/src/index.ts",
     "build-prod": "tsc",
     "run-prod": "node build/index.js",
+    "start": "ts-node packages/api/src/index.ts",
+    "start-dev": "ts-node-dev --respawn packages/api/src/index.ts",
     "test": "jest --coverage && coveralls < coverage/lcov.info"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/COS301-SE-2021/Custom-Data-Source-Search.git"
+  "main": "index.js",
+  "dependencies": {
+    "coveralls": "^3.1.0",
+    "express": "^4.17.1",
+    "vuetify": "^2.4.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/COS301-SE-2021/Custom-Data-Source-Search/issues"
-  },
-  "homepage": "https://github.com/COS301-SE-2021/Custom-Data-Source-Search#readme",
   "devDependencies": {
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.4",
@@ -30,12 +25,22 @@
     "@types/node": "^15.6.1",
     "babel-jest": "^27.0.2",
     "jest": "^27.0.2",
+    "sass": "^1.32.0",
+    "sass-loader": "^10.0.0",
     "ts-jest": "^27.0.1",
     "ts-node-dev": "^1.1.6",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.2",
+    "vue-cli-plugin-vuetify": "~2.4.0",
+    "vuetify-loader": "^1.7.0"
   },
-  "dependencies": {
-    "coveralls": "^3.1.0",
-    "express": "^4.17.1"
+  "bugs": {
+    "url": "https://github.com/COS301-SE-2021/Custom-Data-Source-Search/issues"
+  },
+  "homepage": "https://github.com/COS301-SE-2021/Custom-Data-Source-Search#readme",
+  "keywords": [],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/COS301-SE-2021/Custom-Data-Source-Search.git"
   }
 }
