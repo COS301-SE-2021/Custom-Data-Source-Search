@@ -11,8 +11,8 @@ app.listen(3001, () => {
 })
 
 app.get('/', (req,res) =>{
-    let six : number = add(6);
-    res.send( `Hello world! This Is It! ${six}`);
+    let nine : number = add(9);
+    res.send( `Hello world! This Is It! ${nine}`);
     console.log('Root Accessed');
    })
 
@@ -28,7 +28,7 @@ function add (a: number, b?: number): number {
     if(b){
         return a + b;
     }else {
-        return a + 2;
+        return a;
     }
     
 }
