@@ -4,17 +4,28 @@
     <meta charset="UTF-8">
     <title>Data Search</title>
     <link rel="stylesheet" href="index.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
-<div id="app">
-    <ol>
-        <todo-item
-                v-for="item in groceryList"
-                v-bind:todo="item"
-                v-bind:key="item.id"
-        ></todo-item>
-    </ol>
+
+<div id="counter">
+    Counter: {{ counter }}
+</div>
+
+<div>
+    <span title="message">
+        Hover your mouse over me for a few seconds to see my statically bound
+        title!
+    </span>
+</div>
+
+<div id="bind-attribute">
+
+
+  <span v-bind:title="message">
+    Hover your mouse over me for a few seconds to see my DYNAMICALLY bound
+    title!
+  </span>
 </div>
 
 <script src="index.js"></script>

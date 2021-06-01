@@ -1,15 +1,22 @@
-Vue.component('todo-item', {
-    props: ['todo'],
-    template: '<li>{{ todo.text }}</li>'
-})
-
-var app7 = new Vue({
-    el: '#app',
-    data: {
-        groceryList: [
-            { id: 0, text: 'Vegetables' },
-            { id: 1, text: 'Cheese' },
-            { id: 2, text: 'Whatever else humans are supposed to eat' }
-        ]
+const Counter = {
+    data() {
+        return {
+            counter: 0
+        }
+    },
+    mounted() {
+        setInterval(() => {
+            this.counter++
+        }, 1000)
     }
-})
+}
+Vue.createApp(Counter).mount('#counter')
+
+const AttributeBinding = {
+    data() {
+        return {
+            message: 'You loaded this page on ' + new Date().toLocaleString()
+        }
+    }
+}
+Vue.createApp(AttributeBinding).mount('#bind-attribute')
