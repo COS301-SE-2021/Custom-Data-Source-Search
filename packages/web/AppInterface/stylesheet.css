@@ -22,7 +22,7 @@ h1{
     font-family: 'Ubuntu', sans-serif;
     position: absolute;
     bottom: 50px;
-    width: 100%;
+    width: 150px;
 }
 .sidebar {
     font-family: 'Ubuntu', sans-serif;
@@ -30,7 +30,7 @@ h1{
     padding: 0;
     width: 150px;
     background-color: dimgray;
-    position: fixed;
+    float: left;
     height: 100%;
     overflow: auto;
     padding-top: 100px;
@@ -76,4 +76,54 @@ h1{
 .item{
     padding: 10px;
     margin-bottom: 10px;
+}
+
+.topnav{
+    margin: auto;
+    margin-top: 30px;
+    padding-left: 20%;
+    padding-right:8%;
+}
+
+{
+    box-sizing: border-box;
+}
+
+
+/* Style the search field */
+form.search input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 70%;
+    height: 40px;
+    background: #f1f1f1;
+    margin-top: 30px;
+    margin-left: 100px;
+}
+
+/* Style the submit button */
+form.search button {
+    float: left;
+    width: 8%;
+    height: 40px;
+    padding: 10px;
+    color: black;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none; /* Prevent double borders */
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+form.search button:hover {
+    background: #0b7dda;
+}
+
+/* Clear floats */
+form.search::after {
+    content: "";
+    clear: both;
+    display: table;
 }
