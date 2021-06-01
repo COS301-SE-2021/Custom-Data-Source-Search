@@ -27,12 +27,12 @@ h1{
     font-family: 'Ubuntu', sans-serif;
     margin: 0;
     padding: 0;
-    width: 200px;
+    width: 150px;
     background-color: dimgray;
     position: fixed;
     height: 100%;
     overflow: auto;
-    padding-top: 150px;
+    padding-top: 100px;
     line-height: 50px;
 }
 
@@ -59,11 +59,13 @@ h1{
 
 .main{
     font-family: 'Ubuntu', sans-serif;
-    margin-left: 200px;
+    margin-left: 40px;
 }
 
 .boxes{
-    padding: 30px;
+    padding: 10px;
+    margin-top: 50px;
+    margin-left: 150px;
 }
 
 /*.boxes a:hover:not(.active) {*/
