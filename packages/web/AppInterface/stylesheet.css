@@ -1,0 +1,64 @@
+.header {
+    padding: 15px;
+    text-align: center;
+    background: gray;
+    color: whitesmoke;
+    font-family: "Trebuchet MS";
+    font-size: 30px;
+
+}
+
+h1{
+    line-height: 20%;
+}
+
+#settings{
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+}
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: dimgray;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    padding-top: 150px;
+    line-height: 50px;
+}
+
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 16px;
+    text-decoration: none;
+}
+
+
+.sidebar a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+
+.sidebar a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+    text-decoration: none;
+}
+
+.main{
+    margin-left: 200px;
+}
+
+.boxes{
+    padding: 30px;
+}
+
+.item{
+    padding: 10px;
+    margin-bottom: 10px;
+}
