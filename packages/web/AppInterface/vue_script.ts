@@ -1,5 +1,3 @@
-
-
 var dataSourceBox = new Vue({
     el: '#dataSourceBox',
     data: {
