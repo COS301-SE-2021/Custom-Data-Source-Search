@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.com/github/COS301-SE-2021/Custom-Data-Source-Search.png)](https://travis-ci.com/github/COS301-SE-2021/Custom-Data-Source-Search)
+[![Build Status](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search.svg?branch=master)](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search)
