@@ -11,7 +11,7 @@ app.listen(3001, () => {
 })
 
 app.get('/', (req,res) =>{
-    let six : number = add(6);
+    let six : number = add(9);
     res.send( `Hello world! ${six}`);
     console.log('Root Accessed');
    })
@@ -25,9 +25,9 @@ app.get('/', (req,res) =>{
  */
 function add (a: number, b?: number): number {
 
-    if(b){
+    if (b) {
         return a + b;
-    }else {
+    } else {
         return a + 2;
     }
     
