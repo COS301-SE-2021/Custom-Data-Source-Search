@@ -7,32 +7,37 @@
     <script type = "text/javascript" src = "https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link rel="stylesheet" href="stylesheet.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="sidebar">
+<div class="all">
+    <div class="sidebar">
 
-    <a href="home.html" >Home</a>
-    <a href="#">Add Data Source</a> <!--Must produce a pop-up -->
+        <a href="home.html" >Home</a>
+        <a href="#">Add Data Source</a> <!--Must produce a pop-up -->
 
 
-    <a id = "settings" href="#">Settings</a>
-</div>
-
-<div class = "flex-container main">
-    <div class="header">
-        <p>Available Data Source</p>
-
+        <a id = "settings" href="#">Settings</a>
     </div>
 
-    <div class = "d-flex flex-row boxes" id = "dataSourceBox">
-        <div class ="item bg-info col-12"  v-for="item in items" >
-            <a href="editFolderDS.html">
-            {{item.text}}
-            </a>
+    <div class = "flex-container main">
+        <div class="header">
+            <p>Available Data Source</p>
+
+        </div>
+
+        <div class = "d-flex flex-row boxes" id = "dataSourceBox">
+            <div class ="item bg-info col-12"  v-for="item in items" >
+                <a href="editFolderDS.html">
+                {{item.text}}
+                </a>
+            </div>
         </div>
     </div>
-</div>
+
 <script src="vue_script_test.js"></script>
+</div>
 </body>
 </html>
