@@ -24,7 +24,7 @@ const SearchSystem = {
             this.result = this.cache;
         },
         addDataSource() {
-            this.cache.push({title: "this", snippet: "that"})
+            this.cache.push({title: this.query, snippet: "that"})
         }
     }
 }
