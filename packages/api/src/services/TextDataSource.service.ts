@@ -58,9 +58,16 @@ import { StringOccurrenceResponse } from "../models/response/searchFileResponse.
 
 
     searchFile(fileContents: string, searchString: string): StringOccurrenceResponse {
+        if(searchString === ""){
+            return {};
+        }
 
-
-        return {};
+        return {
+            1:{
+                lineNumber : 12,
+                occurrenceString : "some return"
+            }
+        };
     }
 
 }
