@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Search</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+
+<div id="search-system">
+    <input v-model="query" />
+    <button @click="search">Search</button>
+
+    {{ result }}
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>
