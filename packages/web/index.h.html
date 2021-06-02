@@ -9,11 +9,10 @@
 <body>
 
 <div id="search-system">
-    <p>{{query}}</p>
     <input v-model="query" />
     <button @click="search">Search</button>
     <button @click="addDataSource">Add</button>
-    {{ result }}
+    <p v-for="r in result"><i>{{ r.title }}</i> <br> {{r.snippet}}</p>
 </div>
 
 <script src="index.js"></script>
