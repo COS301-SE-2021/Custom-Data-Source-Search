@@ -22,6 +22,9 @@ const SearchSystem = {
     methods: {
         search() {
             this.result = this.cache;
+        },
+        addDataSource() {
+            this.cache.push({title: "this", snippet: "that"})
         }
     }
 }
