@@ -30,16 +30,12 @@ const SearchSystem = {
 
 
 const MockAddedDataSources = {
-    data() { //data sources "added"
-       return {
-           tempMessage : '',
-           dataSources: [
-               { filePath: "C:\\Users\\User\\Downloads\\Telegram Desktop"},
-               { filePath: "C:\\Users\\Laurens-PC\\Documents\\Another one"},
-               { filePath: "C:\\Users\\Laurens-PC\\Documents\\Portia"}
-           ]
-       }
-    },
+    tempMessage : '',
+    dataSources: [
+        { filePath: 'C:\\Users\\User\\Downloads\\Telegram Desktop'},
+        { filePath: 'C:\\Users\\Laurens-PC\\Documents\\Another one'},
+        { filePath: 'C:\\Users\\Laurens-PC\\Documents\\Portia'}
+    ],
     method: { //add and view these mock dataSources
         add() {
             this.dataSources.push({filePath: this.tempMessage});

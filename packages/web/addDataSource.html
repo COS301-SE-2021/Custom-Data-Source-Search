@@ -15,13 +15,14 @@
         <button onclick="window.location.href='index.h.html'" id="add-datasource">HOME</button>
         <button onclick="window.location.href='viewDataSources.html'" >VIEW DATA SOURCES</button>
 
+        <p>{{tempMessage}}</p>
+
+        <p v-for="item in dataSources">
+            {{item}}
+        </p>
+
     </div>
 
-    <div id="result-card" v-for="result in result">
-        <h4>{{result.title}}</h4>
-        <p>{{result.snippet}}</p>
-        <p>{{result.dir}}</p>
-    </div>
 
 </div>
 
