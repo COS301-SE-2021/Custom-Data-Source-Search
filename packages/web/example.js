@@ -42,7 +42,7 @@ const DataSource = {
     methods: {
         addDataSource() {
             if (!this.datasourceList.includes(this.datasource)) {
-                this.datasourceList.push({s: this.datasource})
+                this.datasourceList.push({info: this.datasource})
             }
         }
     }
