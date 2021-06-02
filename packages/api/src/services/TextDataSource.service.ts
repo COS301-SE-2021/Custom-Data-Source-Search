@@ -58,17 +58,21 @@ class TextDataSourceService {
 
 
     searchFile(fileContents: string, searchString: string): StringOccurrenceResponse {
-        if(searchString === ""){
+        if(searchString === "" || fileContents === ""){
             return {};
         }
+        let matches : StringOccurrenceResponse = {};
+        let numOccurrence : number = 0;
+        for (let index = fileContents.indexOf(searchString);index >= 0; index = fileContents.indexOf(searchString, index + 1)) {
+            console.log(index);
+            matches[numOccurrence] = {
+                lineNumber : -1,
+                occurrenceString : fileContents.substring(index -5, index + searchString.length + 10)
+            };
+            numOccurrence++;
+        }
 
-
-        return {
-            0:{
-                lineNumber : 12,
-                occurrenceString : "some return"
-            }
-        };
+        return matches;
     }
 
 }
