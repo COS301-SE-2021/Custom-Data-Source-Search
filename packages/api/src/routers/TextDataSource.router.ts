@@ -50,7 +50,7 @@ textDataSourceRouter.get("/:id", async (req: Request, res: Response) => {
  */
 textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, res: Response) => {
     try {
-        const textDataSources: StringOccurrenceResponse = textDataSourceService.searchFile("bob asdlkfj bob asdfare;glkj bob", "bob");
+        const textDataSources: StringOccurrenceResponse = textDataSourceService.searchFile("bob asdlkfj \n asdfare;glkj bob", "bob");
 
         res.status(200).send(textDataSources);
     } catch (e) {
