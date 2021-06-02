@@ -1,7 +1,7 @@
 /**
  * Required External Modules and Interfaces
  */
-import express, {Request, Response, text} from "express";
+import express, {Request, Response} from "express";
 import TextDataSourceService from "../services/TextDataSource.service";
 import { TextDataSource, TextDataSourceList} from "../models/TextDataSource.interface";
 
@@ -35,9 +35,9 @@ textDataSourceRouter.get("/", async (req: Request, res: Response) => {
  */
 textDataSourceRouter.get("/:id", async (req: Request, res: Response) => {
     try {
-        const textDataSource: TextDataSource = await textDataSourceService.getDataSource(parseInt(req.params.id));
+        const textDataSource: TextDataSource = await textDataSourceService.getTextDataSource(parseInt(req.params.id));
 
-       // res.status(200).send(textDataSources)
+        res.status(200).send(textDataSource)
     } catch (e) {
         res.status(500).send(e.message);
     }
@@ -47,7 +47,7 @@ textDataSourceRouter.get("/:id", async (req: Request, res: Response) => {
 /**
  * Return results of a search run
  */
-textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, res: Response) => {
+textDataSourceRouter.get("/search/string/:searchString", async (req: Request, res: Response) => {
     try {
       //  const textDataSources: TextDataSourceList = await textDataSourceService.getAllTextDataSources();
 
