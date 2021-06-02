@@ -1,5 +1,6 @@
 import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
+import exp from "constants";
 //import exp from "constants";
 
 
@@ -40,8 +41,88 @@ describe('TextDataSourceService' , () => {
         const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).not.toEqual({});
-        expect(response[0]).not.toBeNaN();
+        expect(response[0]).not.toBe(undefined);
         expect(response[0].occurrenceString).toContain(mockSearchString);
-        expect(response[1]).toBeNaN();
+        expect(response[1]).toBe(undefined);
+    });
+
+    it('Should return two different occurrence that contains the search string when file content contains two different instances of the search string', () =>{
+        //given
+        const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).not.toEqual({});
+        expect(response[0]).not.toBe(undefined);
+        expect(response[0].occurrenceString).toContain(mockSearchString);
+
+        expect(response[1]).not.toBe(undefined);
+        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[2]).toBe(undefined);
+    });
+
+    it('Should return empty object if the file content is empty', () => {
+        //given
+        const mockFileContent = "";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).toEqual({});
+    });
+
+    it('Should return occurrences on different lines for windows if the file contains multiple lines with occurrences on them', () => {
+        //given
+        const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\r\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).not.toEqual({});
+        expect(response[0]).not.toBe(undefined);
+        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].lineNumber).toEqual(1);
+
+        expect(response[1]).not.toBe(undefined);
+        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].lineNumber).toEqual(2);
+        expect(response[2]).toBe(undefined);
+    });
+
+    it('Should return occurrences on different lines for Linux if the file contains multiple lines with occurrences on them', () => {
+        //given
+        const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).not.toEqual({});
+        expect(response[0]).not.toBe(undefined);
+        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].lineNumber).toEqual(1);
+
+        expect(response[1]).not.toBe(undefined);
+        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].lineNumber).toEqual(2);
+        expect(response[2]).toBe(undefined);
+    });
+
+    it('Should return occurrences on different lines for older mac if the file contains multiple lines with occurrences on them', () => {
+        //given
+        const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\rMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).not.toEqual({});
+        expect(response[0]).not.toBe(undefined);
+        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].lineNumber).toEqual(1);
+
+        expect(response[1]).not.toBe(undefined);
+        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].lineNumber).toEqual(2);
+        expect(response[2]).toBe(undefined);
     });
 });

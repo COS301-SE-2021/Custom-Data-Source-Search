@@ -58,16 +58,25 @@ class TextDataSourceService {
 
 
     searchFile(fileContents: string, searchString: string): StringOccurrenceResponse {
-        if(searchString === ""){
+        if(searchString === "" || fileContents === ""){
             return {};
         }
-
-        return {
-            0:{
-                lineNumber : 12,
-                occurrenceString : "some return"
+        var stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
+        let matches : StringOccurrenceResponse = {};
+        let numOccurrence : number = 0;
+        for (let index = stringWithStandardLineBreaks.indexOf(searchString);index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
+            let lineNum : number = 1;
+            for(let index2 = stringWithStandardLineBreaks.indexOf('\n'); (index2 < index && index2 >= 0); index2 = stringWithStandardLineBreaks.indexOf("\n", index2 + 1)){
+                lineNum++;
             }
-        };
+            matches[numOccurrence] = {
+                lineNumber : lineNum,
+                occurrenceString : fileContents.substring(index -5, index + searchString.length + 10)
+            };
+            numOccurrence++;
+        }
+
+        return matches;
     }
 
 }
