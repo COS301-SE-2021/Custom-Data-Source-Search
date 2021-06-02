@@ -44,4 +44,20 @@ describe('TextDataSourceService' , () => {
         expect(response[0].occurrenceString).toContain(mockSearchString);
         expect(response[1]).toBeNaN();
     });
+
+    it('Should return two different occurrence that contains the search string when file content contains two different instances of the search string', () =>{
+        //given
+        const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).not.toEqual({});
+        expect(response[0]).not.toBeNaN();
+        expect(response[0].occurrenceString).toContain(mockSearchString);
+
+        expect(response[1]).not.toBeNaN();
+        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[2]).toBeNaN();
+    });
 });
