@@ -4,6 +4,7 @@
 import express, {Request, Response} from "express";
 import TextDataSourceService from "../services/TextDataSource.service";
 import { TextDataSource, TextDataSourceList} from "../models/TextDataSource.interface";
+import textDataSourceService from "../services/TextDataSource.service";
 
 /**
  * Router Definition
@@ -13,7 +14,6 @@ export const textDataSourceRouter = express.Router();
 /**
  * Controller Definitions
  */
-const textDataSourceService = new TextDataSourceService();
 
 
 /**
@@ -47,7 +47,7 @@ textDataSourceRouter.get("/:id", async (req: Request, res: Response) => {
 /**
  * Return results of a search run
  */
-textDataSourceRouter.get("/search/string/:searchString", async (req: Request, res: Response) => {
+textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, res: Response) => {
     try {
       //  const textDataSources: TextDataSourceList = await textDataSourceService.getAllTextDataSources();
 

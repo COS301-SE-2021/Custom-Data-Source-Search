@@ -8,6 +8,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { textDataSourceRouter } from  "./routers/TextDataSource.router";
 import ExampleDataSource from "./ExampleDataSource";
+import {generalRouter} from "./routers/General.router";
 
 //temporary
 const exampleDataSource = new ExampleDataSource("file.txt");
@@ -39,6 +40,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use("/textdatasources", textDataSourceRouter);
+app.use("/general", generalRouter);
 
 
 app.listen(PORT , () => {

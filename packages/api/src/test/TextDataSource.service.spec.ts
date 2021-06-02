@@ -1,4 +1,4 @@
-import TextDataSourceService from "../services/TextDataSource.service";
+import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
 //import exp from "constants";
 
@@ -6,7 +6,7 @@ import {StringOccurrenceResponse} from "../models/response/searchFileResponse.in
 // const mockFileContent = "Heglfgfgflgrlgg fefeff f eefef fef fefe";
 // const mockSearchString = "";
 
-const service = new TextDataSourceService();
+const service = textDataSourceService;
 
 describe('TextDataSourceService' , () => {
     it('Should return empty object on empty string search', () => {

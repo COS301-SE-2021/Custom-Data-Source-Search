@@ -6,7 +6,7 @@ import { TextDataSourceList } from "../models/TextDataSource.interface";
 import { StringOccurrenceResponse } from "../models/response/searchFileResponse.interface";
 
 
- export default class TextDataSourceService {
+class TextDataSourceService {
 
 
     /**
@@ -71,3 +71,6 @@ import { StringOccurrenceResponse } from "../models/response/searchFileResponse.
     }
 
 }
+
+const textDataSourceService = new TextDataSourceService();
+export default textDataSourceService;
