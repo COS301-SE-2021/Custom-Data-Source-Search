@@ -60,4 +60,14 @@ describe('TextDataSourceService' , () => {
         expect(response[1].occurrenceString).toContain(mockSearchString);
         expect(response[2]).toBeNaN();
     });
+
+    it('Should return empty object if the file content is empty', () => {
+        //given
+        const mockFileContent = "";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).toEqual({});
+    });
 });
