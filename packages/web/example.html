@@ -19,7 +19,7 @@
 <div id="search-system">
     <input v-model="query" />
     <button @click="search">Search</button>
-    <p v-for="r in result"><i>{{r.lineNumber}}</i> {{r.occurrenceString}}</p>
+    <p v-for="r in result"><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
 </div>
 
 <script src="example.js"></script>
