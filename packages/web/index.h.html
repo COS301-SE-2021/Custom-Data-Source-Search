@@ -9,10 +9,18 @@
 <body>
 
 <div id="search-system">
-    <input v-model="query" />
-    <button @click="search">Search</button>
+    <div>
+        <input v-model="query" />
+        <button @click="search">Search</button>
+        <button id="add-datasource">Add DS</button>
+    </div>
 
-    {{ result }}
+    <div id="result-card" v-for="result in result">
+        <h4>{{result.title}}</h4>
+        <p>{{result.snippet}}</p>
+        <p>{{result.dir}}</p>
+    </div>
+
 </div>
 
 <script src="index.js"></script>
