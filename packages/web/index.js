@@ -10,11 +10,13 @@ const SearchSystem = {
                         "functionality in the form of includes and extends relationships to lower level use cases. Use <<include>> to specify\n" +
                         "sub-functionality for a given functionality and <<extend>> if the sub-functionality is optional. Show the required\n" +
                         "functionality within a system boundary as actions (ovals). The actors (stick figures) are people or other systems\n" +
-                        "requesting or delivering services (labels on the connection line between an actor and an action). "
+                        "requesting or delivering services (labels on the connection line between an actor and an action). ",
+                    dir: "C:\\Users\\Laurens-PC\\Documents\\Portia"
                 },
                 {
                     title: "anotherfile.txt",
-                    snippet: "a short snippet for now"
+                    snippet: "a short snippet for now",
+                    dir: "C:\\Users\\Laurens-PC\\Documents\\Another one"
                 }
             ]
         }
