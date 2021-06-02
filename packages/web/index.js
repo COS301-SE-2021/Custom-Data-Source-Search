@@ -1,49 +1,29 @@
-const Counter = {
+const SearchSystem = {
     data() {
         return {
-            counter: 0
-        }
-    },
-    mounted() {
-        setInterval(() => {
-            this.counter++
-        }, 1000)
-    }
-}
-Vue.createApp(Counter).mount('#counter')
-
-const AttributeBinding = {
-    data() {
-        return {
-            message: 'You loaded this page on ' + new Date().toLocaleString()
-        }
-    }
-}
-Vue.createApp(AttributeBinding).mount('#bind-attribute')
-
-
-const EventHandling = {
-    data() {
-        return {
-            message: 'Hello Vue.js!'
+            query: "",
+            result: {},
+            cache:  [
+                {
+                    title: "file.txt",
+                    snippet: "Assign the requirements to subsystems. in Figure 1. For each concrete use case a use case diagram with the required\n" +
+                        "functionality in the form of includes and extends relationships to lower level use cases. Use <<include>> to specify\n" +
+                        "sub-functionality for a given functionality and <<extend>> if the sub-functionality is optional. Show the required\n" +
+                        "functionality within a system boundary as actions (ovals). The actors (stick figures) are people or other systems\n" +
+                        "requesting or delivering services (labels on the connection line between an actor and an action). "
+                },
+                {
+                    title: "anotherfile.txt",
+                    snippet: "a short snippet for now"
+                }
+            ]
         }
     },
     methods: {
-        reverseMessage() {
-            this.message = this.message
-                .split('')
-                .reverse()
-                .join('')
+        search() {
+            this.result = this.cache;
         }
     }
 }
-Vue.createApp(EventHandling).mount('#event-handling')
 
-const TwoWayBinding = {
-    data() {
-        return {
-            message: 'Hello Vue!'
-        }
-    }
-}
-Vue.createApp(TwoWayBinding).mount('#two-way-binding')
+Vue.createApp(SearchSystem).mount("#search-system")

@@ -8,32 +8,11 @@
 </head>
 <body>
 
-<div id="counter">
-    Counter: {{ counter }}
-</div>
+<div id="search-system">
+    <input v-model="query" />
+    <button @click="search">Search</button>
 
-<div>
-    <span title="message">
-        Hover your mouse over me for a few seconds to see my statically bound
-        title!
-    </span>
-</div>
-
-<div id="bind-attribute">
-  <span v-bind:title="message">
-    Hover your mouse over me for a few seconds to see my DYNAMICALLY bound
-    title!
-  </span>
-</div>
-
-<div id="event-handling">
-    <p>{{ message }}</p>
-    <button v-on:click="reverseMessage">Reverse Message</button>
-</div>
-
-<div id="two-way-binding">
-    <p>{{ message }}</p>
-    <input v-model="message" />
+    {{ result }}
 </div>
 
 <script src="index.js"></script>
