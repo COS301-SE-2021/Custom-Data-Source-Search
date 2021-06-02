@@ -8,11 +8,13 @@
 </head>
 <body>
 
-    <div id="search-system">
-    <div>
-        <input v-model="query" />
-        <button @click="search">Search</button>
-        <button onclick="window.location.href='addDataSource.html'" id="add-datasource">Add DS</button>
+<div id="mock-added-data-sources">
+    <div >
+        <input v-model="tempMessage" placeholder="Enter a filepath"/>
+        <button @click="add" >ADD</button>
+        <button onclick="window.location.href='index.h.html'" id="add-datasource">HOME</button>
+        <button onclick="window.location.href='viewDataSources.html'" >VIEW DATA SOURCES</button>
+
     </div>
 
     <div id="result-card" v-for="result in result">
