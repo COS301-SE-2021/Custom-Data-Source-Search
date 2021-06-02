@@ -5,7 +5,7 @@ import express, {Request, Response} from "express";
 import TextDataSourceService from "../services/TextDataSource.service";
 import { TextDataSource, TextDataSourceList} from "../models/TextDataSource.interface";
 import textDataSourceService from "../services/TextDataSource.service";
-import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
+import {StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 
 /**
  * Router Definition
@@ -39,20 +39,6 @@ textDataSourceRouter.get("/:id", async (req: Request, res: Response) => {
         const textDataSource: TextDataSource = await textDataSourceService.getTextDataSource(parseInt(req.params.id));
 
         res.status(200).send(textDataSource)
-    } catch (e) {
-        res.status(500).send(e.message);
-    }
-
-});
-
-/**
- * Return results of a search run
- */
-textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, res: Response) => {
-    try {
-        const textDataSources: StringOccurrenceResponse = textDataSourceService.searchFile("bob asdlkfj \n asdfare;glkj bob", "bob");
-
-        res.status(200).send(textDataSources);
     } catch (e) {
         res.status(500).send(e.message);
     }

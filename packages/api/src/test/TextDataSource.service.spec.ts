@@ -1,5 +1,5 @@
 import textDataSourceService from "../services/TextDataSource.service";
-import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
+import {StringOccurrences} from "../models/response/searchFileResponse.interface";
 import exp from "constants";
 //import exp from "constants";
 
@@ -17,7 +17,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
         const mockSearchString = "";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).toEqual({});
      //   expect(testFilename).toEqual(exampleDataSource.getFileName());
@@ -28,7 +28,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).toEqual({});
     });
@@ -38,7 +38,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).not.toEqual({});
         expect(response[0]).not.toBe(undefined);
@@ -51,7 +51,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).not.toEqual({});
         expect(response[0]).not.toBe(undefined);
@@ -67,7 +67,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).toEqual({});
     });
@@ -77,7 +77,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\r\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).not.toEqual({});
         expect(response[0]).not.toBe(undefined);
@@ -95,7 +95,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).not.toEqual({});
         expect(response[0]).not.toBe(undefined);
@@ -113,7 +113,7 @@ describe('TextDataSourceService' , () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\rMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        const response: StringOccurrences = service.searchFile(mockFileContent,mockSearchString);
         //then
         expect(response).not.toEqual({});
         expect(response[0]).not.toBe(undefined);
