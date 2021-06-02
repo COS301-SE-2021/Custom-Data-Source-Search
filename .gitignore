@@ -2,3 +2,4 @@ node_modules/
 build/
 /.coveralls.yml
 .env
+/package-lock.json
