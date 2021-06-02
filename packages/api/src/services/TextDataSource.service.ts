@@ -47,17 +47,17 @@ class TextDataSourceService {
 
     addTextDataSource(fileName: string, filePath: string){
         if (fileName === '') {
-            throw new FileReadingError('No fileName specified', 400);
+            throw new FileReadingError('NO FILE NAME', 400);
         } else if (filePath === '') {
-            throw new FileReadingError('No file path specified', 400);
+            throw new FileReadingError('NO FILE PATH', 400);
         }
         try {
             fs.readFileSync(filePath + fileName);
         } catch (err){
             if(err.code == 'ENOENT'){
-                throw new FileReadingError('File not found', 404);
+                throw new FileReadingError('FILE NOT FOUND', 404);
             } else if(err.code == 'EACCES'){
-                throw new FileReadingError('File access is forbidden', 403);
+                throw new FileReadingError('ACCESS FORBIDDEN', 403);
             }
             throw err;
         }

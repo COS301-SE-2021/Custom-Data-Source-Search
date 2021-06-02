@@ -1,6 +1,6 @@
 import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
-import exp from "constants";
+import FileReadingError from "../errors/FileReadingError";
 //import exp from "constants";
 
 
@@ -9,7 +9,7 @@ import exp from "constants";
 
 const service = textDataSourceService;
 
-describe('TextDataSourceService' , () => {
+describe('searchFile function' , () => {
     it('Should return empty object on empty string search', () => {
        // const exampleDataSource = new ExampleDataSource(testFilename)
      //   const textDataSources: TextDataSourceList = await TextDataSourceService.getAllTextDataSources();
@@ -124,5 +124,32 @@ describe('TextDataSourceService' , () => {
         expect(response[1].occurrenceString).toContain(mockSearchString);
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
+    });
+});
+
+describe('addTextDataSource function' , () => {
+    it('Should throw FileReadingError with appropriate message when no file path is specified', () => {
+        //given
+        const fileName = "file.txt";
+        const filePath = "";
+        //when
+        function add(){
+            service.addTextDataSource(fileName, filePath);
+        }
+        //then
+        expect(add).toThrow(FileReadingError);
+        expect(add).toThrow("NO FILE PATH");
+    });
+    it('Should throw FileReadingError with appropriate message when no file name is specified', () => {
+        //given
+        const fileName = "";
+        const filePath = "/somePath";
+        //when
+        function add(){
+            service.addTextDataSource(fileName, filePath);
+        }
+        //then
+        expect(add).toThrow(FileReadingError);
+        expect(add).toThrow("NO FILE NAME");
     });
 });
