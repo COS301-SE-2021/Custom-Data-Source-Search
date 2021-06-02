@@ -89,4 +89,40 @@ describe('TextDataSourceService' , () => {
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
     });
+
+    it('Should return occurrences on different lines for Linux if the file contains multiple lines with occurrences on them', () => {
+        //given
+        const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).not.toEqual({});
+        expect(response[0]).not.toBe(undefined);
+        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].lineNumber).toEqual(1);
+
+        expect(response[1]).not.toBe(undefined);
+        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].lineNumber).toEqual(2);
+        expect(response[2]).toBe(undefined);
+    });
+
+    it('Should return occurrences on different lines for older mac if the file contains multiple lines with occurrences on them', () => {
+        //given
+        const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\rMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
+        const mockSearchString = "Gelato";
+        //when
+        const response: StringOccurrenceResponse = service.searchFile(mockFileContent,mockSearchString);
+        //then
+        expect(response).not.toEqual({});
+        expect(response[0]).not.toBe(undefined);
+        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].lineNumber).toEqual(1);
+
+        expect(response[1]).not.toBe(undefined);
+        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].lineNumber).toEqual(2);
+        expect(response[2]).toBe(undefined);
+    });
 });
