@@ -2,31 +2,50 @@ const SearchSystem = {
     data() {
         return {
             query: "",
-            result: {},
-            cache:  [
-                {
-                    title: "file.txt",
-                    snippet: "Assign the requirements to subsystems. in Figure 1. For each concrete use case a use case diagram with the required\n" +
-                        "functionality in the form of includes and extends relationships to lower level use cases. Use <<include>> to specify\n" +
-                        "sub-functionality for a given functionality and <<extend>> if the sub-functionality is optional. Show the required\n" +
-                        "functionality within a system boundary as actions (ovals). The actors (stick figures) are people or other systems\n" +
-                        "requesting or delivering services (labels on the connection line between an actor and an action). "
-                },
-                {
-                    title: "anotherfile.txt",
-                    snippet: "a short snippet for now"
-                }
-            ]
+            result: [],
+            datasource: "",
+            datasourceList: []
         }
     },
     methods: {
         search() {
-            this.result = this.cache;
+            let json = this.queryServer(this.query)
+            console.log(json)
+            this.result = json
         },
-        addDataSource() {
-            this.cache.push({title: this.query, snippet: "that"})
+        queryServer(query) {
+            console.log(query)
+            return [
+                {
+                    title: "lewis.txt",
+                    snippet: "Of all tyrannies, a tyranny sincerely exercised for the good of its victims may be the most oppressive. It would be better to live under robber barons than under omnipotent moral busybodies. The robber baron's cruelty may sometimes sleep, his cupidity may at some point be satiated; but those who torment us for our own good will torment us without end for they do so with the approval of their own conscience."
+                },
+                {
+                    title: "churchill.txt",
+                    snippet: "It is not enough that we do our best; sometimes we must do what is required."
+                }
+            ]
         }
     }
 }
 
 Vue.createApp(SearchSystem).mount("#search-system")
+
+
+const DataSource = {
+    data() {
+        return {
+            datasource: "",
+            datasourceList: []
+        }
+    },
+    methods: {
+        addDataSource() {
+            if (!this.datasourceList.includes(this.datasource)) {
+                this.datasourceList.push({s: this.datasource})
+            }
+        }
+    }
+}
+
+Vue.createApp(DataSource).mount("#data-sources")
