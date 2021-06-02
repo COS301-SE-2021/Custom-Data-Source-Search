@@ -5,6 +5,7 @@
     <title>Data Search</title>
     <link rel="stylesheet" href="example.css">
     <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -18,7 +19,7 @@
 <div id="search-system">
     <input v-model="query" />
     <button @click="search">Search</button>
-    <p v-for="r in result"><i>{{ r.title }}</i> <br> {{r.snippet}}</p>
+    <p v-for="r in result"><i>{{r.lineNumber}}</i> {{r.occurrenceString}}</p>
 </div>
 
 <script src="example.js"></script>
