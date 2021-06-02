@@ -63,7 +63,7 @@ import { StringOccurrenceResponse } from "../models/response/searchFileResponse.
         }
 
         return {
-            1:{
+            0:{
                 lineNumber : 12,
                 occurrenceString : "some return"
             }
