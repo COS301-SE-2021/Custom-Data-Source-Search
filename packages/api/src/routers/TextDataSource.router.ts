@@ -2,7 +2,6 @@
  * Required External Modules and Interfaces
  */
 import express, {Request, Response} from "express";
-import TextDataSourceService from "../services/TextDataSource.service";
 import { TextDataSource, TextDataSourceList} from "../models/TextDataSource.interface";
 import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
@@ -62,7 +61,7 @@ textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, re
 /**
  * Add a data source by it's path and file name
  */
-textDataSourceRouter.post("/", async (req: Request, res: Response) => {
+textDataSourceRouter.post("/datasources", async (req: Request, res: Response) => {
     try {
        // const textDataSources: TextDataSourceList = await textDataSourceService.getAllTextDataSources();
 

@@ -4,6 +4,8 @@
 import { TextDataSource } from "../models/TextDataSource.interface";
 import { TextDataSourceList } from "../models/TextDataSource.interface";
 import { StringOccurrenceResponse } from "../models/response/searchFileResponse.interface";
+import * as fs from 'fs';
+import FileReadingError from "../errors/FileReadingError";
 
 
 class TextDataSourceService {
@@ -44,8 +46,22 @@ class TextDataSourceService {
     }
 
     addTextDataSource(fileName: string, filePath: string){
-
-        let temp: TextDataSource = {filename: fileName, path: filePath}
+        if (fileName === '') {
+            throw new FileReadingError('No fileName specified', 400);
+        } else if (filePath === '') {
+            throw new FileReadingError('No file path specified', 400);
+        }
+        try {
+            fs.readFileSync(filePath + fileName);
+        } catch (err){
+            if(err.code == 'ENOENT'){
+                throw new FileReadingError('File not found', 404);
+            } else if(err.code == 'EACCES'){
+                throw new FileReadingError('File access is forbidden', 403);
+            }
+            throw err;
+        }
+        const temp: TextDataSource = {filename: fileName, path: filePath}
 
         this.textDataSourceArray.push(temp);
     }
