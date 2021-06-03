@@ -29,7 +29,7 @@ body{
 }
 
 #search-system{
-    display: inline-block;
+    /*display: inline-block;*/
     margin-left: 10%;
     margin-top: 15px;
 
@@ -39,7 +39,7 @@ body{
 #data-sources{
     margin-right: 10%;
     float:right;
-    display: inline-block;
+    /*display: inline-block;*/
     margin-top: 15px;
 }
 
@@ -63,3 +63,26 @@ textarea:focus,
 button:focus {
     outline: none;
 }
+
+
+.main-container{
+    display: grid;
+    grid-template-columns: 1fr 20px 1fr;
+    grid-column-gap: 10px;
+}
+
+.vl {
+    position: fixed;
+    border-left: 1px solid grey;
+    border-radius: 2px;
+    height: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+}
+
+
