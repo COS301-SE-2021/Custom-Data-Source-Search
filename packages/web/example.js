@@ -24,8 +24,9 @@ const SearchSystem = {
 }
 
 Vue.createApp(SearchSystem).mount("#search-system")
-
+let nextId = 1
 const DataSource = {
+
     data() {
         return {
             datasource: "",
@@ -35,8 +36,13 @@ const DataSource = {
     methods: {
         addDataSource() {
             if (!this.datasourceList.includes(this.datasource)) {
-                this.datasourceList.push({info: this.datasource})
+                this.datasourceList.push({id: nextId++, info: this.datasource})
             }
+        },
+        deleteDataSource(idToDelete) {
+            this.datasourceList = this.datasourceList.filter(item => {
+                return item.id !== idToDelete
+            })
         }
     }
 }
