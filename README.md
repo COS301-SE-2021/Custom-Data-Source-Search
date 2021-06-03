@@ -5,12 +5,11 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/COS301-SE-2021/Custom-Data-Source-Search)
 ![GitHub open issues](https://img.shields.io/github/issues-raw/COS301-SE-2021/Custom-Data-Source-Search)
 
-DataSleuth is to a custom data source search system. It provides software developers 
-with a central system from which they can search all the data sources they use for 
-their work. This would include local files, code repositories, wikis, databases, 
-specific websites and communication systems - it could also include user specific
-data sources, and as such the system allows software developers to use their 
-expertise to easily plug in any esoteric data sources they might wish to.
+DataSleuth is a custom data source search system. It provides software developers 
+with a central system from where they can search all the data sources they use for 
+their work. From local files, code repositories, wikis, databases, 
+websites and communication systems, all the way to user specific esoteric
+data sources that competent software developers plug in to the system for themselves.
 
 ### SRS
 link
