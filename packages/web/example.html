@@ -17,8 +17,8 @@
                 <input v-model="query" class = "input-box"/>
                 <button @click="search" class = "input-button" >Search</button>
             </div>
-            <div class ="output" >
-                <p v-for="r in result"><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
+            <div class ="output" v-for="r in result" >
+                <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
 
             </div>
 
@@ -44,7 +44,7 @@
             <div class ="output" v-else>
                 <p>No data sources added</p>
             </div>
-            
+
         </div>
     </div>
 
