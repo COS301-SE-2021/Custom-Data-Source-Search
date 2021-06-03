@@ -29,6 +29,14 @@ body{
     padding: 5px;
 }
 
+#delete-button{
+    float:right;
+    background: #2c2c2c;
+    color: floralwhite;
+    border:none;
+    /*border-radius: 3px;*/
+}
+
 #search-system{
     /*display: inline-block;*/
     /*margin-left: 10%;*/

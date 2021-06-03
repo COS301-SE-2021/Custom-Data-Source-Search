@@ -16,6 +16,7 @@ const SearchSystem = {
             $.get(
                 serverQuery,
                 (data) => {
+                    console.log(data);
                     this.result = data;
                 }
             );
