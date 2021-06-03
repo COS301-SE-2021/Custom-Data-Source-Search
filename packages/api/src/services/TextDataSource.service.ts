@@ -19,6 +19,8 @@ class TextDataSourceService {
         console.log("Text Data Source Service started");
         this.textDataSourceArray = [];
 
+
+        //Temporary Mocked filenames
         this.textDataSourceArray[0] = { filename : 'hello.txt', path: '../test/'}
         this.textDataSourceArray[1] = { filename : 'beans.txt', path: '../test/'}
     }
@@ -26,6 +28,7 @@ class TextDataSourceService {
     /**
      * Service Methods
      */
+
     getAllTextDataSources() : TextDataSourceList {
        return this.textDataSourceArray;
     }
@@ -82,7 +85,7 @@ class TextDataSourceService {
             }
             matches[numOccurrence] = {
                 lineNumber : lineNum,
-                occurrenceString : fileContents.substring(index -5, index + searchString.length + 10)
+                occurrenceString : '...' + fileContents.substring(index -12, index + searchString.length + 13) + '...'
                 
             };
             numOccurrence++;
@@ -93,5 +96,6 @@ class TextDataSourceService {
 
 }
 
+//Only 1 Instance Allowed in the System
 const textDataSourceService = new TextDataSourceService();
 export default textDataSourceService;

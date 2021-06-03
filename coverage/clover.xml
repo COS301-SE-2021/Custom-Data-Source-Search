@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1622708987045" clover="3.2.0">
+  <project timestamp="1622708987045" name="All files">
+    <metrics statements="29" coveredstatements="27" conditionals="6" coveredconditionals="6" methods="8" coveredmethods="6" elements="43" coveredelements="39" complexity="0" loc="29" ncloc="29" packages="2" files="2" classes="2"/>
+    <package name="src">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+      <file name="ExampleDataSource.ts" path="/mnt/c/Users/Joshua/Documents/GitHub/Custom-Data-Source-Search/packages/api/src/ExampleDataSource.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.services">
+      <metrics statements="27" coveredstatements="25" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="4"/>
+      <file name="TextDataSource.service.ts" path="/mnt/c/Users/Joshua/Documents/GitHub/Custom-Data-Source-Search/packages/api/src/services/TextDataSource.service.ts">
+        <metrics statements="27" coveredstatements="25" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="4"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="42" count="4" type="stmt"/>
+        <line num="44" count="4" type="stmt"/>
+        <line num="49" count="2" type="stmt"/>
+        <line num="51" count="2" type="stmt"/>
+        <line num="53" count="10" type="stmt"/>
+        <line num="55" count="10" type="stmt"/>
+        <line num="58" count="10" type="stmt"/>
+        <line num="63" count="2" type="stmt"/>
+        <line num="75" count="18" type="cond" truecount="4" falsecount="0"/>
+        <line num="76" count="2" type="stmt"/>
+        <line num="78" count="16" type="stmt"/>
+        <line num="79" count="16" type="stmt"/>
+        <line num="80" count="16" type="stmt"/>
+        <line num="81" count="16" type="stmt"/>
+        <line num="82" count="19" type="stmt"/>
+        <line num="83" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="84" count="34" type="stmt"/>
+        <line num="86" count="19" type="stmt"/>
+        <line num="91" count="19" type="stmt"/>
+        <line num="94" count="16" type="stmt"/>
+        <line num="100" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
