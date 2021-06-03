@@ -69,6 +69,7 @@ button:focus {
     display: grid;
     grid-template-columns: 1fr 20px 1fr;
     grid-column-gap: 10px;
+    grid-template-rows: 50px 1fr;
 }
 
 .vl {
