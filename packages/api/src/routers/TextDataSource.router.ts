@@ -41,7 +41,6 @@ textDataSourceRouter.get("/:id", async (req: Request, res: Response) => {
     } catch (e) {
         res.status(500).send(e.message);
     }
-
 });
 
 /**
@@ -56,7 +55,6 @@ textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, re
     } catch (e) {
         res.status(500).send(e.message);
     }
-
 });
 
 /**
@@ -64,11 +62,14 @@ textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, re
  */
 textDataSourceRouter.post("/", async (req: Request, res: Response) => {
     try {
-       // const textDataSources: TextDataSourceList = await textDataSourceService.getAllTextDataSources();
+        textDataSourceService.addTextDataSource(req.body.fileName, req.body.filePath);
 
-       // res.status(200).send(textDataSources)
+        res.status(200).send('Successfully added text datasource');
     } catch (e) {
-        res.status(500).send(e.message);
+        if (e.status){
+            res.status(e.status).send(e.message);
+        } else {
+            res.status(500).send(e.message);
+        }
     }
-
 });
