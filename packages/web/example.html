@@ -11,27 +11,30 @@
 
 
 <div class = "main-container">
+    <div class = "sub-container">
+        <div id="search-system">
+            <input v-model="query" class = "input-box"/>
+            <button @click="search" v-on:click="search = true"  class = "input-button">Search</button>
+            <div class ="output">
+                <p v-for="r in result"><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
+            </div>
 
-    <div id="search-system">
-        <input v-model="query" class = "input-box"/>
-        <button @click="search" v-on:click="search = true"  class = "input-button">Search</button>
-        <div class ="output">
-            <p v-for="r in result"><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
-        </div>
-
-    </div>
-
-    <div id="data-sources">
-        <input v-model="datasource" class = "input-box"/>
-        <button @click="addDataSource" v-on:click="search = false" class = "input-button">Add Datasource</button>
-        <div class ="output">
-            <p v-for="s in datasourceList">{{s.info}}</p>
         </div>
     </div>
 
+    <div class = "sub-container">
+        <div class="vl"></div>
+    </div>
 
-
-
+    <div class = "sub-container">
+        <div id="data-sources">
+            <input v-model="datasource" class = "input-box"/>
+            <button @click="addDataSource" v-on:click="search = false" class = "input-button">Add Datasource</button>
+            <div class ="output">
+                <p v-for="s in datasourceList">{{s.info}}</p>
+            </div>
+        </div>
+    </div>
 
 </div>
 <script src="example.js"></script>
