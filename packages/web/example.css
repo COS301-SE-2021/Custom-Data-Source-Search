@@ -1,0 +1,65 @@
+html, body {
+    margin: 5px;
+    padding: 0;
+}
+
+#add-datasource {
+    float: left;
+    margin-right: 100px;
+}
+
+body{
+    background: #2c2c2c;
+}
+
+.input-box{
+    background: #474747;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    color: floralwhite;
+    width: 250px;
+}
+
+.input-button{
+    border-radius: 3px;
+    background: #2a9d8f;
+    border: none;
+    padding: 5px;
+}
+
+#search-system{
+    display: inline-block;
+    margin-left: 10%;
+    margin-top: 15px;
+
+}
+
+
+#data-sources{
+    margin-right: 10%;
+    float:right;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.output{
+    margin-top: 50px;
+    color: floralwhite;
+    font-family: "Trebuchet MS";
+    background: #474747;
+    border-radius: 5px;
+
+}
+
+.output p{
+    padding:5px;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
