@@ -15,12 +15,9 @@
         <div id="search-system">
             <input v-model="query" class = "input-box"/>
             <button @click="search" class = "input-button" >Search</button>
-            <div class ="output" v-if="result.length" >
+            <div class ="output" >
                 <p v-for="r in result"><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
 
-            </div>
-            <div class ="output" v-else>
-                <p style="height: 20px"></p>
             </div>
 
         </div>
