@@ -23,10 +23,15 @@ data sources that competent software developers plug in to the system for themse
 
 ### Team Members
 #### Josua Botha
+[LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/)
 #### Laruen Rowe
-#### Marike van Zyl
+[LinkedIn](https://www.linkedin.com/in/lauren-rowe-63b15b18b/)
+#### Catharina van Zyl
+[LinkedIn](https://www.linkedin.com/in/catharina-van-zyl-a3286b20b/)
 #### Gianni Volpi
+[LinkedIn](https://www.linkedin.com/in/gianni-volpi)
 #### Joshua Walker
+[LinkedIn](https://www.linkedin.com/in/joshua-walker-7b0816208)
 
 ### Branching Strategy
 - git organization?
