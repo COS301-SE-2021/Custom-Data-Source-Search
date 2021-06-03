@@ -60,7 +60,7 @@ textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, re
 /**
  * Add a data source by it's path and file name
  */
-textDataSourceRouter.post("/datasources", async (req: Request, res: Response) => {
+textDataSourceRouter.post("/", async (req: Request, res: Response) => {
     try {
         textDataSourceService.addTextDataSource(req.body.fileName, req.body.filePath);
 
