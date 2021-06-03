@@ -3,6 +3,10 @@ export interface StringOccurrence {
     occurrenceString : string;
 }
 
-export interface StringOccurrenceResponse {
+export interface StringOccurrences {
     [key: number]: StringOccurrence;
+}
+
+export interface StringOccurrencesResponse {
+    [key: string]: StringOccurrences;
 }
