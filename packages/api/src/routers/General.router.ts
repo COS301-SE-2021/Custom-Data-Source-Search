@@ -22,7 +22,7 @@ export const generalRouter = express.Router();
 generalRouter.get("/:searchstring",  (req: Request, res: Response) => {
     try {
          const textDataSources: StringOccurrencesResponse = textDataSourceService.searchAllTextDataSources(req.params.searchstring);
-        //
+
          res.status(200).send(textDataSources)
     } catch (e) {
         res.status(500).send(e.message);
