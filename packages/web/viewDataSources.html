@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Search</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://unpkg.com/vue@next" integrity="sha384-MEjJ07I/SLnb0PgyCIWKX5JtRELbplt6ecAPNT9eEI0mq8dGm9met0SpBoJsdYzt" crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<div id="mock-added-data-sources">
+    <div >
+        <button onclick="window.location.href='addDataSource.html'" id="add-datasource">Add DS</button>
+        <button onclick="window.location.href='index.h.html'" >HOME</button>
+    </div>
+
+    <div id="view-data-card" v-for="result in dataSources">
+        <h4>{{result}}</h4>
+    </div>
+
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>

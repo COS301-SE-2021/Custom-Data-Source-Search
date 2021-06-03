@@ -2,3 +2,108 @@ html, body {
     margin: 5px;
     padding: 0;
 }
+
+#add-datasource {
+    /*float: left;*/
+    /*margin-right: 100px;*/
+
+}
+
+body{
+    background: #2c2c2c;
+}
+
+.input-box{
+    background: #474747;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    color: floralwhite;
+    width: 250px;
+}
+
+.input-button{
+    border-radius: 3px;
+    background: #2a9d8f;
+    border: none;
+    padding: 5px;
+}
+
+#delete-button{
+    float:right;
+    background: #2c2c2c;
+    color: floralwhite;
+    border:none;
+    /*border-radius: 3px;*/
+}
+
+#search-system{
+    /*display: inline-block;*/
+    /*margin-left: 10%;*/
+    margin-top: 15px;
+
+}
+
+
+#data-sources{
+    /*margin-right: 10%;*/
+    /*float:right;*/
+    /*display: inline-block;*/
+    margin-top: 15px;
+}
+
+.output{
+    margin-bottom: 20px;
+    color: floralwhite;
+    font-family: "Trebuchet MS", serif;
+    background: #474747;
+    border-radius: 5px;
+    text-align: left;
+
+}
+
+.output p{
+    padding:5px;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+
+.main-container{
+    display: grid;
+    grid-template-columns: 1fr 20px 1fr;
+    grid-column-gap: 10px;
+    grid-template-rows: 50px 1fr;
+}
+
+.vl {
+    position: absolute;
+    border-left: 1px solid grey;
+    border-radius: 2px;
+    height: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+}
+
+
+
+.sub-container {
+    margin: auto;
+    width: 80%;
+    text-align: center;
+    float: top;
+}
+
+.first-div{
+    margin-bottom: 50px;
+}

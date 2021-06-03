@@ -12,10 +12,10 @@ const SearchSystem = {
             this.queryServer(this.query)
         },
         queryServer(query) {
-            let serverQuery = `http://localhost:3001/textdatasources/search/string/${query}`;
             $.get(
-                serverQuery,
+                `http://localhost:3001/general/${query}`,
                 (data) => {
+                    console.log("called");
                     this.result = data;
                 }
             );
@@ -24,7 +24,7 @@ const SearchSystem = {
 }
 
 Vue.createApp(SearchSystem).mount("#search-system")
-
+let nextId = 1
 const DataSource = {
     data() {
         return {
@@ -35,8 +35,13 @@ const DataSource = {
     methods: {
         addDataSource() {
             if (!this.datasourceList.includes(this.datasource)) {
-                this.datasourceList.push({info: this.datasource})
+                this.datasourceList.push({id: nextId++, info: this.datasource})
             }
+        },
+        deleteDataSource(idToDelete) {
+            this.datasourceList = this.datasourceList.filter(item => {
+                return item.id !== idToDelete
+            })
         }
     }
 }

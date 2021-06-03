@@ -4,24 +4,49 @@
     <meta charset="UTF-8">
     <title>Data Search</title>
     <link rel="stylesheet" href="example.css">
-    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/vue@next" integrity="sha384-MEjJ07I/SLnb0PgyCIWKX5JtRELbplt6ecAPNT9eEI0mq8dGm9met0SpBoJsdYzt" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<div id="data-sources">
-    <p v-for="s in datasourceList">{{s.info}}</p>
-    <input v-model="datasource"/>
-    <button @click="addDataSource">Add Datasource</button>
+
+<div class = "main-container">
+    <div class = "sub-container">
+        <div id="search-system">
+            <div class="first-div">
+                <input v-model="query" class = "input-box"/>
+                <button @click="search" class = "input-button" >Search</button>
+            </div>
+            <div class ="output" v-for="r in result" >
+                <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class = "sub-container">
+        <div class="vl"></div>
+    </div>
+
+    <div class = "sub-container">
+        <div id="data-sources">
+            <div class="first-div">
+                <input v-model="datasource" class = "input-box"/>
+                <button @click="addDataSource" class = "input-button">Add Datasource</button>
+            </div>
+            <div class ="output" v-if="datasourceList.length" v-for="s in datasourceList">
+                <p >{{s.info}}<button @click="deleteDataSource(s.id)" id="delete-button">
+                    X
+                </button></p>
+            </div>
+
+            <div class ="output" v-else>
+                <p>No data sources added</p>
+            </div>
+
+        </div>
+    </div>
 
 </div>
-
-<div id="search-system">
-    <input v-model="query" />
-    <button @click="search">Search</button>
-    <p v-for="r in result"><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
-</div>
-
 <script src="example.js"></script>
 </body>
 </html>
