@@ -13,8 +13,10 @@
 <div class = "main-container">
     <div class = "sub-container">
         <div id="search-system">
-            <input v-model="query" class = "input-box"/>
-            <button @click="search" class = "input-button" >Search</button>
+            <div class="first-div">
+                <input v-model="query" class = "input-box"/>
+                <button @click="search" class = "input-button" >Search</button>
+            </div>
             <div class ="output" >
                 <p v-for="r in result"><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
 
@@ -29,17 +31,20 @@
 
     <div class = "sub-container">
         <div id="data-sources">
-            <input v-model="datasource" class = "input-box"/>
-            <button @click="addDataSource" class = "input-button">Add Datasource</button>
-            <div class ="output" v-if="datasourceList.length">
-                <p v-for="s in datasourceList">{{s.info}}<button @click="deleteDataSource(s.id)" id="delete-button">
+            <div class="first-div">
+                <input v-model="datasource" class = "input-box"/>
+                <button @click="addDataSource" class = "input-button">Add Datasource</button>
+            </div>
+            <div class ="output" v-if="datasourceList.length" v-for="s in datasourceList">
+                <p >{{s.info}}<button @click="deleteDataSource(s.id)" id="delete-button">
                     X
                 </button></p>
-
             </div>
+
             <div class ="output" v-else>
                 <p>No data sources added</p>
             </div>
+            
         </div>
     </div>
 

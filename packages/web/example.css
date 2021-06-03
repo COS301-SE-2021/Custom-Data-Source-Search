@@ -53,13 +53,12 @@ body{
 }
 
 .output{
-    margin-top: 50px;
+    margin-bottom: 20px;
     color: floralwhite;
     font-family: "Trebuchet MS";
     background: #474747;
     border-radius: 5px;
     text-align: left;
-
 
 }
 
@@ -104,4 +103,8 @@ button:focus {
     width: 80%;
     text-align: center;
     float: top;
+}
+
+.first-div{
+    margin-bottom: 50px;
 }
