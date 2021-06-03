@@ -4,8 +4,8 @@ html, body {
 }
 
 #add-datasource {
-    float: left;
-    margin-right: 100px;
+    /*float: left;*/
+    /*margin-right: 100px;*/
 }
 
 body{
@@ -30,7 +30,7 @@ body{
 
 #search-system{
     /*display: inline-block;*/
-    margin-left: 10%;
+    /*margin-left: 10%;*/
     margin-top: 15px;
 
 }
@@ -86,3 +86,10 @@ button:focus {
 }
 
 
+
+.sub-container {
+    margin: auto;
+    width: 80%;
+    text-align: center;
+    float: top;
+}
