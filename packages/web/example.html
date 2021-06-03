@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Data Search</title>
     <link rel="stylesheet" href="example.css">
-    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/vue@next" integrity="sha384-MEjJ07I/SLnb0PgyCIWKX5JtRELbplt6ecAPNT9eEI0mq8dGm9met0SpBoJsdYzt" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -19,9 +19,7 @@
             </div>
             <div class ="output" v-for="r in result" >
                 <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
-
             </div>
-
         </div>
     </div>
 

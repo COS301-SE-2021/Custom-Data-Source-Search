@@ -3,4 +3,5 @@ build/
 /.coveralls.yml
 .env
 /package-lock.json
+/coverage
 coverage/

@@ -55,7 +55,7 @@ body{
 .output{
     margin-bottom: 20px;
     color: floralwhite;
-    font-family: "Trebuchet MS";
+    font-family: "Trebuchet MS", serif;
     background: #474747;
     border-radius: 5px;
     text-align: left;
@@ -83,14 +83,13 @@ button:focus {
 }
 
 .vl {
-    position: fixed;
+    position: absolute;
     border-left: 1px solid grey;
     border-radius: 2px;
     height: 100%;
     padding: 10px;
     margin-top: 20px;
     margin-bottom: 30px;
-    position: absolute;
     left: 50%;
     margin-left: -3px;
     top: 0;
