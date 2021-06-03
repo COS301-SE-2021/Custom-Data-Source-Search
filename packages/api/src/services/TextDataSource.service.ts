@@ -4,7 +4,7 @@
 import { TextDataSource } from "../models/TextDataSource.interface";
 import { TextDataSourceList } from "../models/TextDataSource.interface";
 import { StringOccurrenceResponse } from "../models/response/searchFileResponse.interface";
-import * as fs from 'fs';
+import fs from 'fs';
 import FileReadingError from "../errors/FileReadingError";
 
 

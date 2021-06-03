@@ -1,6 +1,7 @@
 import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
 import FileReadingError from "../errors/FileReadingError";
+import fs from "fs";
 //import exp from "constants";
 
 
@@ -151,5 +152,71 @@ describe('addTextDataSource function' , () => {
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("NO FILE NAME");
+    });
+    it('Should throw correct error when readFileSync throws file not found error', () => {
+        //given
+        class TestError extends Error{
+            constructor(message:string, code:string) {
+                super(message);
+                this.code = code;
+            }
+            code:string;
+        }
+        const fileName = "file.txt";
+        const filePath = "/somePath";
+        jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
+            throw new TestError('TEST', 'ENOENT');
+        });
+        //when
+        function add(){
+            service.addTextDataSource(fileName, filePath);
+        }
+        //then
+        expect(add).toThrow(FileReadingError);
+        expect(add).toThrow("FILE NOT FOUND");
+    });
+    it('Should throw correct error when readFileSync throws access prohibited error', () => {
+        //given
+        class TestError extends Error{
+            constructor(message:string, code:string) {
+                super(message);
+                this.code = code;
+            }
+            code:string;
+        }
+        const fileName = "file.txt";
+        const filePath = "/somePath";
+        jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
+            throw new TestError('TEST', 'EACCES');
+        });
+        //when
+        function add(){
+            service.addTextDataSource(fileName, filePath);
+        }
+        //then
+        expect(add).toThrow(FileReadingError);
+        expect(add).toThrow("ACCESS FORBIDDEN");
+    });
+    it('Should pass on error when readFileSync throws error with unknown code', () => {
+        //given
+        class TestError extends Error{
+            constructor(message:string, code:string) {
+                super(message);
+                this.code = code;
+            }
+            code:string;
+        }
+        const fileName = "file.txt";
+        const filePath = "/somePath";
+        jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
+            throw new TestError('TEST', 'UNKNOWN');
+        });
+        //when
+        function add(){
+            service.addTextDataSource(fileName, filePath);
+        }
+        //then
+        expect(add).toThrow(TestError);
+        expect(add).toThrow("TEST");
     });
 });
