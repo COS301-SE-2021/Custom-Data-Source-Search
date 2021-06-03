@@ -21,8 +21,8 @@ class TextDataSourceService {
 
 
         //Temporary Mocked filenames
-        this.textDataSourceArray[0] = { filename : 'hello.txt', path: '../test/'}
-        this.textDataSourceArray[1] = { filename : 'beans.txt', path: '../test/'}
+        //this.textDataSourceArray[0] = { filename : 'hello.txt', path: '../test/'}
+      //  this.textDataSourceArray[1] = { filename : 'beans.txt', path: '../test/'}
     }
 
     /**
@@ -79,10 +79,8 @@ class TextDataSourceService {
         let matches : StringOccurrences = {};
         let numOccurrence : number = 0;
         for (let index = stringWithStandardLineBreaks.indexOf(searchString);index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
-            let lineNum : number = 1;
-            for(let index2 = stringWithStandardLineBreaks.indexOf('\n'); (index2 < index && index2 >= 0); index2 = stringWithStandardLineBreaks.indexOf("\n", index2 + 1)){
-                lineNum++;
-            }
+
+            let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
             matches[numOccurrence] = {
                 lineNumber : lineNum,
                 occurrenceString : '...' + fileContents.substring(index -12, index + searchString.length + 13) + '...'
@@ -92,6 +90,18 @@ class TextDataSourceService {
         }
 
         return matches;
+    }
+
+    getLineNumber(index : number, fullString: string): number {
+
+        let lineNum = 1;
+
+        for(let index2 = fullString.indexOf('\n'); (index2 < index && index2 >= 0); index2 = fullString.indexOf("\n", index2 + 1)){
+            lineNum++;
+        }
+
+        return lineNum;
+
     }
 
 }
