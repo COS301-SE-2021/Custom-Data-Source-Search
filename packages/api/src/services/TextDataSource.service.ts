@@ -70,17 +70,14 @@ class TextDataSourceService {
     }
 
 
-
     /**
      * Internal Methods
      */
-
-
     searchFile(fileContents: string, searchString: string): StringOccurrenceResponse {
         if(searchString === "" || fileContents === ""){
             return {};
         }
-        var stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
+        let stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
         let matches : StringOccurrenceResponse = {};
         let numOccurrence : number = 0;
         for (let index = stringWithStandardLineBreaks.indexOf(searchString);index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
