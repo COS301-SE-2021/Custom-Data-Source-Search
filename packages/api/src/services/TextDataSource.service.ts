@@ -42,6 +42,9 @@ class TextDataSourceService {
     }
 
     getTextDataSource(index : number){
+        if(index >= this.textDataSourceArray.length){
+            throw new Error('Index out of bounds');
+        }
         return this.textDataSourceArray[index];
     }
 

@@ -5,6 +5,7 @@ import express, {Request, Response} from "express";
 import { TextDataSource, TextDataSourceList} from "../models/TextDataSource.interface";
 import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrenceResponse} from "../models/response/searchFileResponse.interface";
+import FileReadingError from "../errors/FileReadingError";
 
 /**
  * Router Definition
@@ -41,7 +42,6 @@ textDataSourceRouter.get("/:id", async (req: Request, res: Response) => {
     } catch (e) {
         res.status(500).send(e.message);
     }
-
 });
 
 /**
@@ -55,7 +55,6 @@ textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, re
     } catch (e) {
         res.status(500).send(e.message);
     }
-
 });
 
 /**
@@ -63,11 +62,13 @@ textDataSourceRouter.get("/search/string/:searchstring", async (req: Request, re
  */
 textDataSourceRouter.post("/datasources", async (req: Request, res: Response) => {
     try {
-       // const textDataSources: TextDataSourceList = await textDataSourceService.getAllTextDataSources();
+        textDataSourceService.addTextDataSource(req.body.fileName, req.body.filePath);
 
-       // res.status(200).send(textDataSources)
+        res.status(200).send('Successfully added text datasource');
     } catch (e) {
+        if (e instanceof FileReadingError){
+            res.status(e.status).send(e.message);
+        }
         res.status(500).send(e.message);
     }
-
 });
