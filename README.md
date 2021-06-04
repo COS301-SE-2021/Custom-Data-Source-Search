@@ -22,11 +22,12 @@ data sources that competent software developers plug in to the system for themse
 - link to gitkraken?
 
 ### Team Members
+| _ | _ |
 | :-----: | :-----: | 
-|![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha")|
+| ![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha") |
 #### Josua Botha
 Third year Computer Science student. Average grade of 77%. Has been working as a programmer for Dr Nils Timm since first year, implementing his research on model checkers of concurrent software using both Kotlin and Python. Built the frontend of the single page web application www.eduanywhere.academy using Vue. Currently building a compiler in ruby on rails. Represented SA in the 2013 World Robot Olympiad.
-[LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/)|
+[LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/) |
 
 #### Laruen Rowe
 Third year Computer Science student, planning on doing honours next year. Studying an HCI module and has a passion for crafting enjoyable user experiences. Likes working with databases and is experienced in MySQL. Is a Teaching Assistant for COS221 - Introduction to Database systems. Good at research and learning new technologies rapidly.
