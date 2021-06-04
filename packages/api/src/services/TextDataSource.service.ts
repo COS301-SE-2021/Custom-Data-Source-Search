@@ -44,7 +44,7 @@ class TextDataSourceService {
     }
 
     getTextDataSource(index : number){
-        if(index >= this.textDataSourceArray.length){
+        if(index >= this.textDataSourceArray.length || index < 0){
             throw new Error('Index out of bounds');
         }
         return this.textDataSourceArray[index];
@@ -71,6 +71,13 @@ class TextDataSourceService {
         this.textDataSourceArray.push(temp);
     }
 
+    removeTextDataSource(id: number){
+        if(id >= this.textDataSourceArray.length || id < 0){
+            throw new Error('Index out of bounds');
+        }
+        this.textDataSourceArray.splice(id, 1);
+    }
+
     searchAllTextDataSources(searchString : string) : StringOccurrencesResponse{
 
         let result : StringOccurrencesResponse = {};
@@ -82,8 +89,11 @@ class TextDataSourceService {
             let file = fs.readFileSync(path.resolve(__dirname,location), 'utf-8');
 
 
-            result[this.textDataSourceArray[i].filename] = this.searchFile(file, searchString);
-
+            //result[this.textDataSourceArray[i].filename] = this.searchFile(file, searchString);
+            result[i] = {
+                fileName : this.textDataSourceArray[i].filename,
+                occurrences : this.searchFile(file, searchString)
+            };
 
 
         }

@@ -17,8 +17,11 @@
                 <input v-model="query" class = "input-box"/>
                 <button @click="search" class = "input-button" >Search</button>
             </div>
-            <div class ="output" v-for="r in result" >
-                <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
+            <div v-for="file in result" >
+                <p><strong>{{file.fileName}}</strong></p>
+                <div class="output" v-for="r in file.occurrences">
+                    <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -30,11 +33,12 @@
     <div class = "sub-container">
         <div id="data-sources">
             <div class="first-div">
-                <input v-model="datasource" class = "input-box"/>
+                <span>filename: </span><input v-model="filename" class="input-box"/><br><br>
+                <span>filepath: </span><input v-model="datasource" class = "input-box"/>
                 <button @click="addDataSource" class = "input-button">Add Datasource</button>
             </div>
-            <div class ="output" v-if="datasourceList.length" v-for="s in datasourceList">
-                <p >{{s.info}}<button @click="deleteDataSource(s.id)" id="delete-button">
+            <div class ="output" v-if="datasourceList.length !== 0" v-for="(s, i) in datasourceList">
+                <p><em>{{s.filename}}</em> {{s.path}}<button @click="deleteDataSource(i)" id="delete-button">
                     X
                 </button></p>
             </div>
