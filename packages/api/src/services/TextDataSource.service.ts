@@ -44,7 +44,7 @@ class TextDataSourceService {
     }
 
     getTextDataSource(index : number){
-        if(index >= this.textDataSourceArray.length){
+        if(index >= this.textDataSourceArray.length || index < 0){
             throw new Error('Index out of bounds');
         }
         return this.textDataSourceArray[index];
@@ -69,6 +69,13 @@ class TextDataSourceService {
         const temp: TextDataSource = {filename: fileName, path: filePath}
 
         this.textDataSourceArray.push(temp);
+    }
+
+    removeTextDataSource(id: number){
+        if(id >= this.textDataSourceArray.length || id < 0){
+            throw new Error('Index out of bounds');
+        }
+        this.textDataSourceArray.splice(id, 1);
     }
 
     searchAllTextDataSources(searchString : string) : StringOccurrencesResponse{
