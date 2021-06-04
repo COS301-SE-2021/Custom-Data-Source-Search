@@ -34,7 +34,7 @@
         <div id="data-sources">
             <div class="first-div">
                 <input placeholder="Filename..." v-model="filename" class="input-box"/><br><br>
-                <input placeholder="Filename..." v-model="datasource" class = "input-box"/><br><br>
+                <input placeholder="Filepath..." v-model="datasource" class = "input-box"/><br><br>
                 <button @click="addDataSource" class = "input-button">Add Datasource</button>
             </div>
             <div class ="output" v-if="datasourceList.length !== 0" v-for="(s, i) in datasourceList">
