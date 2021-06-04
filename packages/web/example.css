@@ -62,6 +62,14 @@ body{
 
 }
 
+.search-output{
+    color: floralwhite;
+    font-family: "Trebuchet MS", serif;
+    background: #474747;
+    border-radius: 5px;
+    text-align: left;
+}
+
 .output p{
     padding:5px;
 
@@ -106,4 +114,6 @@ button:focus {
 
 .first-div{
     margin-bottom: 50px;
+    color: floralwhite;
+    font-family: "Trebuchet MS";
 }
