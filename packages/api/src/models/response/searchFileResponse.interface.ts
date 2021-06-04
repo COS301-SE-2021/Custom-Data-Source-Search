@@ -1,8 +1,17 @@
 export interface StringOccurrence {
-    lineNumber : number;
-    occurrenceString : string;
+    lineNumber: number;
+    occurrenceString: string;
 }
 
-export interface StringOccurrenceResponse {
+export interface StringOccurrences {
     [key: number]: StringOccurrence;
+}
+
+export interface FileOccurrence {
+    fileName: string;
+    occurrences: StringOccurrences;
+}
+
+export interface StringOccurrencesResponse {
+    [key: number]: FileOccurrence;
 }
