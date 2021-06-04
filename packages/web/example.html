@@ -17,8 +17,11 @@
                 <input v-model="query" class = "input-box"/>
                 <button @click="search" class = "input-button" >Search</button>
             </div>
-            <div class ="output" v-for="r in result" >
-                <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
+            <div v-for="file in result" >
+                <p><strong>{{file.fileName}}</strong></p>
+                <div class="output" v-for="r in result" >
+                    <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
+                </div>
             </div>
         </div>
     </div>

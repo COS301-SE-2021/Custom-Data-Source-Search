@@ -15,7 +15,6 @@ const SearchSystem = {
             $.get(
                 `http://localhost:3001/general/${query}`,
                 (data) => {
-                    console.log("called");
                     this.result = data;
                 }
             );
