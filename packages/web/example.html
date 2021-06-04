@@ -19,7 +19,7 @@
             </div>
             <div class = "output" v-for="file in result" >
                 <p style = "font-family: Trebuchet MS; color: floralwhite;"><strong>Filename: {{file.fileName}}</strong></p>
-                <div class="search-output" v-for="r in file.occurrences">
+                <div v-for="r in file.occurrences">
                     <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
                 </div>
             </div>
