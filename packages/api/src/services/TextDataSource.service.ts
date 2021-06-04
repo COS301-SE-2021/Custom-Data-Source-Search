@@ -83,8 +83,10 @@ class TextDataSourceService {
 
 
             //result[this.textDataSourceArray[i].filename] = this.searchFile(file, searchString);
-            result[i]["occurrences"] = this.searchFile(file, searchString);
-            result[i]["fileName"] = this.textDataSourceArray[i].filename;
+            result[i] = {
+                fileName : this.textDataSourceArray[i].filename,
+                occurrences : this.searchFile(file, searchString)
+            };
 
 
         }

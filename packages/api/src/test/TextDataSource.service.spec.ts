@@ -139,15 +139,20 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
         expect(response).not.toEqual({});
 
         //hello.txt
-        expect(response['hello.txt']).not.toBe(undefined);
-        expect(response['hello.txt'][0].lineNumber).toEqual(1);
-        expect(response['hello.txt'][1].lineNumber).toEqual(3);
-        expect(response['hello.txt'][2].lineNumber).toEqual(5);
-
+        // expect(response['hello.txt']).not.toBe(undefined);
+        // expect(response['hello.txt'][0].lineNumber).toEqual(1);
+        // expect(response['hello.txt'][1].lineNumber).toEqual(3);
+        // expect(response['hello.txt'][2].lineNumber).toEqual(5);
+        expect(response[0]).not.toBe(undefined);
+        expect(response[0].fileName).toEqual("hello.txt");
+        expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
+        expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
+        expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
         //beans.txt
-        expect(response['beans.txt']).not.toBe(undefined);
-        expect(response['beans.txt'][0].lineNumber).toEqual(5);
-        expect(response['beans.txt'][1].lineNumber).toEqual(6);
+        expect(response[1]).not.toBe(undefined);
+        expect(response[1].fileName).toEqual("beans.txt");
+        expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
+        expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
 
 
     });
@@ -155,20 +160,13 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
     it('Should return empty object when no occurrences of the search string are in any files ', () => {
         //given
         textDataSourceService.setDataSourceArray();
-
         const searchString = "awordthatshouldntbethere";
         //when
         const response: StringOccurrencesResponse = service.searchAllTextDataSources(searchString);
         //then
         expect(response).not.toEqual({});
-
-        expect(response["hello.txt"]).toEqual({});
-        expect(response["beans.txt"]).toEqual({});
-
-
-
-
-
+        expect(response[0]["occurrences"]).toEqual({});
+        expect(response[1]["occurrences"]).toEqual({});
     });
 });
 
