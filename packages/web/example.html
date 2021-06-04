@@ -37,8 +37,8 @@
                 <span>filepath: </span><input v-model="datasource" class = "input-box"/>
                 <button @click="addDataSource" class = "input-button">Add Datasource</button>
             </div>
-            <div class ="output" v-if="datasourceList.length !== 0" v-for="s in datasourceList">
-                <p><em>{{s.filename}}</em> {{s.path}}<button @click="deleteDataSource(s.id)" id="delete-button">
+            <div class ="output" v-if="datasourceList.length !== 0" v-for="(s, i) in datasourceList">
+                <p><em>{{s.filename}}</em> {{s.path}}<button @click="deleteDataSource(i)" id="delete-button">
                     X
                 </button></p>
             </div>
