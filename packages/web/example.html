@@ -19,7 +19,7 @@
             </div>
             <div class = "output" v-for="file in result" >
                 <p style = "font-family: Trebuchet MS; color: floralwhite;"><strong>Filename: {{file.fileName}}</strong></p>
-                <div class="search-output" v-for="r in file.occurrences">
+                <div v-for="r in file.occurrences">
                     <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
                 </div>
             </div>
@@ -34,7 +34,7 @@
         <div id="data-sources">
             <div class="first-div">
                 <input placeholder="Filename..." v-model="filename" class="input-box"/><br><br>
-                <input placeholder="Filename..." v-model="datasource" class = "input-box"/><br><br>
+                <input placeholder="Filepath..." v-model="datasource" class = "input-box"/><br><br>
                 <button @click="addDataSource" class = "input-button">Add Datasource</button>
             </div>
             <div class ="output" v-if="datasourceList.length !== 0" v-for="(s, i) in datasourceList">
