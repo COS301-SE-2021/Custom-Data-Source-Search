@@ -24,24 +24,11 @@ data sources that competent software developers plug in to the system for themse
 ### Team Members
 |   |   |
 | :----: | :-----: | 
-| ![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha") | #### Josua Botha <br/> Third year Computer Science student. Average grade of 77%. Has been working as a programmer for Dr Nils Timm since first year, implementing his research on model checkers of concurrent software using both Kotlin and Python. Built the frontend of the single page web application www.eduanywhere.academy using Vue. Currently building a compiler in ruby on rails. Represented SA in the 2013 World Robot Olympiad. <br/>
-[LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/) |
-
-#### Laruen Rowe
-Third year Computer Science student, planning on doing honours next year. Studying an HCI module and has a passion for crafting enjoyable user experiences. Likes working with databases and is experienced in MySQL. Is a Teaching Assistant for COS221 - Introduction to Database systems. Good at research and learning new technologies rapidly.
-[LinkedIn](https://www.linkedin.com/in/lauren-rowe-63b15b18b/)
-
-#### Catharina van Zyl
-Third year Applied Mathematics Student. Average grade of 71%. Completed her Cambridge Matric with distinction while sailing around the world with her family. Enjoys helping groups work together efficiently; is very good at this - from taking minutes to ensuring tasks are completed on time and correctly. Currently doing part time work as a Personal Assistant at Praxima, a software based payroll company.
-[LinkedIn](https://www.linkedin.com/in/catharina-van-zyl-a3286b20b/)
-
-#### Gianni Volpi
-Third year Applied Mathematics Student. Intends to do his honours in Computer Science. Average grade of 84%. A Vice Chancellor's merit award winner. A diligent and enthusiastic problem solver, especially if the problems are of a new and challenging technical nature. Diligent analytical thinker. Represented South Africa in the 2013 World Robot Olympiad along with Josua Botha.
-[LinkedIn](https://www.linkedin.com/in/gianni-volpi)
-
-#### Joshua Walker
-Third year Computer Science student, planning on doing honours next year. Placed 2nd at an IT showcase for matric final Practical Assessment Task after building a video game in Unity, OpenGL and Java. Enjoys the challenge of large scale software development projects. Ambitious; wants to be at the cutting edge of the software industry.
-[LinkedIn](https://www.linkedin.com/in/joshua-walker-7b0816208)
+| ![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha") | #### Josua Botha <br/> Third year Computer Science student. Average grade of 77%. Has been working as a programmer for Dr Nils Timm since first year, implementing his research on model checkers of concurrent software using both Kotlin and Python. Built the frontend of the single page web application www.eduanywhere.academy using Vue. Currently building a compiler in ruby on rails. Represented SA in the 2013 World Robot Olympiad. <br/> [LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/) |
+| ![Firstname Lastname](https://i.ibb.co/CPkw44n/lauren-circ.png "Lauren Rowe") | #### Laruen Rowe <br/> Third year Computer Science student, planning on doing honours next year. Studying an HCI module and has a passion for crafting enjoyable user experiences. Likes working with databases and is experienced in MySQL. Is a Teaching Assistant for COS221 - Introduction to Database systems. Good at research and learning new technologies rapidly. <br/> [LinkedIn](https://www.linkedin.com/in/lauren-rowe-63b15b18b/)
+| ![Firstname Lastname](https://i.ibb.co/HpJfTy7/marike-circ.png "Catharina van Zyl") | #### Catharina van Zyl <br/> Third year Applied Mathematics Student. Average grade of 71%. Completed her Cambridge Matric with distinction while sailing around the world with her family. Enjoys helping groups work together efficiently; is very good at this - from taking minutes to ensuring tasks are completed on time and correctly. Currently doing part time work as a Personal Assistant at Praxima, a software based payroll company. <br/> [LinkedIn](https://www.linkedin.com/in/catharina-van-zyl-a3286b20b/)
+| ![Firstname Lastname](https://i.ibb.co/wrHm84Z/gianni-circ.png "Gianni Volpi") | #### Gianni Volpi <br/> Third year Applied Mathematics Student. Intends to do his honours in Computer Science. Average grade of 84%. A Vice Chancellor's merit award winner. A diligent and enthusiastic problem solver, especially if the problems are of a new and challenging technical nature. Diligent analytical thinker. Represented South Africa in the 2013 World Robot Olympiad along with Josua Botha. <br/> [LinkedIn](https://www.linkedin.com/in/gianni-volpi)
+| ![Firstname Lastname](https://i.ibb.co/82Ccdzs/josh-circ.png "Joshua Walker") | #### Joshua Walker <br/> Third year Computer Science student, planning on doing honours next year. Placed 2nd at an IT showcase for matric final Practical Assessment Task after building a video game in Unity, OpenGL and Java. Enjoys the challenge of large scale software development projects. Ambitious; wants to be at the cutting edge of the software industry. <br/> [LinkedIn](https://www.linkedin.com/in/joshua-walker-7b0816208)
 
 ### Branching Strategy
 - git organization?
