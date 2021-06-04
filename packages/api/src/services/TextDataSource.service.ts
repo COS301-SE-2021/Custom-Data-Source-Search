@@ -82,8 +82,9 @@ class TextDataSourceService {
             let file = fs.readFileSync(path.resolve(__dirname,location), 'utf-8');
 
 
-            result[this.textDataSourceArray[i].filename] = this.searchFile(file, searchString);
-
+            //result[this.textDataSourceArray[i].filename] = this.searchFile(file, searchString);
+            result[i]["occurrences"] = this.searchFile(file, searchString);
+            result[i]["fileName"] = this.textDataSourceArray[i].filename;
 
 
         }
