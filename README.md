@@ -14,13 +14,14 @@ websites and communication systems, all the way to user specific esoteric
 data sources that competent software developers plug in to the system for themselves.
 
 ### SRS
-link
+[Overleaf](https://www.overleaf.com/project/60b8d575257b726a64a95d6f)
 
 ### Demos
-Abstraction-Demo1
+[Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing
+)
 
 ### ProjectBoard
-- link to gitkraken?
+[GitKraken](https://www.gitkraken.com/)
 
 ### Team Members
 #### Josua Botha
