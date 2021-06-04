@@ -23,14 +23,6 @@ data sources that competent software developers plug in to the system for themse
 ### ProjectBoard
 [GitKraken](https://www.gitkraken.com/)
 
-### Team Members
-#### Josua Botha
-#### Laruen Rowe
-#### Marike van Zyl
-#### Gianni Volpi
-#### Joshua Walker
-
-
 | **Team Member**                                                                                                 | **Details**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                      |
 |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
 | ![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha") <br/> **Josua Botha** | Third year Computer Science student. Average grade of 77%. Has been working as a programmer for Dr Nils Timm since first year, implementing his research on model checkers of concurrent software using both Kotlin and Python. Built the frontend of the single page web application www.eduanywhere.academy using Vue. Currently building a compiler in ruby on rails. Represented SA in the 2013 World Robot Olympiad. <br/> [LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/) | [LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/)        |
