@@ -4,7 +4,6 @@
 import express, {Request, Response} from "express";
 import { TextDataSource, TextDataSourceList} from "../models/TextDataSource.interface";
 import textDataSourceService from "../services/TextDataSource.service";
-import {StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 
 /**
  * Router Definition
@@ -51,7 +50,7 @@ textDataSourceRouter.post("/", async (req: Request, res: Response) => {
     try {
         textDataSourceService.addTextDataSource(req.body.fileName, req.body.filePath);
 
-        res.status(200).send('Successfully added text datasource');
+        res.status(200).send({'message':'Successfully added text datasource'});
     } catch (e) {
         if (e.status){
             res.status(e.status).send(e.message);

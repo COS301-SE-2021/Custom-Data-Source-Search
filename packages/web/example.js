@@ -27,19 +27,39 @@ let nextId = 1
 const DataSource = {
     data() {
         return {
+            filename: "",
             datasource: "",
             datasourceList: []
         }
     },
     methods: {
         addDataSource() {
-            if (!this.datasourceList.includes(this.datasource)) {
-                this.datasourceList.push({id: nextId++, info: this.datasource})
-            }
+            $.ajaxSetup(
+                {headers: {'content-type': "application/json"}}
+            );
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3001/textdatasources/",
+                data: JSON.stringify({"fileName" : this.filename, "filePath" : this.datasource}),
+                success: (data) => {
+                    alert(data)
+                    console.log(data.message)
+                    $.get(
+                        "http://localhost:3001/textdatasources/",
+                        (data) => {
+                            console.log(data)
+                            this.datasourceList = data;
+                        }
+                    )
+                },
+                error: (data) => {
+                    alert("Could Not Add Datasource")
+                }
+            });
         },
         deleteDataSource(idToDelete) {
             this.datasourceList = this.datasourceList.filter(item => {
-                return item.id !== idToDelete
+                return item.data !== idToDelete
             })
         }
     }
