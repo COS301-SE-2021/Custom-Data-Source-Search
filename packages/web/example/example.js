@@ -16,9 +16,6 @@ const SearchSystem = {
             $.get(
                 `http://localhost:3001/general/${query}`,
                 (data) => {
-                    if(data.length === undefined) {
-                        alert("Sorry, nothing could be found...")
-                    }
                     this.result = data;
                 }
             );

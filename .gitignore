@@ -4,3 +4,4 @@ build/
 .env
 /package-lock.json
 coverage/
+/dist/
