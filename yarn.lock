@@ -3448,6 +3448,11 @@ node-modules-regexp@^1.0.0:
   resolved "https://registry.npmjs.org/node-modules-regexp/-/node-modules-regexp-1.0.0.tgz"
   integrity sha1-jZ2+KJZKSsVxLpExZCEHxx6Q7EA=
 
+node-persist@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/node-persist/-/node-persist-3.1.0.tgz#9d4b03950bba70d37d13d3d3551840e25fd17e09"
+  integrity sha512-/j+fd/u71wNgKf3V2bx4tnDm+3GvLnlCuvf2MXbJ3wern+67IAb6zN9Leu1tCWPlPNZ+v1hLSibVukkPK2HqJw==
+
 node-releases@^1.1.71:
   version "1.1.72"
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-1.1.72.tgz"
