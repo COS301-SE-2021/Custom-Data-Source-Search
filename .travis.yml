@@ -18,4 +18,3 @@ branches:
   only:
     - master
     - development
-    - f-restructure-repo
