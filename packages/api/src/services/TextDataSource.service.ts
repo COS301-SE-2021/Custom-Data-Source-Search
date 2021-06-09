@@ -7,6 +7,7 @@ import { StringOccurrences, StringOccurrencesResponse } from "../models/response
 import fs from 'fs';
 import path from 'path';
 import FileReadingError from "../errors/FileReadingError";
+import fileReadingService from "./FileReading.service";
 
 
 class TextDataSourceService {
@@ -51,23 +52,8 @@ class TextDataSourceService {
     }
 
     addTextDataSource(fileName: string, filePath: string){
-        if (fileName === '') {
-            throw new FileReadingError('NO FILE NAME', 400);
-        } else if (filePath === '') {
-            throw new FileReadingError('NO FILE PATH', 400);
-        }
-        try {
-            fs.readFileSync(filePath + fileName);
-        } catch (err){
-            if(err.code == 'ENOENT'){
-                throw new FileReadingError('FILE NOT FOUND', 404);
-            } else if(err.code == 'EACCES'){
-                throw new FileReadingError('ACCESS FORBIDDEN', 403);
-            }
-            throw err;
-        }
+        fileReadingService.checkFileValid(fileName, filePath);
         const temp: TextDataSource = {filename: fileName, path: filePath}
-
         this.textDataSourceArray.push(temp);
     }
 
