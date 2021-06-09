@@ -18,7 +18,7 @@
                 <button @click="search" class = "input-button" >Search</button>
             </div>
             <div class = "output" v-for="file in result" >
-                <p style = "font-family: Trebuchet MS; color: floralwhite;"><strong>Filename: {{file.fileName}}</strong></p>
+                <p style = "font-family: Trebuchet MS,serif; color: floralwhite;"><strong>Filename: {{file.fileName}}</strong></p>
                 <div v-for="r in file.occurrences">
                     <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
                 </div>

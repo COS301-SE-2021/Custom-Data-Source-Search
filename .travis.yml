@@ -1,7 +1,20 @@
-language: node_js
-node_js:
-  - 15
+jobs:
+  include:
+    - language: node_js
+      node_js: 15
+      before_script:
+        - cd packages/api
+      script:
+        - npm run test
+    - language: node_js
+      node_js: 15
+      before_script:
+        - cd packages/vue
+      script:
+        - npm run test:unit
+
 branches:
   only:
     - master
     - development
+    - f-restructure-repo

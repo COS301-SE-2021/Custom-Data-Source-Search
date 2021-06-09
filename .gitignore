@@ -1,6 +1,6 @@
 node_modules/
 build/
-/.coveralls.yml
-.env
-/package-lock.json
+/packages/api/.coveralls.yml
+packages/api/.env
+/packages/api/package-lock.json
 coverage/

@@ -4,8 +4,8 @@
   "description": "Init",
   "main": "server.js",
   "scripts": {
-    "start-dev": "ts-node-dev --respawn packages/api/src/server.ts",
-    "start": "ts-node packages/api/src/server.ts",
+    "start-dev": "ts-node-dev --respawn src/server.ts",
+    "start": "ts-node src/server.ts",
     "build-prod": "tsc",
     "run-prod": "node build/server.js",
     "test": "jest --coverage --verbose && coveralls < coverage/lcov.info"
@@ -42,7 +42,6 @@
     "cors": "^2.8.5",
     "coveralls": "^3.1.0",
     "express": "^4.17.1",
-    "global": "^4.4.0",
-    "vue": "^3.0.11"
+    "global": "^4.4.0"
   }
 }
