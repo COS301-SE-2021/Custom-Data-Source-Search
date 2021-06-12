@@ -139,10 +139,6 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
         expect(response).not.toEqual({});
 
         //hello.txt
-        // expect(response['hello.txt']).not.toBe(undefined);
-        // expect(response['hello.txt'][0].lineNumber).toEqual(1);
-        // expect(response['hello.txt'][1].lineNumber).toEqual(3);
-        // expect(response['hello.txt'][2].lineNumber).toEqual(5);
         expect(response[0]).not.toBe(undefined);
         expect(response[0].fileName).toEqual("hello.txt");
         expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
