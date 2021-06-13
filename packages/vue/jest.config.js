@@ -1,6 +1,9 @@
 module.exports = {
-  preset: '@vue/cli-plugin-unit-jest/presets/typescript-and-babel',
+  preset: '@vue/cli-plugin-unit-jest',
   transform: {
     '^.+\\.vue$': 'vue-jest'
-  }
+  },
+  modulePathIgnorePatterns: [
+    'dist_electron'
+  ]
 }
