@@ -20,13 +20,9 @@ export const generalRouter = express.Router();
  * Return all the search results from available data sources
  */
 generalRouter.get("/:searchstring", async (req: Request, res: Response) => {
-    try {
-        const textDataSources: StringOccurrencesResponse = textDataSourceService.searchAllTextDataSources(req.params.searchstring);
 
+    const result = await generalService.getResults(req.params.searchstring);
 
-         res.status(200).send(textDataSources)
-    } catch (e) {
-        res.status(500).send(e.message);
-    }
+    res.status(result.code).send(result.message);
 
 });
