@@ -78,7 +78,7 @@ class TextDataSourceService {
         this.textDataSourceArray.splice(id, 1);
     }
 
-    searchAllTextDataSources(searchString : string) : StringOccurrencesResponse{
+    searchAllTextDataSources(searchString : string){
 
         let result : StringOccurrencesResponse = {};
 
@@ -94,11 +94,8 @@ class TextDataSourceService {
                 fileName : this.textDataSourceArray[i].filename,
                 occurrences : this.searchFile(file, searchString)
             };
-
-
         }
-        return result;
-
+        return [result,null];
     }
 
 

@@ -1,16 +1,12 @@
 import textDataSourceService from "../services/TextDataSource.service";
-import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import {StringOccurrences} from "../models/response/searchFileResponse.interface";
 import FileReadingError from "../errors/FileReadingError";
 import fs from "fs";
-//import exp from "constants";
-
 
 const service = textDataSourceService;
 
-
 describe('TextDataSourceService : Individual File Searching' , () => {
     it('Should return empty object on empty string search', () => {
-
         //given
         const mockFileContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
         const mockSearchString = "";
@@ -134,27 +130,28 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
 
         const searchString = "Jeff";
         //when
-        const response: StringOccurrencesResponse = service.searchAllTextDataSources(searchString);
+        const [response,error] = service.searchAllTextDataSources(searchString);
         //then
+        expect(error).toBe(null);
+        expect(response).not.toBe(null);
         expect(response).not.toEqual({});
-
         //hello.txt
         // expect(response['hello.txt']).not.toBe(undefined);
         // expect(response['hello.txt'][0].lineNumber).toEqual(1);
         // expect(response['hello.txt'][1].lineNumber).toEqual(3);
         // expect(response['hello.txt'][2].lineNumber).toEqual(5);
-        expect(response[0]).not.toBe(undefined);
-        expect(response[0].fileName).toEqual("hello.txt");
-        expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
-        expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
-        expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
-        //beans.txt
-        expect(response[1]).not.toBe(undefined);
-        expect(response[1].fileName).toEqual("beans.txt");
-        expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
-        expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
-
-
+        if (response) {
+            expect(response[0]).not.toBe(undefined);
+            expect(response[0].fileName).toEqual("hello.txt");
+            expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
+            expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
+            expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
+            //beans.txt
+            expect(response[1]).not.toBe(undefined);
+            expect(response[1].fileName).toEqual("beans.txt");
+            expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
+            expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
+        }
     });
 
     it('Should return empty object when no occurrences of the search string are in any files ', () => {
@@ -162,11 +159,15 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
         textDataSourceService.setDataSourceArray();
         const searchString = "awordthatshouldntbethere";
         //when
-        const response: StringOccurrencesResponse = service.searchAllTextDataSources(searchString);
+        const [response,error] = service.searchAllTextDataSources(searchString);
         //then
+        expect(error).toBe(null);
+        expect(response).not.toBe(null);
         expect(response).not.toEqual({});
-        expect(response[0]["occurrences"]).toEqual({});
-        expect(response[1]["occurrences"]).toEqual({});
+        if (response) {
+            expect(response[0]["occurrences"]).toEqual({});
+            expect(response[1]["occurrences"]).toEqual({});
+        }
     });
 });
 
