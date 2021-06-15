@@ -13,6 +13,13 @@ class GeneralService {
         //const dbResults = await databaseDataSourceService.searchAllDBSources(searchString);
 
         //const results await Promise.all([textResults]);
+        return {
+            "code":200,
+            "body":{
+                "type":"textDatasource",
+                "data":textResults
+            }
+        }
     }
 }
 

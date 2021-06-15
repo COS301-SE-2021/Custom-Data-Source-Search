@@ -2,9 +2,7 @@
  * Required External Modules and Interfaces
  */
 import express, {Request, Response} from "express";
-import textDataSourceService from "../services/TextDataSource.service";
-import { TextDataSource, TextDataSourceList} from "../models/TextDataSource.interface";
-import {StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import generalService from "../services/General.service";
 
 /**
  * Router Definition
@@ -23,6 +21,6 @@ generalRouter.get("/:searchstring", async (req: Request, res: Response) => {
 
     const result = await generalService.getResults(req.params.searchstring);
 
-    res.status(result.code).send(result.message);
+    res.status(result.code).send(result.body);
 
 });
