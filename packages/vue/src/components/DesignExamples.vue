@@ -32,16 +32,11 @@
             @change="handleChange"
         ></el-cascader>
       </div>
-      <!-- <el-carousel
-        height="100px"
-        direction="vertical"
-        :autoplay="false"
-        type="card"
-      >
-        <el-carousel-item v-for="item in 4" :key="item">
+      <el-carousel :interval="4000" type="card" height="200px">
+        <el-carousel-item v-for="item in 6" :key="item">
           <h3 class="medium">{{ item }}</h3>
         </el-carousel-item>
-      </el-carousel> -->
+      </el-carousel>
     </el-main>
   </el-container>
 </template>
@@ -378,7 +373,7 @@ body > .el-container {
   line-height: 320px;
 }
 .el-carousel__item h3 {
-  color: #717171;
+  color: #475669;
   font-size: 14px;
   opacity: 0.75;
   line-height: 200px;
@@ -386,11 +381,11 @@ body > .el-container {
 }
 
 .el-carousel__item:nth-child(2n) {
-  background-color: #474747;
+  background-color: #99a9bf;
 }
 
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #474747;
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
 }
 body {
   background: #2c2c2c;
