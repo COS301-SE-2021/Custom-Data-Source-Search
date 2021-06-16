@@ -1,9 +1,9 @@
 /**
  * Data Model Interfaces
  */
-import { TextDataSource } from "../models/TextDataSource.interface";
-import { TextDataSourceList } from "../models/TextDataSource.interface";
-import { StringOccurrences, StringOccurrencesResponse } from "../models/response/searchFileResponse.interface";
+import {TextDataSource} from "../models/TextDataSource.interface";
+import {TextDataSourceList} from "../models/TextDataSource.interface";
+import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
 import FileReadingError from "../errors/FileReadingError";
@@ -11,46 +11,38 @@ import FileReadingError from "../errors/FileReadingError";
 
 class TextDataSourceService {
 
-
     /**
      * In-Memory Store
      */
 
     textDataSourceArray: TextDataSource[];
 
-
-    constructor () {
+    constructor() {
         console.log("Text Data Source Service started");
         this.textDataSourceArray = [];
-
-        //Temporary Mocked filenames
-       // this.textDataSourceArray[0] = { filename : 'hello.txt', path: '../test/'}
-      //  this.textDataSourceArray[1] = { filename : 'beans.txt', path: '../test/'}
     }
 
 
     setDataSourceArray() {
-
-        this.textDataSourceArray[0] = { filename : 'hello.txt', path: '../test/'};
-        this.textDataSourceArray[1] = { filename : 'beans.txt', path: '../test/'};
-
+        this.textDataSourceArray[0] = {filename: 'hello.txt', path: '../test/'};
+        this.textDataSourceArray[1] = {filename: 'beans.txt', path: '../test/'};
     }
 
     /**
      * Service Methods
      */
-    getAllTextDataSources() : TextDataSourceList {
-       return this.textDataSourceArray;
+    getAllTextDataSources(): TextDataSourceList {
+        return this.textDataSourceArray;
     }
 
-    getTextDataSource(index : number){
-        if(index >= this.textDataSourceArray.length || index < 0){
+    getTextDataSource(index: number) {
+        if (index >= this.textDataSourceArray.length || index < 0) {
             throw new Error('Index out of bounds');
         }
         return this.textDataSourceArray[index];
     }
 
-    addTextDataSource(fileName: string, filePath: string){
+    addTextDataSource(fileName: string, filePath: string) {
         if (fileName === '') {
             throw new FileReadingError('NO FILE NAME', 400);
         } else if (filePath === '') {
@@ -58,35 +50,30 @@ class TextDataSourceService {
         }
         try {
             fs.readFileSync(filePath + fileName);
-        } catch (err){
-            if(err.code == 'ENOENT'){
+        } catch (err) {
+            if (err.code == 'ENOENT') {
                 throw new FileReadingError('FILE NOT FOUND', 404);
-            } else if(err.code == 'EACCES'){
+            } else if (err.code == 'EACCES') {
                 throw new FileReadingError('ACCESS FORBIDDEN', 403);
             }
             throw err;
         }
         const temp: TextDataSource = {filename: fileName, path: filePath}
-
         this.textDataSourceArray.push(temp);
     }
 
-    removeTextDataSource(id: number){
-        if(id >= this.textDataSourceArray.length || id < 0){
+    removeTextDataSource(id: number) {
+        if (id >= this.textDataSourceArray.length || id < 0) {
             throw new Error('Index out of bounds');
         }
         this.textDataSourceArray.splice(id, 1);
     }
 
-    async searchAllTextDataSources(searchString : string){
-
-        let result : StringOccurrencesResponse = {};
+    async searchAllTextDataSources(searchString: string) {
+        let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
-
-        for(let i = 0; i < this.textDataSourceArray.length; i++){
-
+        for (let i = 0; i < this.textDataSourceArray.length; i++) {
             let location = this.textDataSourceArray[i].path + this.textDataSourceArray[i].filename;
-
             file.push(this.readFile(location));
         }
         let i = 0;
@@ -97,18 +84,17 @@ class TextDataSourceService {
             };
             i++;
         }
-        return [result,null];
+        return [result, null];
     }
 
-    async readFile(location: string): Promise<string>{
+    async readFile(location: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            fs.readFile(path.resolve(__dirname,location), 'utf-8', (err, data) => {
+            fs.readFile(path.resolve(__dirname, location), 'utf-8', (err, data) => {
                 if (err) return reject(err);
                 return resolve(data.toString());
             })
         })
     }
-
 
 
     /**
@@ -117,36 +103,29 @@ class TextDataSourceService {
 
 
     searchFile(fileContents: string, searchString: string): StringOccurrences {
-        if(searchString === "" || fileContents === ""){
+        if (searchString === "" || fileContents === "") {
             return {};
         }
         let stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
-        let matches : StringOccurrences = {};
-        let numOccurrence : number = 0;
-        for (let index = stringWithStandardLineBreaks.indexOf(searchString);index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
-
+        let matches: StringOccurrences = {};
+        let numOccurrence: number = 0;
+        for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
             let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
             matches[numOccurrence] = {
-                lineNumber : lineNum,
-                occurrenceString : '...' + fileContents.substring(index -12, index + searchString.length + 13) + '...'
-
+                lineNumber: lineNum,
+                occurrenceString: '...' + fileContents.substring(index - 12, index + searchString.length + 13) + '...'
             };
             numOccurrence++;
         }
-
         return matches;
     }
 
-    getLineNumber(index : number, fullString: string): number {
-
+    getLineNumber(index: number, fullString: string): number {
         let lineNum = 1;
-
-        for(let index2 = fullString.indexOf('\n'); (index2 < index && index2 >= 0); index2 = fullString.indexOf("\n", index2 + 1)){
+        for (let index2 = fullString.indexOf('\n'); (index2 < index && index2 >= 0); index2 = fullString.indexOf("\n", index2 + 1)) {
             lineNum++;
         }
-
         return lineNum;
-
     }
 
 }
