@@ -3,9 +3,12 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/test">TEST</router-link> |
-    <router-link to="/todoApp">Todo App</router-link>
+    <router-link to="/todoApp">Todo App</router-link> |
+    <router-link to="/design">Design</router-link>
   </div>
+
   <router-view/>
+
 </template>
 
 <style lang="scss">

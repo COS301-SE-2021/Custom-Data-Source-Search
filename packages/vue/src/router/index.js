@@ -24,7 +24,12 @@ const routes = [
     path: '/todoApp',
     name: 'Todo App',
     component: () => import('../views/TodoApp')
-  }
+  },
+  {
+    path: '/design',
+    name: 'Design',
+    component: () => import('../views/Design')
+  },
 ]
 
 const router = createRouter({
