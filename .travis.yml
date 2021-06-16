@@ -1,20 +1,32 @@
+language: node_js
+node_js: 15
+
+cache:
+  # cache both npm modules and Cypress binary
+  directories:
+    - ~/.npm
+    - ~/.cache
+
 jobs:
   include:
-    - language: node_js
-      node_js: 15
+    - stage: test
       before_script:
         - cd packages/api
       script:
         - npm run test
-    - language: node_js
+    - stage: test
       node_js: 15
       before_install:
-        - cd packages/vue
-        - npm install -g @vue/cli
+        - cd packages/client
       script:
         - npm run test:unit
-
+    - stage: test
+      before_install:
+        - cd packages/client
+      script:
+        - npm run test:e2e
 branches:
   only:
     - master
     - development
+    - refactor/52-refactor-client-code-to-use-store
