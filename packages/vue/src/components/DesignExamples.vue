@@ -492,6 +492,7 @@ body > .el-container {
 }
 body {
   background: #2c2c2c;
+  color: floralwhite;
   background-size: 400% 400%;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
@@ -501,5 +502,9 @@ body {
 
 #example-icons{
   line-height: 60px;
+}
+
+.el-dialog{
+  z-index: 100;
 }
 </style>
