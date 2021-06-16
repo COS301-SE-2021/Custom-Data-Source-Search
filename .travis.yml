@@ -20,11 +20,6 @@ jobs:
         - cd packages/client
       script:
         - npm run test:unit
-    - stage: test
-      before_install:
-        - cd packages/client
-      script:
-        - npm run test:e2e
 branches:
   only:
     - master
