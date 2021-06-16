@@ -1,5 +1,6 @@
 <template>
   <el-container>
+
     <el-menu
         :default-active="activeIndex2"
         class="el-menu-demo"
@@ -47,6 +48,7 @@
       </el-dialog>
     </el-header>
     <el-main>
+
       <div class="block">
         <span class="demonstration">Child options expand when hovered </span>
         <el-cascader
@@ -61,7 +63,17 @@
           <h3 class="medium">{{ item }}</h3>
         </el-carousel-item>
       </el-carousel>
+      <span>Element Plus also has super cool icons! Look at these:</span>
+      <div id="example-icons">
+        <span>Loading: <i class="el-icon-loading"></i></span><br>
+        <el-button type="primary" icon="el-icon-folder-add"></el-button>
+        <el-button type="primary" icon="el-icon-search"></el-button>
+        <el-button type="primary" icon="el-icon-star-off"></el-button>
+      </div>
+
     </el-main>
+    <el-footer>
+    </el-footer>
     <el-tabs v-model="editableTabsValue" type="card" editable @edit="handleTabsEdit">
       <el-tab-pane
           v-for="(item, index) in editableTabs"
@@ -481,5 +493,13 @@ body > .el-container {
 body {
   background: #2c2c2c;
   background-size: 400% 400%;
+}
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+#example-icons{
+  line-height: 60px;
 }
 </style>
