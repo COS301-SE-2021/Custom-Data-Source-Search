@@ -3,8 +3,8 @@
 
     <el-input placeholder="Please input your name" v-model="input"></el-input>
     <el-header>
-
-      <el-button type="primary" @click="dialogVisible = true">click to open the Dialog</el-button>
+      <el-button :plain="true" @click="open" type="info">Show a funny message</el-button>
+      <el-button type="primary" @click="dialogVisible = true">Click to open the Dialog</el-button>
 
       <el-dialog
           title="Tip"
@@ -344,6 +344,10 @@ export default {
     };
   },
   methods: {
+    open() {
+      this.$message('What’s the best thing about Switzerland?\n' +
+          'I don’t know, but the flag is a big plus. :)');
+    },
     handleChange(value) {
       console.log(value);
     },
@@ -383,6 +387,7 @@ export default {
         this.editableTabsValue = activeName;
         this.editableTabs = tabs.filter(tab => tab.name !== targetName);
       }
+
     }
   }
 };
