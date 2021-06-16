@@ -1,6 +1,9 @@
 language: node_js
 node_js: 15
 
+install:
+  - npm install
+
 cache:
   directories:
     - packages/client/node_modules/
