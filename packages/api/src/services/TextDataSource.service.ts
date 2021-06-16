@@ -78,24 +78,35 @@ class TextDataSourceService {
         this.textDataSourceArray.splice(id, 1);
     }
 
-    searchAllTextDataSources(searchString : string){
+    async searchAllTextDataSources(searchString : string){
 
         let result : StringOccurrencesResponse = {};
+        let file: Promise<string>[] = [];
 
         for(let i = 0; i < this.textDataSourceArray.length; i++){
 
             let location = this.textDataSourceArray[i].path + this.textDataSourceArray[i].filename;
 
-            let file = fs.readFileSync(path.resolve(__dirname,location), 'utf-8');
-
-
-            //result[this.textDataSourceArray[i].filename] = this.searchFile(file, searchString);
+            file.push(this.readFile(location));
+        }
+        let i = 0;
+        for await (const content of file) {
             result[i] = {
-                fileName : this.textDataSourceArray[i].filename,
-                occurrences : this.searchFile(file, searchString)
+                fileName: this.textDataSourceArray[i].filename,
+                occurrences: this.searchFile(content, searchString)
             };
+            i++;
         }
         return [result,null];
+    }
+
+    async readFile(location: string): Promise<string>{
+        return new Promise((resolve, reject) => {
+            fs.readFile(path.resolve(__dirname,location), 'utf-8', (err, data) => {
+                if (err) return reject(err);
+                return resolve(data.toString());
+            })
+        })
     }
 
 

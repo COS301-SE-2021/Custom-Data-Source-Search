@@ -122,7 +122,7 @@ describe('TextDataSourceService : Individual File Searching' , () => {
 
 
 describe('TextDataSourceService : Searching Across All Files' , () => {
-    it('Should return search results when there are multiple occurrences of the search string in any files ', () => {
+    it('Should return search results when there are multiple occurrences of the search string in any files ', async () => {
         //given
       //  textDataSourceService.addTextDataSource('hello.txt', '../test/');
        // textDataSourceService.addTextDataSource('beans.txt', '../test/')
@@ -130,7 +130,7 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
 
         const searchString = "Jeff";
         //when
-        const [response,error] = service.searchAllTextDataSources(searchString);
+        const [response,error] = await service.searchAllTextDataSources(searchString);
         //then
         expect(error).toBe(null);
         expect(response).not.toBe(null);
@@ -154,12 +154,12 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
         }
     });
 
-    it('Should return empty object when no occurrences of the search string are in any files ', () => {
+    it('Should return empty object when no occurrences of the search string are in any files ', async () => {
         //given
         textDataSourceService.setDataSourceArray();
         const searchString = "awordthatshouldntbethere";
         //when
-        const [response,error] = service.searchAllTextDataSources(searchString);
+        const [response,error] = await service.searchAllTextDataSources(searchString);
         //then
         expect(error).toBe(null);
         expect(response).not.toBe(null);
