@@ -4,14 +4,12 @@ node_js: 15
 jobs:
   include:
     - stage: test
-      cache: npm
-      before_script:
+      before_cache:
         - cd packages/api
       script:
         - npm run test
     - stage: test
-      cache: npm
-      before_install:
+      before_cache:
         - cd packages/client
       script:
         - npm run test:unit
