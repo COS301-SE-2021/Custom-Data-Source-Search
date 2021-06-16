@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img alt="Abstraction logo" src="../assets/logosmall.jpg">
+    <img alt="Abstraction theme" src="../assets/buildings-corner-dark.jpg">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
