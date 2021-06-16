@@ -1,7 +1,7 @@
 <template>
     <div class="test">
         <img alt="DataSleuth Logo" src="../assets/dataSmokerSleuth.jpg" style="width: 500px">
-        <TestComponent msg="Testing out my Vue.js App"/>
+        <TestComponent msg="Initial component test"/>
     </div>
 </template>
 
