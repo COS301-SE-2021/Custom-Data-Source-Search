@@ -3,8 +3,8 @@ node_js: 15
 
 cache:
   directories:
-    - /packages/client/node_modules/
-    - /packages/api/node_modules/
+    - packages/client/node_modules/
+    - packages/api/node_modules/
 
 jobs:
   include:
