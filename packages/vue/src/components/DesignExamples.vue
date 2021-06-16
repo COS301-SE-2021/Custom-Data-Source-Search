@@ -34,8 +34,7 @@
           title="Tip"
           v-model="dialogVisible"
           width="30%"
-          :before-close="handleClose"
-      >
+          >
         <span>Hi {{input}}, {{ msg }}</span>
         <template #footer>
           <span class="dialog-footer">
