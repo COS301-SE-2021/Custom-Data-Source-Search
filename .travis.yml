@@ -9,12 +9,12 @@ cache:
 jobs:
   include:
     - stage: test
-      before_script:
+      before_install:
         - cd packages/api
       script:
         - npm run test
     - stage: test
-      before_script:
+      before_install:
         - cd packages/client
       script:
         - npm run test:unit
