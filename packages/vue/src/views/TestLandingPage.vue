@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <LandingPageElement :msg="msg"/>
-    </div>
+    <LandingPageElement></LandingPageElement>
 </template>
 
 <script>
