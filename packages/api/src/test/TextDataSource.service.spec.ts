@@ -135,12 +135,8 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
         expect(error).toBe(null);
         expect(response).not.toBe(null);
         expect(response).not.toEqual({});
-        //hello.txt
-        // expect(response['hello.txt']).not.toBe(undefined);
-        // expect(response['hello.txt'][0].lineNumber).toEqual(1);
-        // expect(response['hello.txt'][1].lineNumber).toEqual(3);
-        // expect(response['hello.txt'][2].lineNumber).toEqual(5);
         if (response) {
+            //hello.txt
             expect(response[0]).not.toBe(undefined);
             expect(response[0].fileName).toEqual("hello.txt");
             expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
@@ -172,92 +168,62 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
 });
 
 describe('addTextDataSource function' , () => {
+    class TestError extends Error{
+        constructor(message:string, code:string) {
+            super(message);
+            this.code = code;
+        }
+        code:string;
+    }
+    let fileName: string = "";
+    let filePath: string = "";
+    function add(){
+        service.addTextDataSource(fileName, filePath);
+    }
     it('Should throw FileReadingError with appropriate message when no file path is specified', () => {
         //given
-        const fileName = "file.txt";
-        const filePath = "";
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
+        fileName = "file.txt";
+        filePath = "";
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("NO FILE PATH");
     });
     it('Should throw FileReadingError with appropriate message when no file name is specified', () => {
         //given
-        const fileName = "";
-        const filePath = "/somePath";
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
+        fileName = "";
+        filePath = "/somePath";
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("NO FILE NAME");
     });
     it('Should throw correct error when readFileSync throws file not found error', () => {
         //given
-        class TestError extends Error{
-            constructor(message:string, code:string) {
-                super(message);
-                this.code = code;
-            }
-            code:string;
-        }
-        const fileName = "file.txt";
-        const filePath = "/somePath";
+        fileName = "file.txt";
+        filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'ENOENT');
         });
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
-        //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("FILE NOT FOUND");
     });
     it('Should throw correct error when readFileSync throws access prohibited error', () => {
         //given
-        class TestError extends Error{
-            constructor(message:string, code:string) {
-                super(message);
-                this.code = code;
-            }
-            code:string;
-        }
-        const fileName = "file.txt";
-        const filePath = "/somePath";
+        fileName = "file.txt";
+        filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'EACCES');
         });
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("ACCESS FORBIDDEN");
     });
     it('Should pass on error when readFileSync throws error with unknown code', () => {
         //given
-        class TestError extends Error{
-            constructor(message:string, code:string) {
-                super(message);
-                this.code = code;
-            }
-            code:string;
-        }
-        const fileName = "file.txt";
-        const filePath = "/somePath";
+        fileName = "file.txt";
+        filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'UNKNOWN');
         });
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
         //then
         expect(add).toThrow(TestError);
         expect(add).toThrow("TEST");
