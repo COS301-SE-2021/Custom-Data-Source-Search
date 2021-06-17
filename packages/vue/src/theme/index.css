@@ -19472,6 +19472,7 @@
 }
 
 [class*=el-col-] {
+    height: 100%;
     float: left;
     -webkit-box-sizing: border-box;
     box-sizing: border-box
