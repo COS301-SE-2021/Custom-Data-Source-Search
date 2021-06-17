@@ -1,12 +1,12 @@
 <template>
-    <el-radio-group v-model="isCollapse" style="text-align: left;">
-        <el-radio-button :label="false">expand</el-radio-button>
-        <el-radio-button :label="true">collapse</el-radio-button>
-    </el-radio-group>
+<!--    <el-radio-group v-model="isCollapse" style="text-align: left;">-->
+<!--        <el-radio-button :label="false">expand</el-radio-button>-->
+<!--        <el-radio-button :label="true">collapse</el-radio-button>-->
+<!--    </el-radio-group>-->
     <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
         <el-submenu index="1">
             <template #title>
-                <i class="el-icon-location"></i>
+                <i class="el-icon-download"></i>
 <!--                <span>Navigator One</span>-->
             </template>
             <el-menu-item-group>

@@ -4640,12 +4640,12 @@
 }
 
 .el-menu {
-    border-right: solid 1px #e6e6e6;
+    border-right: solid 1px #212121;
     list-style: none;
     position: relative;
     margin: 0;
     padding-left: 0;
-    background-color: #525252;
+    background-color: #212121;
 }
 
 .el-menu::after, .el-menu::before {
