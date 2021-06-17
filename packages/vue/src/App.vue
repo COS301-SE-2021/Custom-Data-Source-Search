@@ -4,7 +4,8 @@
     <router-link to="/about">About</router-link> |
     <router-link to="/test">TEST</router-link> |
     <router-link to="/todoApp">Todo App</router-link> |
-    <router-link to="/design">Design</router-link>
+    <router-link to="/design">Design</router-link> |
+    <router-link to="/testLandingPage">Test Landing Page</router-link>
   </div>
 
   <router-view/>
@@ -18,10 +19,13 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-color: #121212;
 }
 
 #nav {
-  padding: 30px;
+  padding: 10px;
+  background-color: #212121;
+  text-align: left;
 
   a {
     font-weight: bold;

@@ -30,6 +30,11 @@ const routes = [
     name: 'Design',
     component: () => import('../views/Design')
   },
+  {
+    path: '/testLandingPage',
+    name: 'TestLandingPage',
+    component: () => import('../views/TestLandingPage')
+  },
 ]
 
 const router = createRouter({
