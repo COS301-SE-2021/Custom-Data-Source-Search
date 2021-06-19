@@ -48,6 +48,21 @@ class TextDataSourceRepository {
             "message": "Datasource not found"
         }]
     }
+
+    deleteDataSource(uuid: string) {
+        let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
+        if (index !== -1) {
+            this.textDataSourceArray.splice(index, 1);
+            return [{
+                "code": 200,
+                "message": "Successfully deleted datasource"
+            }, null]
+        }
+        return [null, {
+            "code": 404,
+            "message": "Datasource not found"
+        }]
+    }
 }
 
 const textDataSourceRepository = new TextDataSourceRepository();
