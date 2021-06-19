@@ -40,6 +40,11 @@ const routes = [
     name: 'ViewDataSource',
     component: () => import('../views/ViewDataSource')
   },
+  {
+    path: '/AddDataSource',
+    name: 'AddDataSource',
+    component: () => import('../views/AddDataSource')
+  },
 ]
 
 const router = createRouter({

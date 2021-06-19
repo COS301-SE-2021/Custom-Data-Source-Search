@@ -7,7 +7,10 @@
         <el-menu-item index="2" route="/ViewDataSource">
           <i class="el-icon-folder" ></i>
         </el-menu-item>
-        <el-menu-item index="3" disabled>
+        <el-menu-item index="3" route="/AddDataSource">
+          <i class="el-icon-folder-add"></i>
+        </el-menu-item>
+        <el-menu-item index="4" disabled>
             <i class="el-icon-setting"></i>
         </el-menu-item>
     </el-menu>
