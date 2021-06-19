@@ -39,7 +39,10 @@
             data: JSON.stringify({"id": idToDelete}),
             success: () => {
               this.getDataSources();
-              alert("Deleted Data Source...");
+              this.$message({
+                message: "Successfully deleted.",
+                type: "success"
+              });
             }
           })
         }
