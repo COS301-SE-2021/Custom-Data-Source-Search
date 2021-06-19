@@ -10,5 +10,5 @@ export interface StoredTextDataSource {
 }
 
 export interface TextDataSourceList {
-    [key: number]: TextDataSource;
+    [key: number]: StoredTextDataSource;
 }

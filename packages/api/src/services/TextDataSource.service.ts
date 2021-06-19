@@ -2,11 +2,11 @@
  * Data Model Interfaces
  */
 import {TextDataSource} from "../models/TextDataSource.interface";
-import {TextDataSourceList} from "../models/TextDataSource.interface";
 import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
 import FileReadingError from "../errors/FileReadingError";
+import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 
 
 class TextDataSourceService {
@@ -24,22 +24,46 @@ class TextDataSourceService {
 
 
     setDataSourceArray() {
-        this.textDataSourceArray[0] = {filename: 'hello.txt', path: '../test/'};
-        this.textDataSourceArray[1] = {filename: 'beans.txt', path: '../test/'};
+        textDataSourceRepository.addDataSource({filename: 'hello.txt', path: '../test/'});
+        textDataSourceRepository.addDataSource({filename: 'beans.txt', path: '../test/'});
     }
 
     /**
      * Service Methods
      */
-    getAllTextDataSources(): TextDataSourceList {
-        return this.textDataSourceArray;
+    getAllTextDataSources() {
+        let [result, err] = textDataSourceRepository.getAllDataSources();
+        if (!err && result) {
+            return {
+                "code": 200,
+                "body": result[0]
+            };
+        }
+        return {
+            "code": 500,
+            "body": {
+                "message": "Internal error"
+            }
+        }
     }
 
-    getTextDataSource(index: number) {
-        if (index >= this.textDataSourceArray.length || index < 0) {
-            throw new Error('Index out of bounds');
+    getTextDataSource(uuid: string) {
+        let [result, err] = textDataSourceRepository.getDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
         }
-        return this.textDataSourceArray[index];
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success",
+                "data": result
+            }
+        }
     }
 
     addTextDataSource(fileName: string, filePath: string) {
@@ -70,6 +94,10 @@ class TextDataSourceService {
     }
 
     async searchAllTextDataSources(searchString: string) {
+        // TODO make this right
+        let [data] = textDataSourceRepository.getAllDataSources();
+        this.textDataSourceArray = data;
+        // Upto here is placeholder
         let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
         for (let i = 0; i < this.textDataSourceArray.length; i++) {

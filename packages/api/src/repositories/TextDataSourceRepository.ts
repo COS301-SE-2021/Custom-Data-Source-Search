@@ -1,5 +1,5 @@
 import {StoredTextDataSource, TextDataSource} from "../models/TextDataSource.interface";
-import {randomUUID} from "crypto";
+import {randomBytes} from "crypto";
 
 
 class TextDataSourceRepository {
@@ -10,15 +10,15 @@ class TextDataSourceRepository {
         this.textDataSourceArray = [];
     }
 
-    addDataSource(dataSource: StoredTextDataSource) {
+    addDataSource(dataSource: TextDataSource) {
         this.textDataSourceArray.push({
-            uuid: randomUUID(),
+            uuid: randomBytes(16).toString("hex"),
             filename: dataSource.filename,
             path: dataSource.path
         });
     }
 
-    getDataSource(uuid: string) {
+    getDataSource(uuid: string): [StoredTextDataSource, {"code":number, "message":string}] {
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             return [this.textDataSourceArray[index], null];
