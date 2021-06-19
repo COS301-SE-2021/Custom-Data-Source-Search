@@ -5,21 +5,9 @@
     </button></p>
     {{s.path}}
   </div>
-
   <div class ="output" v-else>
     <p>No data sources added</p>
   </div>
-
-<!--  <el-card class="box-card" v-if="datasourceList.length !== 0" v-for="(s, i) in datasourceList">-->
-<!--    <div class="text item">-->
-<!--      {{s.filename}}-->
-<!--    </div>-->
-<!--    <div class="text item">-->
-<!--      {{s.path}}-->
-<!--    </div>-->
-<!--    <el-button @click="deleteDataSource(i)" type="danger" icon="el-icon-delete" circle></el-button>-->
-<!--  </el-card>-->
-
 </template>
 
 <script>
