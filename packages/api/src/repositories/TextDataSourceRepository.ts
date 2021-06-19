@@ -16,6 +16,10 @@ class TextDataSourceRepository {
             filename: dataSource.filename,
             path: dataSource.path
         });
+        return [{
+            "code":200,
+            "message":"Successfully added text datasource"
+        }, null];
     }
 
     getDataSource(uuid: string): [StoredTextDataSource, {"code":number, "message":string}] {

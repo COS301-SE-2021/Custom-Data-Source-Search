@@ -83,31 +83,41 @@ class TextDataSourceService {
             throw err;
         }
         const temp: TextDataSource = {filename: fileName, path: filePath}
-        this.textDataSourceArray.push(temp);
+        textDataSourceRepository.addDataSource(temp);
     }
 
-    removeTextDataSource(id: number) {
-        if (id >= this.textDataSourceArray.length || id < 0) {
-            throw new Error('Index out of bounds');
+    removeTextDataSource(uuid: string) {
+        let [result, err] = textDataSourceRepository.deleteDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
         }
-        this.textDataSourceArray.splice(id, 1);
+        return {
+            "code": 200,
+            "body": {
+                "message": result.message
+            }
+        }
     }
 
     async searchAllTextDataSources(searchString: string) {
         // TODO make this right
         let [data] = textDataSourceRepository.getAllDataSources();
-        this.textDataSourceArray = data;
         // Upto here is placeholder
         let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
-        for (let i = 0; i < this.textDataSourceArray.length; i++) {
-            let location = this.textDataSourceArray[i].path + this.textDataSourceArray[i].filename;
+        for (let i = 0; i < data.length; i++) {
+            let location = data[i].path + data[i].filename;
             file.push(this.readFile(location));
         }
         let i = 0;
         for await (const content of file) {
             result[i] = {
-                fileName: this.textDataSourceArray[i].filename,
+                fileName: data[i].filename,
                 occurrences: this.searchFile(content, searchString)
             };
             i++;
