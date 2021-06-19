@@ -35,6 +35,11 @@ const routes = [
     name: 'TestLandingPage',
     component: () => import('../views/TestLandingPage')
   },
+  {
+    path: '/ViewDataSource',
+    name: 'ViewDataSource',
+    component: () => import('../views/ViewDataSource')
+  },
 ]
 
 const router = createRouter({

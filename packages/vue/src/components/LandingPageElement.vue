@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="20" style="height: 100%;">
       <el-col :span="2"><div class="grid-content bg-purple"><CollapseSideNav></CollapseSideNav></div></el-col>
-      <el-col :span="6"><div class="grid-content bg-purple">
+      <el-col :span="12"><div class="grid-content bg-purple">
         <SearchBar></SearchBar>
         <SearchResult></SearchResult>
       </div></el-col>

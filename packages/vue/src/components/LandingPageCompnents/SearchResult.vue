@@ -1,13 +1,26 @@
 <template>
-  <el-card class="box-card">
-    <template #header>
-      <div class="card-header">
-        <span>Card name</span>
-        <el-button class="button" type="text">Operation button</el-button>
+  <el-card v-for="file in result"  class="box-card">
+    <div class="text item">
+      <span>Filename: {{file.fileName}}</span><br>
+      <div v-for="r in file.occurrences">
+        <p ><em>{{r.lineNumber}}</em> {{r.occurrenceString}}</p>
       </div>
-    </template>
-    <div v-for="o in 4" :key="o" class="text item">
-      {{'List item ' + o }}
+      <span>This will be the directory/url</span>
     </div>
   </el-card>
+
 </template>
+
+<script>
+  props: {
+    result: Array
+  }
+</script>
+<style>
+.box-card{
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+
+</style>

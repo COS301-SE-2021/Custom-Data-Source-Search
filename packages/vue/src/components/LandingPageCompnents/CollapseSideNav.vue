@@ -1,38 +1,14 @@
 <template>
-<!--    <el-radio-group v-model="isCollapse" style="text-align: left;">-->
-<!--        <el-radio-button :label="false">expand</el-radio-button>-->
-<!--        <el-radio-button :label="true">collapse</el-radio-button>-->
-<!--    </el-radio-group>-->
-    <el-menu fill-height default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-        <el-submenu index="1">
-            <template #title>
-                <i class="el-icon-download"></i>
-<!--                <span>Navigator One</span>-->
-            </template>
-            <el-menu-item-group>
-                <template #title><span>Group One</span></template>
-                <el-menu-item index="1-1">item one</el-menu-item>
-                <el-menu-item index="1-2">item two</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group Two">
-                <el-menu-item index="1-3">item three</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-                <template #title><span>item four</span></template>
-                <el-menu-item index="1-4-1">item one</el-menu-item>
-            </el-submenu>
-        </el-submenu>
-        <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-<!--            <template #title>Navigator Two</template>-->
+    <el-menu fill-height default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse" :router="true">
+<!--      Each menu item routes to necessary view. Settings is temporarily disabled as it does not route to any view as of yet.-->
+        <el-menu-item index="1" route="/TestLandingPage">
+          <i class="el-icon-search" ></i>
+        </el-menu-item>
+        <el-menu-item index="2" route="/ViewDataSource">
+          <i class="el-icon-folder" ></i>
         </el-menu-item>
         <el-menu-item index="3" disabled>
-            <i class="el-icon-document"></i>
-<!--            <template #title>Navigator Three</template>-->
-        </el-menu-item>
-        <el-menu-item index="4">
             <i class="el-icon-setting"></i>
-<!--            <template #title>Navigator Four</template>-->
         </el-menu-item>
     </el-menu>
 </template>
