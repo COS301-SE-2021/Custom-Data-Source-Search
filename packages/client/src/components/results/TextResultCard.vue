@@ -16,7 +16,7 @@ export default {
   props: {
     type: String,
     source: String,
-    occurrences: Array
+    occurrences: Array,
   },
   methods: {
     isTextFile() {

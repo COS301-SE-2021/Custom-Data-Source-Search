@@ -6,13 +6,22 @@
     </span>
     </div>
     <div id="header">Webpage</div>
-    <div><svg style="float: right" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"/></svg></div>
+    <div @click="expanded=!expanded" >
+      <svg class="expand" id="minimise" v-if="expanded" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"/></svg>
+      <svg class="expand" id="expand" v-else xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"/></svg>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "WebpageDatasource"
+  name: "WebpageDatasource",
+  data() {
+    return {
+      expanded: false
+
+    }
+  }
 }
 </script>
 
@@ -27,6 +36,10 @@ div {
 #header {
   font-weight: bold;
   padding-top: 28px;
+}
+
+.expand {
+  float: right;
 }
 
 .grid {

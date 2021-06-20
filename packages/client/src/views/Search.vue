@@ -61,8 +61,8 @@ export default {
     }
   },
   methods: {
-    search() {
-      alert(this.query)
+    search(message) {
+      alert(message)
     }
   },
   components: {
