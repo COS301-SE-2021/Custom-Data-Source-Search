@@ -2,6 +2,7 @@ import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrences} from "../models/response/searchFileResponse.interface";
 import FileReadingError from "../errors/FileReadingError";
 import fs from "fs";
+import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 
 const service = textDataSourceService;
 
@@ -122,12 +123,17 @@ describe('TextDataSourceService : Individual File Searching' , () => {
 
 
 describe('TextDataSourceService : Searching Across All Files' , () => {
+    beforeAll(() => {
+        jest.spyOn(textDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
+            return [
+                [
+                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/'},
+                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/'}
+                ], null];
+        });
+    })
     it('Should return search results when there are multiple occurrences of the search string in any files ', async () => {
         //given
-      //  textDataSourceService.addTextDataSource('hello.txt', '../test/');
-       // textDataSourceService.addTextDataSource('beans.txt', '../test/')
-        textDataSourceService.setDataSourceArray();
-
         const searchString = "Jeff";
         //when
         const [response,error] = await service.searchAllTextDataSources(searchString);
@@ -152,7 +158,6 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
 
     it('Should return empty object when no occurrences of the search string are in any files ', async () => {
         //given
-        textDataSourceService.setDataSourceArray();
         const searchString = "awordthatshouldntbethere";
         //when
         const [response,error] = await service.searchAllTextDataSources(searchString);
