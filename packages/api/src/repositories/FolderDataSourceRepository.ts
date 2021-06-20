@@ -41,7 +41,7 @@ class FolderDataSourceRepository {
         }]
     }
 
-    getAllDataSources(): any {
+    getAllDataSources(): [StoredFolderDataSource[], { "code": number, "message": string }] {
         this.readFile()
         return [this.folderDataSourceArray, null];
     }
