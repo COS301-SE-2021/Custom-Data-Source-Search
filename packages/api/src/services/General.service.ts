@@ -1,4 +1,5 @@
 import textDataSourceService from "./TextDataSource.service";
+import webPageDataSourceService from "./WebPageDataSource.service";
 
 class GeneralService {
 
@@ -8,12 +9,12 @@ class GeneralService {
 
     async getResults(searchString: string) {
 
-        const [textResults, error] = await textDataSourceService.searchAllTextDataSources(searchString);
+      const [textResults, texterror] = await textDataSourceService.searchAllTextDataSources(searchString);
 
-        //const dbResults = await databaseDataSourceService.searchAllDBSources(searchString);
+       const [pageResults,pagerror] = await webPageDataSourceService.searchAllWebPageDataSources(searchString);
 
-        //const results await Promise.all([textResults]);
-        if (error) {
+        //const results = await Promise.all([text, page]);
+        if (texterror) {
             return {
                 "code": 500,
                 "body": {
@@ -29,6 +30,11 @@ class GeneralService {
                     {
                         "type": "textDatasource",
                         "results": textResults
+                    },
+
+                    {
+                        "type": "webPageDatasource",
+                        "results": pageResults
                     }
                 ]
             }
