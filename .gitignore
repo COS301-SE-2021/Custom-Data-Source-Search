@@ -6,7 +6,7 @@ coverage/
 dist_electron/
 
 /packages/api/.coveralls.yml
-/packages/api/.env
+/.env
 
 /packages/client/tests/e2e/videos/
 /packages/client/tests/e2e/screenshots/
