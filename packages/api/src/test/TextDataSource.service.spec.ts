@@ -144,13 +144,13 @@ describe('TextDataSourceService : Searching Across All Files' , () => {
         if (response) {
             //hello.txt
             expect(response[0]).not.toBe(undefined);
-            expect(response[0].fileName).toEqual("hello.txt");
+            expect(response[0].source).toEqual("../test/hello.txt");
             expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
             expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
             expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
             //beans.txt
             expect(response[1]).not.toBe(undefined);
-            expect(response[1].fileName).toEqual("beans.txt");
+            expect(response[1].source).toEqual("../test/beans.txt");
             expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
             expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
         }
