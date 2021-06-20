@@ -122,7 +122,7 @@ class TextDataSourceService {
             let searchResults: StringOccurrences = this.searchFile(content, searchString);
             if (searchResults.hasOwnProperty('0')) {
                 result[i] = {
-                    type: "file",
+                    type: "text",
                     source: data[i].path + data[i].filename,
                     occurrences: searchResults
                 };
