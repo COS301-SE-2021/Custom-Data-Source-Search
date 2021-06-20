@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     deleteDataSource() {
-      if (confirm("Do you want to delete it?")) {
+      if (confirm("Do you want to delete " + this.id)) {
         this.isNotDeleted = false
       }
     }

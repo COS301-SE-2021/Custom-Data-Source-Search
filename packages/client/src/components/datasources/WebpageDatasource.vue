@@ -17,12 +17,8 @@
     <div v-if="add">
       <AddDataURI placeholder-path="Enter Webpage Link..."></AddDataURI>
     </div>
-    <div v-if="expanded" id="web-datasources">
-      <DataSourceCard title="Document"></DataSourceCard>
-      <DataSourceCard title="Something"></DataSourceCard>
-      <DataSourceCard title="Else"></DataSourceCard>
-      <DataSourceCard title="path/name/"></DataSourceCard>
-      <DataSourceCard title="dont/know/what/to"></DataSourceCard>
+    <div v-if="expanded" id="folder-datasources">
+      <DataSourceCard v-for="(item, index) in dataSources" :key=index :title="item.path" :id="item.uuid"></DataSourceCard>
     </div>
   </div>
 </template>
@@ -36,7 +32,14 @@ export default {
   data() {
     return {
       expanded: false,
-      add: false
+      add: false,
+      dataSources: [
+        { uuid: '3463457345235', path: 'working/on/many/things' },
+        { uuid: '4564564564564', path: 'working/random/lengths/things' },
+        { uuid: '1212121212121', path: 'working/on/many/they/must/be/different' },
+        { uuid: '9595959595959', path: 'working/I/think/many/things' },
+        { uuid: '3333333333333', path: 'working/on/Gianni/moet/gelato/kry/things' }
+      ]
     }
   },
   components: {
