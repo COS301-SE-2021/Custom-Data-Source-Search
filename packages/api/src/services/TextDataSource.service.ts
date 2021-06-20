@@ -83,7 +83,10 @@ class TextDataSourceService {
             throw err;
         }
         const temp: TextDataSource = {filename: fileName, path: filePath};
-        textDataSourceRepository.addDataSource(temp);
+        let [, err] = textDataSourceRepository.addDataSource(temp);
+        if (err) {
+            throw new FileReadingError('DATASOURCE ALREADY EXISTS', 400);
+        }
     }
 
     removeTextDataSource(uuid: string) {

@@ -41,9 +41,9 @@ textDataSourceRouter.post("/", (req: Request, res: Response) => {
         res.status(200).send({'message':'Successfully added text datasource'});
     } catch (e) {
         if (e.status){
-            res.status(e.status).send(e.message);
+            res.status(e.status).send({'message': e.message});
         } else {
-            res.status(500).send(e.message);
+            res.status(500).send({'message': e.message});
         }
     }
 });

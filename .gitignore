@@ -4,6 +4,7 @@ build/
 packages/api/.env
 /packages/api/package-lock.json
 coverage/
+/packages/api/src/repositories/store/**
 
 .DS_Store
 packages/vue/node_modules

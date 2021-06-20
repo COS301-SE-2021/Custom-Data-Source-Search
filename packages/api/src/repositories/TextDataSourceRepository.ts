@@ -1,5 +1,6 @@
 import {StoredTextDataSource, TextDataSource} from "../models/TextDataSource.interface";
 import {randomBytes} from "crypto";
+import fs from "fs";
 
 
 class TextDataSourceRepository {
@@ -11,11 +12,22 @@ class TextDataSourceRepository {
     }
 
     addDataSource(dataSource: TextDataSource) {
+        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
+        let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
+        console.log(index);
+        if (index !== -1) {
+            console.log("here");
+            return [null, {
+                "code":400,
+                "message":"Datasource already exists"
+            }];
+        }
         this.textDataSourceArray.push({
             uuid: randomBytes(16).toString("hex"),
             filename: dataSource.filename,
             path: dataSource.path
         });
+        fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
         return [{
             "code":200,
             "message":"Successfully added text datasource"
@@ -23,6 +35,7 @@ class TextDataSourceRepository {
     }
 
     getDataSource(uuid: string): [StoredTextDataSource, {"code":number, "message":string}] {
+        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             return [this.textDataSourceArray[index], null];
@@ -34,6 +47,7 @@ class TextDataSourceRepository {
     }
 
     getAllDataSources() {
+        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
         return [this.textDataSourceArray, null]
     }
 
@@ -54,9 +68,11 @@ class TextDataSourceRepository {
     }
 
     deleteDataSource(uuid: string) {
+        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.textDataSourceArray.splice(index, 1);
+            fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
             return [{
                 "code": 200,
                 "message": "Successfully deleted datasource"
