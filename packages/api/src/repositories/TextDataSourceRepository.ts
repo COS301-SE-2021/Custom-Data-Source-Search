@@ -14,9 +14,7 @@ class TextDataSourceRepository {
     addDataSource(dataSource: TextDataSource) {
         this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
         let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
-        console.log(index);
         if (index !== -1) {
-            console.log("here");
             return [null, {
                 "code":400,
                 "message":"Datasource already exists"

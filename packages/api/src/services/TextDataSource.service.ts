@@ -22,12 +22,6 @@ class TextDataSourceService {
         this.textDataSourceArray = [];
     }
 
-
-    setDataSourceArray() {
-        textDataSourceRepository.addDataSource({filename: 'hello.txt', path: '../test/'});
-        textDataSourceRepository.addDataSource({filename: 'beans.txt', path: '../test/'});
-    }
-
     /**
      * Service Methods
      */
