@@ -21,8 +21,8 @@ jobs:
         - cd packages/client
       script:
         - npm run test:unit
+
 branches:
   only:
     - master
     - development
-    - refactor/52-refactor-client-code-to-use-store
