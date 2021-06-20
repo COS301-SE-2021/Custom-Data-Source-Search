@@ -1,5 +1,9 @@
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
+import FileReadingError from "../errors/FileReadingError";
+import fs from "fs";
+import {TextDataSource} from "../models/TextDataSource.interface";
+import {FolderDataSource} from "../models/FolderDataSource.interface";
 
 class FolderDataSourceService {
 
@@ -39,9 +43,32 @@ class FolderDataSourceService {
     }
 
     addFolderDataSource(path: string) {
+        if (path[path.length - 1] === '/') {
+            path = path.slice(0, path.length - 1);
+        }
+        if (!fs.existsSync(path)) {
+            return {
+                "code": 404,
+                "body": {
+                    "message": "Directory does not exist"
+                }
+            }
+        }
+        const temp: FolderDataSource = {path: path};
+        let [, e] = folderDataSourceRepository.addDataSource(temp);
+        if (e) {
+            return {
+                "code": 400,
+                "body": {
+                    "message": "Datasource already exists"
+                }
+            }
+        }
         return {
-            "code": 501,
-            "body": "Not implemented"
+            "code": 200,
+            "body": {
+                "message": "Successfully added datasource"
+            }
         }
     }
 

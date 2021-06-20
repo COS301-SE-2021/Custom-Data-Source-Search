@@ -1,6 +1,7 @@
 import fs from "fs";
-import {StoredFolderDataSource} from "../models/FolderDataSource.interface";
+import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import {StoredTextDataSource} from "../models/TextDataSource.interface";
+import {randomBytes} from "crypto";
 
 class FolderDataSourceRepository {
     folderDataSourceArray: StoredFolderDataSource[];
@@ -9,11 +10,27 @@ class FolderDataSourceRepository {
         this.folderDataSourceArray = [];
     }
 
-    addDataSource() {
-
+    addDataSource(dataSource: FolderDataSource) {
+        this.readFile()
+        let index: number = this.folderDataSourceArray.findIndex(x => x.path === dataSource.path);
+        if (index !== -1) {
+            return [null, {
+                "code": 400,
+                "message": "Folder datasource already exists"
+            }];
+        }
+        this.folderDataSourceArray.push({
+            uuid: randomBytes(16).toString("hex"),
+            path: dataSource.path
+        });
+        fs.writeFileSync('./src/repositories/store/folderDataStore.json', JSON.stringify(this.folderDataSourceArray));
+        return [{
+            "code": 200,
+            "message": "Successfully added folder datasource"
+        }, null];
     }
 
-    getDataSource(uuid: string): [StoredFolderDataSource, {"code":number, "message":string}] {
+    getDataSource(uuid: string): [StoredFolderDataSource, { "code": number, "message": string }] {
         this.readFile()
         let index: number = this.folderDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {

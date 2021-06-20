@@ -16,8 +16,8 @@ class TextDataSourceRepository {
         let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {
             return [null, {
-                "code":400,
-                "message":"Datasource already exists"
+                "code": 400,
+                "message": "Text datasource already exists"
             }];
         }
         this.textDataSourceArray.push({
@@ -27,12 +27,12 @@ class TextDataSourceRepository {
         });
         fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
         return [{
-            "code":200,
-            "message":"Successfully added text datasource"
+            "code": 200,
+            "message": "Successfully added text datasource"
         }, null];
     }
 
-    getDataSource(uuid: string): [StoredTextDataSource, {"code":number, "message":string}] {
+    getDataSource(uuid: string): [StoredTextDataSource, { "code": number, "message": string }] {
         this.readFile()
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
@@ -82,8 +82,8 @@ class TextDataSourceRepository {
         }]
     }
 
-    readFile(){
-        try{
+    readFile() {
+        try {
             this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
         } catch (err) {
             this.textDataSourceArray = [];
