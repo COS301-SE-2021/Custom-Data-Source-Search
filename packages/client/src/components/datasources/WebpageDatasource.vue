@@ -17,7 +17,7 @@
     <div v-if="add">
       <AddDataURI placeholder-path="Enter Webpage Link..."></AddDataURI>
     </div>
-    <div v-if="expanded" id="folder-datasources">
+    <div v-if="expanded" id="web-datasources">
       <DataSourceCard v-for="(item, index) in dataSources" :key=index :title="item.path" :id="item.uuid"></DataSourceCard>
     </div>
   </div>
