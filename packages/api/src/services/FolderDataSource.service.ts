@@ -1,8 +1,5 @@
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
-import FileReadingError from "../errors/FileReadingError";
 import fs from "fs";
-import {TextDataSource} from "../models/TextDataSource.interface";
 import {FolderDataSource} from "../models/FolderDataSource.interface";
 
 class FolderDataSourceService {
@@ -73,9 +70,20 @@ class FolderDataSourceService {
     }
 
     removeFolderDataSource(id: string) {
+        let [result, err] = folderDataSourceRepository.deleteDataSource(id);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
+        }
         return {
-            "code": 501,
-            "body": "Not implemented"
+            "code": 204,
+            "body": {
+                "message": result.message
+            }
         }
     }
 }

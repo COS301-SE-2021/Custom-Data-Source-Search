@@ -1,6 +1,5 @@
 import fs from "fs";
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
-import {StoredTextDataSource} from "../models/TextDataSource.interface";
 import {randomBytes} from "crypto";
 
 class FolderDataSourceRepository {
@@ -47,12 +46,21 @@ class FolderDataSourceRepository {
         return [this.folderDataSourceArray, null];
     }
 
-    updateDataSource(uuid: string) {
-
-    }
-
     deleteDataSource(uuid: string) {
-
+        this.readFile()
+        let index: number = this.folderDataSourceArray.findIndex(x => x.uuid === uuid);
+        if (index !== -1) {
+            this.folderDataSourceArray.splice(index, 1);
+            fs.writeFileSync('./src/repositories/store/folderDataStore.json', JSON.stringify(this.folderDataSourceArray));
+            return [{
+                "code": 204,
+                "message": "Successfully deleted folder datasource"
+            }, null]
+        }
+        return [null, {
+            "code": 404,
+            "message": "Folder datasource not found"
+        }]
     }
 
     readFile() {

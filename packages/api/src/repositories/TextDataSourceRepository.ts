@@ -72,13 +72,13 @@ class TextDataSourceRepository {
             this.textDataSourceArray.splice(index, 1);
             fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
             return [{
-                "code": 200,
-                "message": "Successfully deleted datasource"
+                "code": 204,
+                "message": "Successfully deleted Text datasource"
             }, null]
         }
         return [null, {
             "code": 404,
-            "message": "Datasource not found"
+            "message": "Text datasource not found"
         }]
     }
 
