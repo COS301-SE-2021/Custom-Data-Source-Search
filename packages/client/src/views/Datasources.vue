@@ -1,8 +1,17 @@
 <template>
   <div class="about">
-    <TextDatasource/>
-    <FolderDatasource/>
-    <WebpageDatasource/>
+    <div class="grid">
+      <div>
+        <TextDatasource/>
+      </div>
+      <div>
+        <FolderDatasource/>
+      </div>
+      <div>
+        <WebpageDatasource/>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -19,4 +28,12 @@ export default {
 }
 </script>
 
+<style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  row-gap: 5%;
+  padding-left: 40px;
+}
 
+</style>
