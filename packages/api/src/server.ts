@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import { textDataSourceRouter } from  "./routers/TextDataSource.router";
+import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import ExampleDataSource from "./ExampleDataSource";
 import {generalRouter} from "./routers/General.router";
 
@@ -41,6 +42,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/textdatasources", textDataSourceRouter);
 app.use("/general", generalRouter);
+app.use("/webpagedatasources", webPageDataSourceRouter)
 
 
 app.listen(PORT , () => {
