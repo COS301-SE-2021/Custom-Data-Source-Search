@@ -36,7 +36,7 @@ class TextDataSourceService {
         if (!err && result) {
             return {
                 "code": 200,
-                "body": result[0]
+                "body": result
             };
         }
         return {
@@ -82,7 +82,7 @@ class TextDataSourceService {
             }
             throw err;
         }
-        const temp: TextDataSource = {filename: fileName, path: filePath}
+        const temp: TextDataSource = {filename: fileName, path: filePath};
         textDataSourceRepository.addDataSource(temp);
     }
 
@@ -97,7 +97,7 @@ class TextDataSourceService {
             }
         }
         return {
-            "code": 200,
+            "code": 204,
             "body": {
                 "message": result.message
             }

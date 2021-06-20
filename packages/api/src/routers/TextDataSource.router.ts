@@ -52,15 +52,6 @@ textDataSourceRouter.post("/", (req: Request, res: Response) => {
      * Remove a data source by it's id
      */
     textDataSourceRouter.delete("/", (req: Request, res: Response) => {
-        try {
-            textDataSourceService.removeTextDataSource(req.body.id);
-
-            res.status(204).send('Successfully removed text datasource');
-        } catch (e) {
-            if (e.status){
-                res.status(e.status).send(e.message);
-            } else {
-                res.status(500).send(e.message);
-            }
-        }
+            const result = textDataSourceService.removeTextDataSource(req.body.id);
+            res.status(result.code).send(result.body);
     });
