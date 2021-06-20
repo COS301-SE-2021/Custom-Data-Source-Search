@@ -1,11 +1,12 @@
 <template>
   <div>
-    <input :placeholder="placeholderPath" v-model="dataSourceName">
-    <button>Add</button>
+    <input :placeholder="placeholderPath" v-model="dataSourceURI" v-on:keyup.enter="message">
+    <button @click="message">Add</button>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "AddDataURI",
   props: {
@@ -13,7 +14,12 @@ export default {
   },
   data() {
     return {
-      dataSourceName: ""
+      dataSourceURI: ""
+    }
+  },
+  methods: {
+    message() {
+      alert(this.dataSourceURI)
     }
   }
 }
@@ -44,6 +50,7 @@ button {
   border-radius: 12px;
   margin-left: 45px;
   padding: 6px;
+  cursor: pointer;
 }
 
 </style>
