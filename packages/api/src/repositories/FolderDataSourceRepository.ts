@@ -1,7 +1,9 @@
 import fs from "fs";
+import {StoredFolderDataSource} from "../models/FolderDataSource.interface";
+import {StoredTextDataSource} from "../models/TextDataSource.interface";
 
 class FolderDataSourceRepository {
-    folderDataSourceArray: [];
+    folderDataSourceArray: StoredFolderDataSource[];
 
     constructor() {
         this.folderDataSourceArray = [];
@@ -11,8 +13,16 @@ class FolderDataSourceRepository {
 
     }
 
-    getDataSource(uuid: string) {
-
+    getDataSource(uuid: string): [StoredFolderDataSource, {"code":number, "message":string}] {
+        this.readFile()
+        let index: number = this.folderDataSourceArray.findIndex(x => x.uuid === uuid);
+        if (index !== -1) {
+            return [this.folderDataSourceArray[index], null];
+        }
+        return [null, {
+            "code": 404,
+            "message": "Datasource not found"
+        }]
     }
 
     getAllDataSources(): any {
