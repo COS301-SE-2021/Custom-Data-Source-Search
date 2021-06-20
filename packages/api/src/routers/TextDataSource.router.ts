@@ -48,10 +48,10 @@ textDataSourceRouter.post("/", (req: Request, res: Response) => {
     }
 });
 
-    /**
-     * Remove a data source by it's id
-     */
-    textDataSourceRouter.delete("/", (req: Request, res: Response) => {
-            const result = textDataSourceService.removeTextDataSource(req.body.id);
-            res.status(result.code).send(result.body);
-    });
+/**
+ * Remove a data source by it's id
+ */
+textDataSourceRouter.delete("/", (req: Request, res: Response) => {
+        const result = textDataSourceService.removeTextDataSource(req.body.id);
+        res.status(result.code).send(result.body);
+});
