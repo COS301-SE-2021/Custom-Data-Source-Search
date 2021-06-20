@@ -121,12 +121,12 @@
     font-family: element-icons;
     src: url("fonts/element-icons.woff") format("woff"), url("fonts/element-icons.ttf") format("truetype");
     font-weight: 400;
-    font-display: "auto";
+    font-display: auto;
     font-style: normal
 }
 
 [class*=" el-icon-"], [class^=el-icon-] {
-    font-family: element-icons !important;
+    font-family: element-icons, serif !important;
     speak: none;
     font-style: normal;
     font-weight: 400;
@@ -1416,7 +1416,7 @@
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected::after {
     position: absolute;
     right: 20px;
-    font-family: element-icons;
+    font-family: element-icons, serif;
     content: "\e6da";
     font-size: 12px;
     font-weight: 700;
@@ -1877,7 +1877,6 @@
     padding: 0 10px;
     line-height: 30px;
     font-size: 12px;
-    color: #18b495;
     border-width: 1px;
     border-style: solid;
     border-radius: 4px;
@@ -6930,7 +6929,7 @@
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected::after {
     position: absolute;
     right: 20px;
-    font-family: element-icons;
+    font-family: element-icons, serif;
     content: "\e6da";
     font-size: 12px;
     font-weight: 700;
@@ -7391,7 +7390,6 @@
     padding: 0 10px;
     line-height: 30px;
     font-size: 12px;
-    color: #18b495;
     border-width: 1px;
     border-style: solid;
     border-radius: 4px;
@@ -9011,7 +9009,6 @@
     padding: 0 10px;
     line-height: 30px;
     font-size: 12px;
-    color: #18b495;
     border-width: 1px;
     border-style: solid;
     border-radius: 4px;
@@ -10412,7 +10409,6 @@
     padding: 0 10px;
     line-height: 30px;
     font-size: 12px;
-    color: #18b495;
     border-width: 1px;
     border-style: solid;
     border-radius: 4px;
@@ -17079,7 +17075,6 @@
 .el-tag {
     background-color: #4c5c59;
     border-color: #46665f;
-    color: #18b495;
     display: inline-block;
     height: 32px;
     padding: 0 10px;
@@ -24823,7 +24818,6 @@
     padding: 0 10px;
     line-height: 30px;
     font-size: 12px;
-    color: #18b495;
     border-width: 1px;
     border-style: solid;
     border-radius: 4px;

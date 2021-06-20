@@ -2,16 +2,16 @@
     <el-menu fill-height default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse" :router="true">
 <!--      Each menu item routes to necessary view. Settings is temporarily disabled as it does not route to any view as of yet.-->
         <el-menu-item index="1" route="/TestLandingPage">
-          <i class="el-icon-search" ></i>
+          <em class="el-icon-search" ></em>
         </el-menu-item>
         <el-menu-item index="2" route="/ViewDataSource">
-          <i class="el-icon-folder" ></i>
+          <em class="el-icon-folder" ></em>
         </el-menu-item>
         <el-menu-item index="3" route="/AddDataSource">
-          <i class="el-icon-folder-add"></i>
+          <em class="el-icon-folder-add"></em>
         </el-menu-item>
         <el-menu-item index="4" disabled>
-            <i class="el-icon-setting"></i>
+            <em class="el-icon-setting"></em>
         </el-menu-item>
     </el-menu>
 </template>

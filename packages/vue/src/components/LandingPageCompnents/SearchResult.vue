@@ -12,9 +12,7 @@
 </template>
 
 <script>
-  props: {
-    result: Array
-  }
+
 </script>
 <style>
 .box-card{

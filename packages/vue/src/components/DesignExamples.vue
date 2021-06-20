@@ -64,7 +64,7 @@
       </el-carousel>
       <span>Element Plus also has super cool icons! Look at these:</span>
       <div id="example-icons">
-        <span>Loading: <i class="el-icon-loading"></i></span><br>
+        <span>Loading: <em class="el-icon-loading"></em></span><br>
         <el-tooltip content="example" placement="right" effect="light"><el-button type="primary" icon="el-icon-folder-add"></el-button></el-tooltip>
         <el-button type="primary" icon="el-icon-search"></el-button>
         <el-button type="primary" icon="el-icon-star-off"></el-button>
