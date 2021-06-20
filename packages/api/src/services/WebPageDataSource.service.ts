@@ -116,7 +116,8 @@ class WebPageDataSourceService {
         if (searchString === "" || pageContents === "") {
             return {};
         }
-        let stringWithStandardLineBreaks = pageContents.replace(/(\r\n|\n|\r)/gm, "\n");
+        //let stringWithStandardLineBreaks = pageContents.replace(/(\r\n|\n|\r)/gm, "\n");
+        let stringWithStandardLineBreaks = pageContents
         let matches: WebStringOccurrences = {};
         let numOccurrence = 0;
         for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
