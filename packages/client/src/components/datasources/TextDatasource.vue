@@ -15,10 +15,16 @@
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Text File URI..."></AddDataURI>
+      <AddDataURI placeholder-path="Enter Text File URI..." endpoint="http://localhost:3001/textdatasources"></AddDataURI>
     </div>
     <div v-if="expanded" id="text-datasources">
-      <DataSourceCard v-for="(item, index) in dataSources" :key=index :title="item.path" :id="item.uuid"></DataSourceCard>
+      <DataSourceCard
+          v-for="(item, index) in dataSources"
+          :key=index :title="item.path + item.filename"
+          :id="item.uuid"
+          endpoint="http://localhost:3001/textdatasources"
+      >
+      </DataSourceCard>
     </div>
   </div>
 </template>
@@ -26,25 +32,27 @@
 <script>
 import DataSourceCard from "./DataSourceCard";
 import AddDataURI from "./AddDataURI";
-
+import axios from "axios";
 export default {
   name: "FileDataSource",
   data() {
     return {
       expanded: false,
       add: false,
-      dataSources: [
-        { uuid: '3463457345235', path: 'working/on/many/things' },
-        { uuid: '4564564564564', path: 'working/random/lengths/things' },
-        { uuid: '1212121212121', path: 'working/on/many/they/must/be/different' },
-        { uuid: '9595959595959', path: 'working/I/think/many/things' },
-        { uuid: '3333333333333', path: 'working/on/Gianni/moet/gelato/kry/things' }
-      ]
+      dataSources: []
     }
   },
   components: {
     DataSourceCard,
     AddDataURI
+  },
+  beforeMount() {
+    axios.get("http://localhost:3001/textdatasources").then(
+        resp => {
+          console.log(resp.data)
+          this.dataSources = resp.data
+        }
+    )
   }
 }
 </script>

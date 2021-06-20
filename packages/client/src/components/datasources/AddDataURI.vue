@@ -1,16 +1,17 @@
 <template>
   <div>
-    <input :placeholder="placeholderPath" v-model="dataSourceURI" v-on:keyup.enter="message">
-    <button @click="message">Add</button>
+    <input :placeholder="placeholderPath" v-model="dataSourceURI" v-on:keyup.enter="addDataSource">
+    <button @click="addDataSource(endpoint)">Add</button>
   </div>
 </template>
 
 <script>
-
+import axios from 'axios'
 export default {
   name: "AddDataURI",
   props: {
-    placeholderPath: String
+    placeholderPath: String,
+    endpoint: String
   },
   data() {
     return {
@@ -18,8 +19,28 @@ export default {
     }
   },
   methods: {
-    message() {
-      alert(this.dataSourceURI)
+    addDataSource(endpoint) {
+      let respObject = undefined
+      if (endpoint === "http://localhost:3001/textdatasources") {
+        let p = this.dataSourceURI.split("/")
+        let filename = p.pop()
+        let path = p.join("/")
+        respObject = {"fileName": filename, "filePath": path}
+      } else if (endpoint === "http://localhost:3001/webpagedatasources") {
+        respObject = {"url": this.dataSourceURI}
+      } else {
+        respObject = {"path": this.dataSourceURI}
+      }
+      console.log(respObject)
+      axios
+          .post(endpoint, respObject)
+          .then(resp => {
+            console.log(resp.data)
+            alert(resp.data.message)
+          })
+          .catch(() => {
+            alert("Could Not Add Datasource")
+          })
     }
   }
 }
