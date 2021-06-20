@@ -118,7 +118,7 @@ class TextDataSourceService {
         for await (const content of file) {
             result[i] = {
                 type: "file",
-                fileName: data[i].filename,
+                source: data[i].path + data[i].filename,
                 occurrences: this.searchFile(content, searchString)
             };
             i++;

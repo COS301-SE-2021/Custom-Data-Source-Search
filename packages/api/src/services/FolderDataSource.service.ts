@@ -113,7 +113,7 @@ class FolderDataSourceService {
         for await (const content of file) {
             result[i] = {
                 type: "folder",
-                fileName: files[i],
+                source: paths[i] + files[i],
                 occurrences: textDataSourceService.searchFile(content, searchString)
             };
             i++;
