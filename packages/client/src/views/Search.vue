@@ -3,7 +3,7 @@
     <input v-model="query" v-on:keyup.enter="search" placeholder="Sleuth...">
   </div>
   <div>
-    <TextResultCard ></TextResultCard>
+    <TextResultCard source="website_this" type="website" content="lots of content"/>
   </div>
 
 </template>
