@@ -69,7 +69,7 @@ class TextDataSourceService {
         this.textDataSourceArray.splice(id, 1);
     }
 
-    async searchAllTextDataSources(searchString: string) {
+    async searchAllTextDataSources(searchString: string) : Promise<[StringOccurrencesResponse, Error]> {
         let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
         for (let i = 0; i < this.textDataSourceArray.length; i++) {

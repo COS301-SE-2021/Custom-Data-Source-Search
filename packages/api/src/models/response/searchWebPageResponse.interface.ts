@@ -1,5 +1,4 @@
 export interface WebStringOccurrence {
-    lineNumber: number;
     occurrenceString: string;
 }
 
