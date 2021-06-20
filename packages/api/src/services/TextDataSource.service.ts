@@ -119,12 +119,15 @@ class TextDataSourceService {
         }
         let i = 0;
         for await (const content of file) {
-            result[i] = {
-                type: "file",
-                source: data[i].path + data[i].filename,
-                occurrences: this.searchFile(content, searchString)
-            };
-            i++;
+            let searchResults: StringOccurrences = this.searchFile(content, searchString);
+            if (searchResults.hasOwnProperty('0')) {
+                result[i] = {
+                    type: "text",
+                    source: data[i].path + data[i].filename,
+                    occurrences: searchResults
+                };
+                i++;
+            }
         }
         return [result, null];
     }
