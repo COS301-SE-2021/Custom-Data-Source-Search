@@ -1,7 +1,7 @@
 node_modules/
 build/
 /packages/api/.coveralls.yml
-packages/api/.env
+.env
 /packages/api/package-lock.json
 coverage/
 
