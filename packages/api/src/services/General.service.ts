@@ -1,4 +1,5 @@
 import textDataSourceService from "./TextDataSource.service";
+import folderDataSourceService from "./FolderDataSource.service";
 
 class GeneralService {
 
@@ -9,11 +10,12 @@ class GeneralService {
     async getResults(searchString: string) {
 
         const [textResults, error] = await textDataSourceService.searchAllTextDataSources(searchString);
+        const [folderResults, folderError] = await folderDataSourceService.searchAllFolderDataSources(searchString);
 
         //const dbResults = await databaseDataSourceService.searchAllDBSources(searchString);
 
         //const results await Promise.all([textResults]);
-        if (error) {
+        if (error || folderError) {
             return {
                 "code": 500,
                 "body": {
@@ -29,6 +31,10 @@ class GeneralService {
                     {
                         "type": "textDatasource",
                         "results": textResults
+                    },
+                    {
+                        "type": "folderDatasource",
+                        "results": folderResults
                     }
                 ]
             }

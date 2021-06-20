@@ -1,6 +1,9 @@
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import fs from "fs";
 import {FolderDataSource} from "../models/FolderDataSource.interface";
+import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import {StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import textDataSourceService from "./TextDataSource.service";
 
 class FolderDataSourceService {
 
@@ -40,8 +43,8 @@ class FolderDataSourceService {
     }
 
     addFolderDataSource(path: string) {
-        if (path[path.length - 1] === '/') {
-            path = path.slice(0, path.length - 1);
+        if (path[path.length - 1] !== '/') {
+            path += '/';
         }
         if (!fs.existsSync(path)) {
             return {
@@ -85,6 +88,49 @@ class FolderDataSourceService {
                 "message": result.message
             }
         }
+    }
+
+    async searchAllFolderDataSources(searchString: string) {
+        // TODO make this right
+        let [data] = folderDataSourceRepository.getAllDataSources();
+        // Above this is placeholder implementation
+        let files: string[] = [];
+        let paths: string[] = [];
+        data.forEach((storedFile) => {
+            let temp: string[] = this.getFilesInFolder(storedFile.path);
+            files = files.concat(temp);
+            for (let i = 0; i < temp.length; i++) {
+                paths.push(storedFile.path);
+            }
+        });
+        let result: StringOccurrencesResponse = {};
+        let file: Promise<string>[] = [];
+        for (let i = 0; i < files.length; i++) {
+            let location = paths[i] + files[i];
+            file.push(textDataSourceService.readFile(location));
+        }
+        let i = 0;
+        for await (const content of file) {
+            result[i] = {
+                type: "folder",
+                fileName: files[i],
+                occurrences: textDataSourceService.searchFile(content, searchString)
+            };
+            i++;
+        }
+        return [result, null];
+    }
+
+    getFilesInFolder(path: string) {
+        let fileNames: string[] = fs.readdirSync(path);
+        let results: string[] = [];
+        let [separateFiles, ] = textDataSourceRepository.getAllDataSources();
+        fileNames.forEach((file) => {
+            if (file.indexOf('.txt') !== -1 && separateFiles.findIndex(x => x.filename === file) === -1) {
+                results.push(file);
+            }
+        });
+        return results;
     }
 }
 
