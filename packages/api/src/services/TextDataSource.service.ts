@@ -61,13 +61,13 @@ class TextDataSourceService {
     }
 
     addTextDataSource(fileName: string, filePath: string) {
-        if (filePath[filePath.length - 1] !== '/') {
-            filePath += '/';
-        }
         if (fileName === '') {
             throw new FileReadingError('NO FILE NAME', 400);
         } else if (filePath === '') {
             throw new FileReadingError('NO FILE PATH', 400);
+        }
+        if (filePath[filePath.length - 1] !== '/') {
+            filePath += '/';
         }
         try {
             fs.readFileSync(filePath + fileName);
