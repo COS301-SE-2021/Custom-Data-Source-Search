@@ -3,6 +3,7 @@ import {TextDataSource} from "../models/TextDataSource.interface";
 import WebPageUnavailableError from "../errors/WebPageError";
 import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 import {WebOccurrencesResponse, WebStringOccurrences} from "../models/response/searchWebPageResponse.interface";
+import {randomBytes} from "crypto";
 
 const fetch = require("node-fetch");
 const axios = require("axios")
@@ -23,24 +24,28 @@ class WebPageDataSourceService {
 
     }
 
-    getWebPageDataSource(index: number) {
-        if (index >= this.webPageDataSourceArray.length || index < 0) {
-            throw new Error('Index out of bounds');
+    getWebPageDataSource(uuid : string) {
+
+        let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
+        if (index !== -1) {
+            return this.webPageDataSourceArray[index];
         }
-        return this.webPageDataSourceArray[index];
+
+
     }
 
-    removeWebPageDataSource(id: number) {
-        if (id >= this.webPageDataSourceArray.length || id < 0) {
-            throw new Error('Index out of bounds');
+    removeWebPageDataSource(uuid: string) {
+
+        let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
+        if (index !== -1) {
+            this.webPageDataSourceArray.splice(index, 1);
         }
-        this.webPageDataSourceArray.splice(id, 1);
     }
 
 
     async addWebPageDataSource(webUrl: string): Promise<WebPageUnavailableError>{
 
-        const temp: WebPageDataSource = {url: webUrl};
+        const temp: WebPageDataSource = {uuid: randomBytes(16).toString("hex") ,url: webUrl};
 
         var page;
         var error : WebPageUnavailableError;
@@ -53,14 +58,6 @@ class WebPageDataSourceService {
 
 
         }
-
-      //  let text = await page.text();
-     //   console.log(text);
-      //  const data = await axios.get(webUrl);
-     //   const data2 = cheerio.load(data);
-
-       // console.log(data2.html());
-
 
         if(page.status == 200) {
             this.webPageDataSourceArray.push(temp);

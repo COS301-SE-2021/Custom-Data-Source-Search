@@ -20,7 +20,7 @@ webPageDataSourceRouter.get("/", (req: Request, res: Response) => {
 
 webPageDataSourceRouter.get("/:id", (req: Request, res: Response) => {
     try {
-        const webPageDataSource: WebPageDataSource = webPageDataSourceService.getWebPageDataSource(parseInt(req.params.id));
+        const webPageDataSource: WebPageDataSource = webPageDataSourceService.getWebPageDataSource(req.params.id);
 
         res.status(200).send(webPageDataSource)
     } catch (e) {
