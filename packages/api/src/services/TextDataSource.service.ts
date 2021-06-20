@@ -77,8 +77,8 @@ class TextDataSourceService {
             throw err;
         }
         const temp: TextDataSource = {filename: fileName, path: filePath};
-        let [, err] = textDataSourceRepository.addDataSource(temp);
-        if (err) {
+        let [, e] = textDataSourceRepository.addDataSource(temp);
+        if (e) {
             throw new FileReadingError('DATASOURCE ALREADY EXISTS', 400);
         }
     }

@@ -12,7 +12,7 @@ class TextDataSourceRepository {
     }
 
     addDataSource(dataSource: TextDataSource) {
-        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
+        this.readFile()
         let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {
             return [null, {
@@ -33,7 +33,7 @@ class TextDataSourceRepository {
     }
 
     getDataSource(uuid: string): [StoredTextDataSource, {"code":number, "message":string}] {
-        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
+        this.readFile()
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             return [this.textDataSourceArray[index], null];
@@ -45,8 +45,8 @@ class TextDataSourceRepository {
     }
 
     getAllDataSources() {
-        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
-        return [this.textDataSourceArray, null]
+        this.readFile()
+        return [this.textDataSourceArray, null];
     }
 
     updateDataSource(uuid: string, dataSource: TextDataSource) {
@@ -66,7 +66,7 @@ class TextDataSourceRepository {
     }
 
     deleteDataSource(uuid: string) {
-        this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
+        this.readFile()
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.textDataSourceArray.splice(index, 1);
@@ -80,6 +80,15 @@ class TextDataSourceRepository {
             "code": 404,
             "message": "Datasource not found"
         }]
+    }
+
+    readFile(){
+        try{
+            this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
+        } catch (err) {
+            console.log("json file probably empty");
+            this.textDataSourceArray = [];
+        }
     }
 }
 
