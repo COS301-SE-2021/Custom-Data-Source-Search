@@ -1,10 +1,16 @@
 <template>
-  <div>
+  <div class="search-div">
     <input v-model="query" v-on:keyup.enter="search" placeholder="Sleuth...">
   </div>
+  <div>
+    <TextResultCard ></TextResultCard>
+  </div>
+
 </template>
 
 <script>
+import TextResultCard from "../components/TextResultCard";
+
 export default {
   name: "SearchBar",
   data() {
@@ -16,13 +22,16 @@ export default {
     search() {
       alert(this.query)
     }
+  },
+  components: {
+    TextResultCard
   }
 }
 </script>
 
 <style scoped>
 
-div {
+.search-div {
   vertical-align: center;
 }
 
