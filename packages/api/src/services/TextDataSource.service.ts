@@ -2,11 +2,11 @@
  * Data Model Interfaces
  */
 import {TextDataSource} from "../models/TextDataSource.interface";
-import {TextDataSourceList} from "../models/TextDataSource.interface";
 import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
 import FileReadingError from "../errors/FileReadingError";
+import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 
 
 class TextDataSourceService {
@@ -22,24 +22,42 @@ class TextDataSourceService {
         this.textDataSourceArray = [];
     }
 
-
-    setDataSourceArray() {
-        this.textDataSourceArray[0] = {filename: 'hello.txt', path: '../test/'};
-        this.textDataSourceArray[1] = {filename: 'beans.txt', path: '../test/'};
-    }
-
     /**
      * Service Methods
      */
-    getAllTextDataSources(): TextDataSourceList {
-        return this.textDataSourceArray;
+    getAllTextDataSources() {
+        let [result, err] = textDataSourceRepository.getAllDataSources();
+        if (!err && result) {
+            return {
+                "code": 200,
+                "body": result
+            };
+        }
+        return {
+            "code": 500,
+            "body": {
+                "message": "Internal error"
+            }
+        }
     }
 
-    getTextDataSource(index: number) {
-        if (index >= this.textDataSourceArray.length || index < 0) {
-            throw new Error('Index out of bounds');
+    getTextDataSource(uuid: string) {
+        let [result, err] = textDataSourceRepository.getDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
         }
-        return this.textDataSourceArray[index];
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success",
+                "data": result
+            }
+        }
     }
 
     addTextDataSource(fileName: string, filePath: string) {
@@ -47,6 +65,9 @@ class TextDataSourceService {
             throw new FileReadingError('NO FILE NAME', 400);
         } else if (filePath === '') {
             throw new FileReadingError('NO FILE PATH', 400);
+        }
+        if (filePath[filePath.length - 1] !== '/') {
+            filePath += '/';
         }
         try {
             fs.readFileSync(filePath + fileName);
@@ -58,28 +79,48 @@ class TextDataSourceService {
             }
             throw err;
         }
-        const temp: TextDataSource = {filename: fileName, path: filePath}
-        this.textDataSourceArray.push(temp);
+        const temp: TextDataSource = {filename: fileName, path: filePath};
+        let [, e] = textDataSourceRepository.addDataSource(temp);
+        if (e) {
+            throw new FileReadingError('DATASOURCE ALREADY EXISTS', 400);
+        }
     }
 
-    removeTextDataSource(id: number) {
-        if (id >= this.textDataSourceArray.length || id < 0) {
-            throw new Error('Index out of bounds');
+    removeTextDataSource(uuid: string) {
+        let [result, err] = textDataSourceRepository.deleteDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
         }
-        this.textDataSourceArray.splice(id, 1);
+        return {
+            "code": 204,
+            "body": {
+                "message": result.message
+            }
+        }
     }
+
 
     async searchAllTextDataSources(searchString: string) : Promise<[StringOccurrencesResponse, Error]> {
+
+        // TODO make this right
+        let [data] = textDataSourceRepository.getAllDataSources();
+        // Above this is placeholder implementation
+
         let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
-        for (let i = 0; i < this.textDataSourceArray.length; i++) {
-            let location = this.textDataSourceArray[i].path + this.textDataSourceArray[i].filename;
+        for (let i = 0; i < data.length; i++) {
+            let location = data[i].path + data[i].filename;
             file.push(this.readFile(location));
         }
         let i = 0;
         for await (const content of file) {
             result[i] = {
-                fileName: this.textDataSourceArray[i].filename,
+                fileName: data[i].filename,
                 occurrences: this.searchFile(content, searchString)
             };
             i++;

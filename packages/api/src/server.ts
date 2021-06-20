@@ -10,6 +10,7 @@ import { textDataSourceRouter } from  "./routers/TextDataSource.router";
 import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import ExampleDataSource from "./ExampleDataSource";
 import {generalRouter} from "./routers/General.router";
+import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 
 //temporary
 const exampleDataSource = new ExampleDataSource("file.txt");
@@ -43,6 +44,8 @@ app.use(express.json());
 app.use("/textdatasources", textDataSourceRouter);
 app.use("/general", generalRouter);
 app.use("/webpagedatasources", webPageDataSourceRouter)
+app.use("/folderdatasources", folderDataSourceRouter);
+
 
 
 app.listen(PORT , () => {

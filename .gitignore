@@ -3,6 +3,8 @@ dist/
 node_modules/
 build/
 coverage/
+/packages/api/src/repositories/store/*
+!/packages/api/src/repositories/store/gitkeep
 dist_electron/
 
 /packages/api/.coveralls.yml
