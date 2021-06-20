@@ -15,6 +15,20 @@ class GeneralService {
 
         const [pageResults,pagerror] = await webPageDataSourceService.searchAllWebPageDataSources(searchString);
 
+        let array: any[] = [];
+        let i: number = 0;
+        while (folderResults.hasOwnProperty(i)) {
+            array.push(folderResults[i++]);
+        }
+        i = 0;
+        while (textResults.hasOwnProperty(i)) {
+            array.push(textResults[i++]);
+        }
+        i = 0;
+        while (pageResults.hasOwnProperty(i)) {
+            array.push(pageResults[i++]);
+        }
+
         //const results await Promise.all([textResults]);
         if (texterror || folderError || pagerror) {
             return {
@@ -28,20 +42,7 @@ class GeneralService {
             "code": 200,
             "body": {
                 "message": "success",
-                "data": [
-                    {
-                        "type": "text",
-                        "results": textResults
-                    },
-                    {
-                        "type": "folder",
-                        "results": folderResults
-                    },
-                    {
-                        "type": "webpage",
-                        "results": pageResults
-                    }
-                ]
+                "searchResults": array
             }
         }
     }
