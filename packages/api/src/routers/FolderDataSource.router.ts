@@ -25,7 +25,7 @@ folderDataSourceRouter.get("/", (req: Request, res: Response) => {
  * Return the path of a single folder Data Source specified by the id
  */
 folderDataSourceRouter.get("/:id", (req: Request, res: Response) => {
-    const result = folderDataSourceService.getTextDataSource(req.params.id);
+    const result = folderDataSourceService.getFolderDataSource(req.params.id);
     res.status(result.code).send(result.body);
 });
 
@@ -33,7 +33,7 @@ folderDataSourceRouter.get("/:id", (req: Request, res: Response) => {
  * Add a data source by it's path
  */
 folderDataSourceRouter.post("/", (req: Request, res: Response) => {
-    const result = folderDataSourceService.addTextDataSource(req.body.path);
+    const result = folderDataSourceService.addFolderDataSource(req.body.path);
     res.status(result.code).send(result.body);
 });
 
@@ -41,6 +41,6 @@ folderDataSourceRouter.post("/", (req: Request, res: Response) => {
  * Remove a data source by it's id
  */
 folderDataSourceRouter.delete("/", (req: Request, res: Response) => {
-    const result = folderDataSourceService.removeTextDataSource(req.body.id);
+    const result = folderDataSourceService.removeFolderDataSource(req.body.id);
     res.status(result.code).send(result.body);
 });

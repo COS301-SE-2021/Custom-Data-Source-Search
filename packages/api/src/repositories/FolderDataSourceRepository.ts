@@ -1,4 +1,6 @@
-class FolderDataSourceRepository{
+import fs from "fs";
+
+class FolderDataSourceRepository {
     folderDataSourceArray: [];
 
     constructor() {
@@ -13,8 +15,9 @@ class FolderDataSourceRepository{
 
     }
 
-    getAllDataSources() {
-
+    getAllDataSources(): any {
+        this.readFile()
+        return [this.folderDataSourceArray, null];
     }
 
     updateDataSource(uuid: string) {
@@ -23,6 +26,14 @@ class FolderDataSourceRepository{
 
     deleteDataSource(uuid: string) {
 
+    }
+
+    readFile() {
+        try {
+            this.folderDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/folderDataStore.json', 'utf-8'));
+        } catch (err) {
+            this.folderDataSourceArray = [];
+        }
     }
 }
 
