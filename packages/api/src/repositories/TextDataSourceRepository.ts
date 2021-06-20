@@ -86,7 +86,6 @@ class TextDataSourceRepository {
         try{
             this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
         } catch (err) {
-            console.log("json file probably empty");
             this.textDataSourceArray = [];
         }
     }
