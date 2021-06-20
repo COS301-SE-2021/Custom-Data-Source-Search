@@ -15,7 +15,7 @@
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Folder URI"></AddDataURI>
+      <AddDataURI placeholder-path="Enter Folder URI..."></AddDataURI>
     </div>
     <div v-if="expanded" id="folder-datasources">
       <DataSourceCard title="Document"></DataSourceCard>

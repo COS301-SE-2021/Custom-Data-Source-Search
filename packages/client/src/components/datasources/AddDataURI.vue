@@ -30,7 +30,7 @@ input {
   padding: 3px;
   border-radius: 8px;
   border: none;
-  min-width: 600px;
+  min-width: 680px;
 }
 
 input::placeholder {
@@ -42,7 +42,7 @@ button {
   background-color: #26C6DA;
   border: none;
   border-radius: 12px;
-  margin-left: 40px;
+  margin-left: 45px;
   padding: 6px;
 }
 
