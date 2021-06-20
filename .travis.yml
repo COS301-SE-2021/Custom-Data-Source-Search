@@ -1,16 +1,24 @@
+language: node_js
+node_js: 15
+
+install:
+  - npm install
+
+cache:
+  directories:
+    - packages/client/node_modules/
+    - packages/api/node_modules/
+
 jobs:
   include:
-    - language: node_js
-      node_js: 15
-      before_script:
+    - stage: test
+      before_install:
         - cd packages/api
       script:
         - npm run test
-    - language: node_js
-      node_js: 15
+    - stage: test
       before_install:
-        - cd packages/vue
-        - npm install -g @vue/cli
+        - cd packages/client
       script:
         - npm run test:unit
 

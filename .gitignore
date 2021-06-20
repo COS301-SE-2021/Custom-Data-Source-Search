@@ -1,14 +1,15 @@
+.DS_Store
+dist/
 node_modules/
 build/
-/packages/api/.coveralls.yml
-packages/api/.env
-/packages/api/package-lock.json
 coverage/
+dist_electron/
 
-.DS_Store
-packages/vue/node_modules
-/dist
+/packages/api/.coveralls.yml
+/packages/api/.env
 
+/packages/client/tests/e2e/videos/
+/packages/client/tests/e2e/screenshots/
 
 # local env files
 .env.local
@@ -28,4 +29,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-/packages/vue/dist_electron/
