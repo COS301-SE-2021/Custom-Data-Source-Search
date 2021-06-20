@@ -61,6 +61,9 @@ class TextDataSourceService {
     }
 
     addTextDataSource(fileName: string, filePath: string) {
+        if (filePath[filePath.length - 1] !== '/') {
+            filePath += '/';
+        }
         if (fileName === '') {
             throw new FileReadingError('NO FILE NAME', 400);
         } else if (filePath === '') {
@@ -104,7 +107,7 @@ class TextDataSourceService {
     async searchAllTextDataSources(searchString: string) {
         // TODO make this right
         let [data] = textDataSourceRepository.getAllDataSources();
-        // Upto here is placeholder
+        // Above this is placeholder implementation
         let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
         for (let i = 0; i < data.length; i++) {
