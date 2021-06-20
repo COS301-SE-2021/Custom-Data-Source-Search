@@ -104,10 +104,13 @@ class TextDataSourceService {
         }
     }
 
-    async searchAllTextDataSources(searchString: string) {
+
+    async searchAllTextDataSources(searchString: string) : Promise<[StringOccurrencesResponse, Error]> {
+
         // TODO make this right
         let [data] = textDataSourceRepository.getAllDataSources();
         // Above this is placeholder implementation
+
         let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
         for (let i = 0; i < data.length; i++) {
