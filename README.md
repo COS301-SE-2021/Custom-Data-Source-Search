@@ -16,8 +16,11 @@ data sources that competent software developers plug in to the system for themse
 ### SRS
 [Demo 1](https://www.overleaf.com/project/60b8d575257b726a64a95d6f)
 
+### DataSleuth Architecture
+[Demo 2](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing)
+
 ### User Manual
-[Demo 2](https://www.overleaf.com/read/tbnhnsnkqzmj)
+[Demo 2](https://drive.google.com/file/d/1FNIe4R1prw5S8LBU3TC2LQrwWTPcDlGN/view?usp=sharing)
 
 ### Demos
 [Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing
