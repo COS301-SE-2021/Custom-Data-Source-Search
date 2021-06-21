@@ -4,6 +4,7 @@ import WebPageUnavailableError from "../errors/WebPageError";
 import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 import {WebOccurrencesResponse, WebStringOccurrences} from "../models/response/searchWebPageResponse.interface";
 import {randomBytes} from "crypto";
+import textDataSourceService from "./TextDataSource.service";
 
 const fetch = require("node-fetch");
 const axios = require("axios")
@@ -84,11 +85,15 @@ class WebPageDataSourceService {
 
         let i = 0;
         for await (const content of pages) {
-            result[i] = {
-                url: this.webPageDataSourceArray[i].url,
-                occurrences: this.searchWebPage(content, searchString)
-            };
-            i++;
+            let searchResults: WebStringOccurrences = this.searchWebPage(await content, searchString);
+            if (searchResults.hasOwnProperty('0')) {
+                result[i] = {
+                    type: "webpage",
+                    url: this.webPageDataSourceArray[i].url,
+                    occurrences: searchResults
+                };
+                i++;
+            }
         }
         return [result, null];
     }
@@ -103,9 +108,6 @@ class WebPageDataSourceService {
         } catch {
             return "";
         }
-
-
-
     }
 
     searchWebPage(pageContents : string, searchString : string) : WebStringOccurrences{

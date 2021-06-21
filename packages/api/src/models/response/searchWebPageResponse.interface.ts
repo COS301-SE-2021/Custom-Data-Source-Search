@@ -7,6 +7,7 @@ export interface WebStringOccurrences {
 }
 
 export interface WebPageOccurrence {
+    type: string;
     url: string;
     occurrences: WebStringOccurrences;
 }

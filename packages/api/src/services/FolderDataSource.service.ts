@@ -129,7 +129,7 @@ class FolderDataSourceService {
         let results: string[] = [];
         let [separateFiles, ] = textDataSourceRepository.getAllDataSources();
         fileNames.forEach((file) => {
-            if (file.indexOf('.txt') !== -1 && separateFiles.findIndex(x => x.filename === file) === -1) {
+            if ((file.indexOf('.ts') !== -1 || file.indexOf('.txt') !== -1) && separateFiles.findIndex(x => x.filename === file) === -1) {
                 results.push(file);
             }
         });

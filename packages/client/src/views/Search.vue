@@ -22,9 +22,7 @@ export default {
     return {
       notDeleted: true,
       query: "",
-      searchResults: [
-
-      ]
+      searchResults: []
     }
   },
   methods: {
@@ -33,7 +31,7 @@ export default {
       axios
         .get("http://localhost:3001/general/" + this.query)
         .then((resp) => {
-          this.searchResults = resp.data
+          this.searchResults = resp.data.searchResults
         }).catch(() => {
           alert("Something went wrong!")
         })
