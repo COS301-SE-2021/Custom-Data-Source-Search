@@ -1,6 +1,6 @@
 <template>
   <div class="search-div">
-    <input v-model="query" v-on:keyup.enter="search" placeholder="Sleuth...">
+    <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
   </div>
   <div>
     <TextResultCard
@@ -15,54 +15,26 @@
 
 <script>
 import TextResultCard from "../components/results/TextResultCard";
-
+import axios from "axios";
 export default {
   name: "SearchBar",
   data() {
     return {
       notDeleted: true,
       query: "",
-      searchResults: [
-        {
-          type: "webpage",
-          source: "stackoverflow/result/a/how-do-you-do-this",
-          occurrences: [
-            {occurrenceString: "one result"},
-             {occurrenceString: "something else in the same file"},
-             {occurrenceString: "another thing!"}
-          ]
-        },
-        {
-          type: "text",
-          source: "some/folder/lewis.txt",
-          occurrences: [
-               {occurrenceString: "When the whole world is running towards a cliff, he who is running in the opposite direction appears to have lost his mind."},
-              "something else in the same file",
-               {occurrenceString: "Of all tyrannies, a tyranny sincerely exercised for the good of its victims may be the most oppressive. It would be better to live under robber barons than under omnipotent moral busybodies. The robber baron's cruelty may sometimes sleep, his cupidity may at some point be satiated; but those who torment us for our own good will torment us without end for they do so with the approval of their own conscience."}
-          ]
-        },
-        {
-          type: "folder",
-          source: "some/folder/lewis.txt",
-          occurrences: [
-             {occurrenceString: "Humility is not thinking less of yourself, it's thinking of yourself less."}
-          ]
-        },
-        {
-          type: "folder",
-          source: "some/folder/lewis.txt",
-          occurrences: [
-             {occurrenceString: "When the whole world is running towards a cliff, he who is running in the opposite direction appears to have lost his mind."},
-            "something else in the same file",
-             {occurrenceString: "Of all tyrannies, a tyranny sincerely exercised for the good of its victims may be the most oppressive. It would be better to live under robber barons than under omnipotent moral busybodies. The robber baron's cruelty may sometimes sleep, his cupidity may at some point be satiated; but those who torment us for our own good will torment us without end for they do so with the approval of their own conscience."}
-          ]
-        }
-      ]
+      searchResults: []
     }
   },
   methods: {
-    search(message) {
-      alert(message)
+    queryServer() {
+      this.searchResults = []
+      axios
+        .get("http://localhost:3001/general/" + this.query)
+        .then((resp) => {
+          this.searchResults = resp.data.searchResults
+        }).catch(() => {
+          alert("Something went wrong!")
+        })
     }
   },
   components: {
