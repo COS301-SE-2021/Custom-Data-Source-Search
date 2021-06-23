@@ -18,7 +18,6 @@ class TextDataSourceService {
     textDataSourceArray: TextDataSource[];
 
     constructor() {
-        console.log("Text Data Source Service started");
         this.textDataSourceArray = [];
     }
 
