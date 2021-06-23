@@ -8,7 +8,8 @@ export interface StringOccurrences {
 }
 
 export interface FileOccurrence {
-    fileName: string;
+    type: string;
+    source: string;
     occurrences: StringOccurrences;
 }
 

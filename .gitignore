@@ -1,6 +1,33 @@
+.DS_Store
+dist/
 node_modules/
 build/
-/.coveralls.yml
-.env
-/package-lock.json
 coverage/
+/packages/api/src/repositories/store/*
+!/packages/api/src/repositories/store/gitkeep
+dist_electron/
+
+/packages/api/.coveralls.yml
+/.env
+
+/packages/client/tests/e2e/videos/
+/packages/client/tests/e2e/screenshots/
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

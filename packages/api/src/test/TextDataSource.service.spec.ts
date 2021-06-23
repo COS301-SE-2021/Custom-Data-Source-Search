@@ -1,16 +1,13 @@
 import textDataSourceService from "../services/TextDataSource.service";
-import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import {StringOccurrences} from "../models/response/searchFileResponse.interface";
 import FileReadingError from "../errors/FileReadingError";
 import fs from "fs";
-//import exp from "constants";
-
+import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 
 const service = textDataSourceService;
 
-
 describe('TextDataSourceService : Individual File Searching' , () => {
     it('Should return empty object on empty string search', () => {
-
         //given
         const mockFileContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
         const mockSearchString = "";
@@ -126,137 +123,108 @@ describe('TextDataSourceService : Individual File Searching' , () => {
 
 
 describe('TextDataSourceService : Searching Across All Files' , () => {
-    it('Should return search results when there are multiple occurrences of the search string in any files ', () => {
+    beforeAll(() => {
+        jest.spyOn(textDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
+            return [
+                [
+                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/'},
+                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/'}
+                ], null];
+        });
+    })
+    it('Should return search results when there are multiple occurrences of the search string in any files ', async () => {
         //given
-      //  textDataSourceService.addTextDataSource('hello.txt', '../test/');
-       // textDataSourceService.addTextDataSource('beans.txt', '../test/')
-        textDataSourceService.setDataSourceArray();
-
         const searchString = "Jeff";
         //when
-        const response: StringOccurrencesResponse = service.searchAllTextDataSources(searchString);
+        const [response,error] = await service.searchAllTextDataSources(searchString);
         //then
+        expect(error).toBe(null);
+        expect(response).not.toBe(null);
         expect(response).not.toEqual({});
-
-        //hello.txt
-        // expect(response['hello.txt']).not.toBe(undefined);
-        // expect(response['hello.txt'][0].lineNumber).toEqual(1);
-        // expect(response['hello.txt'][1].lineNumber).toEqual(3);
-        // expect(response['hello.txt'][2].lineNumber).toEqual(5);
-        expect(response[0]).not.toBe(undefined);
-        expect(response[0].fileName).toEqual("hello.txt");
-        expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
-        expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
-        expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
-        //beans.txt
-        expect(response[1]).not.toBe(undefined);
-        expect(response[1].fileName).toEqual("beans.txt");
-        expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
-        expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
-
-
+        if (response) {
+            //hello.txt
+            expect(response[0]).not.toBe(undefined);
+            expect(response[0].source).toEqual("../test/hello.txt");
+            expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
+            expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
+            expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
+            //beans.txt
+            expect(response[1]).not.toBe(undefined);
+            expect(response[1].source).toEqual("../test/beans.txt");
+            expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
+            expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
+        }
     });
 
-    it('Should return empty object when no occurrences of the search string are in any files ', () => {
+    it('Should return empty object when no occurrences of the search string are in any files ', async () => {
         //given
-        textDataSourceService.setDataSourceArray();
         const searchString = "awordthatshouldntbethere";
         //when
-        const response: StringOccurrencesResponse = service.searchAllTextDataSources(searchString);
+        const [response,error] = await service.searchAllTextDataSources(searchString);
         //then
-        expect(response).not.toEqual({});
-        expect(response[0]["occurrences"]).toEqual({});
-        expect(response[1]["occurrences"]).toEqual({});
+        expect(error).toBe(null);
+        expect(response).not.toBe(null);
+        expect(response).toEqual({});
     });
 });
 
 describe('addTextDataSource function' , () => {
+    class TestError extends Error{
+        constructor(message:string, code:string) {
+            super(message);
+            this.code = code;
+        }
+        code:string;
+    }
+    let fileName: string = "";
+    let filePath: string = "";
+    function add(){
+        service.addTextDataSource(fileName, filePath);
+    }
     it('Should throw FileReadingError with appropriate message when no file path is specified', () => {
         //given
-        const fileName = "file.txt";
-        const filePath = "";
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
+        fileName = "file.txt";
+        filePath = "";
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("NO FILE PATH");
     });
     it('Should throw FileReadingError with appropriate message when no file name is specified', () => {
         //given
-        const fileName = "";
-        const filePath = "/somePath";
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
+        fileName = "";
+        filePath = "/somePath";
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("NO FILE NAME");
     });
     it('Should throw correct error when readFileSync throws file not found error', () => {
         //given
-        class TestError extends Error{
-            constructor(message:string, code:string) {
-                super(message);
-                this.code = code;
-            }
-            code:string;
-        }
-        const fileName = "file.txt";
-        const filePath = "/somePath";
+        fileName = "file.txt";
+        filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'ENOENT');
         });
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
-        //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("FILE NOT FOUND");
     });
     it('Should throw correct error when readFileSync throws access prohibited error', () => {
         //given
-        class TestError extends Error{
-            constructor(message:string, code:string) {
-                super(message);
-                this.code = code;
-            }
-            code:string;
-        }
-        const fileName = "file.txt";
-        const filePath = "/somePath";
+        fileName = "file.txt";
+        filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'EACCES');
         });
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow("ACCESS FORBIDDEN");
     });
     it('Should pass on error when readFileSync throws error with unknown code', () => {
         //given
-        class TestError extends Error{
-            constructor(message:string, code:string) {
-                super(message);
-                this.code = code;
-            }
-            code:string;
-        }
-        const fileName = "file.txt";
-        const filePath = "/somePath";
+        fileName = "file.txt";
+        filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'UNKNOWN');
         });
-        //when
-        function add(){
-            service.addTextDataSource(fileName, filePath);
-        }
         //then
         expect(add).toThrow(TestError);
         expect(add).toThrow("TEST");

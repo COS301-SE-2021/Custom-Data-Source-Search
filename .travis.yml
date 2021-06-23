@@ -1,6 +1,27 @@
 language: node_js
-node_js:
-  - 15
+node_js: 15
+
+install:
+  - npm install
+
+cache:
+  directories:
+    - packages/client/node_modules/
+    - packages/api/node_modules/
+
+jobs:
+  include:
+    - stage: test
+      before_install:
+        - cd packages/api
+      script:
+        - npm run test
+    - stage: test
+      before_install:
+        - cd packages/client
+      script:
+        - npm run test:unit
+
 branches:
   only:
     - master
