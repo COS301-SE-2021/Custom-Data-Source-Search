@@ -23,8 +23,8 @@ data sources that competent software developers plug in to the system for themse
 [Demo 2](https://drive.google.com/file/d/1FNIe4R1prw5S8LBU3TC2LQrwWTPcDlGN/view?usp=sharing)
 
 ### Demos
-![Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing)
-![Abstraction-Demo2](https://drive.google.com/file/d/1sbplUcJwGkIJPUxpzKIw-NadJCk9BQSa/view?usp=sharing)
+[Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing) <br>
+[Abstraction-Demo2](https://drive.google.com/file/d/1sbplUcJwGkIJPUxpzKIw-NadJCk9BQSa/view?usp=sharing)
 
 ### ProjectBoard
 [GitKraken](https://www.gitkraken.com/)
