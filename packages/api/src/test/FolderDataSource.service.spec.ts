@@ -33,4 +33,22 @@ describe("Folder data source service: getAllFolderDataSources function", () => {
         expect(result.code).toEqual(200);
         expect(result.body).toEqual([]);
     });
+    it("Should return a 500 error with a message if an error occurred", () => {
+        //given
+        const error = {
+            "code": 500,
+            "message": "Internal error occurred"
+        };
+        jest.spyOn(folderDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [null, error];
+        });
+        //when
+        let result = service.getAllFolderDataSources();
+        //then
+        expect(result).not.toEqual({});
+        expect(result.code).toEqual(500);
+        expect(result.body.hasOwnProperty("message")).toEqual(true);
+        // @ts-ignore
+        expect(result.body.message).toEqual("Internal error");
+    });
 });
