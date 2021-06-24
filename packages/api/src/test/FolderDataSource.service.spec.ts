@@ -1,6 +1,6 @@
 import folderDataSourceService from "../services/FolderDataSource.service";
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
-import {StoredFolderDataSource} from "../models/FolderDataSource.interface";
+import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 
 const service = folderDataSourceService;
 
@@ -86,5 +86,18 @@ describe("Folder data source service: getFolderDataSource function", () => {
         expect(result.code).toEqual(404);
         expect(result.body.message).toEqual("Folder datasource not found");
         expect(result.body.hasOwnProperty("data")).toEqual(false);
+    });
+    it("Should call repository with same path if it ends in / and exists", () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
+            return [null, null]
+        });
+        //when
+        const path: string = "test/path/";
+        const dataSource: FolderDataSource = {
+            "path": path
+        };
+        folderDataSourceService.addFolderDataSource(path);
+        expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
     });
 });

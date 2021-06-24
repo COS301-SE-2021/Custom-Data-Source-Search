@@ -46,21 +46,13 @@ class FolderDataSourceService {
         if (path[path.length - 1] !== '/') {
             path += '/';
         }
-        if (!fs.existsSync(path)) {
-            return {
-                "code": 404,
-                "body": {
-                    "message": "Directory does not exist"
-                }
-            }
-        }
         const temp: FolderDataSource = {path: path};
         let [, e] = folderDataSourceRepository.addDataSource(temp);
         if (e) {
             return {
-                "code": 400,
+                "code": e.code,
                 "body": {
-                    "message": "Datasource already exists"
+                    "message": e.message
                 }
             }
         }
