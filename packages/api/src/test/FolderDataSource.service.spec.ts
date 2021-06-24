@@ -21,4 +21,16 @@ describe("Folder data source service: getAllFolderDataSources function", () => {
         expect(result.code).toEqual(200);
         expect(result.body).toEqual(object);
     });
+    it("Should return empty array in the body when repository is empty if no error occurred", () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[], null];
+        });
+        //when
+        let result = service.getAllFolderDataSources();
+        //then
+        expect(result).not.toEqual({});
+        expect(result.code).toEqual(200);
+        expect(result.body).toEqual([]);
+    });
 });
