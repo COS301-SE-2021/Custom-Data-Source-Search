@@ -68,14 +68,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+html,
+body,
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
-  background-color: black;
+  height: 100%;
 }
 
 .app-container {
@@ -87,9 +89,9 @@ body #app .p-button {
 
 }
 
-/*Easy to change individual elements*/
+///*Easy to change individual elements*/
 button{
-  background: #10DBB3;
+  color: black;
 }
 
 form {

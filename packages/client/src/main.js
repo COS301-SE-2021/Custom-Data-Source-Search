@@ -13,8 +13,9 @@ import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
-//We can import different themes, a list of available themes is on the PrimeVue website
-import 'primevue/resources/themes/md-dark-indigo/theme.css';
+//We can import different themes, a list of available themes is on the PrimeVue website. I've edited the below theme to include our primary colour
+//There are a few more instances of the original purple that would need to be altered.
+import './assets/_theme.scss';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
