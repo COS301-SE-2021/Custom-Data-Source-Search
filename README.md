@@ -11,7 +11,7 @@ DataSleuth is a custom data source search system. It aims to provide software de
 with a central system from where they can search all the data sources they use for 
 their work. From local files, code repositories, wikis, databases, 
 websites and communication systems, all the way to user specific esoteric
-data sources that competent software developers plug in to the system for themselves.<br>
+data sources that competent software developers can plug in to the system for themselves.<br>
 The project is still in the early phases of development.
 
 ### The DataSleuth Story
