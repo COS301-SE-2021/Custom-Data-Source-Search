@@ -26,11 +26,11 @@ export default {
     },
     width: {
       type: [Number, String],
-      default: 20
+      default: 24
     },
     height: {
       type: [Number, String],
-      default: 20
+      default: 24
     },
     iconColor: {
       type: String,
@@ -51,5 +51,9 @@ export default {
 </script>
 
 <style scoped>
+
+svg {
+  cursor: pointer;
+}
 
 </style>
