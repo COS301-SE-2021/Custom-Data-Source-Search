@@ -3,7 +3,7 @@
   <div id="nav">
     <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
 
-    <router-link title="Data Sources" class="icon" to="/datasources"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#26C6DA"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/></svg></router-link>
+    <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
   </div>
   <div>
   <router-view/>
@@ -53,9 +53,13 @@ body,
 }
 
 </style>
+
 <script>
 import IconSearch from "./components/icons/IconSearch";
+import IconStorage from "./components/icons/IconStorage";
 export default {
-  components: {IconSearch}
+  components: {
+    IconStorage,
+    IconSearch}
 }
 </script>
