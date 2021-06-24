@@ -1,15 +1,30 @@
 <template>
   <div class="grid-app">
-    <div id="nav">
-      <router-link title="Search" class="icon" to="/" style="text-decoration: none;"><Button icon="pi pi-search" class="p-button-rounded p-button-text" /></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources" style="text-decoration: none;"><Button icon="pi pi-book" class="p-button-rounded p-button-text" /></router-link>
-    </div>
+    <Sidebar v-model:visible="visible" dismissable="true">
+      <div class="nav">
+        <router-link title="Search" class="icon" to="/" style="text-decoration: none;"><Button icon="pi pi-search" class="p-button-rounded p-button-text" />Search</router-link>
+      </div>
+      <div class="nav">
+        <router-link title="Data Sources" class="icon" to="/datasources" style="text-decoration: none;"><Button icon="pi pi-book" class="p-button-rounded p-button-text" />Data Sources</router-link>
+      </div>
+    </Sidebar>
+    <Button icon="pi pi-arrow-right" @click="visible = true" />
+
     <div>
       <router-view/>
     </div>
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      visible: false,
+    }
+  }
+}
+</script>
 <style lang="scss">
 html,
 body,
@@ -33,7 +48,7 @@ body,
   grid-template-rows: 1fr 12fr;
 }
 
-#nav {
+.nav {
   padding: 30px;
   text-align: left;
 
@@ -51,4 +66,7 @@ body,
   padding: 10px;
 }
 
+.p-sidebar-active{
+  width: 5em;
+}
 </style>

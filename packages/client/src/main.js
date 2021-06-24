@@ -14,6 +14,7 @@ import SplitterPanel from 'primevue/splitterpanel';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import FileUpload from 'primevue/fileupload';
+import Sidebar from 'primevue/sidebar';
 //We can import different themes, a list of available themes is on the PrimeVue website. I've edited the below theme to include our primary colour
 //There are a few more instances of the original purple that would need to be altered.
 import './assets/_theme.scss';
@@ -25,6 +26,7 @@ const app = createApp(App);
 app.use(PrimeVue);
 app.use(ToastService);
 app.use(router);
+app.component("Sidebar", Sidebar)
 app.component("FileUpload", FileUpload)
 app.component("TabView", TabView)
 app.component("TabPanel", TabPanel)
