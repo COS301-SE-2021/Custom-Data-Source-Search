@@ -6,8 +6,8 @@
       </div>
       <div id="header">Webpages</div>
       <div @click="add=!add">
-        <svg class="add" v-if="add" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg>
-        <svg class="add" v-else xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><rect fill="none" height="24" width="24"/></g><g><g><path d="M19,13h-6v6h-2v-6H5v-2h6V5h2v6h6V13z"/></g></g></svg>
+        <icon-min class="add" v-if="add"/>
+        <icon-add class="add" v-else />
       </div>
       <div @click="expanded=!expanded" id="expand">
         <svg class="expand" id="minimise" v-if="expanded" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"/></svg>
@@ -35,6 +35,8 @@ import DataSourceCard from "./DataSourceCard";
 import AddDataURI from "./AddDataURI";
 import axios from "axios";
 import IconWeb from "../icons/IconWeb";
+import IconMin from "../icons/IconMin";
+import IconAdd from "../icons/IconAdd";
 
 export default {
   name: "WebpageDatasource",
@@ -46,6 +48,8 @@ export default {
     }
   },
   components: {
+    IconMin,
+    IconAdd,
     IconWeb,
     DataSourceCard,
     AddDataURI
