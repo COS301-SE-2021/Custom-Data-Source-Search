@@ -14,6 +14,9 @@ websites and communication systems, all the way to user specific esoteric
 data sources that competent software developers plug in to the system for themselves.<br>
 The project is still in the early phases of development.
 
+### The DataSleuth Story
+See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/wiki/The-DataSleuth-Story) for more information about the design of the DataSleuth system, the workflow of the team behing it, and the story of how it all got where it is now. 
+
 ### SRS
 [Demo 1](https://www.overleaf.com/project/60b8d575257b726a64a95d6f)
 
