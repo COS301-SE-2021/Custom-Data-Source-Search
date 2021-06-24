@@ -19,7 +19,7 @@ export default {
     width: [Number, String],
     iconTitle: {
       type: String,
-      default: 'Folder'
+      default: 'Web'
     },
     iconColor: {
       type: String,
