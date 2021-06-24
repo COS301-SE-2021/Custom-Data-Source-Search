@@ -52,3 +52,39 @@ describe("Folder data source service: getAllFolderDataSources function", () => {
         expect(result.body.message).toEqual("Internal error");
     });
 });
+describe("Folder data source service: getFolderDataSource function", () => {
+    it("Should return a success response and the same object in the body that was returned by repository if no error occurred", () => {
+        //given
+        const object: StoredFolderDataSource = {
+            "uuid": "testUUID",
+            "path": "testPath/"
+        };
+        jest.spyOn(folderDataSourceRepository, "getDataSource").mockImplementation(() => {
+            return [object, null];
+        });
+        //when
+        let result = service.getFolderDataSource("testUUID");
+        //then
+        expect(result).not.toEqual({});
+        expect(result.code).toEqual(200);
+        expect(result.body.message).toEqual("Success");
+        expect(result.body.data).toEqual(object);
+    });
+    it("Should return 404 error when datasource is not found", () => {
+        //given
+        const error = {
+            "code": 404,
+            "message": "Folder datasource not found"
+        };
+        jest.spyOn(folderDataSourceRepository, "getDataSource").mockImplementation(() => {
+            return [null, error];
+        });
+        //when
+        let result = service.getFolderDataSource("testUUID");
+        //then
+        expect(result).not.toEqual({});
+        expect(result.code).toEqual(404);
+        expect(result.body.message).toEqual("Folder datasource not found");
+        expect(result.body.hasOwnProperty("data")).toEqual(false);
+    });
+});
