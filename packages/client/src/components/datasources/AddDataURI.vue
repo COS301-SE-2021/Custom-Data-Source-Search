@@ -2,6 +2,7 @@
   <div>
     <input :placeholder="placeholderPath" v-model="dataSourceURI" v-on:keyup.enter="addDataSource">
     <button @click="addDataSource(endpoint)">Add</button>
+    <FileUpload mode="basic" name="demo[]" url="./upload.php" accept=".txt" :maxFileSize="1000000" @upload="onUpload" />
   </div>
 </template>
 
