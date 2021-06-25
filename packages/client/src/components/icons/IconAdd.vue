@@ -22,8 +22,7 @@ export default {
       default: 'Add'
     },
     iconColor: {
-      type: String,
-      default: '#ffffff'
+      type: String
     }
   }
 }

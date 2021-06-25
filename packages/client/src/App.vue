@@ -2,7 +2,6 @@
 <div class="grid-app">
   <div id="nav">
     <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
-
     <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
   </div>
   <div>
@@ -12,6 +11,7 @@
 </template>
 
 <style lang="scss">
+
 html,
 body,
 #app {
@@ -20,9 +20,6 @@ body,
   padding: 0;
   background-color: #2c2c2c;
   color: rgba(255, 255, 255, 0.58);
-}
-
-#app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

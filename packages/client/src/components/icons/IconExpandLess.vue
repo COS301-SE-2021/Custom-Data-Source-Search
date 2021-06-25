@@ -22,8 +22,7 @@ export default {
       default: 'ExpandLess'
     },
     iconColor: {
-      type: String,
-      default: '#ffffff'
+      type: String
     }
   }
 }

@@ -22,8 +22,7 @@ export default {
       default: 'ExpandMore'
     },
     iconColor: {
-      type: String,
-      default: '#ffffff'
+      type: String
     }
   }
 }

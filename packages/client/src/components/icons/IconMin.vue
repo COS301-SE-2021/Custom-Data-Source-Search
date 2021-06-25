@@ -22,8 +22,7 @@ export default {
       default: 'Min'
     },
     iconColor: {
-      type: String,
-      default: '#ffffff'
+      type: String
     }
   }
 }
