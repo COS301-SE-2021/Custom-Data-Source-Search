@@ -147,4 +147,19 @@ describe("Folder data source service: addFolderDataSource function", () => {
         expect(result.code).toEqual(404);
         expect(result.body.message).toEqual("Directory does not exist");
     });
+    it("Should return \"Successfully added datasource\" when data source was successfully added to repository", () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
+            return [{
+                "code": 200,
+                "message": "Successfully added folder datasource"
+            }, null];
+        });
+        const path: string = "test/path/";
+        //when
+        const result = folderDataSourceService.addFolderDataSource(path);
+        //then
+        expect(result.code).toEqual(200);
+        expect(result.body.message).toEqual("Successfully added datasource");
+    });
 });
