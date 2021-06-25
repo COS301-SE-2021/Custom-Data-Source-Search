@@ -1,6 +1,6 @@
 <template>
   <div class="grid-app">
-    <Sidebar v-model:visible="visible" dismissable="true" id="sidebar-small">
+    <Sidebar v-model:visible="visible" id="sidebar-small">
       <div class="nav">
         <router-link title="Search" class="icon" to="/" style="text-decoration: none;"><Button icon="pi pi-search" class="p-button-rounded p-button-text" />Search</router-link>
       </div>
