@@ -56,18 +56,11 @@ export default {
 
 .icon-button {
   background-color: #212121;
-
+  padding: 20px;
 }
 
 .icon-button:hover {
   background-color: #2c2c2c;
 }
-
-svg {
- /*cursor: pointer;*/
-
-}
-
-
 
 </style>

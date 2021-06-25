@@ -95,14 +95,14 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 6fr 1fr 1fr;
+  grid-template-columns: 1fr 10fr 1fr 1fr;
 }
 
 .grid div {
   width: 100%;
   vertical-align: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 #text-datasources {
