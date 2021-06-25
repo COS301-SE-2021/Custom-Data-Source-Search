@@ -32,4 +32,13 @@ export default {
 </script>
 
 <style scoped>
+
+
+.icon-button {
+  background-color: #2c2c2c;
+}
+
+.icon-button:hover {
+  background-color: #212121;
+}
 </style>

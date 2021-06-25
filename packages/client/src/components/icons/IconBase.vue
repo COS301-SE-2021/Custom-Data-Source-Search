@@ -1,15 +1,17 @@
 <template>
-  <svg
-      :xmlns="xmlns"
-      :title="iconTitle"
-      :height="height"
-      :width="width"
-      :fill="iconColor"
-      :viewBox="viewBox"
-  >
-    <path :d="path1" :fill="path1Fill"/>
-    <path :d="path2"/>
-  </svg>
+  <button class="icon-button">
+    <svg
+        :xmlns="xmlns"
+        :title="iconTitle"
+        :height="height"
+        :width="width"
+        :fill="iconColor"
+        :viewBox="viewBox"
+    >
+      <path :d="path1" :fill="path1Fill"/>
+      <path :d="path2"/>
+    </svg>
+  </button>
 </template>
 
 <script>
@@ -45,15 +47,27 @@ export default {
       type: String,
       default: 'none'
     },
-    path2: String
+    path2: String,
   }
 }
 </script>
 
 <style scoped>
 
-svg {
-  cursor: pointer;
+.icon-button {
+  background-color: #212121;
+
 }
+
+.icon-button:hover {
+  background-color: #2c2c2c;
+}
+
+svg {
+ /*cursor: pointer;*/
+
+}
+
+
 
 </style>
