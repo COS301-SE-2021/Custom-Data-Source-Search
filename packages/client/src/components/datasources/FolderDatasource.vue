@@ -5,13 +5,13 @@
         <icon-folder/>
       </div>
       <div id="header">Folders</div>
-      <div @click="add=!add">
-        <icon-min class="add" v-if="add"/>
-        <icon-add class="add" v-else />
+      <div>
+        <icon-min @click="add=!add" class="add" v-if="add"/>
+        <icon-add @click="add=!add" class="add" v-else />
       </div>
-      <div @click="expanded=!expanded" id="expand">
-        <icon-expand-less class="expand" id="minimise" v-if="expanded" />
-        <icon-expand-more class="expand" v-else />
+      <div id="expand" >
+        <icon-expand-less @click="expanded=!expanded" class="expand" id="minimise" v-if="expanded" />
+        <icon-expand-more @click="expanded=!expanded" class="expand" v-else />
       </div>
     </div>
     <div v-if="add">
