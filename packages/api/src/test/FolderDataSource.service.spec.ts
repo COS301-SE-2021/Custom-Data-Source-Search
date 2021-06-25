@@ -87,17 +87,34 @@ describe("Folder data source service: getFolderDataSource function", () => {
         expect(result.body.message).toEqual("Folder datasource not found");
         expect(result.body.hasOwnProperty("data")).toEqual(false);
     });
-    it("Should call repository with same path if it ends in / and exists", () => {
+});
+describe("Folder data source service: addFolderDataSource function", () => {
+    it("Should call repository with same path if it ends in /", () => {
         //given
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
-            return [null, null]
+            return [null, null];
         });
-        //when
         const path: string = "test/path/";
         const dataSource: FolderDataSource = {
             "path": path
         };
+        //when
         folderDataSourceService.addFolderDataSource(path);
+        //then
+        expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
+    });
+    it("Should call repository with path that has / appended to the end if the path did not end in /", () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
+            return [null, null];
+        });
+        const path: string = "test/path";
+        const dataSource: FolderDataSource = {
+            "path": path + "/"
+        };
+        //when
+        folderDataSourceService.addFolderDataSource(path);
+        //then
         expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
     });
 });
