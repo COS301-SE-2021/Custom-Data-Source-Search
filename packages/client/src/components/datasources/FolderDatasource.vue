@@ -81,7 +81,6 @@ export default {
 
 .add {
   float: right;
-  cursor: pointer;
 }
 
 #header {
@@ -91,10 +90,6 @@ export default {
 
 .expand {
   float: right;
-}
-
-#expand {
-  cursor: pointer;
 }
 
 .grid {
