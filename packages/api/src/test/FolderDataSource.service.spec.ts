@@ -163,3 +163,35 @@ describe("Folder data source service: addFolderDataSource function", () => {
         expect(result.body.message).toEqual("Successfully added datasource");
     });
 });
+describe("Folder data source service: removeFolderDataSource function", () => {
+    it("Should return success code and message when removing from repository was successful", () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "deleteDataSource").mockImplementation(() => {
+            return [{
+                "code": 204,
+                "message": "Successfully deleted folder datasource"
+            }, null];
+        });
+        const id: string = "someTestUUID";
+        //when
+        const result = service.removeFolderDataSource(id);
+        //then
+        expect(result.code).toEqual(204);
+        expect(result.body.message).toEqual("Successfully deleted folder datasource");
+    });
+    it("Should return \"Folder datasource not found\" error when repository does not contain datasource", () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "deleteDataSource").mockImplementation(() => {
+            return [null, {
+                "code": 404,
+                "message": "Folder datasource not found"
+            }];
+        });
+        const id: string = "someTestUUID";
+        //when
+        const result = service.removeFolderDataSource(id);
+        //then
+        expect(result.code).toEqual(404);
+        expect(result.body.message).toEqual("Folder datasource not found");
+    });
+});
