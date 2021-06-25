@@ -26,6 +26,19 @@ body,
   text-align: center;
 }
 
+input {
+  height: 28px;
+  font-size: 1em;
+  background-color: #929292;
+  padding: 3px 3px 3px 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+input::placeholder {
+  color: black;
+}
+
 .grid-app {
   display: grid;
   grid-template-rows: 1fr 12fr;
@@ -49,6 +62,14 @@ body,
   padding: 10px;
 }
 
+button {
+  background-color: #26C6DA;
+  border: none;
+  border-radius: 12px;
+  margin-left: 45px;
+  padding: 10px;
+  cursor: pointer;
+}
 </style>
 
 <script>

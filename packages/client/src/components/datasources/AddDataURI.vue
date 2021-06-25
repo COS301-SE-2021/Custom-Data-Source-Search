@@ -53,25 +53,11 @@ div {
 }
 
 input {
-  background-color: #929292;
-  padding: 3px;
-  border-radius: 8px;
-  border: none;
-  min-width: 680px;
-}
-
-input::placeholder {
-  color: black;
-  padding-left: 10px;
+  min-width: 660px;
 }
 
 button {
-  background-color: #26C6DA;
-  border: none;
-  border-radius: 12px;
   margin-left: 45px;
-  padding: 6px;
-  cursor: pointer;
 }
 
 </style>
