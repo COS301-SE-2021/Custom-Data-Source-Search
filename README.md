@@ -7,26 +7,36 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/COS301-SE-2021/Custom-Data-Source-Search)
 ![GitHub open issues](https://img.shields.io/github/issues-raw/COS301-SE-2021/Custom-Data-Source-Search)
 
-DataSleuth is a custom data source search system. It provides software developers 
+DataSleuth is a custom data source search system. It aims to provide software developers 
 with a central system from where they can search all the data sources they use for 
 their work. From local files, code repositories, wikis, databases, 
 websites and communication systems, all the way to user specific esoteric
-data sources that competent software developers plug in to the system for themselves.
+data sources that competent software developers can plug in to the system for themselves.<br>
+The project is still in the early phases of development.
+
+### The DataSleuth Story
+See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/wiki/The-DataSleuth-Story) for more information on the design of the DataSleuth system; the workflow of the team behind it; and the story of how it all got where it is now. 
 
 ### SRS
 [Demo 1](https://www.overleaf.com/project/60b8d575257b726a64a95d6f)
 
+### DataSleuth Architecture
+[Demo 2](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing)
+
+### User Manual
+[Demo 2](https://drive.google.com/file/d/1FNIe4R1prw5S8LBU3TC2LQrwWTPcDlGN/view?usp=sharing)
+
 ### Demos
-[Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing
-)
+[Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing) <br>
+[Abstraction-Demo2](https://drive.google.com/file/d/1sbplUcJwGkIJPUxpzKIw-NadJCk9BQSa/view?usp=sharing)
 
 ### ProjectBoard
 [GitKraken](https://www.gitkraken.com/)
 
 | **Team Member**                                                                                                 | **Details**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                      |
 |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-| ![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha") <br/> **Josua Botha** | Third year Computer Science student. Average grade of 77%. Has been working as a programmer for Dr Nils Timm since first year, implementing his research on model checkers of concurrent software using both Kotlin and Python. Built the frontend of the single page web application www.eduanywhere.academy using Vue. Currently building a compiler in ruby on rails. Represented SA in the 2013 World Robot Olympiad. <br/>                                                                            | [LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/)        |
-| ![Firstname Lastname](https://i.ibb.co/CPkw44n/lauren-circ.png "Lauren Rowe") <br/> **Laruen Rowe**             | Third year Computer Science student, planning on doing honours next year. Studying an HCI module and has a passion for crafting enjoyable user experiences. Likes working with databases and is experienced in MySQL. Is a Teaching Assistant for COS221 - Introduction to Database systems. Good at research and learning new technologies rapidly.                                                                                                                                          | [LinkedIn](https://www.linkedin.com/in/lauren-rowe-63b15b18b/)       |
-| ![Firstname Lastname](https://i.ibb.co/HpJfTy7/marike-circ.png "Catharina van Zyl") <br/> **Catharina van Zyl** | Third year Applied Mathematics Student. Average grade of 71%. Completed her Cambridge Matric with distinction while sailing around the world with her family. Enjoys helping groups work together efficiently; is very good at this - from taking minutes to ensuring tasks are completed on time and correctly. Currently doing part time work as a Personal Assistant at Praxima, a software based payroll company.                                                                         | [LinkedIn](https://www.linkedin.com/in/catharina-van-zyl-a3286b20b/) |
-| ![Firstname Lastname](https://i.ibb.co/9vbJdNY/gianni-circ-rs.png "Gianni Volpi") <br/> **Gianni Volpi**        | Third year Applied Mathematics Student. Intends to do his honours in Computer Science. Average grade of 84%. A Vice Chancellor's merit award winner. A diligent and enthusiastic problem solver, especially if the problems are of a new and challenging technical nature. Diligent analytical thinker. Represented South Africa in the 2013 World Robot Olympiad along with Josua Botha.                                                                                                     | [LinkedIn](https://www.linkedin.com/in/gianni-volpi)                 |
-| ![Firstname Lastname](https://i.ibb.co/82Ccdzs/josh-circ.png "Joshua Walker") <br/> **Joshua Walker**           | Third year Computer Science student, planning on doing honours next year. Placed 2nd at an IT showcase for matric final Practical Assessment Task after building a video game in Unity, OpenGL and Java. Enjoys the challenge of large scale software development projects. Ambitious; wants to be at the cutting edge of the software industry.                                                                                                                                              | [LinkedIn](https://www.linkedin.com/in/joshua-walker-7b0816208)      |
+| ![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha") <br/> **Josua Botha** | Team Lead. Interested in Software Architecture and writing beautiful code. Likes reading old books in front of the fire, and hikes the Drakensburg every now and then.  | [LinkedIn](https://www.linkedin.com/in/josua-botha-63417274/)        |
+| ![Firstname Lastname](https://i.ibb.co/CPkw44n/lauren-circ.png "Lauren Rowe") <br/> **Lauren Rowe**             | Third year Computer Science student. Enjoys working on the frontend and creating enjoyable user experiences. Interests include gaming and going on adventures.                                                                                                                                            | [LinkedIn](https://www.linkedin.com/in/lauren-rowe-63b15b18b/)       |
+| ![Firstname Lastname](https://i.ibb.co/HpJfTy7/marike-circ.png "Catharina van Zyl") <br/> **Catharina van Zyl** | Third year Applied Mathematics Student. Enjoys helping groups work together efficiently, loves baking and the outdoors.                                                                         | [LinkedIn](https://www.linkedin.com/in/catharina-van-zyl-a3286b20b/) |
+| ![Firstname Lastname](https://i.ibb.co/9vbJdNY/gianni-circ-rs.png "Gianni Volpi") <br/> **Gianni Volpi**        | Third year Applied Mathematics Student. Has a very wide range of interests, from 3D printers to mountain biking. Mostly enjoys working on the backend side of things, focusing on the details. [Does not like ice cream](https://www.youtube.com/watch?v=dQw4w9WgXcQ).                                                                                                   | [LinkedIn](https://www.linkedin.com/in/gianni-volpi)                 |
+| ![Firstname Lastname](https://i.ibb.co/82Ccdzs/josh-circ.png "Joshua Walker") <br/> **Joshua Walker**           | Third year Computer Science student, planning on doing Honours next year. Enjoys the challenge of large scale software development projects. Most interested in Backend Development. Long walks and cooking to unwind.                                                                                                                                              | [LinkedIn](https://www.linkedin.com/in/joshua-walker-7b0816208)      |
