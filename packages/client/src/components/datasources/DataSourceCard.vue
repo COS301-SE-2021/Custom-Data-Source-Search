@@ -1,7 +1,7 @@
 <template>
   <div v-if="isNotDeleted">
     <span> {{ title }} </span>
-    <button @click="deleteDataSource(endpoint, id)"><icon-delete/></button>
+    <icon-delete @click="deleteDataSource(endpoint, id)"/>
   </div>
 </template>
 

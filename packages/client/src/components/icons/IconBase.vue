@@ -36,7 +36,7 @@ export default {
     },
     iconColor: {
       type: String,
-      default: 'currentColor'
+      default: 'rgba(255, 255, 255, 0.58)'
     },
     viewBox: {
       type: String,
