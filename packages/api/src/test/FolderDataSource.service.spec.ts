@@ -117,7 +117,7 @@ describe("Folder data source service: addFolderDataSource function", () => {
         //then
         expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
     });
-    it("Should return Folder datasource already exists error when data source already exists in the repository", () => {
+    it("Should return \"Folder datasource already exists\" error when data source already exists in the repository", () => {
         //given
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [null, {
@@ -130,6 +130,21 @@ describe("Folder data source service: addFolderDataSource function", () => {
         const result = folderDataSourceService.addFolderDataSource(path);
         //then
         expect(result.code).toEqual(400);
-        expect(result.body.message).toEqual("Folder datasource already exists")
+        expect(result.body.message).toEqual("Folder datasource already exists");
+    });
+    it("Should return \"Directory does not exist\" error when data source already exists in the repository", () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
+            return [null, {
+                "code": 404,
+                "message": "Directory does not exist"
+            }];
+        });
+        const path: string = "test/path/";
+        //when
+        const result = folderDataSourceService.addFolderDataSource(path);
+        //then
+        expect(result.code).toEqual(404);
+        expect(result.body.message).toEqual("Directory does not exist");
     });
 });
