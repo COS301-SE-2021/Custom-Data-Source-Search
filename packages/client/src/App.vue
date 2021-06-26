@@ -33,7 +33,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #2c2c2c;
+  background-color: #1e1e1e;
   color: rgba(255, 255, 255, 0.58);
 }
 
@@ -46,7 +46,6 @@ body,
 
 .grid-app {
   display: grid;
-  grid-template-rows: 1fr 12fr;
 }
 
 .nav {

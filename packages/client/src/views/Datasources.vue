@@ -1,9 +1,20 @@
-<template>
-  <div class="all">
-      <TextDatasource/>
-      <FolderDatasource/>
-      <WebpageDatasource/>
+<template >
+  <div class="header">
+    Data Sources
   </div>
+  <Splitter style="height: 90vh">
+    <SplitterPanel style="padding-top: 50px">
+      <div class="all-sources">
+        <TextDatasource/>
+        <FolderDatasource/>
+        <WebpageDatasource/>
+      </div>
+    </SplitterPanel>
+    <SplitterPanel size="25">
+      Panel 2
+    </SplitterPanel>
+  </Splitter>
+
 </template>
 
 <script>
@@ -20,9 +31,12 @@ export default {
 </script>
 
 <style scoped>
-.all {
+.all-sources {
   max-width: 800px;
   margin: auto;
 }
 
+.header{
+  margin-bottom: 30px;
+}
 </style>
