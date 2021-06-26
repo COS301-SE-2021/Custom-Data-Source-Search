@@ -5,13 +5,28 @@
   <Splitter style="height: 90vh">
     <SplitterPanel style="padding-top: 50px">
       <div class="all-sources">
-        <TextDatasource/>
+        <TextDatasource @expand-text="expansion()"></TextDatasource>
         <FolderDatasource/>
         <WebpageDatasource/>
       </div>
     </SplitterPanel>
-    <SplitterPanel size="25">
-      Panel 2
+    <SplitterPanel size="25" style="padding-top: 30px">
+      <div v-if="expand" id="text-datasources">
+        <div class="heading">
+          Text Data Sources
+        </div>
+        <DataSourceCard
+            v-for="(item, index) in dataSources"
+            :key=index :title="item.path + item.filename"
+            :id="item.uuid"
+            endpoint="http://localhost:3001/textdatasources"
+        >
+        </DataSourceCard>
+      </div>
+      <div v-else>
+        {{ msg }}
+      </div>
+
     </SplitterPanel>
   </Splitter>
 
@@ -21,11 +36,39 @@
 import WebpageDatasource from "../components/datasources/WebpageDatasource";
 import TextDatasource from "../components/datasources/TextDatasource";
 import FolderDatasource from "../components/datasources/FolderDatasource";
+import DataSourceCard from "../components/datasources/DataSourceCard";
+import axios from "axios";
+
 export default {
+
   components: {
+    DataSourceCard,
     WebpageDatasource,
     TextDatasource,
     FolderDatasource
+  },
+  props: {
+    expanded: Boolean
+  },
+  data() {
+    return {
+      msg: "No data source chosen",
+      expand: false,
+      dataSources: []
+    }
+  },
+  methods: {
+    expansion(){
+      this.expand = !this.expand
+    }
+  },
+  beforeMount() {
+    axios.get("http://localhost:3001/textdatasources").then(
+        resp => {
+          console.log(resp.data)
+          this.dataSources = resp.data
+        }
+    )
   }
 }
 </script>
@@ -39,4 +82,10 @@ export default {
 .header{
   margin-bottom: 30px;
 }
+
+.heading {
+  margin-bottom: 30px;
+}
+
+
 </style>
