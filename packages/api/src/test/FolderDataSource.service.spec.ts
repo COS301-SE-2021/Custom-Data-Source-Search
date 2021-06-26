@@ -1,6 +1,8 @@
 import folderDataSourceService from "../services/FolderDataSource.service";
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
+import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import fs from "fs";
 
 const service = folderDataSourceService;
 
@@ -193,5 +195,36 @@ describe("Folder data source service: removeFolderDataSource function", () => {
         //then
         expect(result.code).toEqual(404);
         expect(result.body.message).toEqual("Folder datasource not found");
+    });
+});
+describe("Folder data source service: getFilesInFolder function", () => {
+    it("Should return no file paths if the files exist in text datasource repository", () => {
+        //given
+        // @ts-ignore
+        jest.spyOn(fs, "readdirSync").mockImplementation(() => {
+            return [
+                "testFile1.txt",
+                "testFile2.txt"
+            ];
+        });
+        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[
+                {
+                    "uuid": "someTestUUID",
+                    "path": "some/test/path/",
+                    "filename": "testFile1.txt"
+                },
+                {
+                    "uuid": "someTestUUID2",
+                    "path": "some/test/path/",
+                    "filename": "testFile2.txt"
+                }
+            ], null];
+        });
+        const path: string = "testPath/";
+        //when
+        const results = service.getFilesInFolder(path)
+        //then
+        expect(results).toEqual([]);
     });
 });

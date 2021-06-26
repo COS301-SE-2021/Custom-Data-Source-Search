@@ -96,13 +96,20 @@ class FolderDataSourceService {
             }
         });
         let result: StringOccurrencesResponse = {};
-        let file: Promise<string>[] = [];
+        let filePromises: Promise<string>[] = [];
         for (let i = 0; i < files.length; i++) {
             let location = paths[i] + files[i];
-            file.push(textDataSourceService.readFile(location));
+            filePromises.push(textDataSourceService.readFile(location));
         }
+        let file: string[];
+        file = await Promise.all(filePromises.map((promise, i) =>
+            promise.catch(err => {
+                err.index = i;
+                console.log(err);
+                return "";
+            })));
         let i = 0;
-        for await (const content of file) {
+        for (const content of file) {
             let searchResults: StringOccurrences = textDataSourceService.searchFile(content, searchString);
             if (searchResults.hasOwnProperty('0')) {
                 result[i] = {
@@ -119,9 +126,9 @@ class FolderDataSourceService {
     getFilesInFolder(path: string) {
         let fileNames: string[] = fs.readdirSync(path);
         let results: string[] = [];
-        let [separateFiles, ] = textDataSourceRepository.getAllDataSources();
+        let [separateFiles,] = textDataSourceRepository.getAllDataSources();
         fileNames.forEach((file) => {
-            if ((file.indexOf('.ts') !== -1 || file.indexOf('.txt') !== -1) && separateFiles.findIndex(x => x.filename === file) === -1) {
+            if (file.indexOf(".") !== -1 && !separateFiles.some(x => x.filename === file)) {
                 results.push(file);
             }
         });
