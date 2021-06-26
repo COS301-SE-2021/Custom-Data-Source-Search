@@ -227,4 +227,87 @@ describe("Folder data source service: getFilesInFolder function", () => {
         //then
         expect(results).toEqual([]);
     });
+    it("Should return no file paths if the folder contains no files", () => {
+        //given
+        jest.spyOn(fs, "readdirSync").mockImplementation(() => {
+            return [];
+        });
+        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[
+                {
+                    "uuid": "someTestUUID",
+                    "path": "some/test/path/",
+                    "filename": "testFile1.txt"
+                },
+                {
+                    "uuid": "someTestUUID2",
+                    "path": "some/test/path/",
+                    "filename": "testFile2.txt"
+                }
+            ], null];
+        });
+        const path: string = "testPath/";
+        //when
+        const results = service.getFilesInFolder(path)
+        //then
+        expect(results).toEqual([]);
+    });
+    it("Should return no file paths if the folder contains only sub folders", () => {
+        //given
+        // @ts-ignore
+        jest.spyOn(fs, "readdirSync").mockImplementation(() => {
+            return [
+                "some/path/to/a/directory/",
+                "another/path/to/directory/"
+            ];
+        });
+        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[
+                {
+                    "uuid": "someTestUUID",
+                    "path": "some/test/path/",
+                    "filename": "testFile1.txt"
+                },
+                {
+                    "uuid": "someTestUUID2",
+                    "path": "some/test/path/",
+                    "filename": "testFile2.txt"
+                }
+            ], null];
+        });
+        const path: string = "testPath/";
+        //when
+        const results = service.getFilesInFolder(path)
+        //then
+        expect(results).toEqual([]);
+    });
+    it("Should return only file paths that are not also in text datasource repository", () => {
+        //given
+        // @ts-ignore
+        jest.spyOn(fs, "readdirSync").mockImplementation(() => {
+            return [
+                "testFile1.txt",
+                "fileThatShouldBeInResults.txt"
+            ];
+        });
+        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[
+                {
+                    "uuid": "someTestUUID",
+                    "path": "some/test/path/",
+                    "filename": "testFile1.txt"
+                },
+                {
+                    "uuid": "someTestUUID2",
+                    "path": "some/test/path/",
+                    "filename": "testFile2.txt"
+                }
+            ], null];
+        });
+        const path: string = "testPath/";
+        //when
+        const results = service.getFilesInFolder(path)
+        //then
+        expect(results).toEqual(["fileThatShouldBeInResults.txt"]);
+    });
 });
