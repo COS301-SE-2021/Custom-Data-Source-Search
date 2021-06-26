@@ -310,4 +310,25 @@ describe("Folder data source service: getFilesInFolder function", () => {
         //then
         expect(results).toEqual(["fileThatShouldBeInResults.txt"]);
     });
+    it("Should return all files in folder if they are not in text datasource repository", () => {
+        //given
+        // @ts-ignore
+        jest.spyOn(fs, "readdirSync").mockImplementation(() => {
+            return [
+                "testFile1.txt",
+                "testFile2.txt",
+            ];
+        });
+        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[], null];
+        });
+        const path: string = "testPath/";
+        //when
+        const results = service.getFilesInFolder(path)
+        //then
+        expect(results).toEqual([
+            "testFile1.txt",
+            "testFile2.txt",
+        ]);
+    });
 });
