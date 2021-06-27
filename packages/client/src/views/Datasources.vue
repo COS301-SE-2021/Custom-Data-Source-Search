@@ -12,22 +12,44 @@
         <WebpageDatasource/>
       </div>
     </SplitterPanel>
-    <SplitterPanel size=25 style="padding-top: 30px">
-      <div v-if="expand" id="text-datasources">
-        <div class="heading">
-          Text Data Sources
-        </div>
-        <DataSourceCard
-            v-for="(item, index) in dataSources"
-            :key=index :title="item.path + item.filename"
-            :id="item.uuid"
-            endpoint="http://localhost:3001/textdatasources"
-        >
-        </DataSourceCard>
-      </div>
+    <SplitterPanel size=25>
+      <TabView class="tabview-custom" v-if="tabs.length">
+        <TabPanel v-for="tab in tabs" :key="tab.title">
+          <template #header>
+            <span>{{tab.title}}</span>
+            <i class="pi pi-times-circle" style="color: gray" @click="deleteTab(tab.title)"></i>
+          </template>
+          <div v-if="tab.title==='Text'" id="text-datasources">
+            <DataSourceCard
+                v-for="(item, index) in dataSources"
+                :key=index :title="item.path + item.filename"
+                :id="item.uuid"
+                endpoint="http://localhost:3001/textdatasources"
+            >
+            </DataSourceCard>
+          </div>
+        </TabPanel>
+      </TabView>
       <div v-else>
-        {{ msg }}
+        <p>Please click on a type to view stored data sources</p>
       </div>
+
+
+<!--      <div v-if="expand" id="text-datasources">-->
+<!--        <div class="heading">-->
+<!--          Text Data Sources-->
+<!--        </div>-->
+<!--        <DataSourceCard-->
+<!--            v-for="(item, index) in dataSources"-->
+<!--            :key=index :title="item.path + item.filename"-->
+<!--            :id="item.uuid"-->
+<!--            endpoint="http://localhost:3001/textdatasources"-->
+<!--        >-->
+<!--        </DataSourceCard>-->
+<!--      </div>-->
+<!--      <div v-else>-->
+<!--        {{ msg }}-->
+<!--      </div>-->
 
     </SplitterPanel>
   </Splitter>
@@ -56,12 +78,17 @@ export default {
     return {
       msg: "No data source chosen",
       expand: false,
-      dataSources: []
+      dataSources: [],
+      tabs: []
     }
   },
   methods: {
+    deleteTab(tab){
+      this.tabs.splice(this.tabs.indexOf(tab),1)
+    },
     expansion(){
       this.expand = !this.expand
+      this.tabs.push({title: 'Text'})
     }
   },
   beforeMount() {
@@ -75,7 +102,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .all-sources {
   max-width: 800px;
   margin: auto;
@@ -89,5 +116,14 @@ export default {
   margin-bottom: 30px;
 }
 
+.tabview-custom {
+  i, span {
+    vertical-align: middle;
+  }
+
+  span {
+    margin: 0 .5rem;
+  }
+}
 
 </style>
