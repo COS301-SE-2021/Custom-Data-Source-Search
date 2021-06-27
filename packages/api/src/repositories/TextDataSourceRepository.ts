@@ -44,7 +44,7 @@ class TextDataSourceRepository {
         }]
     }
 
-    getAllDataSources() {
+    getAllDataSources(): [StoredTextDataSource[], { "code": number, "message": string }] {
         this.readFile()
         return [this.textDataSourceArray, null];
     }
