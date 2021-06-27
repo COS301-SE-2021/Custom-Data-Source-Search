@@ -367,3 +367,11 @@ describe('TextDataSourceService : getTextDataSource function', () => {
         expect(result.body.message).toEqual(errorMessage);
     });
 });
+describe('TextDataSourceService : readFile function', () => {
+    it("Should reject with a promise if fs failed to read file", async () => {
+        //given
+        const filePath: string = "some, invalid file path";
+        //then
+        await expect(textDataSourceService.readFile(filePath)).rejects.not.toEqual("this");
+    });
+});
