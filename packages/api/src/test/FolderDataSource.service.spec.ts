@@ -3,6 +3,7 @@ import folderDataSourceRepository from "../repositories/FolderDataSourceReposito
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 import fs from "fs";
+import textDataSourceService from "../services/TextDataSource.service";
 
 const service = folderDataSourceService;
 
@@ -330,5 +331,150 @@ describe("Folder data source service: getFilesInFolder function", () => {
             "testFile1.txt",
             "testFile2.txt",
         ]);
+    });
+});
+describe("Folder data source service: searchAllFolderDataSources function", () => {
+    it("Should return occurrences of searchString that was found in all of the folder data sources", async () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[
+                {
+                    "uuid": "testUUID",
+                    "path": "test/path/"
+                },
+                {
+                    "uuid": "testUUID2",
+                    "path": "second/test/path/"
+                }
+            ], null];
+        });
+        jest.spyOn(folderDataSourceService, "getFilesInFolder")
+            .mockReturnValueOnce(["file1.txt", "file2.js"])
+            .mockReturnValueOnce(["otherFile1.txt", "otherFile2.js"]);
+
+        jest.spyOn(textDataSourceService, "readFile")
+            .mockReturnValueOnce(new Promise(resolve => {
+                resolve("File contents of first file searched");
+            }))
+            .mockReturnValueOnce(new Promise(resolve => {
+                resolve("File contents of second file searched");
+            }))
+            .mockReturnValueOnce(new Promise(resolve => {
+                resolve("File contents of third file searched");
+            }))
+            .mockReturnValueOnce(new Promise(resolve => {
+                resolve("File contents of fourth file searched");
+            }));
+
+        jest.spyOn(textDataSourceService, "searchFile")
+            .mockReturnValueOnce({
+                "0": {
+                    "lineNumber": 1,
+                    "occurrenceString": "first file searched"
+                }
+            })
+            .mockReturnValueOnce({
+                "0": {
+                    "lineNumber": 1,
+                    "occurrenceString": "second file searched"
+                }
+            })
+            .mockReturnValueOnce({
+                "0": {
+                    "lineNumber": 1,
+                    "occurrenceString": "third file searched"
+                }
+            })
+            .mockReturnValueOnce({
+                "0": {
+                    "lineNumber": 1,
+                    "occurrenceString": "fourth file searched"
+                }
+            });
+        //when
+        const [result,] = await service.searchAllFolderDataSources("file");
+        //then
+        expect(folderDataSourceService.getFilesInFolder).toBeCalledWith("test/path/");
+        expect(folderDataSourceService.getFilesInFolder).toBeCalledWith("second/test/path/");
+
+        expect(textDataSourceService.readFile).toBeCalledWith("test/path/file1.txt");
+        expect(textDataSourceService.readFile).toBeCalledWith("test/path/file2.js");
+        expect(textDataSourceService.readFile).toBeCalledWith("second/test/path/otherFile1.txt");
+        expect(textDataSourceService.readFile).toBeCalledWith("second/test/path/otherFile2.js");
+
+        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of first file searched", "file");
+        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of second file searched", "file");
+        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of third file searched", "file");
+        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of fourth file searched", "file");
+
+        expect(result).toEqual({
+            "0": {
+                "type": "folder",
+                "source": "test/path/file1.txt",
+                "occurrences": {
+                    "0": {
+                        "lineNumber": 1,
+                        "occurrenceString": "first file searched"
+                    }
+                }
+            },
+            "1": {
+                "type": "folder",
+                "source": "test/path/file2.js",
+                "occurrences": {
+                    "0": {
+                        "lineNumber": 1,
+                        "occurrenceString": "second file searched"
+                    }
+                }
+            },
+            "2": {
+                "type": "folder",
+                "source": "second/test/path/otherFile1.txt",
+                "occurrences": {
+                    "0": {
+                        "lineNumber": 1,
+                        "occurrenceString": "third file searched"
+                    }
+                }
+            },
+            "3": {
+                "type": "folder",
+                "source": "second/test/path/otherFile2.js",
+                "occurrences": {
+                    "0": {
+                        "lineNumber": 1,
+                        "occurrenceString": "fourth file searched"
+                    }
+                }
+            }
+        });
+    });
+    it("Should not break when trying to search files that are not accessible", async () => {
+        //given
+        jest.spyOn(folderDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+            return [[
+                {
+                    "uuid": "testUUID",
+                    "path": "test/path/"
+                }
+            ], null];
+        });
+        jest.spyOn(folderDataSourceService, "getFilesInFolder")
+            .mockReturnValueOnce(["file1.txt", "file2.js"]);
+
+        jest.spyOn(textDataSourceService, "readFile")
+            .mockReturnValue(new Promise((resolve, reject) => {
+                reject("Promise is rejected");
+            }));
+
+        jest.spyOn(textDataSourceService, "searchFile")
+            .mockReturnValue({});
+        //when
+        const [result,] = await service.searchAllFolderDataSources("file");
+        //then
+        expect(textDataSourceService.searchFile).toBeCalledWith("", "file");
+        expect(textDataSourceService.searchFile).toBeCalledWith("", "file");
+        expect(result).toEqual({});
     });
 });

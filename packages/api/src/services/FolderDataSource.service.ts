@@ -102,10 +102,8 @@ class FolderDataSourceService {
             filePromises.push(textDataSourceService.readFile(location));
         }
         let file: string[];
-        file = await Promise.all(filePromises.map((promise, i) =>
-            promise.catch(err => {
-                err.index = i;
-                console.log(err);
+        file = await Promise.all(filePromises.map((promise) =>
+            promise.catch(() => {
                 return "";
             })));
         let i = 0;
