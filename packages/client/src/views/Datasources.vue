@@ -2,6 +2,8 @@
   <div class="header">
     Data Sources
   </div>
+  <ConfirmDialog></ConfirmDialog>
+  <Toast/>
   <Splitter style="height: 90vh">
     <SplitterPanel style="padding-top: 50px">
       <div class="all-sources">
