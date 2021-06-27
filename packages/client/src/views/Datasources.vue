@@ -12,7 +12,7 @@
         <WebpageDatasource/>
       </div>
     </SplitterPanel>
-    <SplitterPanel size="25" style="padding-top: 30px">
+    <SplitterPanel size=25 style="padding-top: 30px">
       <div v-if="expand" id="text-datasources">
         <div class="heading">
           Text Data Sources

@@ -35,9 +35,11 @@ export default {
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-          this.isNotDeleted = false
           axios.delete(endpoint, {"data": {"id": id}}).then(
-              () => this.$toast.add({severity: 'success', summary: 'Success', detail: 'Deleted successfully!', life: 3000})
+              () => {
+                this.$toast.add({severity: 'success', summary: 'Success', detail: 'Deleted successfully!', life: 3000}),
+                    this.isNotDeleted = false
+              }
           ).catch(
               () => this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could not delete.', life: 3000})
           )
