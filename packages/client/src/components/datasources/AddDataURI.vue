@@ -36,10 +36,10 @@ export default {
           .post(endpoint, respObject)
           .then(resp => {
             console.log(resp.data)
-            alert(resp.data.message)
+            this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
           })
           .catch(() => {
-            alert("Could Not Add Datasource")
+            this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could not add data source.', life: 3000})
           })
     }
   }
