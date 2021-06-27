@@ -34,6 +34,7 @@ export default {
         message: 'Are you sure you want to delete this data source?',
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
+        rejectClass: 'p-button-text p-button-plain',
         accept: () => {
           axios.delete(endpoint, {"data": {"id": id}}).then(
               () => {
