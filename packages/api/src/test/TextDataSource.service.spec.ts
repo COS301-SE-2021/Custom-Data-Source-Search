@@ -258,6 +258,41 @@ describe('TextDataSourceService : addTextDataSource function', () => {
         expect(add).toThrow("TEST");
     });
 });
+describe('TextDataSourceService : removeTextDataSource function', () => {
+    it("Should return results returned by repository upon successful deletion of datasource", () => {
+        //given
+        const message: string = "Successfully deleted Text datasource";
+        jest.spyOn(textDataSourceRepository, "deleteDataSource").mockReturnValue([{
+            "code": 204,
+            "message": message
+        }, null]);
+        const id: string = "testUUID";
+        //when
+        const result = textDataSourceService.removeTextDataSource(id);
+        //then
+        expect(textDataSourceRepository.deleteDataSource).toBeCalledWith(id);
+        expect(result.code).toEqual(204);
+        expect(result.body.message).toEqual(message);
+    });
+    it("Should return appropriate error if error occurred inside repository while deleting", () => {
+        //given
+        const errorCode: number = 42;
+        const errorMessage: string = "some error";
+        jest.spyOn(textDataSourceRepository, "deleteDataSource").mockReturnValue([null, {
+            "code": errorCode,
+            "message": errorMessage
+        }]);
+        const id: string = "testUUID";
+        //when
+        const result = textDataSourceService.removeTextDataSource(id);
+        //then
+        expect(textDataSourceRepository.deleteDataSource).toBeCalledWith(id);
+        expect(result.code).toEqual(errorCode);
+        expect(result.body).toEqual({
+            "message": errorMessage
+        });
+    });
+});
 describe('TextDataSourceService : getAllTextDataSources function', () => {
     it("Should return results returned by repository if no error occurred", () => {
         //given
