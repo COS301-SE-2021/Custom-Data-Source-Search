@@ -2552,7 +2552,7 @@
   box-shadow: none;
 }
 .fc .fc-toolbar .fc-button .fc-icon-chevron-left {
-  font-family: "PrimeIcons" !important;
+  font-family: "PrimeIcons", Helvetica, sans-serif !important;
   text-indent: 0;
   font-size: 1rem;
 }
@@ -2560,7 +2560,7 @@
   content: "";
 }
 .fc .fc-toolbar .fc-button .fc-icon-chevron-right {
-  font-family: "PrimeIcons" !important;
+  font-family: "PrimeIcons", Helvetica, sans-serif!important;
   text-indent: 0;
   font-size: 1rem;
 }
@@ -5326,8 +5326,8 @@
   background-origin: border-box;
 }
 .p-input-filled .p-calendar-w-btn .p-inputtext {
-  background-image: none;
   background: transparent;
+  background-image: none;
 }
 .p-input-filled .p-calendar-w-btn:not(.p-disabled):hover {
   background-color: rgba(255, 255, 255, 0.08);
