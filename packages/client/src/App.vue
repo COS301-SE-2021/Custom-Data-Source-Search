@@ -33,7 +33,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #1e1e1e;
+  background-color: #242424;
   color: rgba(255, 255, 255, 0.58);
 }
 

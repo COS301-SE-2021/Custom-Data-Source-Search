@@ -64,7 +64,7 @@ export default {
   text-align: left;
   border-radius: 10px;
   margin-top: 10px;
-  background-color: #2c2c2c;
+  background-color: #303030;
   padding-left: 20px;
   padding-right: 20px;
 }
