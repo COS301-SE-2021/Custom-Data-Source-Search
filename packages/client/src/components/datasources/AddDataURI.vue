@@ -36,10 +36,10 @@ export default {
           .post(endpoint, respObject)
           .then(resp => {
             console.log(resp.data)
-            this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
+            alert(resp.data.message)
           })
           .catch(() => {
-            this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could not add data source.', life: 3000})
+            alert("Could Not Add Datasource")
           })
     }
   }
@@ -53,26 +53,11 @@ div {
 }
 
 input {
-  background-color: #929292;
-  padding: 3px;
-  border-radius: 8px;
-  border: none;
-  min-width: 680px;
-}
-
-input::placeholder {
-  color: black;
-  padding-left: 10px;
+  min-width: 660px;
 }
 
 button {
-  background-color: #26C6DA;
-  border: none;
-  border-radius: 12px;
   margin-left: 45px;
-  padding: 6px;
-  cursor: pointer;
-  display: inline;
 }
 
 </style>

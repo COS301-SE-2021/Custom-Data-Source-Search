@@ -50,20 +50,7 @@ export default {
 }
 
 input {
-  height: 28px;
-  font-size: 1em;
-  padding-left: 7px;
-  padding-right: 7px;
-  margin-bottom: 8px;
   width: 600px;
-  background-color: rgba(211, 211, 211, 0.87);
-  margin-top: -3px;
-  border-radius: 10px;
-  border: none;
-}
-
-input::placeholder {
-  color: black;
 }
 
 </style>
