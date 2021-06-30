@@ -26,18 +26,18 @@ class TextDataSourceService {
      */
     getAllTextDataSources() {
         let [result, err] = textDataSourceRepository.getAllDataSources();
-        if (!err && result) {
+        if (err) {
             return {
-                "code": 200,
-                "body": result
-            };
-        }
-        return {
-            "code": 500,
-            "body": {
-                "message": "Internal error"
+                "code": 500,
+                "body": {
+                    "message": "Internal error"
+                }
             }
         }
+        return {
+            "code": 200,
+            "body": result
+        };
     }
 
     getTextDataSource(uuid: string) {
