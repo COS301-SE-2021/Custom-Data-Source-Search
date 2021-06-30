@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isNotDeleted">
+  <div>
     <span> {{ title }} </span>
     <icon-delete @click="deleteDataSource(endpoint, id)"/>
   </div>
@@ -11,11 +11,6 @@ import IconDelete from "../icons/IconDelete";
 export default {
   name: "DataSourceCard",
   components: {IconDelete},
-  data() {
-    return {
-      isNotDeleted: true
-    }
-  },
   props: {
     title: String,
     id: String,
@@ -24,9 +19,11 @@ export default {
   methods: {
     deleteDataSource(endpoint, id) {
       if (confirm("Do you want to delete this datasource")) {
-        this.isNotDeleted = false
         axios.delete(endpoint, {"data": {"id": id}}).then(
-            () => {alert("Deleted")}
+            () => {
+              this.$parent.fetchDataSources()
+              alert("Deleted")
+            }
         ).catch(
             () => {alert("Could Not Delete!")}
         )
