@@ -1,60 +1,106 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest" target="_blank" rel="noopener">unit-jest</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div id="app">
+    <div className="app-container">
+      <form @submit.prevent="greet">
+        <InputText type="text" v-model="text"/>
+        <!--        You can change the outlining of buttons by choosing the colour - in this case we choose our secondary colour-->
+        <Button type="submit" label="Submit"/>
+        <Button icon="pi pi-bell" class="p-button-rounded p-button-warning" />
+        <ToggleButton v-model="checked1" onIcon="pi pi-star" offIcon="pi pi-star-o" />
+        <h3>{{ message }}</h3>
+      </form>
+      <Card>
+        <template #header>
+          Header of a card
+        </template>
+        <template #title>
+          Advanced Card
+        </template>
+        <template #content>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
+          quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!
+        </template>
+        <template #footer>
+          <Button icon="pi pi-check" label="Save" />
+          <Button icon="pi pi-times" label="Cancel" class="p-button-secondary" style="margin-left: .5em" />
+        </template>
+      </Card>
+    </div>
+    <Splitter style="height: 300px">
+      <SplitterPanel>
+        Panel 1
+      </SplitterPanel>
+      <SplitterPanel>
+        <TabView>
+          <TabPanel header="Header I">
+            Content I
+          </TabPanel>
+          <TabPanel header="Header II">
+            Content II
+          </TabPanel>
+          <TabPanel header="Header III">
+            Content III
+          </TabPanel>
+        </TabView>
+      </SplitterPanel>
+    </Splitter>
+    <Toast/>
+
   </div>
 </template>
 
 <script>
+
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
+  data() {
+    return {
+      message: null,
+      text: null,
+      checked1: false
+    }
+  },
+  methods: {
+    greet() {
+      this.$toast.add({severity: 'success', summary: 'Hello ' + this.text});
+      this.message = 'Hello ' + this.text;
+    }
+  },
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
+html,
+body,
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  margin-top: 60px;
+  height: 100%;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.app-container {
+  text-align: center;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+body #app .p-button {
+  margin-left: .2em;
+
 }
-a {
-  color: #42b983;
+
+///*Easy to change individual elements*/
+button{
+  color: black;
+}
+
+form {
+  margin-top: 2em;
+}
+
+/*PrimeVue website gives you the names of the classes that can be styled. You can apply regular css styling here. Super helpful!*/
+.p-card{
+  color: white;
+  background-image: linear-gradient(black, grey);
 }
 </style>
