@@ -4,6 +4,7 @@
       <span id="text" title="File Datasource" v-if="isTextFile()"><file-data-source/></span>
       <span id="folder" title="Folder Datasource" v-else-if="isFolder()"><folder-datasource/></span>
       <span id="webpage" title="Webpage Datasource" v-else-if="isWebpage()"><webpage-datasource/></span>
+
     </div>
     <p v-for="(line, index) in occurrences" :key="index"> {{ line.occurrenceString }} <br></p>
     <small> {{ source }}</small>
