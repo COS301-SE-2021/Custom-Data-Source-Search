@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="grid">
       <div>
         <icon-folder/>
@@ -68,19 +68,15 @@ export default {
 </script>
 
 <style scoped>
-.container {
+#container {
   vertical-align: center;
   width: 100%;
   text-align: left;
   border-radius: 10px;
   margin-top: 10px;
-  background-color: #303030;
+  background-color: #212121;
   padding-left: 20px;
   padding-right: 20px;
-}
-
-.container:hover{
-  background-color: #393939;
 }
 
 .add {
