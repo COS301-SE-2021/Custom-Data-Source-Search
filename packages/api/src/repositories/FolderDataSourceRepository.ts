@@ -9,7 +9,13 @@ class FolderDataSourceRepository {
         this.folderDataSourceArray = [];
     }
 
-    addDataSource(dataSource: FolderDataSource) {
+    addDataSource(dataSource: FolderDataSource): [{ code: number, message: string }, { code: number, message: string }] {
+        if (!fs.existsSync(dataSource.path)) {
+            return [null, {
+                "code": 404,
+                "message": "Directory does not exist"
+            }];
+        }
         this.readFile()
         let index: number = this.folderDataSourceArray.findIndex(x => x.path === dataSource.path);
         if (index !== -1) {
