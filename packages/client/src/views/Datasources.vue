@@ -67,7 +67,17 @@ export default {
     },
     expansion(){
       this.expand = !this.expand
-      this.tabs.push({title: 'Text'})
+      if (!this.isExist('Text')) {
+        this.tabs.push({title: 'Text'})
+      }
+    },
+    isExist(title) {
+      for (var i = 0; i < this.tabs.length; i++) {
+        if (this.tabs[i].title === title) {
+          return true
+        }
+      }
+      return false
     }
   },
   beforeMount() {
