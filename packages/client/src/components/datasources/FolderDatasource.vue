@@ -1,42 +1,27 @@
 <template>
   <div id="container">
     <div class="grid">
-      <div>
+      <div v-on:click="$emit('expandFolder')">
         <icon-folder/>
       </div>
-      <div id="header">Folders</div>
+      <div id="header" v-on:click="$emit('expandFolder')">Folders</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
-      </div>
-      <div id="expand" >
-        <icon-expand-less @click="expanded=!expanded" class="expand" id="minimise" v-if="expanded" />
-        <icon-expand-more @click="expanded=!expanded" class="expand" v-else />
       </div>
     </div>
     <div v-if="add">
       <AddDataURI placeholder-path="Enter Folder URI..." endpoint="http://localhost:3001/folderdatasources"></AddDataURI>
     </div>
-    <div v-if="expanded" id="folder-datasources">
-      <DataSourceCard
-          v-for="(item, index) in dataSources"
-          :key=index :title="item.path"
-          :id="item.uuid"
-          endpoint="http://localhost:3001/folderdatasources"
-      ></DataSourceCard>
-    </div>
   </div>
 </template>
 
 <script>
-import DataSourceCard from "./DataSourceCard";
 import AddDataURI from "./AddDataURI";
 import axios from "axios";
 import IconFolder from "../icons/IconFolder";
 import IconMin from "../icons/IconMin";
 import IconAdd from "../icons/IconAdd";
-import IconExpandMore from "../icons/IconExpandMore";
-import IconExpandLess from "../icons/IconExpandLess";
 
 export default {
   name: "FolderDatasource",
@@ -48,12 +33,9 @@ export default {
     }
   },
   components: {
-    IconExpandLess,
-    IconExpandMore,
     IconMin,
     IconAdd,
     IconFolder,
-    DataSourceCard,
     AddDataURI
   },
   beforeMount() {
@@ -95,6 +77,7 @@ export default {
 .grid {
   display: grid;
   grid-template-columns: 1fr 10fr 1fr 1fr;
+  cursor: pointer;
 }
 
 .grid div {

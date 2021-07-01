@@ -9,35 +9,19 @@
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
       </div>
-<!--      <div id="expand" >-->
-<!--        <icon-expand-less @click="expanded=!expanded" class="expand" id="minimise" v-if="expanded" />-->
-<!--        <icon-expand-more @click="expanded=!expanded" class="expand" v-else />-->
-<!--      </div>-->
     </div>
     <div v-if="add">
       <AddDataURI placeholder-path="Enter Text File URI..." endpoint="http://localhost:3001/textdatasources"></AddDataURI>
-    </div>
-    <div v-if="expanded" id="text-datasources">
-      <DataSourceCard
-          v-for="(item, index) in dataSources"
-          :key=index :title="item.path + item.filename"
-          :id="item.uuid"
-          endpoint="http://localhost:3001/textdatasources"
-      >
-      </DataSourceCard>
     </div>
   </div>
 </template>
 
 <script>
-import DataSourceCard from "./DataSourceCard";
 import AddDataURI from "./AddDataURI";
 import IconFile from "../icons/IconFile";
 import axios from "axios";
 import IconMin from "../icons/IconMin";
 import IconAdd from "../icons/IconAdd";
-// import IconExpandMore from "../icons/IconExpandMore";
-// import IconExpandLess from "../icons/IconExpandLess";
 
 export default {
   name: "FileDataSource",
@@ -49,12 +33,9 @@ export default {
     }
   },
   components: {
-    // IconExpandLess,
-    // IconExpandMore,
     IconAdd,
     IconMin,
     IconFile,
-    DataSourceCard,
     AddDataURI
   },
   beforeMount() {

@@ -7,8 +7,8 @@
   <Splitter style="height: 90vh; background:var(--surface-200)">
     <SplitterPanel style="padding-top: 50px">
       <div class="all-sources">
-        <TextDatasource @expand-text="expansion()"></TextDatasource>
-        <FolderDatasource/>
+        <TextDatasource @expand-text="expandText()"></TextDatasource>
+        <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
         <WebpageDatasource/>
       </div>
     </SplitterPanel>
@@ -28,6 +28,14 @@
                 endpoint="http://localhost:3001/textdatasources"
             >
             </DataSourceCard>
+          </div>
+          <div v-else-if="tab.title==='Folder'" id="folder-datasources">
+            <DataSourceCard
+                v-for="(item, index) in dataSources"
+                :key=index :title="item.path"
+                :id="item.uuid"
+                endpoint="http://localhost:3001/folderdatasources"
+            ></DataSourceCard>
           </div>
         </TabPanel>
       </TabView>
@@ -65,10 +73,16 @@ export default {
     deleteTab(tab){
       this.tabs.splice(this.tabs.indexOf(tab),1)
     },
-    expansion(){
+    expandText(){
       this.expand = !this.expand
       if (!this.isExist('Text')) {
         this.tabs.push({title: 'Text'})
+      }
+    },
+    expandFolder(){
+      this.expand = !this.expand
+      if (!this.isExist('Folder')) {
+        this.tabs.push({title: 'Folder'})
       }
     },
     isExist(title) {
