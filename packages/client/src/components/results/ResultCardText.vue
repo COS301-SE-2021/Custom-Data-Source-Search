@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import FileDataSource from "../datasources/TextDatasource";
-import FolderDatasource from "../datasources/FolderDatasource";
-import WebpageDatasource from "../datasources/WebpageDatasource";
+import FileDataSource from "../datasources/text/TextDatasource";
+import FolderDatasource from "../datasources/folder/FolderDatasource";
+import WebpageDatasource from "../datasources/webpage/WebpageDatasource";
 export default {
   name: "TextResultCard",
   components: {WebpageDatasource, FolderDatasource, FileDataSource},
