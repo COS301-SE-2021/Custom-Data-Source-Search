@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import TextResultCard from "../components/results/TextResultCard";
+import TextResultCard from "../components/results/ResultCardText";
 import axios from "axios";
 export default {
   name: "SearchBar",
