@@ -1,10 +1,7 @@
 <template>
   <div class="result-card">
     <div class="card-icon">
-      <span id="text" title="File Datasource" v-if="isTextFile()"><file-data-source/></span>
-      <span id="folder" title="Folder Datasource" v-else-if="isFolder()"><folder-datasource/></span>
-      <span id="webpage" title="Webpage Datasource" v-else-if="isWebpage()"><webpage-datasource/></span>
-
+      <span id="text" title="File Datasource"><icon-folder/></span>
     </div>
     <p v-for="(line, index) in occurrences" :key="index"> {{ line.occurrenceString }} <br></p>
     <small> {{ source }}</small>
@@ -12,27 +9,13 @@
 </template>
 
 <script>
-import FileDataSource from "../datasources/text/TextDatasource";
-import FolderDatasource from "../datasources/folder/FolderDatasource";
-import WebpageDatasource from "../datasources/webpage/WebpageDatasource";
+import IconFolder from "../icons/IconFolder";
 export default {
-  name: "TextResultCard",
-  components: {WebpageDatasource, FolderDatasource, FileDataSource},
+  name: "ResultCardText",
+  components: {IconFolder},
   props: {
-    type: String,
     source: String,
     occurrences: Array,
-  },
-  methods: {
-    isTextFile() {
-      return this.type === "text"
-    },
-    isFolder() {
-      return this.type === "folder"
-    },
-    isWebpage() {
-      return this.type === "webpage"
-    }
   }
 }
 </script>
