@@ -55,6 +55,7 @@ export default {
 <style scoped>
 
 .icon-button {
+  border-radius: 10px;
   background-color: #212121;
   padding: 20px;
 }

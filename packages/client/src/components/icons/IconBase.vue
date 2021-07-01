@@ -1,4 +1,5 @@
 <template>
+    <div class="icon-base">
         <svg
                 :xmlns="xmlns"
                 :title="iconTitle"
@@ -10,6 +11,7 @@
             <path :d="path1" :fill="path1Fill"/>
             <path :d="path2"/>
         </svg>
+    </div>
 </template>
 
 <script>
@@ -52,5 +54,9 @@
 
 <style scoped>
 
+    .icon-base {
+        padding-top: 50px;
+        padding-right: 20px;
+    }
 
 </style>

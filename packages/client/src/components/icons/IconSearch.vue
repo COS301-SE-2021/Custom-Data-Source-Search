@@ -35,10 +35,10 @@ export default {
 
 
 .icon-button {
-  background-color: #2c2c2c;
+  background-color: #242424;
 }
 
 .icon-button:hover {
-  background-color: #212121;
+  background-color: #2c2c2c;
 }
 </style>
