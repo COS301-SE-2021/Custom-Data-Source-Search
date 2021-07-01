@@ -1,7 +1,7 @@
 <template>
   <div class="result-card">
     <div class="card-icon">
-      <span id="folder" title="Folder Datasource"><folder-datasource/></span>
+      <span id="folder" title="Folder Datasource"><icon-folder/></span>
     </div>
     <p v-for="(line, index) in occurrences" :key="index"> {{ line.occurrenceString }} <br></p>
     <small> {{ source }}</small>
@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import FolderDatasource from "../datasources/folder/FolderDatasource";
+import IconFolder from "../icons/IconFolder";
 export default {
   name: "ResultCardFolder",
-  components: {FolderDatasource},
+  components: {IconFolder},
   props: {
     type: String,
     source: String,

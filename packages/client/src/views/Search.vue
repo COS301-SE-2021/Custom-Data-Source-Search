@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import TextResultCard from "../components/results/ResultCardText";
 import axios from "axios";
 import ResultCardText from "../components/results/ResultCardText";
 import ResultCardFolder from "../components/results/ResultCardFolder";
@@ -44,8 +43,7 @@ export default {
   components: {
     ResultCardWebpage,
     ResultCardFolder,
-    ResultCardText,
-    TextResultCard
+    ResultCardText
   }
 }
 </script>
