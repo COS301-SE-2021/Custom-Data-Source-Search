@@ -33,7 +33,7 @@ webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
     const error = await webPageDataSourceService.addWebPageDataSource(req.body.url);
 
     if(error == null){
-        res.status(200).send({'message':'Successfully added web page datasource'});
+        res.status(200).send({'message':'Successfully added webpage page datasource'});
     } else {
         res.status(error.status).send(error.message)
     }

@@ -3,19 +3,22 @@
     <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
   </div>
   <div>
-    <TextResultCard
+    <div
         v-for="(r,i) in searchResults"
         :key="i"
-        :source="r.source"
-        :type="r.type"
-        :occurrences="r.occurrences"
-    />
+    >
+      <result-card-text v-if="r.type === 'text'" :result="r"/>
+      <result-card-folder v-if="r.type === 'folder'" :result="r"/>
+      <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
+    </div>
   </div>
 </template>
 
 <script>
-import TextResultCard from "../components/results/TextResultCard";
 import axios from "axios";
+import ResultCardText from "../components/results/ResultCardText";
+import ResultCardFolder from "../components/results/ResultCardFolder";
+import ResultCardWebpage from "../components/results/ResultCardWebpage";
 export default {
   name: "SearchBar",
   data() {
@@ -38,7 +41,9 @@ export default {
     }
   },
   components: {
-    TextResultCard
+    ResultCardWebpage,
+    ResultCardFolder,
+    ResultCardText
   }
 }
 </script>

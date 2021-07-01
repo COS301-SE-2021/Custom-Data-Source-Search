@@ -1,5 +1,5 @@
 <template>
-<div class="grid-app">
+<div>
   <div id="nav">
     <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
     <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
@@ -15,7 +15,6 @@
 html,
 body,
 #app {
-  height: 100%;
   margin: 0;
   padding: 0;
   background-color: #2c2c2c;
@@ -37,11 +36,6 @@ input {
 
 input::placeholder {
   color: black;
-}
-
-.grid-app {
-  display: grid;
-  grid-template-rows: 1fr 12fr;
 }
 
 #nav {

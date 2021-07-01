@@ -2,9 +2,9 @@
   <div id="container">
     <div class="grid">
       <div>
-        <icon-file icon-color="#2ecc71"/>
+        <icon-web/>
       </div>
-      <div id="header">Text Files</div>
+      <div id="header">Webpages</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
@@ -15,32 +15,33 @@
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Text File URI..." endpoint="http://localhost:3001/textdatasources"></AddDataURI>
+      <add-webpage-datasource/>
     </div>
-    <div v-if="expanded" id="text-datasources">
-      <DataSourceCard
+    <div v-if="expanded" id="web-datasources">
+      <data-source-card
           v-for="(item, index) in dataSources"
-          :key=index :title="item.path + item.filename"
+          :key=index
+          :title="item.url"
           :id="item.uuid"
-          endpoint="http://localhost:3001/textdatasources"
+          endpoint="http://localhost:3001/webpagedatasources"
       >
-      </DataSourceCard>
+      </data-source-card>
     </div>
   </div>
 </template>
 
 <script>
-import DataSourceCard from "./DataSourceCard";
-import AddDataURI from "./AddDataURI";
-import IconFile from "../icons/IconFile";
+import DataSourceCard from "../DataSourceCard";
+import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
 import axios from "axios";
-import IconMin from "../icons/IconMin";
-import IconAdd from "../icons/IconAdd";
-import IconExpandMore from "../icons/IconExpandMore";
-import IconExpandLess from "../icons/IconExpandLess";
+import IconWeb from "../../icons/IconWeb";
+import IconMin from "../../icons/IconMin";
+import IconAdd from "../../icons/IconAdd";
+import IconExpandMore from "../../icons/IconExpandMore";
+import IconExpandLess from "../../icons/IconExpandLess";
 
 export default {
-  name: "FileDataSource",
+  name: "WebpageDatasource",
   data() {
     return {
       expanded: false,
@@ -51,19 +52,24 @@ export default {
   components: {
     IconExpandLess,
     IconExpandMore,
-    IconAdd,
     IconMin,
-    IconFile,
+    IconAdd,
+    IconWeb,
     DataSourceCard,
-    AddDataURI
+    AddWebpageDatasource
+  },
+  methods: {
+    fetchDataSources() {
+      axios.get("http://localhost:3001/webpagedatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.dataSources = resp.data
+          }
+      )
+    }
   },
   beforeMount() {
-    axios.get("http://localhost:3001/textdatasources").then(
-        resp => {
-          console.log(resp.data)
-          this.dataSources = resp.data
-        }
-    )
+    this.fetchDataSources()
   }
 }
 </script>
@@ -105,7 +111,7 @@ export default {
   padding-bottom: 8px;
 }
 
-#text-datasources {
+#web-datasources {
   padding-bottom: 10px;
 }
 

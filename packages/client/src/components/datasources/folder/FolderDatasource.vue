@@ -15,28 +15,28 @@
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Folder URI..." endpoint="http://localhost:3001/folderdatasources"></AddDataURI>
+      <add-folder-datasource/>
     </div>
     <div v-if="expanded" id="folder-datasources">
-      <DataSourceCard
+      <data-source-card
           v-for="(item, index) in dataSources"
           :key=index :title="item.path"
           :id="item.uuid"
           endpoint="http://localhost:3001/folderdatasources"
-      ></DataSourceCard>
+      ></data-source-card>
     </div>
   </div>
 </template>
 
 <script>
-import DataSourceCard from "./DataSourceCard";
-import AddDataURI from "./AddDataURI";
+import DataSourceCard from "../DataSourceCard";
+import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
 import axios from "axios";
-import IconFolder from "../icons/IconFolder";
-import IconMin from "../icons/IconMin";
-import IconAdd from "../icons/IconAdd";
-import IconExpandMore from "../icons/IconExpandMore";
-import IconExpandLess from "../icons/IconExpandLess";
+import IconFolder from "../../icons/IconFolder";
+import IconMin from "../../icons/IconMin";
+import IconAdd from "../../icons/IconAdd";
+import IconExpandMore from "../../icons/IconExpandMore";
+import IconExpandLess from "../../icons/IconExpandLess";
 
 export default {
   name: "FolderDatasource",
@@ -54,15 +54,20 @@ export default {
     IconAdd,
     IconFolder,
     DataSourceCard,
-    AddDataURI
+    AddFolderDatasource
+  },
+  methods: {
+      fetchDataSources() {
+          axios.get("http://localhost:3001/folderdatasources").then(
+              resp => {
+                console.log(resp.data)
+                this.dataSources = resp.data
+              }
+          )
+      }
   },
   beforeMount() {
-    axios.get("http://localhost:3001/folderdatasources").then(
-        resp => {
-          console.log(resp.data)
-          this.dataSources = resp.data
-        }
-    )
+    this.fetchDataSources()
   }
 }
 </script>
