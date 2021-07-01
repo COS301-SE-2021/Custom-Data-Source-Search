@@ -18,11 +18,14 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #2c2c2c;
+  background-color: #242424;
   color: rgba(255, 255, 255, 0.58);
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#app{
   text-align: center;
 }
 
@@ -41,7 +44,6 @@ input::placeholder {
 
 .grid-app {
   display: grid;
-  grid-template-rows: 1fr 12fr;
 }
 
 #nav {
