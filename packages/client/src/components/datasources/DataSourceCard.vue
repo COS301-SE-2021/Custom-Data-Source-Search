@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isNotDeleted">
+  <div v-if="isNotDeleted" style="float: left; padding-left: 30px;">
     <span> {{ title }} </span>
     <icon-delete @click="deleteDataSource(endpoint, id)"/>
   </div>
@@ -38,16 +38,5 @@ export default {
 </script>
 
 <style scoped>
-
-
-
-div {
-  padding: 15px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #555555;
-}
-
-
 
 </style>
