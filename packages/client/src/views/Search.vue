@@ -7,9 +7,9 @@
         v-for="(r,i) in searchResults"
         :key="i"
     >
-      <result-card-text v-if="r.type === 'text'"/>
-      <result-card-folder v-if="r.type === 'folder'"/>
-      <result-card-webpage v-if="r.type === 'webpage'"/>
+      <result-card-text v-if="r.type === 'text'" :result="r"/>
+      <result-card-folder v-if="r.type === 'folder'" :result="r"/>
+      <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
     </div>
   </div>
 </template>

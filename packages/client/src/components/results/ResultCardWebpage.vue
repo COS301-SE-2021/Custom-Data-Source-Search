@@ -1,10 +1,15 @@
 <template>
   <div class="result-card">
     <div class="card-icon">
-      <span id="text" title="Webpage datasource"><icon-folder/></span>
+      <span id="webpage" title="Webpage datasource"><icon-folder/></span>
     </div>
-    <p v-for="(line, index) in occurrences" :key="index"> {{ line.occurrenceString }} <br></p>
-    <small> {{ source }}</small>
+    <p
+        v-for="(line, index) in result.occurrences"
+        :key="index"
+    >
+      {{ line.occurrenceString }} <br>
+    </p>
+    <small> {{ result.source }}</small>
   </div>
 </template>
 
@@ -14,8 +19,7 @@ export default {
   name: "ResultCardWebpage",
   components: {IconFolder},
   props: {
-    source: String,
-    occurrences: Array,
+    result: Object
   }
 }
 </script>
