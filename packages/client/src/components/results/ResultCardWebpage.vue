@@ -9,7 +9,7 @@
     >
       {{ line.occurrenceString }} <br>
     </p>
-    <small> {{ result.source }}</small>
+    <small> {{ result.source }} </small>
   </div>
 </template>
 
