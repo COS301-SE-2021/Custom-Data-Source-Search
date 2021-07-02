@@ -9,7 +9,7 @@
       <div class="all-sources">
         <TextDatasource @expand-text="expandText()"></TextDatasource>
         <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
-        <WebpageDatasource/>
+        <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
       </div>
     </SplitterPanel>
     <SplitterPanel size=25>
@@ -36,6 +36,16 @@
                 :id="item.uuid"
                 endpoint="http://localhost:3001/folderdatasources"
             ></DataSourceCard>
+          </div>
+          <div v-else-if="tab.title==='Webpage'" id="webpage-datasources">
+            <DataSourceCard
+                v-for="(item, index) in dataSources"
+                :key=index
+                :title="item.url"
+                :id="item.uuid"
+                endpoint="http://localhost:3001/webpagedatasources"
+            >
+            </DataSourceCard>
           </div>
         </TabPanel>
       </TabView>
@@ -85,6 +95,12 @@ export default {
         this.tabs.push({title: 'Folder'})
       }
     },
+    expandWebpage(){
+      this.expand = !this.expand
+      if (!this.isExist('Webpage')) {
+        this.tabs.push({title: 'Webpage'})
+      }
+    },
     isExist(title) {
       for (var i = 0; i < this.tabs.length; i++) {
         if (this.tabs[i].title === title) {
@@ -129,4 +145,9 @@ export default {
   }
 }
 
+.p-splitter{
+  border-left: none;
+  border-right:none;
+  border-bottom: none;
+}
 </style>

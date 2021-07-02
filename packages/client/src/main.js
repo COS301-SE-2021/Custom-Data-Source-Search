@@ -13,8 +13,8 @@ import TabPanel from 'primevue/tabpanel'
 import 'primevue/resources/themes/md-dark-deeppurple/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
+
 const app = createApp(App)
-// createApp(App).use(router).mount('#app')
 app.use(router)
 app.use(PrimeVue)
 app.use(ConfirmationService)
