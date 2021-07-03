@@ -87,8 +87,5 @@ export default {
   padding-bottom: 8px;
 }
 
-#text-datasources {
-  padding-bottom: 10px;
-}
 
 </style>
