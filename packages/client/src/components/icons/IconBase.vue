@@ -55,8 +55,9 @@
 <style scoped>
 
 .icon-base {
-    padding-top: 50px;
+    padding-top: 20px;
     padding-right: 20px;
+    border-radius: 10px;
 }
 
 </style>

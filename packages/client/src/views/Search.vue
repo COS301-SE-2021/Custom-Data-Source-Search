@@ -3,54 +3,56 @@
     <div class="header" >
       {{ name }}
     </div>
-    <div class="search-div">
-      <div>
+      <div class="search-div">
         <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
       </div>
       <div>
-        <TextResultCard
+        <div
                 v-for="(r,i) in searchResults"
                 :key="i"
-                :source="r.source"
-                :type="r.type"
-                :occurrences="r.occurrences"
-        />
+        >
+          <result-card-text v-if="r.type === 'text'" :result="r"/>
+          <result-card-folder v-if="r.type === 'folder'" :result="r"/>
+          <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
+        </div>
       </div>
-    </div>
-
   </div>
 </template>
 
-<script>
-import TextResultCard from "../components/results/TextResultCard";
-import axios from "axios";
-export default {
-  name: "SearchBar",
-  data() {
-    return {
-      notDeleted: true,
-      query: "",
-      searchResults: [],
-      name: "Search"
+  <script>
+    import axios from "axios";
+    import ResultCardText from "../components/results/ResultCardText";
+    import ResultCardFolder from "../components/results/ResultCardFolder";
+    import ResultCardWebpage from "../components/results/ResultCardWebpage";
+    export default {
+      name: "SearchBar",
+      data() {
+        return {
+          notDeleted: true,
+          query: "",
+          searchResults: [],
+          name: "Search"
+        }
+      },
+      methods: {
+        queryServer() {
+          this.searchResults = []
+          axios
+                  .get("http://localhost:3001/general/" + this.query)
+                  .then((resp) => {
+                    this.searchResults = resp.data.searchResults
+                  }).catch(() => {
+            alert("Something went wrong!")
+          })
+        }
+      },
+      components: {
+        ResultCardWebpage,
+        ResultCardFolder,
+        ResultCardText
+      }
     }
-  },
-  methods: {
-    queryServer() {
-      this.searchResults = []
-      axios
-        .get("http://localhost:3001/general/" + this.query)
-        .then((resp) => {
-          this.searchResults = resp.data.searchResults
-        }).catch(() => {
-          alert("Something went wrong!")
-        })
-    }
-  },
-  components: {
-    TextResultCard
-  }
-}
-</script>
+  </script>
 
 <style scoped>
 
@@ -62,12 +64,13 @@ export default {
 
 .grid-content {
   display: grid;
-  grid-template-rows: 1fr 9fr;
+  grid-template-rows: 1fr ;
 }
 
 .search-div {
   vertical-align: center;
-  padding: 30px
+  padding: 30px;
+  max-height: 100px;
 }
 
 input {

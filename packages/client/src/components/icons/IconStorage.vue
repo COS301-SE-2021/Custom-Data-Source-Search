@@ -34,7 +34,7 @@ export default {
 <style scoped>
 
   .icon-button {
-    background-color: #242424;
+    background-color: #212121;
   }
 
   .icon-button:hover {
