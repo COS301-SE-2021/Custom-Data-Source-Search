@@ -10,7 +10,7 @@ import Splitter from 'primevue/splitter'
 import SplitterPanel from 'primevue/splitterpanel'
 import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
-import 'primevue/resources/themes/md-dark-deeppurple/theme.css'
+import '../src/assets/themes/style.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
 
