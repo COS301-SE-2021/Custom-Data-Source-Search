@@ -1,11 +1,16 @@
 <template>
 <div class="grid-app">
-  <div id="nav">
-    <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
-    <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
-  </div>
   <div>
-  <router-view/>
+    <Sidebar v-model:visible="visibleLeft">
+      <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
+    </Sidebar>
+  </div>
+  <div style="padding-top: 20px">
+    <div class="header">
+      Data Sources
+    </div>
+    <router-view/>
   </div>
 </div>
 </template>
@@ -42,9 +47,15 @@ input::placeholder {
   color: black;
 }
 
+.header{
+  margin-bottom: 30px;
+}
+
 .grid-app {
   display: grid;
+  grid-template-columns: 1fr 15fr;
 }
+
 
 #nav {
   padding: 30px;

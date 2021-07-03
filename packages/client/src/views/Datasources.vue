@@ -2,7 +2,7 @@
   <div class="header">
     Data Sources
   </div>
-  <ConfirmDialog></ConfirmDialog>
+  <ConfirmDialog/>
   <Toast/>
   <Splitter style="height: 90vh; background:var(--surface-200)">
     <SplitterPanel style="padding-top: 50px">
@@ -125,10 +125,6 @@ export default {
 .all-sources {
   max-width: 800px;
   margin: auto;
-}
-
-.header{
-  margin-bottom: 30px;
 }
 
 .heading {

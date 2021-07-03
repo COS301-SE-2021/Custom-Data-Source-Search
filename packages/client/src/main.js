@@ -13,6 +13,7 @@ import TabPanel from 'primevue/tabpanel'
 import '../src/assets/themes/style.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
+import Sidebar from "primevue/sidebar";
 
 const app = createApp(App)
 app.use(router)
@@ -27,3 +28,4 @@ app.component('Splitter', Splitter)
 app.component('SplitterPanel', SplitterPanel)
 app.component('TabView', TabView)
 app.component('TabPanel', TabPanel)
+app.component('Sidebar', Sidebar)
