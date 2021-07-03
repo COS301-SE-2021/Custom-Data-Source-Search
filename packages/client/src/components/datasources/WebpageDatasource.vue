@@ -67,11 +67,7 @@ export default {
 
 #header {
   font-weight: bold;
-  padding-top: 28px;
-}
-
-.expand {
-  float: right;
+  padding-top: 20px;
 }
 
 .grid-data-card {
@@ -87,8 +83,5 @@ export default {
   padding-bottom: 8px;
 }
 
-#web-datasources {
-  padding-bottom: 10px;
-}
 
 </style>

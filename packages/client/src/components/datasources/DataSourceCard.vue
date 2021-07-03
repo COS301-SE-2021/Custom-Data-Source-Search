@@ -48,6 +48,7 @@ export default {
 }
 
 .data-source-card-grid {
+  margin-top: 10px;
   min-width: 100%;
   display: grid;
   grid-template-columns: 9fr 1fr;
@@ -58,7 +59,7 @@ export default {
 
 .data-source-card-grid-div-1 {
   float: left;
-  padding-top: 20px;
+  padding-top: 10px;
   padding-right: 10px;
   overflow: hidden;
 }

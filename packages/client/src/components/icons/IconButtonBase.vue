@@ -57,7 +57,7 @@ export default {
 .icon-button {
   border-radius: 8px;
   background-color: #212121;
-  padding: 15px;
+  padding: 5px;
 }
 
 .icon-button:hover {

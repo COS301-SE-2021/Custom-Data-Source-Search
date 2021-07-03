@@ -67,11 +67,7 @@ export default {
 
 #header {
   font-weight: bold;
-  padding-top: 28px;
-}
-
-.expand {
-  float: right;
+  padding-top: 20px;
 }
 
 .grid-data-card {
