@@ -1,4 +1,7 @@
 <template>
+  <div class="header">
+    {{ name }}
+  </div>
   <div class="search-div">
     <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
   </div>
@@ -22,7 +25,8 @@ export default {
     return {
       notDeleted: true,
       query: "",
-      searchResults: []
+      searchResults: [],
+      name: "Search"
     }
   },
   methods: {

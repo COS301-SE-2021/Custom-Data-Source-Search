@@ -1,15 +1,12 @@
 <template>
 <div class="grid-app">
-  <div>
-    <Sidebar v-model:visible="visibleLeft">
+  <div id="grid-div-1">
+    <Sidebar v-model:visible="visibleLeft" id="Sidebar">
       <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
     </Sidebar>
   </div>
   <div style="padding-top: 20px">
-    <div class="header">
-      Data Sources
-    </div>
     <router-view/>
   </div>
 </div>
@@ -47,15 +44,18 @@ input::placeholder {
   color: black;
 }
 
+#Sidebar {
+  max-width: 30px
+}
+
 .header{
-  margin-bottom: 30px;
+  margin: 30px;
 }
 
 .grid-app {
   display: grid;
-  grid-template-columns: 1fr 15fr;
+  grid-template-columns: 1fr 30fr;
 }
-
 
 #nav {
   padding: 30px;
@@ -79,7 +79,6 @@ button {
   background-color: #26C6DA;
   border: none;
   border-radius: 12px;
-  margin-left: 45px;
   padding: 10px;
 }
 </style>
@@ -90,6 +89,12 @@ import IconStorage from "./components/icons/IconStorage";
 export default {
   components: {
     IconStorage,
-    IconSearch}
+    IconSearch
+  },
+  data() {
+    return{
+      name: "Data Sleuth"
+    }
+  }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    Data Sources
+    {{ name }}
   </div>
   <ConfirmDialog/>
   <Toast/>
@@ -76,7 +76,8 @@ export default {
       msg: "No data source chosen",
       expand: false,
       dataSources: [],
-      tabs: []
+      tabs: [],
+      name: "Data Sources"
     }
   },
   methods: {
