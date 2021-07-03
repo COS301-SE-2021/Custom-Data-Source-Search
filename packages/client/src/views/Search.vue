@@ -57,7 +57,7 @@ export default {
 .header{
   padding: 30px;
   border: solid;
-  border: #3b3b3b;
+  border: rgba(37, 37, 37, 0.91);
 }
 
 .grid-content {

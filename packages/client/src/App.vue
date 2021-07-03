@@ -63,10 +63,11 @@ input::placeholder {
 
 #grid-div-1 {
   padding-top: 20px;
+  background-color: #212121;
 }
 
 #grid-div-2 {
-  border: none #3b3b3b;
+  border: 1px none #212121;
   border-right-style: solid;
   border-left-style: solid;
   height: 100%;
