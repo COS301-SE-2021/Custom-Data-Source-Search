@@ -1,18 +1,23 @@
 <template>
-  <div class="header">
-    {{ name }}
-  </div>
-  <div class="search-div">
-    <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
-  </div>
-  <div>
-    <TextResultCard
-        v-for="(r,i) in searchResults"
-        :key="i"
-        :source="r.source"
-        :type="r.type"
-        :occurrences="r.occurrences"
-    />
+  <div class="grid-content">
+    <div class="header">
+      {{ name }}
+    </div>
+    <div>
+      <div class="search-div">
+        <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
+      </div>
+      <div>
+        <TextResultCard
+                v-for="(r,i) in searchResults"
+                :key="i"
+                :source="r.source"
+                :type="r.type"
+                :occurrences="r.occurrences"
+        />
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -48,6 +53,11 @@ export default {
 </script>
 
 <style scoped>
+
+.grid-content {
+  display: grid;
+  grid-template-rows: 1fr 9fr;
+}
 
 .search-div {
   vertical-align: center;

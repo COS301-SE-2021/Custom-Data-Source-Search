@@ -1,61 +1,63 @@
 <template>
-  <div class="header">
-    {{ name }}
+  <div class="grid-content">
+    <div class="header">
+      {{ name }}
+    </div>
+    <div>
+      <ConfirmDialog/>
+      <Toast/>
+      <Splitter style="height: 90vh; background:var(--surface-200)">
+        <SplitterPanel style="padding-top: 50px">
+          <div class="all-sources">
+            <TextDatasource @expand-text="expandText()"></TextDatasource>
+            <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
+            <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
+          </div>
+        </SplitterPanel>
+        <SplitterPanel size=25>
+          <TabView class="tabview-custom" v-if="tabs.length">
+            <TabPanel v-for="tab in tabs" :key="tab.title">
+              <template #header>
+                <span>{{tab.title}}</span>
+                <em class="pi pi-times-circle" style="color: gray" @click="deleteTab(tab.title)"></em>
+              </template>
+              <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
+              <div v-if="tab.title==='Text'" id="text-datasources">
+                <DataSourceCard
+                        v-for="(item, index) in dataSources"
+                        :key=index :title="item.path + item.filename"
+                        :id="item.uuid"
+                        endpoint="http://localhost:3001/textdatasources"
+                >
+                </DataSourceCard>
+              </div>
+              <div v-else-if="tab.title==='Folder'" id="folder-datasources">
+                <DataSourceCard
+                        v-for="(item, index) in dataSources"
+                        :key=index :title="item.path"
+                        :id="item.uuid"
+                        endpoint="http://localhost:3001/folderdatasources"
+                ></DataSourceCard>
+              </div>
+              <div v-else-if="tab.title==='Webpage'" id="webpage-datasources">
+                <DataSourceCard
+                        v-for="(item, index) in dataSources"
+                        :key=index
+                        :title="item.url"
+                        :id="item.uuid"
+                        endpoint="http://localhost:3001/webpagedatasources"
+                >
+                </DataSourceCard>
+              </div>
+            </TabPanel>
+          </TabView>
+          <div v-else>
+            <p>Please click on a type to view stored data sources</p>
+          </div>
+        </SplitterPanel>
+      </Splitter>
+    </div>
   </div>
-  <ConfirmDialog/>
-  <Toast/>
-  <Splitter style="height: 90vh; background:var(--surface-200)">
-    <SplitterPanel style="padding-top: 50px">
-      <div class="all-sources">
-        <TextDatasource @expand-text="expandText()"></TextDatasource>
-        <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
-        <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
-      </div>
-    </SplitterPanel>
-    <SplitterPanel size=25>
-      <TabView class="tabview-custom" v-if="tabs.length">
-        <TabPanel v-for="tab in tabs" :key="tab.title">
-          <template #header>
-            <span>{{tab.title}}</span>
-            <em class="pi pi-times-circle" style="color: gray" @click="deleteTab(tab.title)"></em>
-          </template>
-          <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
-          <div v-if="tab.title==='Text'" id="text-datasources">
-            <DataSourceCard
-                v-for="(item, index) in dataSources"
-                :key=index :title="item.path + item.filename"
-                :id="item.uuid"
-                endpoint="http://localhost:3001/textdatasources"
-            >
-            </DataSourceCard>
-          </div>
-          <div v-else-if="tab.title==='Folder'" id="folder-datasources">
-            <DataSourceCard
-                v-for="(item, index) in dataSources"
-                :key=index :title="item.path"
-                :id="item.uuid"
-                endpoint="http://localhost:3001/folderdatasources"
-            ></DataSourceCard>
-          </div>
-          <div v-else-if="tab.title==='Webpage'" id="webpage-datasources">
-            <DataSourceCard
-                v-for="(item, index) in dataSources"
-                :key=index
-                :title="item.url"
-                :id="item.uuid"
-                endpoint="http://localhost:3001/webpagedatasources"
-            >
-            </DataSourceCard>
-          </div>
-        </TabPanel>
-      </TabView>
-      <div v-else>
-        <p>Please click on a type to view stored data sources</p>
-      </div>
-
-
-    </SplitterPanel>
-  </Splitter>
 </template>
 
 <script>
@@ -123,6 +125,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.grid-content {
+  display: grid;
+  grid-template-rows: 1fr 9fr;
+}
+
 .all-sources {
   max-width: 800px;
   margin: auto;

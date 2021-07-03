@@ -6,7 +6,7 @@
       <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
     </Sidebar>
   </div>
-  <div style="padding-top: 20px">
+  <div id="grid-div-2">
     <router-view/>
   </div>
 </div>
@@ -55,6 +55,14 @@ input::placeholder {
 .grid-app {
   display: grid;
   grid-template-columns: 1fr 30fr;
+}
+
+#grid-div-2 {
+  padding-top: 20px;
+  border: solid #3b3b3b;
+  border-bottom: none;
+  border-top: none;
+  height: 100%;
 }
 
 #nav {
