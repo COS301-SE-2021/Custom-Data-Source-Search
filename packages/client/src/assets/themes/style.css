@@ -433,10 +433,7 @@
 }
 .p-datepicker.p-datepicker-multiple-month .p-datepicker-group {
     border-right: 1px solid rgba(255, 255, 255, 0.12);
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0 0.5rem;
 }
 .p-datepicker.p-datepicker-multiple-month .p-datepicker-group:first-child {
     padding-left: 0;
@@ -2116,24 +2113,18 @@
 .p-datatable .p-datatable-header {
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
     font-weight: 500;
 }
 .p-datatable .p-datatable-footer {
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
     font-weight: 500;
 }
 .p-datatable .p-datatable-thead > tr > th {
     text-align: left;
     padding: 1rem 1rem;
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.87);
     background: #1e1e1e;
@@ -2142,8 +2133,6 @@
 .p-datatable .p-datatable-tfoot > tr > td {
     text-align: left;
     padding: 1rem 1rem;
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.87);
     background: #1e1e1e;
@@ -2194,8 +2183,6 @@
 }
 .p-datatable .p-datatable-tbody > tr > td {
     text-align: left;
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
 }
 .p-datatable .p-datatable-tbody > tr > td .p-row-toggler,
@@ -2344,8 +2331,6 @@
 .p-dataview .p-dataview-header {
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
     font-weight: 500;
 }
@@ -2362,8 +2347,6 @@
 .p-dataview .p-dataview-footer {
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
     font-weight: 500;
     border-bottom-left-radius: 4px;
@@ -2552,7 +2535,7 @@
     box-shadow: none;
 }
 .fc .fc-toolbar .fc-button .fc-icon-chevron-left {
-    font-family: "PrimeIcons" !important;
+    font-family: "PrimeIcons", serif !important;
     text-indent: 0;
     font-size: 1rem;
 }
@@ -2560,7 +2543,7 @@
     content: "";
 }
 .fc .fc-toolbar .fc-button .fc-icon-chevron-right {
-    font-family: "PrimeIcons" !important;
+    font-family: "PrimeIcons", serif !important;
     text-indent: 0;
     font-size: 1rem;
 }
@@ -2673,11 +2656,9 @@
 }
 .p-organizationchart .p-organizationchart-line-left {
     border-right: 1px solid rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.12);
 }
 .p-organizationchart .p-organizationchart-line-top {
     border-top: 1px solid rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.12);
 }
 .p-organizationchart .p-organizationchart-node-content {
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -2699,8 +2680,7 @@
 .p-paginator {
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border: solid #404040;
-    border-width: 0;
+    border: 0 solid #404040;
     padding: 0.5rem 1rem;
     border-radius: 4px;
 }
@@ -2937,24 +2917,18 @@
 .p-treetable .p-treetable-header {
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
     font-weight: 500;
 }
 .p-treetable .p-treetable-footer {
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
     font-weight: 500;
 }
 .p-treetable .p-treetable-thead > tr > th {
     text-align: left;
     padding: 1rem 1rem;
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.87);
     background: #1e1e1e;
@@ -2963,8 +2937,6 @@
 .p-treetable .p-treetable-tfoot > tr > td {
     text-align: left;
     padding: 1rem 1rem;
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.87);
     background: #1e1e1e;
@@ -3007,8 +2979,6 @@
 }
 .p-treetable .p-treetable-tbody > tr > td {
     text-align: left;
-    border: 1px solid #404040;
-    border-width: 0 0 1px 0;
     padding: 1rem 1rem;
 }
 .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler {
@@ -3152,14 +3122,10 @@
 }
 .p-accordion .p-accordion-content {
     padding: 1rem 1.5rem;
-    border: 0 none;
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
-    border-top: 0;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border: 0 none;
+    border-radius: 0 0 4px 4px;
 }
 .p-accordion .p-accordion-tab {
     margin-bottom: 0;
@@ -3362,9 +3328,7 @@
     margin-right: 0;
 }
 .p-tabview .p-tabview-nav li .p-tabview-nav-link {
-    border: none;
-    border-width: 0 0 0 0;
-    border-color: transparent transparent transparent transparent;
+    border: 0 none transparent;
     background: transparent;
     color: rgba(255, 255, 255, 0.6);
     padding: 1rem 1.5rem;
@@ -3430,13 +3394,9 @@
     margin: 0;
 }
 .p-confirm-popup:after {
-    border: solid transparent;
-    border-color: rgba(38, 38, 38, 0);
     border-bottom-color: #262626;
 }
 .p-confirm-popup:before {
-    border: solid transparent;
-    border-color: rgba(38, 38, 38, 0);
     border-bottom-color: #262626;
 }
 .p-confirm-popup.p-confirm-popup-flipped:after {
@@ -3547,13 +3507,9 @@
     color: #121212;
 }
 .p-overlaypanel:after {
-    border: solid transparent;
-    border-color: rgba(38, 38, 38, 0);
     border-bottom-color: #262626;
 }
 .p-overlaypanel:before {
-    border: solid transparent;
-    border-color: rgba(38, 38, 38, 0);
     border-bottom-color: #262626;
 }
 .p-overlaypanel.p-overlaypanel-flipped:after {
@@ -4238,15 +4194,11 @@
 }
 .p-panelmenu .p-panelmenu-content {
     padding: 0.5rem 0;
-    border: 0 none;
     background: #1e1e1e;
     color: rgba(255, 255, 255, 0.87);
     margin-bottom: 0;
-    border-top: 0;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border: 0 none;
+    border-radius: 0 0 4px 4px;
 }
 .p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link {
     padding: 1rem 1rem;
@@ -4320,7 +4272,6 @@
     background: transparent;
     transition: none;
     border-radius: 4px;
-    background: transparent;
 }
 .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
     color: rgba(255, 255, 255, 0.87);
@@ -4370,9 +4321,7 @@
     margin-right: 0;
 }
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
-    border: none;
-    border-width: 0 0 0 0;
-    border-color: transparent transparent transparent transparent;
+    border: 0 none transparent;
     background: transparent;
     color: rgba(255, 255, 255, 0.6);
     padding: 1rem 1.5rem;
@@ -4478,8 +4427,7 @@
 }
 .p-inline-message.p-inline-message-info {
     background: #B3E5FC;
-    border: solid transparent;
-    border-width: 1px;
+    border: 1px solid transparent;
     color: #01579B;
 }
 .p-inline-message.p-inline-message-info .p-inline-message-icon {
@@ -4487,8 +4435,7 @@
 }
 .p-inline-message.p-inline-message-success {
     background: #C8E6C9;
-    border: solid transparent;
-    border-width: 1px;
+    border: 1px solid transparent;
     color: #1B5E20;
 }
 .p-inline-message.p-inline-message-success .p-inline-message-icon {
@@ -4496,8 +4443,7 @@
 }
 .p-inline-message.p-inline-message-warn {
     background: #FFECB3;
-    border: solid transparent;
-    border-width: 1px;
+    border: 1px solid transparent;
     color: #7f6003;
 }
 .p-inline-message.p-inline-message-warn .p-inline-message-icon {
@@ -4505,8 +4451,7 @@
 }
 .p-inline-message.p-inline-message-error {
     background: #FFCDD2;
-    border: solid transparent;
-    border-width: 1px;
+    border: 1px solid transparent;
     color: #B71C1C;
 }
 .p-inline-message.p-inline-message-error .p-inline-message-icon {
@@ -4547,8 +4492,7 @@
 }
 .p-message.p-message-info {
     background: #B3E5FC;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #01579B;
 }
 .p-message.p-message-info .p-message-icon {
@@ -4559,8 +4503,7 @@
 }
 .p-message.p-message-success {
     background: #C8E6C9;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #1B5E20;
 }
 .p-message.p-message-success .p-message-icon {
@@ -4571,8 +4514,7 @@
 }
 .p-message.p-message-warn {
     background: #FFECB3;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #7f6003;
 }
 .p-message.p-message-warn .p-message-icon {
@@ -4583,8 +4525,7 @@
 }
 .p-message.p-message-error {
     background: #FFCDD2;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #B71C1C;
 }
 .p-message.p-message-error .p-message-icon {
@@ -4643,8 +4584,7 @@
 }
 .p-toast .p-toast-message.p-toast-message-info {
     background: #B3E5FC;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #01579B;
 }
 .p-toast .p-toast-message.p-toast-message-info .p-toast-message-icon,
@@ -4653,8 +4593,7 @@
 }
 .p-toast .p-toast-message.p-toast-message-success {
     background: #C8E6C9;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #1B5E20;
 }
 .p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon,
@@ -4663,8 +4602,7 @@
 }
 .p-toast .p-toast-message.p-toast-message-warn {
     background: #FFECB3;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #7f6003;
 }
 .p-toast .p-toast-message.p-toast-message-warn .p-toast-message-icon,
@@ -4673,8 +4611,7 @@
 }
 .p-toast .p-toast-message.p-toast-message-error {
     background: #FFCDD2;
-    border: solid transparent;
-    border-width: 0 0 0 0;
+    border: 0 solid transparent;
     color: #B71C1C;
 }
 .p-toast .p-toast-message.p-toast-message-error .p-toast-message-icon,
@@ -5031,15 +4968,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-autocomplete.p-autocomplete-multiple .p-autocomplete-multiple-container .p-inputtext {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-autocomplete.p-autocomplete-multiple .p-autocomplete-multiple-container:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -5053,8 +4987,7 @@
     background-size: 100% 2px, 100% 1px;
 }
 .p-input-filled .p-autocomplete.p-autocomplete-multiple .p-autocomplete-multiple-container .p-inputtext:enabled:hover, .p-input-filled .p-autocomplete.p-autocomplete-multiple .p-autocomplete-multiple-container .p-inputtext:enabled:focus {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 
 .p-float-label .p-autocomplete-multiple-container .p-autocomplete-token {
@@ -5319,15 +5252,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-calendar-w-btn .p-inputtext {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-calendar-w-btn:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -5341,8 +5271,7 @@
     background-size: 100% 2px, 100% 1px;
 }
 .p-input-filled .p-calendar-w-btn .p-inputtext:enabled:hover, .p-input-filled .p-calendar-w-btn .p-inputtext:enabled:focus {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-calendar-w-btn .p-inputtext {
     border: 0 none;
@@ -5383,8 +5312,7 @@
 }
 
 .p-cascadeselect .p-cascadeselect-label, .p-cascadeselect .p-dropdown-trigger {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-cascadeselect .p-cascadeselect-label {
     border: 0 none;
@@ -5401,15 +5329,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-cascadeselect .p-inputtext {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-cascadeselect:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -5423,12 +5348,10 @@
     background-size: 100% 2px, 100% 1px;
 }
 .p-input-filled .p-cascadeselect .p-inputtext:enabled:hover, .p-input-filled .p-cascadeselect .p-inputtext:enabled:focus {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-cascadeselect .p-cascadeselect-label:hover {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 
 .p-input-filled .p-float-label .p-cascadeselect .p-cascadeselect-label {
@@ -5481,7 +5404,7 @@
     border-right: 2px solid transparent;
     border-bottom: 2px solid transparent;
     transform: rotate(45deg);
-    transform-origin: 0% 100%;
+    transform-origin: 0 100%;
     animation: checkbox-check 125ms 50ms linear forwards;
 }
 .p-checkbox:not(.p-checkbox-disabled):hover {
@@ -5531,15 +5454,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-chips-multiple-container .p-inputtext {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-chips-multiple-container:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -5553,8 +5473,7 @@
     background-size: 100% 2px, 100% 1px;
 }
 .p-input-filled .p-chips-multiple-container .p-inputtext:enabled:hover, .p-input-filled .p-chips-multiple-container .p-inputtext:enabled:focus {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 
 .p-float-label .p-chips-multiple-container .p-chips-token {
@@ -5601,8 +5520,7 @@
 }
 
 .p-dropdown .p-inputtext, .p-dropdown .p-dropdown-trigger {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-dropdown .p-inputtext {
     border: 0 none;
@@ -5619,15 +5537,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-dropdown .p-inputtext {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-dropdown:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -5641,8 +5556,7 @@
     background-size: 100% 2px, 100% 1px;
 }
 .p-input-filled .p-dropdown .p-inputtext:enabled:hover, .p-input-filled .p-dropdown .p-inputtext:enabled:focus {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-dropdown .p-inputtext {
     border: 0 none;
@@ -5686,10 +5600,8 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-inputtext:enabled:hover {
@@ -5720,10 +5632,8 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-inputgroup .p-inputgroup-addon:last-child {
@@ -5765,19 +5675,19 @@
 
 .p-inputswitch .p-inputswitch-slider:before {
     transition-property: box-shadow;
-    box-shadow: 0px 3px 1px -2px rgba(255, 255, 255, 0.2), 0px 2px 2px 0px rgba(255, 255, 255, 0.14), 0px 1px 5px 0px rgba(255, 255, 255, 0.12);
+    box-shadow: 0 3px 1px -2px rgba(255, 255, 255, 0.2), 0 2px 2px 0 rgba(255, 255, 255, 0.14), 0 1px 5px 0 rgba(255, 255, 255, 0.12);
 }
 .p-inputswitch:not(.p-disabled):hover .p-inputswitch-slider:before {
-    box-shadow: 0px 3px 1px -2px rgba(255, 255, 255, 0.2), 0px 2px 2px 0px rgba(255, 255, 255, 0.14), 0px 1px 5px 0px rgba(255, 255, 255, 0.12), 0 0 1px 10px rgba(255, 255, 255, 0.04);
+    box-shadow: 0 3px 1px -2px rgba(255, 255, 255, 0.2), 0 2px 2px 0 rgba(255, 255, 255, 0.14), 0 1px 5px 0 rgba(255, 255, 255, 0.12), 0 0 1px 10px rgba(255, 255, 255, 0.04);
 }
 .p-inputswitch.p-inputswitch-focus .p-inputswitch-slider:before, .p-inputswitch.p-inputswitch-focus:not(.p-disabled):hover .p-inputswitch-slider:before {
-    box-shadow: 0 0 1px 10px rgba(255, 255, 255, 0.12), 0px 3px 1px -2px rgba(255, 255, 255, 0.2), 0px 2px 2px 0px rgba(255, 255, 255, 0.14), 0px 1px 5px 0px rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 1px 10px rgba(255, 255, 255, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2), 0 2px 2px 0 rgba(255, 255, 255, 0.14), 0 1px 5px 0 rgba(255, 255, 255, 0.12);
 }
 .p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider:before {
-    box-shadow: 0 0 1px 10px rgba(145, 216, 193, 0.04), 0px 3px 1px -2px rgba(255, 255, 255, 0.2), 0px 2px 2px 0px rgba(255, 255, 255, 0.14), 0px 1px 5px 0px rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 1px 10px rgba(145, 216, 193, 0.04), 0 3px 1px -2px rgba(255, 255, 255, 0.2), 0 2px 2px 0 rgba(255, 255, 255, 0.14), 0 1px 5px 0 rgba(255, 255, 255, 0.12);
 }
 .p-inputswitch.p-inputswitch-checked.p-inputswitch-focus .p-inputswitch-slider:before, .p-inputswitch.p-inputswitch-checked.p-inputswitch-focus:not(.p-disabled):hover .p-inputswitch-slider:before {
-    box-shadow: 0 0 1px 10px rgba(143, 216, 202, 0.12), 0px 3px 1px -2px rgba(255, 255, 255, 0.2), 0px 2px 2px 0px rgba(255, 255, 255, 0.14), 0px 1px 5px 0px rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 1px 10px rgba(143, 216, 202, 0.12), 0 3px 1px -2px rgba(255, 255, 255, 0.2), 0 2px 2px 0 rgba(255, 255, 255, 0.14), 0 1px 5px 0 rgba(255, 255, 255, 0.12);
 }
 
 .p-fieldset .p-fieldset-legend {
@@ -5826,8 +5736,7 @@
 }
 
 .p-multiselect .p-multiselect-label, .p-multiselect .p-multiselect-trigger {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-multiselect .p-multiselect-label {
     border: 0 none;
@@ -5844,15 +5753,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-multiselect .p-inputtext {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-multiselect:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -5866,12 +5772,10 @@
     background-size: 100% 2px, 100% 1px;
 }
 .p-input-filled .p-multiselect .p-inputtext:enabled:hover, .p-input-filled .p-multiselect .p-inputtext:enabled:focus {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-multiselect .p-multiselect-label:hover {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 
 .p-float-label .p-multiselect-label .p-multiselect-token {
@@ -6130,8 +6034,7 @@
 }
 
 .p-treeselect .p-treeselect-label, .p-treeselect .p-treeselect-trigger {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-treeselect .p-treeselect-label {
     border: 0 none;
@@ -6148,15 +6051,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.06) no-repeat;
-    background-image: linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
     background-size: 0 2px, 100% 1px;
-    background-position: 50% 100%, 50% 100%;
+    background: rgba(255, 255, 255, 0.06) linear-gradient(to bottom, #39E5CB, #39E5CB), linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) no-repeat 50% 100%, 50% 100%;
     background-origin: border-box;
 }
 .p-input-filled .p-treeselect .p-inputtext {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-treeselect:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -6170,12 +6070,10 @@
     background-size: 100% 2px, 100% 1px;
 }
 .p-input-filled .p-treeselect .p-inputtext:enabled:hover, .p-input-filled .p-treeselect .p-inputtext:enabled:focus {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 .p-input-filled .p-treeselect .p-treeselect-label:hover {
-    background-image: none;
-    background: transparent;
+    background: transparent none;
 }
 
 .p-float-label .p-treeselect-label .p-treeselect-token {
