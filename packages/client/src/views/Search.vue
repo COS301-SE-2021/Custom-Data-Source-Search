@@ -54,6 +54,12 @@ export default {
 
 <style scoped>
 
+.header{
+  padding: 30px;
+  border: solid;
+  border: #3b3b3b;
+}
+
 .grid-content {
   display: grid;
   grid-template-rows: 1fr 9fr;

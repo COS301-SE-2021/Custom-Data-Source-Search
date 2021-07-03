@@ -1,8 +1,8 @@
 <template>
 <div class="grid-app">
   <div id="grid-div-1">
-    <Sidebar v-model:visible="visibleLeft" id="Sidebar">
-      <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
+    <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
+      <router-link title="Search" class="icon" to="/"><icon-search /></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
     </Sidebar>
   </div>
@@ -61,9 +61,9 @@ input::placeholder {
 }
 
 #grid-div-2 {
-  border: solid #3b3b3b;
-  border-bottom: none;
-  border-top: none;
+  border: none #3b3b3b;
+  border-right-style: solid;
+  border-left-style: solid;
   height: 100%;
 }
 
