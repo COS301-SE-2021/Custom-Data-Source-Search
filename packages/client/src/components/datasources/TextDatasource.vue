@@ -1,7 +1,7 @@
 <template>
   <div id="container">
     <div class="grid-data-card">
-      <div v-on:click="$emit('expandText')">
+      <div v-on:click="$emit('expandText')" id="grid-data-card-div-1">
         <icon-file icon-color="#2ecc71"/>
       </div>
       <div id="header" v-on:click="$emit('expandText')">Text Files</div>
@@ -67,7 +67,7 @@ export default {
 
 #header {
   font-weight: bold;
-  padding-top: 20px;
+  padding-top: 15px;
 }
 
 .grid-data-card {
@@ -77,10 +77,14 @@ export default {
 }
 
 .grid-data-card div {
+  max-height: 45px;
   width: 100%;
-  vertical-align: center;
   padding-top: 8px;
   padding-bottom: 8px;
+}
+
+#grid-data-card-div-1 {
+  margin-bottom: 8px
 }
 
 

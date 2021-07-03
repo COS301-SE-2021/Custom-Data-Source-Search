@@ -1,7 +1,7 @@
 <template>
   <div id="container">
     <div class="grid-data-card">
-      <div v-on:click="$emit('expandFolder')" class="grid-data-card-div-1">
+      <div v-on:click="$emit('expandFolder')" id="grid-data-card-div-1">
         <icon-folder/>
       </div>
       <div id="header" v-on:click="$emit('expandFolder')">Folders</div>
@@ -77,16 +77,14 @@ export default {
 }
 
 .grid-data-card div {
-  float: top;
   max-height: 45px;
   width: 100%;
-  vertical-align: center;
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
-.grid-data-card-div-1 {
-  padding-bottom: 20px
+#grid-data-card-div-1 {
+  margin-bottom: 8px
 }
 
 
