@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <input :placeholder="placeholderPath" v-model="dataSourceURI" v-on:keyup.enter="addDataSource">
-    <button @click="addDataSource(endpoint)">Add</button>
+  <div class="data-input">
+    <input :placeholder="placeholderPath" v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
+    <button class="add-datasource" @click="addDataSource(endpoint)">Add</button>
   </div>
 </template>
 
@@ -52,12 +52,18 @@ div {
   padding: 15px;
 }
 
-input {
-  min-width: 660px;
+.data-input {
+  min-width: 100%
 }
 
-button {
-  margin-left: 45px;
+input {
+  min-width: 90%
+}
+
+.add-datasource {
+  float: right;
+  border-radius: 10px;
+  max-height: 100%;
 }
 
 </style>

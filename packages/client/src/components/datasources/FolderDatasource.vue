@@ -1,6 +1,6 @@
 <template>
   <div id="container">
-    <div class="grid">
+    <div class="grid-data-card">
       <div v-on:click="$emit('expandFolder')">
         <icon-folder/>
       </div>
@@ -74,13 +74,13 @@ export default {
   float: right;
 }
 
-.grid {
+.grid-data-card {
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr 1fr;
+  grid-template-columns: 1fr 10fr 1fr;
   cursor: pointer;
 }
 
-.grid div {
+.grid-data-card div {
   width: 100%;
   vertical-align: center;
   padding-top: 8px;
