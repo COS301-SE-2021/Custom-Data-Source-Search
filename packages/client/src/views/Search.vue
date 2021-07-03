@@ -3,8 +3,8 @@
     <div class="header" >
       {{ name }}
     </div>
-    <div>
-      <div class="search-div">
+    <div class="search-div">
+      <div>
         <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
       </div>
       <div>
@@ -67,6 +67,7 @@ export default {
 
 .search-div {
   vertical-align: center;
+  padding: 30px
 }
 
 input {

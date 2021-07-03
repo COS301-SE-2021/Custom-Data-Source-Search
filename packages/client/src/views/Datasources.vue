@@ -136,10 +136,6 @@ export default {
   margin: auto;
 }
 
-.heading {
-  margin-bottom: 30px;
-}
-
 .tabview-custom {
   i, span {
     vertical-align: middle;

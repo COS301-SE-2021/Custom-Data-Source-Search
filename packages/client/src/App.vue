@@ -52,6 +52,7 @@ input::placeholder {
   padding: 30px;
   border: solid;
   border: #3b3b3b;
+  max-height: 80px
 }
 
 .grid-app {
