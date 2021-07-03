@@ -1,6 +1,6 @@
 <template>
   <div class="grid-content">
-    <div class="header">
+    <div class="header" >
       {{ name }}
     </div>
     <div>

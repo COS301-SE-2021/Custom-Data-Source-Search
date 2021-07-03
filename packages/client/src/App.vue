@@ -49,16 +49,18 @@ input::placeholder {
 }
 
 .header{
-  margin: 30px;
+  padding: 30px;
+  border: solid;
+  border: #3b3b3b;
 }
 
 .grid-app {
   display: grid;
   grid-template-columns: 1fr 30fr;
+  height: 100%;
 }
 
 #grid-div-2 {
-  padding-top: 20px;
   border: solid #3b3b3b;
   border-bottom: none;
   border-top: none;
