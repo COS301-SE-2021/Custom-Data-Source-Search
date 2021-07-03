@@ -61,6 +61,10 @@ input::placeholder {
   height: 100%;
 }
 
+#grid-div-1 {
+  padding-top: 20px;
+}
+
 #grid-div-2 {
   border: none #3b3b3b;
   border-right-style: solid;
