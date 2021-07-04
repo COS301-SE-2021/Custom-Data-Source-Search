@@ -27,18 +27,32 @@ export default {
   },
   methods: {
     deleteDataSource(endpoint, id) {
-      if (confirm("Do you want to delete this datasource")) {
-        this.isNotDeleted = false
-        axios.delete(endpoint, {"data": {"id": id}}).then(
-            () => this.$toast.add({severity: 'success', summary: 'Deleted', detail: "Source deleted", life: 3000})
-        ).catch(
-            () => this.$toast.add({severity: 'error', summary: 'Error', detail: "Could not delete source", life: 3000})
-        )
-      }
+      this.$confirm.require({
+        message: 'Are you sure you want to delete this data source?',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        acceptClass: "p-button-danger",
+        rejectClass: "p-button-text p-button-plain",
+        accept: () => {
+          axios.delete(endpoint, {"data": {"id": id}}).then(
+              () => this.isNotDeleted = false, this.$toast.add({severity: 'success', summary: 'Deleted', detail: "Source deleted", life: 3000})
+
+          ).catch(
+              () => this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: "Could not delete source",
+                life: 3000
+              })
+          )
+        },
+        reject: () => {
+          //callback to execute when user rejects the action
+        }
+      })
     }
   }
 }
-
 </script>
 
 <style scoped>
