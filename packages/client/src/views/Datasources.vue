@@ -89,18 +89,36 @@ export default {
       this.tabs.splice(input,1)
     },
     expandText(){
+      axios.get("http://localhost:3001/textdatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.textDataSources = resp.data
+          }
+      )
       this.expand = !this.expand
       if (!this.isExist('Text')) {
         this.tabs.push({title: 'Text'})
       }
     },
     expandFolder(){
+      axios.get("http://localhost:3001/folderdatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.folderDataSources = resp.data
+          }
+      )
       this.expand = !this.expand
       if (!this.isExist('Folder')) {
         this.tabs.push({title: 'Folder'})
       }
     },
     expandWebpage(){
+      axios.get("http://localhost:3001/webpagedatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.webDataSources = resp.data
+          }
+      )
       this.expand = !this.expand
       if (!this.isExist('Webpage')) {
         this.tabs.push({title: 'Webpage'})
@@ -114,26 +132,6 @@ export default {
       }
       return false
     }
-  },
-  beforeMount() {
-    axios.get("http://localhost:3001/textdatasources").then(
-        resp => {
-          console.log(resp.data)
-          this.textDataSources = resp.data
-        }
-    ),
-        axios.get("http://localhost:3001/webpagedatasources").then(
-            resp => {
-              console.log(resp.data)
-              this.webDataSources = resp.data
-            }
-        ),
-        axios.get("http://localhost:3001/folderdatasources").then(
-            resp => {
-              console.log(resp.data)
-              this.folderDataSources = resp.data
-            }
-        )
   }
 }
 </script>
