@@ -16,10 +16,10 @@
         </SplitterPanel>
         <SplitterPanel size=25>
           <TabView class="tabview-custom" v-if="tabs.length">
-            <TabPanel v-for="tab in tabs" :key="tab.title">
+            <TabPanel v-for="(tab, index) in tabs" :key="tab.title">
               <template #header>
                 <span>{{tab.title}}</span>
-                <em class="pi pi-times-circle" style="color: gray" @click="deleteTab(tab.title)"></em>
+                <em class="pi pi-times-circle" style="color: gray" @click="deleteTab(index)"></em>
               </template>
               <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
               <div v-if="tab.title==='Text'" id="text-datasources">
@@ -85,8 +85,8 @@ export default {
     }
   },
   methods: {
-    deleteTab(tab){
-      this.tabs.splice(this.tabs.indexOf(tab),1)
+    deleteTab(input){
+      this.tabs.splice(input,1)
     },
     expandText(){
       this.expand = !this.expand
