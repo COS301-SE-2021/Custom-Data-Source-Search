@@ -24,7 +24,7 @@
               <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
               <div v-if="tab.title==='Text'" id="text-datasources">
                 <DataSourceCard
-                        v-for="(item, index) in dataSources"
+                        v-for="(item, index) in textDataSources"
                         :key=index :title="item.path + item.filename"
                         :id="item.uuid"
                         endpoint="http://localhost:3001/textdatasources"
@@ -33,7 +33,7 @@
               </div>
               <div v-else-if="tab.title==='Folder'" id="folder-datasources">
                 <DataSourceCard
-                        v-for="(item, index) in dataSources"
+                        v-for="(item, index) in folderDataSources"
                         :key=index :title="item.path"
                         :id="item.uuid"
                         endpoint="http://localhost:3001/folderdatasources"
@@ -41,7 +41,7 @@
               </div>
               <div v-else-if="tab.title==='Webpage'" id="webpage-datasources">
                 <DataSourceCard
-                        v-for="(item, index) in dataSources"
+                        v-for="(item, index) in webDataSources"
                         :key=index
                         :title="item.url"
                         :id="item.uuid"
@@ -77,7 +77,9 @@ export default {
     return {
       msg: "No data source chosen",
       expand: false,
-      dataSources: [],
+      textDataSources: [],
+      webDataSources: [],
+      folderDataSources: [],
       tabs: [],
       name: "Data Sources"
     }
@@ -117,9 +119,21 @@ export default {
     axios.get("http://localhost:3001/textdatasources").then(
         resp => {
           console.log(resp.data)
-          this.dataSources = resp.data
+          this.textDataSources = resp.data
         }
-    )
+    ),
+        axios.get("http://localhost:3001/webpagedatasources").then(
+            resp => {
+              console.log(resp.data)
+              this.webDataSources = resp.data
+            }
+        ),
+        axios.get("http://localhost:3001/folderdatasources").then(
+            resp => {
+              console.log(resp.data)
+              this.folderDataSources = resp.data
+            }
+        )
   }
 }
 </script>
