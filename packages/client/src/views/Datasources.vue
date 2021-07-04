@@ -52,7 +52,7 @@
             </TabPanel>
           </TabView>
           <div v-else>
-            <p>Please click on a type to view stored data sources</p>
+            <p style="padding-top:30px;">Please click on a type to view stored data sources</p>
           </div>
         </SplitterPanel>
       </Splitter>
@@ -165,4 +165,5 @@ export default {
   border-right:none;
   border-bottom: none;
 }
+
 </style>

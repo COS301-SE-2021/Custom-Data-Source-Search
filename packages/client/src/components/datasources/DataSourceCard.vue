@@ -30,9 +30,9 @@ export default {
       if (confirm("Do you want to delete this datasource")) {
         this.isNotDeleted = false
         axios.delete(endpoint, {"data": {"id": id}}).then(
-            () => {alert("Deleted")}
+            () => this.$toast.add({severity: 'success', summary: 'Deleted', detail: "Source deleted", life: 3000})
         ).catch(
-            () => {alert("Could Not Delete!")}
+            () => this.$toast.add({severity: 'error', summary: 'Error', detail: "Could not delete source", life: 3000})
         )
       }
     }
