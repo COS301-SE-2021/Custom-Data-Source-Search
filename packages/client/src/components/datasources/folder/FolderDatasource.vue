@@ -11,17 +11,17 @@
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Folder URI..." endpoint="http://localhost:3001/folderdatasources"></AddDataURI>
+      <add-folder-datasource/>
     </div>
   </div>
 </template>
 
 <script>
-import AddDataURI from "../AddDataURI";
 import axios from "axios";
 import IconFolder from "../../icons/IconFolder";
 import IconMin from "../../icons/IconMin";
 import IconAdd from "../../icons/IconAdd";
+import AddFolderDatasource from "./AddFolderDatasource";
 
 export default {
   name: "FolderDatasource",
@@ -33,10 +33,10 @@ export default {
     }
   },
   components: {
+    AddFolderDatasource,
     IconMin,
     IconAdd,
-    IconFolder,
-    AddDataURI
+    IconFolder
   },
   beforeMount() {
     axios.get("http://localhost:3001/folderdatasources").then(

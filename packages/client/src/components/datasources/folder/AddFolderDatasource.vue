@@ -1,7 +1,7 @@
 <template>
     <div>
         <input placeholder="Add Folder URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource">
-        <button @click="addDataSource()">Add</button>
+        <button class="add-datasource" @click="addDataSource()">Add</button>
     </div>
 </template>
 
@@ -31,17 +31,22 @@
 </script>
 
 <style scoped>
+div {
+    padding: 15px;
+}
 
-    div {
-        padding: 15px;
-    }
+.data-input {
+    min-width: 100%
+}
 
-    input {
-        min-width: 660px;
-    }
+input {
+    min-width: 90%
+}
 
-    button {
-        margin-left: 45px;
-    }
+.add-datasource {
+    float: right;
+    border-radius: 10px;
+    max-height: 100%;
+}
 
 </style>
