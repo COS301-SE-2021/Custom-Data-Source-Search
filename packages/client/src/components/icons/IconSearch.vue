@@ -1,5 +1,5 @@
 <template>
-  <IconBase
+  <IconButtonBase
       :title="iconTitle"
       :height="height"
       :width="width"
@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import IconBase from "./IconBase";
+import IconButtonBase from "./IconButtonBase";
 export default {
   name: "IconSearch",
-  components: {IconBase},
+  components: {IconButtonBase},
   props: {
     height: [Number, String],
     width: [Number, String],
@@ -35,10 +35,10 @@ export default {
 
 
 .icon-button {
-  background-color: #2c2c2c;
+  background-color: #212121;
 }
 
 .icon-button:hover {
-  background-color: #212121;
+  background-color: #2c2c2c;
 }
 </style>

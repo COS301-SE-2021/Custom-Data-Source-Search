@@ -1,17 +1,13 @@
 <template>
   <div id="container">
     <div class="grid">
-      <div>
+      <div v-on:click="$emit('expandText')">
         <icon-file icon-color="#2ecc71"/>
       </div>
-      <div id="header">Text Files</div>
+      <div v-on:click="$emit('expandText')" id="header">Text Files</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
-      </div>
-      <div id="expand" >
-        <icon-expand-less @click="expanded=!expanded" class="expand" id="minimise" v-if="expanded" />
-        <icon-expand-more @click="expanded=!expanded" class="expand" v-else />
       </div>
     </div>
     <div v-if="add">
@@ -20,7 +16,8 @@
     <div v-if="expanded" id="text-datasources">
       <data-source-card
           v-for="(item, index) in dataSources"
-          :key=index :title="item.path + item.filename"
+          :key=index
+          :title="item.path + item.filename"
           :id="item.uuid"
           endpoint="http://localhost:3001/textdatasources"
       >
@@ -36,8 +33,6 @@ import IconFile from "../../icons/IconFile";
 import axios from "axios";
 import IconMin from "../../icons/IconMin";
 import IconAdd from "../../icons/IconAdd";
-import IconExpandMore from "../../icons/IconExpandMore";
-import IconExpandLess from "../../icons/IconExpandLess";
 
 export default {
   name: "FileDataSource",
@@ -49,8 +44,6 @@ export default {
     }
   },
   components: {
-    IconExpandLess,
-    IconExpandMore,
     IconAdd,
     IconMin,
     IconFile,
@@ -100,7 +93,8 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr 1fr;
+  grid-template-columns: 1fr 10fr 1fr;
+  cursor: pointer;
 }
 
 .grid div {

@@ -1,17 +1,13 @@
 <template>
   <div id="container">
     <div class="grid">
-      <div>
+      <div v-on:click="$emit('expandWebpage')">
         <icon-web/>
       </div>
-      <div id="header">Webpages</div>
+      <div v-on:click="$emit('expandWebpage')" id="header">Webpages</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
-      </div>
-      <div id="expand" >
-        <icon-expand-less @click="expanded=!expanded" class="expand" id="minimise" v-if="expanded" />
-        <icon-expand-more @click="expanded=!expanded" class="expand" v-else />
       </div>
     </div>
     <div v-if="add">
@@ -37,8 +33,6 @@ import axios from "axios";
 import IconWeb from "../../icons/IconWeb";
 import IconMin from "../../icons/IconMin";
 import IconAdd from "../../icons/IconAdd";
-import IconExpandMore from "../../icons/IconExpandMore";
-import IconExpandLess from "../../icons/IconExpandLess";
 
 export default {
   name: "WebpageDatasource",
@@ -50,8 +44,6 @@ export default {
     }
   },
   components: {
-    IconExpandLess,
-    IconExpandMore,
     IconMin,
     IconAdd,
     IconWeb,
@@ -101,7 +93,8 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr 1fr;
+  grid-template-columns: 1fr 10fr 1fr;
+  cursor: pointer;
 }
 
 .grid div {
