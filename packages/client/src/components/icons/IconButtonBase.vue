@@ -62,6 +62,7 @@ export default {
 
 .icon-button:hover {
   background-color: #2a2a2a;
+  cursor: pointer;
 }
 
 </style>

@@ -22,7 +22,7 @@ app.use(PrimeVue);
 app.use(ConfirmationService);
 app.use(ToastService);
 app.mount('#app');
-
+app.directive('tooltip', Tooltip);
 app.component('ConfirmDialog', ConfirmDialog);
 app.component('Toast', Toast);
 app.component('Splitter', Splitter);
