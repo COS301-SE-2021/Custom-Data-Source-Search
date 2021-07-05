@@ -19,11 +19,10 @@
                 axios
                     .post("http://localhost:3001/folderdatasources", {"path": this.dataSourceURI})
                     .then(resp => {
-                        this.$parent.fetchDataSources()
-                        alert(resp.data.message)
+                        this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                     })
                     .catch(() => {
-                        alert("Could Not Add Folder Datasource")
+                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Folder Datasource.', life: 3000})
                     })
             }
         }

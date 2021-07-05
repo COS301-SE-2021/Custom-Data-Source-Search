@@ -11,7 +11,6 @@
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Webpage Link..." endpoint="http://localhost:3001/webpagedatasources"></AddDataURI>
     </div>
   </div>
 </template>

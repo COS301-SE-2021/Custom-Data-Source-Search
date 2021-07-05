@@ -11,17 +11,17 @@
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Text File URI..." endpoint="http://localhost:3001/textdatasources"></AddDataURI>
+      <add-text-datasource/>
     </div>
   </div>
 </template>
 
 <script>
-import AddDataURI from "../AddDataURI";
 import IconFile from "../../icons/IconFile";
 import axios from "axios";
 import IconMin from "../../icons/IconMin";
 import IconAdd from "../../icons/IconAdd";
+import AddTextDatasource from "./AddTextDatasource";
 
 export default {
   name: "FileDataSource",
@@ -33,10 +33,10 @@ export default {
     }
   },
   components: {
+    AddTextDatasource,
     IconAdd,
     IconMin,
-    IconFile,
-    AddDataURI
+    IconFile
   },
   beforeMount() {
     axios.get("http://localhost:3001/textdatasources").then(

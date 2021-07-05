@@ -39,7 +39,7 @@ export default {
             this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
           })
           .catch(() => {
-            this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could not add data source.', life: 3000})
+            this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Folder Datasource.', life: 3000})
           })
     }
   }

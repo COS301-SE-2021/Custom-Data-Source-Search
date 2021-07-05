@@ -1,7 +1,7 @@
 <template>
     <div>
         <input placeholder="Add text file URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource">
-        <button @click="addDataSource()">Add</button>
+        <button class="add-datasource" @click="addDataSource()">Add</button>
     </div>
 </template>
 
@@ -23,11 +23,10 @@
                 axios
                     .post("http://localhost:3001/textdatasources", respObject)
                     .then(resp => {
-                        this.$parent.fetchDataSources()
-                        alert(resp.data.message)
+                        this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                     })
                     .catch(() => {
-                        alert("Could Not Add Text Datasource")
+                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Text Datasource.', life: 3000})
                     })
             }
         }
@@ -36,16 +35,22 @@
 
 <style scoped>
 
-    div {
-        padding: 15px;
-    }
+div {
+    padding: 15px;
+}
 
-    input {
-        min-width: 660px;
-    }
+.data-input {
+    min-width: 100%
+}
 
-    button {
-        margin-left: 45px;
-    }
+input {
+    min-width: 90%
+}
+
+.add-datasource {
+    float: right;
+    border-radius: 10px;
+    max-height: 100%;
+}
 
 </style>
