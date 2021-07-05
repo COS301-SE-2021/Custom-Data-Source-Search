@@ -15,6 +15,7 @@ import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
 import Sidebar from "primevue/sidebar";
 import Tooltip from 'primevue/tooltip';
+import InputText from 'primevue/inputtext';
 
 const app = createApp(App);
 app.use(router);
@@ -22,7 +23,6 @@ app.use(PrimeVue);
 app.use(ConfirmationService);
 app.use(ToastService);
 app.mount('#app');
-app.directive('tooltip', Tooltip);
 app.component('ConfirmDialog', ConfirmDialog);
 app.component('Toast', Toast);
 app.component('Splitter', Splitter);
@@ -31,3 +31,4 @@ app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
 app.component('Sidebar', Sidebar);
 app.directive('tooltip', Tooltip);
+app.component('InputText', InputText)

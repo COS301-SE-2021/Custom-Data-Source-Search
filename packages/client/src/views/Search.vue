@@ -4,7 +4,10 @@
       {{ name }}
     </div>
       <div class="search-div">
-        <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
+        <span class="p-input-icon-right">
+            <i v-on:click="queryServer" class="pi pi-search" />
+            <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+        </span>
       </div>
       <div>
         <div
@@ -77,4 +80,12 @@ input {
   width: 600px;
 }
 
+::placeholder {
+  color: dimgrey;
+  font-style: italic;
+}
+
+.pi{
+  cursor: pointer;
+}
 </style>
