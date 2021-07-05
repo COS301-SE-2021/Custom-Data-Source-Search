@@ -1,13 +1,13 @@
 <template>
-<div class="grid-app">
-  <div id="nav">
-    <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
-    <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
+  <div class="grid-app">
+    <div id="nav">
+      <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
+    </div>
+    <div>
+    <router-view/>
+    </div>
   </div>
-  <div>
-  <router-view/>
-  </div>
-</div>
 </template>
 
 <style lang="scss">
