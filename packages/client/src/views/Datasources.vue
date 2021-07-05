@@ -7,14 +7,14 @@
       <ConfirmDialog/>
       <Toast/>
       <Splitter style="height: 90vh; background:var(--surface-200)">
-        <SplitterPanel style="padding-top: 50px">
+        <SplitterPanel :size=40 style="padding-top: 50px">
           <div class="all-sources">
             <TextDatasource @expand-text="expandText()"></TextDatasource>
             <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
             <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
           </div>
         </SplitterPanel>
-        <SplitterPanel size=25>
+        <SplitterPanel>
           <TabView class="tabview-custom" v-if="tabs.length">
             <TabPanel v-for="(tab, index) in tabs" :key="tab.title">
               <template #header>
