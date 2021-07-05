@@ -56,7 +56,7 @@ export default {
 
 .icon-button {
   border-radius: 8px;
-  background-color: #212121;
+  background-color: #2a2a2a;
   padding: 5px;
 }
 
