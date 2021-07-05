@@ -93,7 +93,7 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr 1fr;
+  grid-template-columns: 1fr 10fr 1fr;
   cursor: pointer;
 }
 

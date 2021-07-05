@@ -16,7 +16,8 @@
     <div v-if="expanded" id="text-datasources">
       <data-source-card
           v-for="(item, index) in dataSources"
-          :key=index :title="item.path + item.filename"
+          :key=index
+          :title="item.path + item.filename"
           :id="item.uuid"
           endpoint="http://localhost:3001/textdatasources"
       >
@@ -92,7 +93,7 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr 1fr;
+  grid-template-columns: 1fr 10fr 1fr;
   cursor: pointer;
 }
 
