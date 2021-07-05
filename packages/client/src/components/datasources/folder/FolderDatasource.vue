@@ -1,27 +1,42 @@
 <template>
   <div id="container">
-    <div class="grid-data-card">
-      <div v-on:click="$emit('expandFolder')" id="grid-data-card-div-1">
+    <div class="grid">
+      <div>
         <icon-folder/>
       </div>
-      <div id="header" v-on:click="$emit('expandFolder')">Folders</div>
+      <div id="header">Folders</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
+      </div>
+      <div id="expand" >
+        <icon-expand-less @click="expanded=!expanded" class="expand" id="minimise" v-if="expanded" />
+        <icon-expand-more @click="expanded=!expanded" class="expand" v-else />
       </div>
     </div>
     <div v-if="add">
       <add-folder-datasource/>
     </div>
+    <div v-if="expanded" id="folder-datasources">
+      <data-source-card
+          v-for="(item, index) in dataSources"
+          :key=index :title="item.path"
+          :id="item.uuid"
+          endpoint="http://localhost:3001/folderdatasources"
+      ></data-source-card>
+    </div>
   </div>
 </template>
 
 <script>
+import DataSourceCard from "../DataSourceCard";
+import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
 import axios from "axios";
 import IconFolder from "../../icons/IconFolder";
 import IconMin from "../../icons/IconMin";
 import IconAdd from "../../icons/IconAdd";
-import AddFolderDatasource from "./AddFolderDatasource";
+import IconExpandMore from "../../icons/IconExpandMore";
+import IconExpandLess from "../../icons/IconExpandLess";
 
 export default {
   name: "FolderDatasource",
@@ -33,18 +48,26 @@ export default {
     }
   },
   components: {
-    AddFolderDatasource,
+    IconExpandLess,
+    IconExpandMore,
     IconMin,
     IconAdd,
-    IconFolder
+    IconFolder,
+    DataSourceCard,
+    AddFolderDatasource
+  },
+  methods: {
+      fetchDataSources() {
+          axios.get("http://localhost:3001/folderdatasources").then(
+              resp => {
+                console.log(resp.data)
+                this.dataSources = resp.data
+              }
+          )
+      }
   },
   beforeMount() {
-    axios.get("http://localhost:3001/folderdatasources").then(
-        resp => {
-          console.log(resp.data)
-          this.dataSources = resp.data
-        }
-    )
+    this.fetchDataSources()
   }
 }
 </script>
@@ -67,25 +90,27 @@ export default {
 
 #header {
   font-weight: bold;
-  padding-top: 15px;
+  padding-top: 28px;
 }
 
-.grid-data-card {
+.expand {
+  float: right;
+}
+
+.grid {
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr;
-  cursor: pointer;
+  grid-template-columns: 1fr 10fr 1fr 1fr;
 }
 
-.grid-data-card div {
-  max-height: 45px;
+.grid div {
   width: 100%;
+  vertical-align: center;
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
-#grid-data-card-div-1 {
-  margin-bottom: 8px
+#folder-datasources {
+  padding-bottom: 10px;
 }
-
 
 </style>
