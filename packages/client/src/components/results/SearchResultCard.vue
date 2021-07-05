@@ -7,7 +7,7 @@
       {{name}}
     </div>
     <div>
-      <highlightjs autodetect :code="content" />
+      <span v-html="content"></span>
     </div>
     <div>
       {{source}}
