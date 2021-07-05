@@ -11,16 +11,17 @@
       </div>
     </div>
     <div v-if="add">
+      <add-webpage-datasource/>
     </div>
   </div>
 </template>
 
 <script>
-import AddDataURI from "../AddDataURI";
 import axios from "axios";
 import IconWeb from "../../icons/IconWeb";
 import IconMin from "../../icons/IconMin";
 import IconAdd from "../../icons/IconAdd";
+import AddWebpageDatasource from "./AddWebpageDatasource";
 
 export default {
   name: "WebpageDatasource",
@@ -35,7 +36,7 @@ export default {
     IconMin,
     IconAdd,
     IconWeb,
-    AddDataURI
+    AddWebpageDatasource
   },
   beforeMount() {
     axios.get("http://localhost:3001/webpagedatasources").then(

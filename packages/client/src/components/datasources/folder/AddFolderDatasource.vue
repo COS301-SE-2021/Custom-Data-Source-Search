@@ -22,7 +22,7 @@
                         this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                     })
                     .catch(() => {
-                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Folder Datasource.', life: 3000})
+                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Webpage.', life: 3000})
                     })
             }
         }
