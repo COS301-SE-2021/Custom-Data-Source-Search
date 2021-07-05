@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import AddDataURI from "./AddDataURI";
+import AddDataURI from "../AddDataURI";
 import axios from "axios";
-import IconFolder from "../icons/IconFolder";
-import IconMin from "../icons/IconMin";
-import IconAdd from "../icons/IconAdd";
+import IconFolder from "../../icons/IconFolder";
+import IconMin from "../../icons/IconMin";
+import IconAdd from "../../icons/IconAdd";
 
 export default {
   name: "FolderDatasource",

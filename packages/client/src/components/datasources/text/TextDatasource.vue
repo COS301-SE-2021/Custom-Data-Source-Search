@@ -1,30 +1,30 @@
 <template>
   <div id="container">
     <div class="grid-data-card">
-      <div v-on:click="$emit('expandWebpage')" id="grid-data-card-div-1">
-        <icon-web/>
+      <div v-on:click="$emit('expandText')" id="grid-data-card-div-1">
+        <icon-file icon-color="#2ecc71"/>
       </div>
-      <div id="header" v-on:click="$emit('expandWebpage')">Webpages</div>
+      <div id="header" v-on:click="$emit('expandText')">Text Files</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
       </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Webpage Link..." endpoint="http://localhost:3001/webpagedatasources"></AddDataURI>
+      <AddDataURI placeholder-path="Enter Text File URI..." endpoint="http://localhost:3001/textdatasources"></AddDataURI>
     </div>
   </div>
 </template>
 
 <script>
-import AddDataURI from "./AddDataURI";
+import AddDataURI from "../AddDataURI";
+import IconFile from "../../icons/IconFile";
 import axios from "axios";
-import IconWeb from "../icons/IconWeb";
-import IconMin from "../icons/IconMin";
-import IconAdd from "../icons/IconAdd";
+import IconMin from "../../icons/IconMin";
+import IconAdd from "../../icons/IconAdd";
 
 export default {
-  name: "WebpageDatasource",
+  name: "FileDataSource",
   data() {
     return {
       expanded: false,
@@ -33,13 +33,13 @@ export default {
     }
   },
   components: {
-    IconMin,
     IconAdd,
-    IconWeb,
+    IconMin,
+    IconFile,
     AddDataURI
   },
   beforeMount() {
-    axios.get("http://localhost:3001/webpagedatasources").then(
+    axios.get("http://localhost:3001/textdatasources").then(
         resp => {
           console.log(resp.data)
           this.dataSources = resp.data
@@ -86,7 +86,6 @@ export default {
 #grid-data-card-div-1 {
   margin-bottom: 8px
 }
-
 
 
 </style>

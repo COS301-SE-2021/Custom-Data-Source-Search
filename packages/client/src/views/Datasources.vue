@@ -61,9 +61,9 @@
 </template>
 
 <script>
-import WebpageDatasource from "../components/datasources/WebpageDatasource";
-import TextDatasource from "../components/datasources/TextDatasource";
-import FolderDatasource from "../components/datasources/FolderDatasource";
+import WebpageDatasource from "../components/datasources/webpage/WebpageDatasource";
+import TextDatasource from "../components/datasources/text/TextDatasource";
+import FolderDatasource from "../components/datasources/folder/FolderDatasource";
 import DataSourceCard from "@/components/datasources/DataSourceCard";
 import axios from "axios";
 export default {
