@@ -4,6 +4,9 @@
     <div class="header" >
       {{ name }}
     </div>
+    <div class="logo-div">
+      <img src="../assets/demo_logo.png" height="300" alt="">
+    </div>
       <div class="search-div">
         <span class="p-input-icon-right">
             <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
@@ -94,5 +97,11 @@ input {
 
 .pi-search{
   padding: 0;
+}
+
+
+.logo-div {
+  text-align: center;
+  margin-bottom: 10px;
 }
 </style>
