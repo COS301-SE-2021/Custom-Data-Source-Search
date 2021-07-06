@@ -6,7 +6,7 @@
     </div>
       <div class="search-div">
         <span class="p-input-icon-right">
-            <i v-on:click="queryServer" class="pi pi-search" />
+            <em v-on:click="queryServer" class="pi pi-search" />
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
         </span>
       </div>
