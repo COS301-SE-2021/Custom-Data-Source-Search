@@ -5,7 +5,7 @@
     </div>
     <div>
       <ConfirmDialog/>
-      <Toast/>
+      <Toast position="bottom-right"/>
       <Splitter style="height: 90vh; background:var(--surface-200)">
         <SplitterPanel style="padding-top: 50px">
           <div class="all-sources">

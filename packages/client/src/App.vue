@@ -42,7 +42,7 @@ input::placeholder {
 }
 
 #Sidebar {
-  max-width: 30px
+  width: 1000px;
 }
 
 .header{
@@ -59,8 +59,11 @@ input::placeholder {
 }
 
 #grid-div-1 {
-  padding-top: 20px;
+  padding-top: 30px;
   background-color: #212121;
+  width : 80px;
+
+
 }
 
 #grid-div-2 {
@@ -85,7 +88,9 @@ input::placeholder {
 }
 
 .icon {
-  padding: 10px;
+  padding: 5px;
+  width: 60px;
+  height: 60px;
 }
 
 button {

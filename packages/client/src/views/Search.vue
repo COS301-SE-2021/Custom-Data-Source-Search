@@ -3,8 +3,16 @@
     <div class="header" >
       {{ name }}
     </div>
+    <div class="logo-div">
+      <img src="../assets/search_logo.png" height="300" alt="">
+  </div>
       <div class="search-div">
-        <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
+        <span class="p-input-icon-right">
+    <InputText  class="p-input-filled p-inputtext-lg" />
+    <i class="pi pi-spin pi-spinner" />
+</span>
+        <br>
+        <input id="delet" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
       </div>
       <div>
         <div
@@ -57,6 +65,7 @@
 <style scoped>
 
 .header{
+  justify-self: left;
   padding: 30px;
   border: solid;
   border: rgba(37, 37, 37, 0.91);
@@ -67,14 +76,38 @@
   grid-template-rows: 1fr ;
 }
 
-.search-div {
+.logo-div {
   vertical-align: center;
-  padding: 30px;
+  margin-bottom: 10px;
+
+}
+
+.search-div {
+  padding: 10px;
   max-height: 100px;
 }
 
 input {
   width: 600px;
 }
+
+#delet {
+  visibility: collapse;
+}
+
+.p-input-icon-right {
+}
+
+.p-input-filled {
+
+  border-radius: 50px;
+}
+
+.p-input-filled:focus {
+  border-width : 0.5px;
+
+}
+
+
 
 </style>
