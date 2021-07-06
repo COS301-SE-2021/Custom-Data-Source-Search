@@ -4,7 +4,7 @@
       {{ name }}
     </div>
     <div class="logo-div">
-      <img src="../assets/search_logo.png" height="300" alt="">
+      <img src="../assets/12345.png" height="300" alt="">
   </div>
       <div class="search-div">
         <span class="p-input-icon-right">
