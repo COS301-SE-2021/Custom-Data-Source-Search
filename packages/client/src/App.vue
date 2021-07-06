@@ -2,8 +2,8 @@
 <div class="grid-app">
   <div id="grid-div-1">
     <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
-      <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
+      <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="fontSize:1.5rem"></i></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="fontSize:1.5rem"></i></router-link>
 
 <!--      <i class="pi pi-cog" style="fontSize: 1.5rem"></i>-->
 <!--      <i class="pi pi-user" style="fontSize: 1.5rem"></i>-->
@@ -38,10 +38,6 @@ input {
   padding: 3px 3px 3px 10px;
   border-radius: 8px;
   border: none;
-}
-
-input::placeholder {
-  color: black;
 }
 
 #Sidebar {
@@ -97,18 +93,20 @@ button {
   padding: 10px;
 }
 
-.pi .pi-cog{
-
+.pi-search, .pi-list{
+  color: grey;
+  padding: 20px 10px 10px;
 }
+
+.pi-search:hover,.pi-list:hover{
+  color: #41B3B2;
+}
+
 </style>
 
 <script>
-import IconSearch from "./components/icons/IconSearch";
-import IconStorage from "./components/icons/IconStorage";
 export default {
   components: {
-    IconStorage,
-    IconSearch
   },
   data() {
     return{
