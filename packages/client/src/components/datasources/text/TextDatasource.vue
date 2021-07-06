@@ -73,7 +73,7 @@ export default {
   text-align: left;
   border-radius: 10px;
   margin-top: 10px;
-  background-color: #212121;
+  background-color: #2a2a2a;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -83,8 +83,7 @@ export default {
 }
 
 #header {
-  font-weight: bold;
-  padding-top: 28px;
+  padding-top: 20px;
 }
 
 .expand {

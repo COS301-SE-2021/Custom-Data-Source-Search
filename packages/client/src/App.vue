@@ -2,8 +2,11 @@
 <div class="grid-app">
   <div id="grid-div-1">
     <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
-      <router-link title="Search" class="icon" to="/"><icon-search /></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
+      <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+
+<!--      <i class="pi pi-cog" style="fontSize: 1.5rem"></i>-->
+<!--      <i class="pi pi-user" style="fontSize: 1.5rem"></i>-->
     </Sidebar>
   </div>
   <div id="grid-div-2">
@@ -25,7 +28,6 @@ body,
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
 }
 
 input {
@@ -35,10 +37,6 @@ input {
   padding: 3px 3px 3px 10px;
   border-radius: 8px;
   border: none;
-}
-
-input::placeholder {
-  color: black;
 }
 
 #Sidebar {
@@ -59,8 +57,8 @@ input::placeholder {
 }
 
 #grid-div-1 {
-  padding-top: 20px;
-  background-color: #212121;
+  padding-top: 50px;
+  background-color: #1e1e1e;
 }
 
 #grid-div-2 {
@@ -89,20 +87,25 @@ input::placeholder {
 }
 
 button {
-  background-color: #26C6DA;
   border: none;
   border-radius: 12px;
   padding: 10px;
 }
+
+.pi-search, .pi-list{
+  color: grey;
+  padding: 20px 10px 10px;
+}
+
+.pi-search:hover,.pi-list:hover{
+  color: #41B3B2;
+}
+
 </style>
 
 <script>
-import IconSearch from "./components/icons/IconSearch";
-import IconStorage from "./components/icons/IconStorage";
 export default {
   components: {
-    IconStorage,
-    IconSearch
   },
   data() {
     return{

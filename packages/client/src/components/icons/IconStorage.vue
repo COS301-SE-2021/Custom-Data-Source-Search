@@ -23,7 +23,7 @@ export default {
     },
     iconColor: {
       type: String,
-      default: '#26C6DA'
+      default: 'rgba(255, 255, 255, 0.58)'
     }
   }
 }
@@ -34,11 +34,12 @@ export default {
 <style scoped>
 
   .icon-button {
-    background-color: #212121;
+    background-color: #1e1e1e;
   }
 
   .icon-button:hover {
-    background-color: #2c2c2c;
+    background-color: #1e1e1e;
+    color: #26C6DA;
   }
 
 </style>

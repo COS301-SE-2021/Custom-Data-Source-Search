@@ -56,12 +56,13 @@ export default {
 
 .icon-button {
   border-radius: 8px;
-  background-color: #212121;
-  padding: 5px;
+  background-color: #2a2a2a;
+  padding: 10px;
 }
 
 .icon-button:hover {
-  background-color: #2c2c2c;
+  background-color: #2a2a2a;
+  cursor: pointer;
 }
 
 </style>

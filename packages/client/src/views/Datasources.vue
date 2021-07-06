@@ -5,21 +5,21 @@
     </div>
     <div>
       <ConfirmDialog/>
-      <Toast/>
+      <Toast position="bottom-right"/>
       <Splitter style="height: 90vh; background:var(--surface-200)">
-        <SplitterPanel style="padding-top: 50px">
+        <SplitterPanel :size=40 style="padding-top: 50px">
           <div class="all-sources">
             <TextDatasource @expand-text="expandText()"></TextDatasource>
             <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
             <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
           </div>
         </SplitterPanel>
-        <SplitterPanel size=25>
+        <SplitterPanel>
           <TabView class="tabview-custom" v-if="tabs.length">
             <TabPanel v-for="(tab, index) in tabs" :key="tab.title">
               <template #header>
                 <span>{{tab.title}}</span>
-                <em class="pi pi-times-circle" style="color: gray" @click="deleteTab(index)"></em>
+                <em class="pi pi-times" style="color: gray" @click="deleteTab(index)"></em>
               </template>
               <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
               <div v-if="tab.title==='Text'" id="text-datasources">
@@ -52,7 +52,7 @@
             </TabPanel>
           </TabView>
           <div v-else>
-            <p style="padding-top:30px;">Please click on a type to view stored data sources</p>
+            <p style="padding-top:30px; text-align: center;">Please click on a type to view stored data sources</p>
           </div>
         </SplitterPanel>
       </Splitter>
@@ -164,4 +164,7 @@ export default {
   border-bottom: none;
 }
 
+.header{
+  text-align:center;
+}
 </style>

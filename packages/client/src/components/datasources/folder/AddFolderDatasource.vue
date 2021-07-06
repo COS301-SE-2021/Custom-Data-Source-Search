@@ -1,7 +1,7 @@
 <template>
     <div>
-        <input placeholder="Add Folder URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource">
-        <button class="add-datasource" @click="addDataSource()">Add</button>
+      <InputText placeholder="Add Folder URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
+      <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" @click="addDataSource()" />
     </div>
 </template>
 
@@ -22,7 +22,7 @@
                         this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                     })
                     .catch(() => {
-                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Webpage.', life: 3000})
+                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Folder.', life: 3000})
                     })
             }
         }
@@ -39,13 +39,15 @@ div {
 }
 
 input {
-    min-width: 90%
+    min-width: 90%;
+    font-size: 15px;
+    font-style: italic;
+    height: 5px;
+    background: #2a2a2a;
 }
 
-.add-datasource {
-    float: right;
-    border-radius: 10px;
-    max-height: 100%;
+.p-inputtext:enabled:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
-
 </style>
