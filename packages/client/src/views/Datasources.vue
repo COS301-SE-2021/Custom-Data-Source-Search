@@ -5,7 +5,7 @@
     </div>
     <div>
       <ConfirmDialog/>
-      <Toast/>
+      <Toast position="bottom-right"/>
       <Splitter style="height: 90vh; background:var(--surface-200)">
         <SplitterPanel :size=40 style="padding-top: 50px">
           <div class="all-sources">
@@ -52,7 +52,7 @@
             </TabPanel>
           </TabView>
           <div v-else>
-            <p style="padding-top:30px;">Please click on a type to view stored data sources</p>
+            <p style="padding-top:30px; text-align: center;">Please click on a type to view stored data sources</p>
           </div>
         </SplitterPanel>
       </Splitter>
@@ -164,4 +164,7 @@ export default {
   border-bottom: none;
 }
 
+.header{
+  text-align:center;
+}
 </style>

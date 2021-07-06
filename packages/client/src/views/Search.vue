@@ -1,5 +1,6 @@
 <template>
   <div class="grid-content">
+    <Toast position="bottom-right"/>
     <div class="header" >
       {{ name }}
     </div>
@@ -45,7 +46,7 @@
                   .then((resp) => {
                     this.searchResults = resp.data.searchResults
                   }).catch(() => {
-            alert("Something went wrong!")
+            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           })
         }
       },
@@ -63,6 +64,7 @@
   padding: 30px;
   border: solid;
   border: rgba(37, 37, 37, 0.91);
+  text-align: center;
 }
 
 .grid-content {
@@ -72,6 +74,7 @@
 
 .search-div {
   vertical-align: center;
+  text-align: center;
   padding: 30px;
   max-height: 100px;
 }
