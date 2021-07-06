@@ -88,4 +88,8 @@ input {
 .pi{
   cursor: pointer;
 }
+
+.pi-search{
+  padding: 0;
+}
 </style>
