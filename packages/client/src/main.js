@@ -16,6 +16,7 @@ import 'primeicons/primeicons.css'
 import Sidebar from "primevue/sidebar";
 import Tooltip from 'primevue/tooltip';
 import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 
 const app = createApp(App);
 app.use(router);
@@ -31,4 +32,5 @@ app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
 app.component('Sidebar', Sidebar);
 app.directive('tooltip', Tooltip);
-app.component('InputText', InputText)
+app.component('InputText', InputText);
+app.component("Button", Button)

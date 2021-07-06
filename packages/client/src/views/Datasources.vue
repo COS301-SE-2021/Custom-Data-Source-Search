@@ -19,7 +19,7 @@
             <TabPanel v-for="(tab, index) in tabs" :key="tab.title">
               <template #header>
                 <span>{{tab.title}}</span>
-                <em class="pi pi-times-circle" style="color: gray" @click="deleteTab(index)"></em>
+                <em class="pi pi-times" style="color: gray" @click="deleteTab(index)"></em>
               </template>
               <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
               <div v-if="tab.title==='Text'" id="text-datasources">

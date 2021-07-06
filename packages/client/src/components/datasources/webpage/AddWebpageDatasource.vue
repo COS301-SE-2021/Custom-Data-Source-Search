@@ -1,7 +1,7 @@
 <template>
     <div>
-        <input placeholder="Add WebPage URL..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource">
-        <button class="add-datasource" @click="addDataSource()">Add</button>
+      <InputText placeholder="Add WebPage URL..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
+      <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" @click="addDataSource()" />
     </div>
 </template>
 
@@ -35,18 +35,16 @@ div {
     padding: 15px;
 }
 
-.data-input {
-    min-width: 100%
-}
-
 input {
-    min-width: 90%
+  min-width: 90%;
+  font-size: 15px;
+  font-style: italic;
+  height: 5px;
+  background: #2a2a2a;
 }
 
-.add-datasource {
-    float: right;
-    border-radius: 10px;
-    max-height: 100%;
+.p-inputtext:enabled:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
-
 </style>
