@@ -2,7 +2,7 @@
   <div class="grid-content">
     <Toast position="bottom-right"/>
     <div class="header" >
-      {{ name }}
+
     </div>
     <div class="logo-div">
       <img src="../assets/demo_logo.png" height="300" alt="">
