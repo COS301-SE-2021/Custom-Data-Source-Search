@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style scoped>
-@import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css";
+@import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
 
 .search-div {
   vertical-align: center;
