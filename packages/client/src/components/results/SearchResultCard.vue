@@ -4,7 +4,7 @@
       <span v-html="icon"></span>
     </div>
     <div>
-      {{name}}
+      <h3>{{name}}</h3>
     </div>
     <div>
       <span v-html="content"></span>

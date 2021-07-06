@@ -54,7 +54,7 @@ export default {
           .get("http://localhost:3001/search")
           .then((resp) => {
             console.log(resp)
-            this.generalResults = [resp.data]
+            this.generalResults = resp.data
           }).catch(() => {
         alert("Something went wrong!")
       })
