@@ -1,36 +1,71 @@
 <template>
 <div class="grid-app">
-  <div id="nav">
-    <router-link title="Search" class="icon" to="/"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#26C6DA"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></router-link>
-    <router-link title="Data Sources" class="icon" to="/datasources"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#26C6DA"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/></svg></router-link>
+  <div id="grid-div-1">
+    <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
+      <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+
+<!--      <i class="pi pi-cog" style="fontSize: 1.5rem"></i>-->
+<!--      <i class="pi pi-user" style="fontSize: 1.5rem"></i>-->
+    </Sidebar>
   </div>
-  <div>
-  <router-view/>
+  <div id="grid-div-2">
+    <router-view/>
   </div>
 </div>
 </template>
 
 <style lang="scss">
+
 html,
 body,
 #app {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #2c2c2c;
+  background-color: #242424;
   color: rgba(255, 255, 255, 0.58);
-}
-
-#app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+}
+
+input {
+  height: 28px;
+  font-size: 1em;
+  background-color: #929292;
+  padding: 3px 3px 3px 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+#Sidebar {
+  max-width: 30px
+}
+
+.header{
+  padding: 30px;
+  border: solid;
+  border: #3b3b3b;
+  max-height: 80px
 }
 
 .grid-app {
   display: grid;
-  grid-template-rows: 1fr 12fr;
+  grid-template-columns: 1fr 30fr;
+  height: 100%;
+}
+
+#grid-div-1 {
+  padding-top: 50px;
+  background-color: #1e1e1e;
+}
+
+#grid-div-2 {
+  border: 1px none #212121;
+  border-right-style: solid;
+  border-left-style: solid;
+  height: 100%;
 }
 
 #nav {
@@ -51,4 +86,31 @@ body,
   padding: 10px;
 }
 
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.pi-search, .pi-list{
+  color: grey;
+  padding: 20px 10px 10px;
+}
+
+.pi-search:hover,.pi-list:hover{
+  color: #41B3B2;
+}
+
 </style>
+
+<script>
+export default {
+  components: {
+  },
+  data() {
+    return{
+      name: "Data Sleuth"
+    }
+  }
+}
+</script>

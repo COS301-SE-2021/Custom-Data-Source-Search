@@ -1,14 +1,20 @@
 <template>
-  <div v-if="isNotDeleted">
-    <span> {{ title }} </span>
-    <button @click="deleteDataSource(endpoint, id)"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#777777"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/></svg></button>
+  <div class="data-source-card-grid" v-if="isNotDeleted">
+    <div class="data-source-card-grid-div-1">
+      <span style="float: left"> {{ title }} </span>
+    </div>
+    <div>
+      <icon-delete class="delete-datasource" @click="deleteDataSource(endpoint, id)"/>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import IconDelete from "../icons/IconDelete";
 export default {
   name: "DataSourceCard",
+  components: {IconDelete},
   data() {
     return {
       isNotDeleted: true
@@ -21,14 +27,29 @@ export default {
   },
   methods: {
     deleteDataSource(endpoint, id) {
-      if (confirm("Do you want to delete this datasource")) {
-        this.isNotDeleted = false
-        axios.delete(endpoint, {"data": {"id": id}}).then(
-            () => {alert("Deleted")}
-        ).catch(
-            () => {alert("Could Not Delete!")}
-        )
-      }
+      this.$confirm.require({
+        message: 'Are you sure you want to delete this data source?',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        acceptClass: "p-button-danger",
+        rejectClass: "p-button-text p-button-plain",
+        accept: () => {
+          axios.delete(endpoint, {"data": {"id": id}}).then(
+              () => this.isNotDeleted = false, this.$toast.add({severity: 'success', summary: 'Deleted', detail: "Source deleted", life: 3000})
+
+          ).catch(
+              () => this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: "Could not delete source",
+                life: 3000
+              })
+          )
+        },
+        reject: () => {
+          //callback to execute when user rejects the action
+        }
+      })
     }
   }
 }
@@ -37,20 +58,25 @@ export default {
 
 <style scoped>
 
-button {
-  background-color: #212121;
-  border: none;
+.delete-datasource {
   float: right;
-  cursor: pointer;
 }
 
-div {
-  padding: 15px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #555555;
+.data-source-card-grid {
+  margin-top: 10px;
+  min-width: 100%;
+  display: grid;
+  grid-template-columns: 9fr 1fr;
+  max-width: 100%;
+  max-height: 80px;
+  padding-left: 30px;
 }
 
-
+.data-source-card-grid-div-1 {
+  float: left;
+  padding-top: 10px;
+  padding-right: 10px;
+  overflow: hidden;
+}
 
 </style>
