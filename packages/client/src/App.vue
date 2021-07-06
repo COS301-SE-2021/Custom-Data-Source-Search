@@ -2,8 +2,8 @@
 <div class="grid-app">
   <div id="grid-div-1">
     <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
-      <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="fontSize:1.5rem"></em></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="fontSize:1.5rem"></em></router-link>
+      <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem"></em></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem"></em></router-link>
 
 <!--      <i class="pi pi-cog" style="fontSize: 1.5rem"></i>-->
 <!--      <i class="pi pi-user" style="fontSize: 1.5rem"></i>-->
