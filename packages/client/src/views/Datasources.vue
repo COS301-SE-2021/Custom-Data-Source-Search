@@ -136,37 +136,30 @@ export default {
       return false
     },
     updateFolder(){
-      console.log("WORKING YAAAAAAAAY")
       axios.get("http://localhost:3001/folderdatasources").then(
           resp => {
             console.log(resp.data)
             this.folderDataSources = resp.data
-            console.log(this.folderDataSources)
           }
       )
     },
     updateWebpage(){
-      console.log("WORKING YAAAAAAAAY")
       axios.get("http://localhost:3001/webpagedatasources").then(
           resp => {
             console.log(resp.data)
             this.webDataSources = resp.data
-            console.log(this.webDataSources)
           }
       )
     },
     updateText(){
-      console.log("WORKING YAAAAAAAAY")
       axios.get("http://localhost:3001/textdatasources").then(
           resp => {
             console.log(resp.data)
             this.textDataSources = resp.data
-            console.log(this.textDataSources)
           }
       )
     },
     deleteItem(type){
-      console.log("DELETING YAAAAAAAAY")
       if(type==="Folder"){
         axios.get("http://localhost:3001/folderdatasources").then(
             resp => {
