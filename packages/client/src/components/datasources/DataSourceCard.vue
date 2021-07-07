@@ -42,7 +42,7 @@ export default {
                   summary: 'Deleted',
                   detail: "Source deleted",
                   life: 3000}),
-                    this.$emit('deleteFolder')
+                    this.$emit('deleteItem')
               })
               .catch(() => {
                   this.$toast.add({

@@ -1,7 +1,7 @@
 <template>
     <div>
       <InputText placeholder="Add Text File URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
-      <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" @click="addDataSource()" />
+      <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" v-on:click="addDataSource()" />
     </div>
 </template>
 
@@ -24,6 +24,7 @@
                     .post("http://localhost:3001/textdatasources", respObject)
                     .then(resp => {
                         this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
+                        this.$emit('addText')
                     })
                     .catch(() => {
                         this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Text Datasource.', life: 3000})
