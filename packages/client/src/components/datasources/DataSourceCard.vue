@@ -34,19 +34,24 @@ export default {
         acceptClass: "p-button-danger",
         rejectClass: "p-button-text p-button-plain",
         accept: () => {
-          axios.delete(endpoint, {"data": {"id": id}}).then(() => this.isNotDeleted = false, this.$toast.add({
-            severity: 'success',
-            summary: 'Deleted',
-            detail: "Source deleted",
-            life: 3000
-          }), this.$emit('deleteFolder')).catch(
-              () => this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: "Could not delete source",
-                life: 3000
+          axios
+              .delete(endpoint, {"data": {"id": id}})
+              .then(() => {
+                this.$toast.add({
+                  severity: 'success',
+                  summary: 'Deleted',
+                  detail: "Source deleted",
+                  life: 3000}),
+                    this.$emit('deleteFolder')
               })
-          )
+              .catch(() => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: "Could not delete source",
+                    life: 3000
+                  })
+              })
         },
         reject: () => {
           //callback to execute when user rejects the action
