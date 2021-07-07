@@ -34,10 +34,12 @@ export default {
         acceptClass: "p-button-danger",
         rejectClass: "p-button-text p-button-plain",
         accept: () => {
-          axios.delete(endpoint, {"data": {"id": id}}).then(
-              () => this.isNotDeleted = false, this.$toast.add({severity: 'success', summary: 'Deleted', detail: "Source deleted", life: 3000})
-
-          ).catch(
+          axios.delete(endpoint, {"data": {"id": id}}).then(() => this.isNotDeleted = false, this.$toast.add({
+            severity: 'success',
+            summary: 'Deleted',
+            detail: "Source deleted",
+            life: 3000
+          }), this.$emit('deleteFolder')).catch(
               () => this.$toast.add({
                 severity: 'error',
                 summary: 'Error',

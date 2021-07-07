@@ -9,8 +9,8 @@
       <Splitter style="height: 90vh; background:var(--surface-200)">
         <SplitterPanel :size=40 style="padding-top: 50px">
           <div class="all-sources">
-            <TextDatasource @expand-text="expandText()"></TextDatasource>
-            <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
+            <TextDatasource @expand-text="expandText()" ></TextDatasource>
+            <FolderDatasource @expand-folder="expandFolder()" @add-folder="updateFolder()"></FolderDatasource>
             <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
           </div>
         </SplitterPanel>
@@ -37,6 +37,7 @@
                         :key=index :title="item.path"
                         :id="item.uuid"
                         endpoint="http://localhost:3001/folderdatasources"
+                        @delete-folder="deleteFolder()"
                 ></DataSourceCard>
               </div>
               <div v-else-if="tab.title==='Webpage'" id="webpage-datasources">
@@ -131,6 +132,26 @@ export default {
         }
       }
       return false
+    },
+    updateFolder(){
+      console.log("WORKING YAAAAAAAAY")
+      axios.get("http://localhost:3001/folderdatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.folderDataSources = resp.data
+            console.log(this.folderDataSources)
+          }
+      )
+    },
+    deleteFolder(){
+      console.log("DELETING YAAAAAAAAY")
+      axios.get("http://localhost:3001/folderdatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.folderDataSources = resp.data
+            console.log(this.folderDataSources)
+          }
+      )
     }
   }
 }
