@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-if="add">
-      <add-text-datasource/>
+      <add-text-datasource @add-text="$emit('addText')"/>
     </div>
     <div v-if="expanded" id="text-datasources">
       <data-source-card

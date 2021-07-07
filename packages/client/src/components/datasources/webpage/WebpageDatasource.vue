@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-if="add">
-      <add-webpage-datasource/>
+      <add-webpage-datasource @add-webpage="$emit('addWebpage')"/>
     </div>
     <div v-if="expanded" id="web-datasources">
       <data-source-card
