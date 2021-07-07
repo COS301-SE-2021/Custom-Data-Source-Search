@@ -41,8 +41,8 @@ export default {
                   severity: 'success',
                   summary: 'Deleted',
                   detail: "Source deleted",
-                  life: 3000}),
-                    this.$emit('deleteItem')
+                  life: 3000});
+                    this.$emit('deleteItem');
               })
               .catch(() => {
                   this.$toast.add({
