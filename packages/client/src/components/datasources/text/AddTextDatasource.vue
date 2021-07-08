@@ -22,7 +22,7 @@
 
 
               dialog.showOpenDialog({
-                  title: 'Select File Data Sources To Add,',
+                  title: 'Select Text Files to Add as Data Sources',
                   buttonLabel: "Select",
                 filters: [
                   {
@@ -36,45 +36,55 @@
                 //Check that files were successfully selected
                 if(files.filePaths && files.filePaths[0]) {
 
-                  var p, filename, path;
+                  let p, filename, path, str;
 
-                  if (files.filePaths[0].indexOf("/") === -1) {
-                    p = files.filePaths[0].split("\\")
-                    filename = p.pop()
-                    path = p.join("\\")
-                    console.log(filename)
-                    console.log(path)
+                  for (let i = 0; i < files.filePaths.length; i++) {
 
 
-                  } else {
-                    p = files.filePaths[0].split("//")
-                    filename = p.pop()
-                    path = p.join("//")
-                    console.log(filename)
-                    console.log(path)
+                    //Choose appropriate slash form
+                  //  if (files.filePaths[i].indexOf("/") === -1) {
+                   //   p = files.filePaths[i].split("\\")
+                   //   filename = p.pop()
+                   //   path = p.join("\\")
+                    //  console.log(filename)
+                   //   console.log(path)
+
+
+                   // } else {
+                    str = files.filePaths[i]
+                    console.log("yyyyyy",str)
+                    str = str.replace("\\", "/")
+                    console.log("yyyyy", str)
+                    p = str.split("/")
+                      filename = p.pop()
+                      path = p.join("/")
+                      console.log(filename)
+                      console.log(path)
+
+                  //  }
+
+                    let respObject = {"fileName": filename, "filePath": path}
+                    axios
+                        .post("http://localhost:3001/textdatasources", respObject)
+                        .then(resp => {
+                          this.$toast.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: resp.data.message,
+                            life: 3000
+                          })
+                          this.$emit('addText')
+                        })
+                        .catch(() => {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Could Not Add Text Datasource.',
+                            life: 3000
+                          })
+                        })
 
                   }
-
-                  let respObject = {"fileName": filename, "filePath": path}
-                  axios
-                      .post("http://localhost:3001/textdatasources", respObject)
-                      .then(resp => {
-                        this.$toast.add({
-                          severity: 'success',
-                          summary: 'Success',
-                          detail: resp.data.message,
-                          life: 3000
-                        })
-                        this.$emit('addText')
-                      })
-                      .catch(() => {
-                        this.$toast.add({
-                          severity: 'error',
-                          summary: 'Error',
-                          detail: 'Could Not Add Text Datasource.',
-                          life: 3000
-                        })
-                      })
 
                 }
               })
