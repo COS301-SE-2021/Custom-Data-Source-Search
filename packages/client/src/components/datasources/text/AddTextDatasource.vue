@@ -1,6 +1,6 @@
 <template>
     <div>
-      <Button label="Browse" icon="pi pi-plus" class="p-button-sm" @click="addDataSource()"/>
+      <Button label="Browse" icon="pi pi-plus" class="p-button-sm p-button-outlined" @click="addDataSource()"/>
       <div class="p-text-normal">Select one or more Text Files to add as Data Sources</div>
       </div>
 </template>
