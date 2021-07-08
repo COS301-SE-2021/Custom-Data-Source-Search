@@ -17,6 +17,7 @@ import Sidebar from "primevue/sidebar";
 import Tooltip from 'primevue/tooltip';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import FileUpload from "primevue/fileupload";
 
 const app = createApp(App);
 app.use(router);
@@ -33,4 +34,5 @@ app.component('TabPanel', TabPanel);
 app.component('Sidebar', Sidebar);
 app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
-app.component("Button", Button)
+app.component("Button", Button);
+app.component("FileUpload", FileUpload);

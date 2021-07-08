@@ -2,11 +2,14 @@
     <div>
       <InputText placeholder="Add Text File URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
       <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" v-on:click="addDataSource()" />
+      <Button label="Browse" icon="pi pi-plus" @click="addDataSource()"/>
     </div>
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from 'axios';
+    const electron = require('electron');
+    const dialog = electron.remote.dialog;
     export default {
         name: "AddTextDatasource",
         data() {
@@ -16,19 +19,68 @@
         },
         methods: {
             addDataSource() {
-                let p = this.dataSourceURI.split("/")
-                let filename = p.pop()
-                let path = p.join("/")
-                let respObject = {"fileName": filename, "filePath": path}
-                axios
-                    .post("http://localhost:3001/textdatasources", respObject)
-                    .then(resp => {
-                        this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
+
+
+              dialog.showOpenDialog({
+                  title: 'Select File Data Sources To Add,',
+                  buttonLabel: "Select",
+                filters: [
+                  {
+                    name: 'Text Files',
+                    extensions: ['txt', 'ts', 'js', 'vue', 'css'] //Could be problematic in the future.
+                  }, ],
+
+                  properties: ['openFile', 'multiSelections'] })
+              .then(files => {
+
+                //Check that files were successfully selected
+                if(files.filePaths && files.filePaths[0]) {
+
+                  var p, filename, path;
+
+                  if (files.filePaths[0].indexOf("/") === -1) {
+                    p = files.filePaths[0].split("\\")
+                    filename = p.pop()
+                    path = p.join("\\")
+                    console.log(filename)
+                    console.log(path)
+
+
+                  } else {
+                    p = files.filePaths[0].split("//")
+                    filename = p.pop()
+                    path = p.join("//")
+                    console.log(filename)
+                    console.log(path)
+
+                  }
+
+                  let respObject = {"fileName": filename, "filePath": path}
+                  axios
+                      .post("http://localhost:3001/textdatasources", respObject)
+                      .then(resp => {
+                        this.$toast.add({
+                          severity: 'success',
+                          summary: 'Success',
+                          detail: resp.data.message,
+                          life: 3000
+                        })
                         this.$emit('addText')
-                    })
-                    .catch(() => {
-                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Text Datasource.', life: 3000})
-                    })
+                      })
+                      .catch(() => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: 'Could Not Add Text Datasource.',
+                          life: 3000
+                        })
+                      })
+
+                }
+              })
+
+
+
             }
         }
     }
