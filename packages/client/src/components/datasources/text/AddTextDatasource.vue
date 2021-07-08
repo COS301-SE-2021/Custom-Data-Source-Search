@@ -8,8 +8,6 @@
 <script>
     import axios from 'axios';
     const electron = require('@electron/remote');
-    const dialogHandler = electron.dialog;
-  //  const { dialog } = require('electron')
     export default {
         name: "AddTextDatasource",
         data() {
@@ -19,7 +17,7 @@
         },
         methods: {
             addDataSource() {
-              dialogHandler.showOpenDialog({
+              electron.dialog.showOpenDialog({
                   title: 'Select Text Files to Add as Data Sources',
                   buttonLabel: "Select",
                 filters: [

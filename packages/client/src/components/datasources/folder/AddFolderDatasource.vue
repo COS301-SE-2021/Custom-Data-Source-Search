@@ -1,14 +1,13 @@
 <template>
     <div>
-      <InputText placeholder="Add Folder URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
-      <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" v-on:click="addDataSource()" />
+      <Button label="Browse" icon="pi pi-plus" class="p-button-sm" @click="addDataSource()"/>
+      <div class="p-text-normal">Select one or more Folders to add as Data Sources</div>
     </div>
 </template>
 
 <script>
     import axios from 'axios'
-   // const electron = require('@electron/remote');
-   // const dialogHandler = electron.dialog;
+    const electron = require('@electron/remote');
     export default {
         name: "AddFolderDatasource",
         data() {
@@ -18,15 +17,39 @@
         },
         methods: {
             addDataSource() {
-                axios
-                    .post("http://localhost:3001/folderdatasources", {"path": this.dataSourceURI})
-                    .then(resp => {
-                        this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
-                        this.$emit('addFolder')
-                    })
-                    .catch(() => {
-                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Folder.', life: 3000})
-                    })
+
+              electron.dialog.showOpenDialog({
+                title: 'Select Folders to Add as Data Sources',
+                buttonLabel: "Select",
+
+                properties: ['openDirectory', 'multiSelections'] })
+                  .then(dirs => {
+
+                    //Check that files were successfully selected
+                    if(dirs.filePaths && dirs.filePaths[0]) {
+
+                      let path, str;
+
+                      //for every folder selected
+                      for (let i = 0; i < dirs.filePaths.length; i++) {
+
+                        str = dirs.filePaths[i]
+
+                        //Force use of / in URI's across all platforms
+                        path = str.replaceAll("\\", "/")
+
+                         axios
+                             .post("http://localhost:3001/folderdatasources", {"path": path})
+                             .then(resp => {
+                                this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
+                                this.$emit('addFolder')
+                             })
+                              .catch(() => {
+                                  this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Folder.', life: 3000})
+                              })
+                      }
+                    }
+                  })
             }
         }
     }
@@ -47,6 +70,14 @@ input {
     font-style: italic;
     height: 5px;
     background: #2a2a2a;
+}
+
+.p-text-normal {
+  display: inline-flex;
+}
+
+.p-button-sm {
+  vertical-align: middle;
 }
 
 .p-inputtext:enabled:focus {
