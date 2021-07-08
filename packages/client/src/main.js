@@ -36,3 +36,4 @@ app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
 app.component("Button", Button);
 app.component("FileUpload", FileUpload);
+

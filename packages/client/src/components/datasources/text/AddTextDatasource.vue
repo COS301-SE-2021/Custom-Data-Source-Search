@@ -1,15 +1,15 @@
 <template>
     <div>
-      <InputText placeholder="Add Text File URI..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
-      <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" v-on:click="addDataSource()" />
-      <Button label="Browse" icon="pi pi-plus" @click="addDataSource()"/>
-    </div>
+      <Button label="Browse" icon="pi pi-plus" class="p-button-sm" @click="addDataSource()"/>
+      <div class="p-text-normal">Select one or more Text Files to add as Data Sources</div>
+      </div>
 </template>
 
 <script>
     import axios from 'axios';
-    const electron = require('electron');
-    const dialog = electron.remote.dialog;
+    const electron = require('@electron/remote');
+    const dialogHandler = electron.dialog;
+  //  const { dialog } = require('electron')
     export default {
         name: "AddTextDatasource",
         data() {
@@ -19,15 +19,13 @@
         },
         methods: {
             addDataSource() {
-
-
-              dialog.showOpenDialog({
+              dialogHandler.showOpenDialog({
                   title: 'Select Text Files to Add as Data Sources',
                   buttonLabel: "Select",
                 filters: [
                   {
                     name: 'Text Files',
-                    extensions: ['txt', 'ts', 'js', 'vue', 'css'] //Could be problematic in the future.
+                    extensions: ['txt', 'ts', 'js', 'vue', 'css'] //Will need to expand in the future.
                   }, ],
 
                   properties: ['openFile', 'multiSelections'] })
@@ -38,30 +36,17 @@
 
                   let p, filename, path, str;
 
+                  //for every file selected
                   for (let i = 0; i < files.filePaths.length; i++) {
 
-
-                    //Choose appropriate slash form
-                  //  if (files.filePaths[i].indexOf("/") === -1) {
-                   //   p = files.filePaths[i].split("\\")
-                   //   filename = p.pop()
-                   //   path = p.join("\\")
-                    //  console.log(filename)
-                   //   console.log(path)
-
-
-                   // } else {
                     str = files.filePaths[i]
-                    console.log("yyyyyy",str)
-                    str = str.replace("\\", "/")
-                    console.log("yyyyy", str)
-                    p = str.split("/")
-                      filename = p.pop()
-                      path = p.join("/")
-                      console.log(filename)
-                      console.log(path)
 
-                  //  }
+                    //Force use of / in URI's across all platforms
+                    str = str.replaceAll("\\", "/")
+
+                    p = str.split("/")
+                    filename = p.pop()
+                    path = p.join("/")
 
                     let respObject = {"fileName": filename, "filePath": path}
                     axios
@@ -83,14 +68,9 @@
                             life: 3000
                           })
                         })
-
                   }
-
                 }
               })
-
-
-
             }
         }
     }
@@ -113,6 +93,14 @@ input {
 .p-inputtext:enabled:focus {
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.p-text-normal {
+  display: inline-flex;
+}
+
+.p-button-sm {
+  vertical-align: middle;
 }
 
 </style>

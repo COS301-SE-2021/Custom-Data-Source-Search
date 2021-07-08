@@ -7,6 +7,8 @@
 
 <script>
     import axios from 'axios'
+   // const electron = require('@electron/remote');
+   // const dialogHandler = electron.dialog;
     export default {
         name: "AddFolderDatasource",
         data() {
