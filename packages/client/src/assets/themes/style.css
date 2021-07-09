@@ -5043,7 +5043,7 @@
     min-width: auto;
 }
 .p-button:enabled:focus {
-    background: rgba(206, 147, 216, 0.76);
+  /*  background: rgba(206, 147, 216, 0.76); */
 }
 .p-button:enabled:active {
     background: #82E5D7;
