@@ -47,6 +47,7 @@
           axios
                   .get("http://localhost:3001/general/" + this.query)
                   .then((resp) => {
+                    console.log(resp.data)
                     this.searchResults = resp.data.searchResults
                   }).catch(() => {
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})

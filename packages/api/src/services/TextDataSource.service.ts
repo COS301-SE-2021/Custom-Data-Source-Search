@@ -2,11 +2,16 @@
  * Data Model Interfaces
  */
 import {TextDataSource} from "../models/TextDataSource.interface";
-import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import {
+    FileOccurrence, StringOccurrence,
+    StringOccurrences,
+    StringOccurrencesResponse
+} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
 import FileReadingError from "../errors/FileReadingError";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import axios from "axios";
 
 
 class TextDataSourceService {
@@ -105,30 +110,27 @@ class TextDataSourceService {
 
 
     async searchAllTextDataSources(searchString: string) : Promise<[StringOccurrencesResponse, Error]> {
-
-        // TODO make this right
-        let [data] = textDataSourceRepository.getAllDataSources();
-        // Above this is placeholder implementation
-
-        let result: StringOccurrencesResponse = {};
-        let file: Promise<string>[] = [];
-        for (let i = 0; i < data.length; i++) {
-            let location = data[i].path + data[i].filename;
-            file.push(this.readFile(location));
-        }
-        let i = 0;
-        for await (const content of file) {
-            let searchResults: StringOccurrences = this.searchFile(content, searchString);
-            if (searchResults.hasOwnProperty('0')) {
-                result[i] = {
-                    type: "text",
-                    source: data[i].path + data[i].filename,
-                    occurrences: searchResults
-                };
-                i++;
+        try {
+            let response: any  = await axios.get('http://localhost:8983/solr/files/select?q=' + searchString + '&q.op=OR&hl=true&hl.fl=content&hl.highlightMultiTerm=false&hl.snippets=3');
+            let result: StringOccurrencesResponse = {};
+            let i = 0;
+            for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
+                // @ts-ignore
+                if (value["content"] != undefined) {
+                    let stringOccurrences: StringOccurrence[] = [];
+                    // @ts-ignore
+                    for (let i = 0; i < value["content"].length; i++) {
+                        // @ts-ignore
+                        // @ts-ignore
+                        stringOccurrences.push({"lineNumber": 0, "occurrenceString": value["content"][i]});
+                    }
+                    result[i++] = {"type": "text", "source": key, "occurrences": stringOccurrences};
+                }
             }
+            return [result, null];
+        } catch (e) {
+            console.error(e)
         }
-        return [result, null];
     }
 
     async readFile(location: string): Promise<string> {
