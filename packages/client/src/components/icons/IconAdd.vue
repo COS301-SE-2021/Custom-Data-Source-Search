@@ -1,5 +1,5 @@
 <template>
-  <IconBase
+  <IconButtonBase
       :title="iconTitle"
       :height="height"
       :width="width"
@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import IconBase from "./IconBase";
+import IconButtonBase from "./IconButtonBase";
 export default {
   name: "IconAdd",
-  components: {IconBase},
+  components: {IconButtonBase},
   props: {
     height: [Number, String],
     width: [Number, String],

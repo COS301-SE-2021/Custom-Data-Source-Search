@@ -1,84 +1,107 @@
 <template>
-  <div class="search-div">
-    <input v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth...">
-  </div>
-  <div>
-    <SearchResultCard
-      v-for="(r, i) in generalResults"
-      :key="i"
-      :icon="r.icon"
-      :name="r.name"
-      :content="r.content"
-      :source="r.source"
-    />
-  </div>
-  <div>
-    <TextResultCard
-        v-for="(r,i) in searchResults"
-        :key="i"
-        :source="r.source"
-        :type="r.type"
-        :occurrences="r.occurrences"
-    />
+  <div class="grid-content">
+    <Toast position="bottom-right"/>
+    <div class="header" >
+
+    </div>
+    <div class="logo-div">
+      <img src="../assets/demo_logo.png" height="300" alt="">
+    </div>
+      <div class="search-div">
+        <span class="p-input-icon-right">
+            <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
+            <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+        </span>
+      </div>
+      <div>
+        <div
+                v-for="(r,i) in searchResults"
+                :key="i"
+        >
+          <result-card-text v-if="r.type === 'text'" :result="r"/>
+          <result-card-folder v-if="r.type === 'folder'" :result="r"/>
+          <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
+        </div>
+      </div>
   </div>
 </template>
 
-<script>
-import SearchResultCard from "@/components/results/SearchResultCard";
-import TextResultCard from "../components/results/TextResultCard";
-import axios from "axios";
-export default {
-  name: "SearchBar",
-  data() {
-    return {
-      notDeleted: true,
-      query: "",
-      searchResults: [],
-      generalResults: []
+  <script>
+    import axios from "axios";
+    import ResultCardText from "../components/results/ResultCardText";
+    import ResultCardFolder from "../components/results/ResultCardFolder";
+    import ResultCardWebpage from "../components/results/ResultCardWebpage";
+    export default {
+      name: "SearchBar",
+      data() {
+        return {
+          notDeleted: true,
+          query: "",
+          searchResults: [],
+          name: "Search"
+        }
+      },
+      methods: {
+        queryServer() {
+          this.searchResults = []
+          axios
+                  .get("http://localhost:3001/general/" + this.query)
+                  .then((resp) => {
+                    this.searchResults = resp.data.searchResults
+                  }).catch(() => {
+            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+          })
+        }
+      },
+      components: {
+        ResultCardWebpage,
+        ResultCardFolder,
+        ResultCardText
+      }
     }
-  },
-  methods: {
-    queryServer() {
-      this.searchResults = []
-      axios
-        .get("http://localhost:3001/general/" + this.query)
-        .then((resp) => {
-          this.searchResults = resp.data.searchResults
-        }).catch(() => {
-          alert("Something went wrong!")
-        })
-    },
-    getGeneralSearchResults() {
-      this.generalResults = []
-      axios
-          .get("http://localhost:3001/search")
-          .then((resp) => {
-            console.log(resp)
-            this.generalResults = resp.data
-          }).catch(() => {
-        alert("Something went wrong!")
-      })
-    }
-  },
-  beforeMount() {
-    this.getGeneralSearchResults()
-  },
-  components: {
-    TextResultCard,
-    SearchResultCard
-  }
-}
-</script>
+  </script>
 
 <style scoped>
-@import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
+
+.header{
+  padding: 30px;
+  border: solid;
+  border: rgba(37, 37, 37, 0.91);
+  text-align: center;
+}
+
+.grid-content {
+  display: grid;
+  grid-template-rows: 1fr ;
+}
 
 .search-div {
   vertical-align: center;
+  text-align: center;
+  padding: 30px;
+  max-height: 100px;
 }
 
 input {
   width: 600px;
 }
 
+::placeholder {
+  color: dimgrey;
+  font-style: italic;
+}
+
+.pi{
+  cursor: pointer;
+}
+
+.pi-search{
+  padding: 0;
+}
+
+
+.logo-div {
+  text-align: center;
+  margin-bottom: 10px;
+}
 </style>

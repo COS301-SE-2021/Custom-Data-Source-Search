@@ -1,5 +1,5 @@
 <template>
-  <IconBase
+  <IconButtonBase
       :title="iconTitle"
       :height="height"
       :width="width"
@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import IconBase from "./IconBase";
+import IconButtonBase from "./IconButtonBase";
 export default {
   name: "IconDelete",
-  components: {IconBase},
+  components: {IconButtonBase},
   props: {
     height: [Number, String],
     width: [Number, String],
@@ -31,4 +31,13 @@ export default {
 </script>
 
 <style scoped>
+
+.icon-button {
+  background-color: #242424;
+}
+
+.icon-button:hover {
+  background-color: #2c2c2c;
+}
+
 </style>

@@ -1,13 +1,18 @@
 <template>
-  <div class="grid-app">
-    <div id="nav">
-      <router-link title="Search" class="icon" to="/"><icon-search/></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><icon-storage/></router-link>
-    </div>
-    <div>
-    <router-view/>
-    </div>
+<div class="grid-app">
+  <div id="grid-div-1">
+    <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
+      <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+
+<!--      <i class="pi pi-cog" style="fontSize: 1.5rem"></i>-->
+<!--      <i class="pi pi-user" style="fontSize: 1.5rem"></i>-->
+    </Sidebar>
   </div>
+  <div id="grid-div-2">
+    <router-view/>
+  </div>
+</div>
 </template>
 
 <style lang="scss">
@@ -18,12 +23,11 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #2c2c2c;
+  background-color: #242424;
   color: rgba(255, 255, 255, 0.58);
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
 }
 
 input {
@@ -35,13 +39,33 @@ input {
   border: none;
 }
 
-input::placeholder {
-  color: black;
+#Sidebar {
+  max-width: 30px
+}
+
+.header{
+  padding: 30px;
+  border: solid;
+  border: #3b3b3b;
+  max-height: 80px
 }
 
 .grid-app {
   display: grid;
-  grid-template-rows: 1fr 12fr;
+  grid-template-columns: 1fr 30fr;
+  height: 100%;
+}
+
+#grid-div-1 {
+  padding-top: 50px;
+  background-color: #1e1e1e;
+}
+
+#grid-div-2 {
+  border: 1px none #212121;
+  border-right-style: solid;
+  border-left-style: solid;
+  height: 100%;
 }
 
 #nav {
@@ -63,20 +87,30 @@ input::placeholder {
 }
 
 button {
-  background-color: #26C6DA;
   border: none;
   border-radius: 12px;
-  margin-left: 45px;
   padding: 10px;
 }
+
+.pi-search, .pi-list{
+  color: grey;
+  padding: 20px 10px 10px;
+}
+
+.pi-search:hover,.pi-list:hover{
+  color: #41B3B2;
+}
+
 </style>
 
 <script>
-import IconSearch from "./components/icons/IconSearch";
-import IconStorage from "./components/icons/IconStorage";
 export default {
   components: {
-    IconStorage,
-    IconSearch}
+  },
+  data() {
+    return{
+      name: "Data Sleuth"
+    }
+  }
 }
 </script>

@@ -1,21 +1,15 @@
 import {WebPageDataSource, WebPageDataSourceList} from "../models/WebPageDataSource.interface";
-import {TextDataSource} from "../models/TextDataSource.interface";
 import WebPageUnavailableError from "../errors/WebPageError";
-import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 import {WebOccurrencesResponse, WebStringOccurrences} from "../models/response/searchWebPageResponse.interface";
 import {randomBytes} from "crypto";
-import textDataSourceService from "./TextDataSource.service";
 
 const fetch = require("node-fetch");
-const axios = require("axios")
-const cheerio = require("cheerio")
 
 class WebPageDataSourceService {
 
     webPageDataSourceArray: WebPageDataSource[];
 
     constructor(){
-        console.log("Web Page Data Source Service started");
         this.webPageDataSourceArray = [];
     }
 
@@ -45,44 +39,29 @@ class WebPageDataSourceService {
 
 
     async addWebPageDataSource(webUrl: string): Promise<WebPageUnavailableError>{
-
         const temp: WebPageDataSource = {uuid: randomBytes(16).toString("hex") ,url: webUrl};
-
-        var page;
-        var error : WebPageUnavailableError;
-
+        let page;
         try {
             page = await fetch(webUrl);
         } catch(err) {
-
             return new WebPageUnavailableError("Web Page not available", 400)
-
-
         }
-
         if(page.status == 200) {
             this.webPageDataSourceArray.push(temp);
             return null;
-
         } else {
             return new WebPageUnavailableError("Web Page not available", 400)
         }
-
-
-
     }
 
     async searchAllWebPageDataSources(searchString: string) {
         let result: WebOccurrencesResponse = {};
-       let pages: Promise<string>[] = [];
-
+        let pages: Promise<string>[] = [];
         for (let i = 0; i < this.webPageDataSourceArray.length; i++) {
             //let location = this.webPageDataSourceArray[i].path + this.textDataSourceArray[i].filename;
            let url = this.webPageDataSourceArray[i].url;
             pages.push(this.readWebPage(url));
         }
-
-
         let i = 0;
         for await (const content of pages) {
             let searchResults: WebStringOccurrences = this.searchWebPage(await content, searchString);

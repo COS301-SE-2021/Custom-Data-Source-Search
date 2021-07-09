@@ -1,43 +1,38 @@
 <template>
   <div id="container">
     <div class="grid">
-      <div>
+      <div v-on:click="$emit('expandText')">
         <icon-file icon-color="#2ecc71"/>
       </div>
-      <div id="header">Text Files</div>
+      <div v-on:click="$emit('expandText')" id="header">Text Files</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
       </div>
-      <div id="expand" >
-        <icon-expand-less @click="expanded=!expanded" class="expand" id="minimise" v-if="expanded" />
-        <icon-expand-more @click="expanded=!expanded" class="expand" v-else />
-      </div>
     </div>
     <div v-if="add">
-      <AddDataURI placeholder-path="Enter Text File URI..." endpoint="http://localhost:3001/textdatasources"></AddDataURI>
+      <add-text-datasource @add-text="$emit('addText')"/>
     </div>
     <div v-if="expanded" id="text-datasources">
-      <DataSourceCard
+      <data-source-card
           v-for="(item, index) in dataSources"
-          :key=index :title="item.path + item.filename"
+          :key=index
+          :title="item.path + item.filename"
           :id="item.uuid"
           endpoint="http://localhost:3001/textdatasources"
       >
-      </DataSourceCard>
+      </data-source-card>
     </div>
   </div>
 </template>
 
 <script>
-import DataSourceCard from "./DataSourceCard";
-import AddDataURI from "./AddDataURI";
-import IconFile from "../icons/IconFile";
+import DataSourceCard from "../DataSourceCard";
+import AddTextDatasource from "@/components/datasources/text/AddTextDatasource";
+import IconFile from "../../icons/IconFile";
 import axios from "axios";
-import IconMin from "../icons/IconMin";
-import IconAdd from "../icons/IconAdd";
-import IconExpandMore from "../icons/IconExpandMore";
-import IconExpandLess from "../icons/IconExpandLess";
+import IconMin from "../../icons/IconMin";
+import IconAdd from "../../icons/IconAdd";
 
 export default {
   name: "FileDataSource",
@@ -49,21 +44,24 @@ export default {
     }
   },
   components: {
-    IconExpandLess,
-    IconExpandMore,
     IconAdd,
     IconMin,
     IconFile,
     DataSourceCard,
-    AddDataURI
+    AddTextDatasource
+  },
+  methods: {
+    fetchDataSources() {
+      axios.get("http://localhost:3001/textdatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.dataSources = resp.data
+          }
+      )
+    }
   },
   beforeMount() {
-    axios.get("http://localhost:3001/textdatasources").then(
-        resp => {
-          console.log(resp.data)
-          this.dataSources = resp.data
-        }
-    )
+    this.fetchDataSources()
   }
 }
 </script>
@@ -75,7 +73,7 @@ export default {
   text-align: left;
   border-radius: 10px;
   margin-top: 10px;
-  background-color: #212121;
+  background-color: #2a2a2a;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -85,8 +83,7 @@ export default {
 }
 
 #header {
-  font-weight: bold;
-  padding-top: 28px;
+  padding-top: 20px;
 }
 
 .expand {
@@ -95,7 +92,8 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr 1fr;
+  grid-template-columns: 1fr 10fr 1fr;
+  cursor: pointer;
 }
 
 .grid div {
