@@ -2,7 +2,7 @@
   <div id="container">
     <div class="grid">
       <div v-on:click="$emit('expandText')">
-        <icon-file icon-color="#2ecc71"/>
+        <icon-file />
       </div>
       <div v-on:click="$emit('expandText')" id="header">Text Files</div>
       <div>
