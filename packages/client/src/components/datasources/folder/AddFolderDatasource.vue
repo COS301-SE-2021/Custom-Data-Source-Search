@@ -57,7 +57,7 @@
 
 <style scoped>
 div {
-    padding: 15px 15px 15px 0;
+    padding: 0 15px 15px 0;
 }
 
 .data-input {
