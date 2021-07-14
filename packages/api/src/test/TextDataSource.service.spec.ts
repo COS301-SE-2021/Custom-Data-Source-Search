@@ -1,5 +1,5 @@
 import textDataSourceService from "../services/TextDataSource.service";
-import {StringOccurrences} from "../models/response/searchFileResponse.interface";
+import {StringOccurrence} from "../models/response/searchFileResponse.interface";
 import FileReadingError from "../errors/FileReadingError";
 import fs from "fs";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
@@ -12,9 +12,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
         const mockSearchString = "";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).toEqual({});
+        expect(response).toEqual([]);
     });
 
     it('Should return empty object when searching for a string that is not contained in the file content', () => {
@@ -22,9 +22,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).toEqual({});
+        expect(response).toEqual([]);
     });
 
     it('Should return one occurrence that contains the search string when file content contains the search string', () => {
@@ -32,9 +32,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).not.toEqual({});
+        expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
         expect(response[0].occurrenceString).toContain(mockSearchString);
         expect(response[1]).toBe(undefined);
@@ -45,9 +45,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).not.toEqual({});
+        expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
         expect(response[0].occurrenceString).toContain(mockSearchString);
 
@@ -61,9 +61,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).toEqual({});
+        expect(response).toEqual([]);
     });
 
     it('Should return occurrences on different lines for Windows if the file contains multiple lines with occurrences on them', () => {
@@ -71,9 +71,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\r\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).not.toEqual({});
+        expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
         expect(response[0].occurrenceString).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
@@ -89,9 +89,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\nMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).not.toEqual({});
+        expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
         expect(response[0].occurrenceString).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
@@ -107,9 +107,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
         const mockFileContent = "Lorem ipsum dolor sit amet, Gelato consectetur adipiscing elit.\rMaecenas at sagittis eros. Gelato Duis at velit vel est vestibulum laoreet.";
         const mockSearchString = "Gelato";
         //when
-        const response: StringOccurrences = service.searchFile(mockFileContent, mockSearchString);
+        const response: StringOccurrence[] = service.searchFile(mockFileContent, mockSearchString);
         //then
-        expect(response).not.toEqual({});
+        expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
         expect(response[0].occurrenceString).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
