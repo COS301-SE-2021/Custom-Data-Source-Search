@@ -2,7 +2,7 @@ import folderDataSourceRepository from "../repositories/FolderDataSourceReposito
 import fs from "fs";
 import {FolderDataSource} from "../models/FolderDataSource.interface";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
-import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import {StringOccurrence, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
 import textDataSourceService from "./TextDataSource.service";
 
 class FolderDataSourceService {
@@ -108,7 +108,7 @@ class FolderDataSourceService {
             })));
         let i = 0;
         for (const content of file) {
-            let searchResults: StringOccurrences = textDataSourceService.searchFile(content, searchString);
+            let searchResults: StringOccurrence[] = textDataSourceService.searchFile(content, searchString);
             if (searchResults.hasOwnProperty('0')) {
                 result[i] = {
                     type: "folder",
