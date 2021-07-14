@@ -9,6 +9,6 @@ export interface FileOccurrence {
     occurrences: StringOccurrence[];
 }
 
-export interface StringOccurrencesResponse {
-    [key: number]: FileOccurrence;
-}
+// export interface StringOccurrencesResponse {
+//     [key: number]: FileOccurrence;
+// }
