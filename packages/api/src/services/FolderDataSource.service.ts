@@ -109,7 +109,7 @@ class FolderDataSourceService {
         let result: FileOccurrence[] = [];
         for (const content of file) {
             let searchResults: StringOccurrence[] = textDataSourceService.searchFile(content, searchString);
-            if (searchResults.hasOwnProperty('0')) {
+            if (searchResults.length > 0) {
                 result.push({
                     type: "folder",
                     source: paths[i] + files[i],

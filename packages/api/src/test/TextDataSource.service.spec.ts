@@ -164,7 +164,7 @@ describe('TextDataSourceService : Searching Across All Files', () => {
         //then
         expect(error).toBe(null);
         expect(response).not.toBe(null);
-        expect(response).toEqual({});
+        expect(response).toEqual([]);
     });
 });
 
