@@ -2,7 +2,7 @@
  * Data Model Interfaces
  */
 import {TextDataSource} from "../models/TextDataSource.interface";
-import {StringOccurrence, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
 import FileReadingError from "../errors/FileReadingError";
@@ -104,27 +104,27 @@ class TextDataSourceService {
     }
 
 
-    async searchAllTextDataSources(searchString: string) : Promise<[StringOccurrencesResponse, Error]> {
+    async searchAllTextDataSources(searchString: string) : Promise<[FileOccurrence[], Error]> {
 
         // TODO make this right
         let [data] = textDataSourceRepository.getAllDataSources();
         // Above this is placeholder implementation
 
-        let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
         for (let i = 0; i < data.length; i++) {
             let location = data[i].path + data[i].filename;
             file.push(this.readFile(location));
         }
         let i = 0;
+        let result: FileOccurrence[] = [];
         for await (const content of file) {
             let searchResults: StringOccurrence[] = this.searchFile(content, searchString);
             if (searchResults.length > 0) {
-                result[i] = {
+                result.push({
                     type: "text",
                     source: data[i].path + data[i].filename,
                     occurrences: searchResults
-                };
+                });
                 i++;
             }
         }
