@@ -82,7 +82,7 @@ class FolderDataSourceService {
         }
     }
 
-    async searchAllFolderDataSources(searchString: string) {
+    async searchAllFolderDataSources(searchString: string): Promise<[FileOccurrence[], Error]> {
         // TODO make this right
         let [data] = folderDataSourceRepository.getAllDataSources();
         // Above this is placeholder implementation
@@ -126,7 +126,7 @@ class FolderDataSourceService {
         let results: string[] = [];
         let [separateFiles,] = textDataSourceRepository.getAllDataSources();
         fileNames.forEach((file) => {
-            if (file.indexOf(".") !== -1 && !separateFiles.some(x => x.filename === file)) {
+            if (file.indexOf(".") !== -1 && file.indexOf(".ini") == -1 && !separateFiles.some(x => x.filename === file)) {
                 results.push(file);
             }
         });
