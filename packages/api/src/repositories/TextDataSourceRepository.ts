@@ -13,7 +13,7 @@ class TextDataSourceRepository {
         this.textDataSourceArray = [];
     }
 
-    async addDataSource(dataSource: TextDataSource) {
+    async addDataSource(dataSource: TextDataSource): Promise<[{code: number, message: string}, {code: number, message: string}]> {
         this.readFile()
         let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {

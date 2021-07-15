@@ -9,7 +9,6 @@ import {
 } from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
-import FileReadingError from "../errors/FileReadingError";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 import axios from "axios";
 
@@ -66,9 +65,15 @@ class TextDataSourceService {
 
     async addTextDataSource(fileName: string, filePath: string) {
         if (fileName === '') {
-            throw new FileReadingError('NO FILE NAME', 400);
+            return [null, {
+                "code": 400,
+                "message": "No file name"
+            }]
         } else if (filePath === '') {
-            throw new FileReadingError('NO FILE PATH', 400);
+            return [null, {
+                "code": 400,
+                "message": "No file path"
+            }]
         }
         if (filePath[filePath.length - 1] !== '/') {
             filePath += '/';
@@ -77,16 +82,28 @@ class TextDataSourceService {
             fs.readFileSync(filePath + fileName);
         } catch (err) {
             if (err.code == 'ENOENT') {
-                throw new FileReadingError('FILE NOT FOUND', 404);
+                return [null, {
+                    "code": 404,
+                    "message": "File not found"
+                }]
             } else if (err.code == 'EACCES') {
-                throw new FileReadingError('ACCESS FORBIDDEN', 403);
+                return [null, {
+                    "code": 403,
+                    "message": "Access forbidden"
+                }]
             }
-            throw err;
+            return [null, {
+                "code": 500,
+                "message": "Unknown error"
+            }];
         }
         const temp: TextDataSource = {filename: fileName, path: filePath};
         let [, e] = await textDataSourceRepository.addDataSource(temp);
         if (e) {
-            throw new FileReadingError('DATASOURCE ALREADY EXISTS', 400);
+            return [null, {
+                "code": 400,
+                "message": "Datasource already exists"
+            }]
         }
     }
 
@@ -120,7 +137,6 @@ class TextDataSourceService {
                     let stringOccurrences: StringOccurrence[] = [];
                     // @ts-ignore
                     for (let i = 0; i < value["content"].length; i++) {
-                        // @ts-ignore
                         // @ts-ignore
                         stringOccurrences.push({"lineNumber": 0, "occurrenceString": value["content"][i]});
                     }

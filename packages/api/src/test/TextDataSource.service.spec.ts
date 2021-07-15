@@ -181,8 +181,8 @@ describe('TextDataSourceService : addTextDataSource function', () => {
     let fileName: string = "";
     let filePath: string = "";
 
-    function add() {
-        service.addTextDataSource(fileName, filePath);
+    async function add() {
+        await service.addTextDataSource(fileName, filePath);
     }
 
     it('Should make a call to text repository to store valid datasource', () => {
@@ -190,7 +190,7 @@ describe('TextDataSourceService : addTextDataSource function', () => {
         fileName = "file.txt";
         filePath = "valid/path/";
         jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(textDataSourceRepository, "addDataSource").mockReturnValue([null, null]);
+        jest.spyOn(textDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, null]});
         //when
         expect(add).not.toThrow(FileReadingError);
         //then
@@ -201,10 +201,10 @@ describe('TextDataSourceService : addTextDataSource function', () => {
         fileName = "file.txt";
         filePath = "valid/path/";
         jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(textDataSourceRepository, "addDataSource").mockReturnValue([null, {
+        jest.spyOn(textDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, {
             "code": 400,
             "message": "already exists"
-        }]);
+        }]});
         //then
         expect(add).toThrow(FileReadingError);
         expect(add).toThrow('DATASOURCE ALREADY EXISTS');
