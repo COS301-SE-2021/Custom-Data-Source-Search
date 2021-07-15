@@ -18,6 +18,7 @@ import Tooltip from 'primevue/tooltip';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
+import ScrollPanel from 'primevue/scrollpanel';
 
 const app = createApp(App);
 app.use(router);
@@ -36,3 +37,4 @@ app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
 app.component("Button", Button)
 app.component("Dropdown", Dropdown)
+app.component("ScrollPanel", ScrollPanel)
