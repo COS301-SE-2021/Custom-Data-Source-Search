@@ -28,7 +28,7 @@ class TextDataSourceRepository {
             path: dataSource.path
         };
         let formData = new FormData();
-        formData.append("file", fs.readFileSync(dataSource.filename + dataSource.path), dataSource.filename);
+        formData.append("file", fs.readFileSync(dataSource.path + dataSource.filename), dataSource.filename);
         try {
             await axios.post('http://localhost:8983/solr/files/update/extract?commit=true', formData, {
                 headers: {
