@@ -106,7 +106,7 @@
       Mattis aliquam faucibus purus in massa tempor nec.
     </div>
   </ScrollPanel>
-  
+  <Button label="Add Data Source" class="p-button-text"/>
 </template>
 
 <script>
