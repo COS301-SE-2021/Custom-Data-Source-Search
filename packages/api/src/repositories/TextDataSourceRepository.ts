@@ -1,6 +1,8 @@
 import {StoredTextDataSource, TextDataSource} from "../models/TextDataSource.interface";
 import {randomBytes} from "crypto";
 import fs from "fs";
+import axios from "axios";
+import FormData from "form-data";
 
 
 class TextDataSourceRepository {
@@ -11,7 +13,7 @@ class TextDataSourceRepository {
         this.textDataSourceArray = [];
     }
 
-    addDataSource(dataSource: TextDataSource) {
+    async addDataSource(dataSource: TextDataSource) {
         this.readFile()
         let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {
@@ -20,11 +22,26 @@ class TextDataSourceRepository {
                 "message": "Text datasource already exists"
             }];
         }
-        this.textDataSourceArray.push({
+        const storedDatasource: StoredTextDataSource = {
             uuid: randomBytes(16).toString("hex"),
             filename: dataSource.filename,
             path: dataSource.path
-        });
+        };
+        let formData = new FormData();
+        formData.append("file", fs.readFileSync(dataSource.filename + dataSource.path), dataSource.filename);
+        try {
+            await axios.post('http://localhost:8983/solr/files/update/extract?commit=true', formData, {
+                headers: {
+                    ...formData.getHeaders()
+                }
+            });
+        } catch (e) {
+            return [null, {
+                "code": 500,
+                "message": "Could not post file to solr"
+            }]
+        }
+        this.textDataSourceArray.push(storedDatasource);
         fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
         return [{
             "code": 200,

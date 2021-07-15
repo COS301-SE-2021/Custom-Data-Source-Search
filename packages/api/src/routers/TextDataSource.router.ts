@@ -34,9 +34,9 @@ textDataSourceRouter.get("/:id", (req: Request, res: Response) => {
 /**
  * Add a data source by it's path and file name
  */
-textDataSourceRouter.post("/", (req: Request, res: Response) => {
+textDataSourceRouter.post("/", async (req: Request, res: Response) => {
     try {
-        textDataSourceService.addTextDataSource(req.body.fileName, req.body.filePath);
+        await textDataSourceService.addTextDataSource(req.body.fileName, req.body.filePath);
 
         res.status(200).send({'message':'Successfully added text datasource'});
     } catch (e) {

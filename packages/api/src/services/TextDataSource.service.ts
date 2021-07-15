@@ -3,7 +3,7 @@
  */
 import {TextDataSource} from "../models/TextDataSource.interface";
 import {
-    FileOccurrence, StringOccurrence,
+    StringOccurrence,
     StringOccurrences,
     StringOccurrencesResponse
 } from "../models/response/searchFileResponse.interface";
@@ -64,7 +64,7 @@ class TextDataSourceService {
         }
     }
 
-    addTextDataSource(fileName: string, filePath: string) {
+    async addTextDataSource(fileName: string, filePath: string) {
         if (fileName === '') {
             throw new FileReadingError('NO FILE NAME', 400);
         } else if (filePath === '') {
@@ -84,7 +84,7 @@ class TextDataSourceService {
             throw err;
         }
         const temp: TextDataSource = {filename: fileName, path: filePath};
-        let [, e] = textDataSourceRepository.addDataSource(temp);
+        let [, e] = await textDataSourceRepository.addDataSource(temp);
         if (e) {
             throw new FileReadingError('DATASOURCE ALREADY EXISTS', 400);
         }
