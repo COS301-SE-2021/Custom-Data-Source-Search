@@ -132,30 +132,6 @@ describe('TextDataSourceService : Searching Across All Files', () => {
                 ], null];
         });
     })
-    it('Should return search results when there are multiple occurrences of the search string in any files ', async () => {
-        //given
-        const searchString = "Jeff";
-        //when
-        const [response, error] = await service.searchAllTextDataSources(searchString);
-        //then
-        expect(error).toBe(null);
-        expect(response).not.toBe(null);
-        expect(response).not.toEqual({});
-        if (response) {
-            //hello.txt
-            expect(response[0]).not.toBe(undefined);
-            expect(response[0].source).toEqual("../test/hello.txt");
-            expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
-            expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
-            expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
-            //beans.txt
-            expect(response[1]).not.toBe(undefined);
-            expect(response[1].source).toEqual("../test/beans.txt");
-            expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
-            expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
-        }
-    });
-
     it('Should return empty object when no occurrences of the search string are in any files ', async () => {
         //given
         const searchString = "awordthatshouldntbethere";

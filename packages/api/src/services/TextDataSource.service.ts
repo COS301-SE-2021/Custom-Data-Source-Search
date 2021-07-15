@@ -105,6 +105,10 @@ class TextDataSourceService {
                 "message": "Datasource already exists"
             }]
         }
+        return [{
+            "code": 200,
+            "message": "Success"
+        }, null];
     }
 
     removeTextDataSource(uuid: string) {
