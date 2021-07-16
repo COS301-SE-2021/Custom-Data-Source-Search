@@ -14,7 +14,7 @@ class TextDataSourceRepository {
     }
 
     async addDataSource(dataSource: TextDataSource): Promise<[{code: number, message: string}, {code: number, message: string}]> {
-        this.readFile()
+        this.readFile();
         let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {
             return [null, {
@@ -62,11 +62,26 @@ class TextDataSourceRepository {
     }
 
     async updateDatasources() {
-
+        this.readFile();
+        for (let storedDatasrouce of this.textDataSourceArray) {
+            if (storedDatasrouce.lastModified.toString() != fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime.toString()) {
+                console.log("Trying to update: " + storedDatasrouce.filename);
+                console.log(storedDatasrouce.lastModified);
+                console.log(fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime);
+                console.log(typeof storedDatasrouce.lastModified);
+                console.log(typeof fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime);
+                console.log("--------------------------")
+                try {
+                    await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
+                } catch (e) {
+                    console.log("Error posting file to solr");
+                }
+            }
+        }
     }
 
     getDataSource(uuid: string): [StoredTextDataSource, { "code": number, "message": string }] {
-        this.readFile()
+        this.readFile();
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             return [this.textDataSourceArray[index], null];
@@ -78,7 +93,7 @@ class TextDataSourceRepository {
     }
 
     getAllDataSources(): [StoredTextDataSource[], { "code": number, "message": string }] {
-        this.readFile()
+        this.readFile();
         return [this.textDataSourceArray, null];
     }
 
@@ -99,7 +114,7 @@ class TextDataSourceRepository {
     }
 
     deleteDataSource(uuid: string) {
-        this.readFile()
+        this.readFile();
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.textDataSourceArray.splice(index, 1);
