@@ -1,6 +1,6 @@
 import {WebPageDataSource, WebPageDataSourceList} from "../models/WebPageDataSource.interface";
 import WebPageUnavailableError from "../errors/WebPageError";
-import {WebOccurrencesResponse, WebStringOccurrences} from "../models/response/searchWebPageResponse.interface";
+import {WebOccurrencesResponse, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import {randomBytes} from "crypto";
 
 const fetch = require("node-fetch");
@@ -64,8 +64,8 @@ class WebPageDataSourceService {
         }
         let i = 0;
         for await (const content of pages) {
-            let searchResults: WebStringOccurrences = this.searchWebPage(await content, searchString);
-            if (searchResults.hasOwnProperty('0')) {
+            let searchResults: WebStringOccurrence[] = this.searchWebPage(await content, searchString);
+            if (searchResults.length > 0) {
                 result[i] = {
                     type: "webpage",
                     url: this.webPageDataSourceArray[i].url,
@@ -89,20 +89,20 @@ class WebPageDataSourceService {
         }
     }
 
-    searchWebPage(pageContents : string, searchString : string) : WebStringOccurrences{
+    searchWebPage(pageContents : string, searchString : string) : WebStringOccurrence[]{
 
         if (searchString === "" || pageContents === "") {
-            return {};
+            return [];
         }
         //let stringWithStandardLineBreaks = pageContents.replace(/(\r\n|\n|\r)/gm, "\n");
         let stringWithStandardLineBreaks = pageContents
-        let matches: WebStringOccurrences = {};
+        let matches: WebStringOccurrence[] = [];
         let numOccurrence = 0;
         for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
             //let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
-            matches[numOccurrence] = {
+            matches.push({
                 occurrenceString: '...' + pageContents.substring(index - 12, index + searchString.length + 13) + '...'
-            };
+            });
             numOccurrence++;
         }
         return matches;
