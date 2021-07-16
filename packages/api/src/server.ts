@@ -40,3 +40,7 @@ app.use("/folderdatasources", folderDataSourceRouter);
 app.listen(PORT , () => {
     console.log(`Listening on port ${PORT}`);
 });
+
+setInterval(async () => {
+    console.log("Testing");
+}, 3000, 'funky');
