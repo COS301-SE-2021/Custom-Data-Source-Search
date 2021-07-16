@@ -90,4 +90,8 @@ a {
 .pi-search{
   padding: 0;
 }
+
+.p-inputtext{
+  background-color: #242424;
+}
 </style>
