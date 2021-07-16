@@ -1,11 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Search from '../views/Search.vue'
+import Register from "../views/Register";
 
 const routes = [
   {
     path: '/',
     name: 'Search',
     component: Search
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   },
   {
     path: '/datasources',
