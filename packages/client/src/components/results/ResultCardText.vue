@@ -7,7 +7,7 @@
                 v-for="(line, index) in result.occurrences"
                 :key="index"
         >
-            {{ line.occurrenceString }} <br>
+          <span v-html="line.occurrenceString"></span> <br>
         </p>
         <small> {{ result.source }} </small>
     </div>
