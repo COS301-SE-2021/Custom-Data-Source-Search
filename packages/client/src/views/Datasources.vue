@@ -1,219 +1,63 @@
-<!--<template>-->
-<!--  <div>-->
-<!--    <h2>-->
-<!--      Data Sources-->
-<!--    </h2>-->
-<!--  </div>-->
-<!-- <div class="options">-->
-<!--   <div>-->
-<!--     Filter by:-->
-<!--     <Dropdown v-model="selectedBackend" :options="backends" optionLabel="name" :filter="true" placeholder="Backend" :showClear="true" >-->
-<!--            <template #value="slotProps">-->
-<!--                <div v-if="slotProps.value">-->
-<!--                    <div>{{slotProps.value.name}}</div>-->
-<!--                </div>-->
-<!--                <span v-else>-->
-<!--                    {{slotProps.placeholder}}-->
-<!--                </span>-->
-<!--            </template>-->
-<!--            <template #option="slotProps">-->
-<!--                <div>-->
-<!--                    <div>{{slotProps.option.name}}</div>-->
-<!--                </div>-->
-<!--            </template>-->
-<!--        </Dropdown>-->
-<!--     <Dropdown v-model="selectedType" :options="types" optionLabel="name" :filter="true" placeholder="Data Type" :showClear="true">-->
-<!--       <template #value="slotProps">-->
-<!--         <div v-if="slotProps.value">-->
-<!--           <div>{{slotProps.value.name}}</div>-->
-<!--         </div>-->
-<!--         <span v-else>-->
-<!--                    {{slotProps.placeholder}}-->
-<!--                </span>-->
-<!--       </template>-->
-<!--       <template #option="slotProps">-->
-<!--         <div>-->
-<!--           <div>{{slotProps.option.name}}</div>-->
-<!--         </div>-->
-<!--       </template>-->
-<!--     </Dropdown>-->
-<!--     <Dropdown v-model="selectedTag1" :options="tags" optionLabel="name" :filter="true" placeholder="Tag #1" :showClear="true">-->
-<!--       <template #value="slotProps">-->
-<!--         <div v-if="slotProps.value">-->
-<!--           <div>{{slotProps.value.name}}</div>-->
-<!--         </div>-->
-<!--         <span v-else>-->
-<!--                    {{slotProps.placeholder}}-->
-<!--                </span>-->
-<!--       </template>-->
-<!--       <template #option="slotProps">-->
-<!--         <div>-->
-<!--           <div>{{slotProps.option.name}}</div>-->
-<!--         </div>-->
-<!--       </template>-->
-<!--     </Dropdown>-->
-<!--     <Dropdown v-model="selectedTag2" :options="tags" optionLabel="name" :filter="true" placeholder="Tag #2" :showClear="true">-->
-<!--       <template #value="slotProps">-->
-<!--         <div v-if="slotProps.value">-->
-<!--           <div>{{slotProps.value.name}}</div>-->
-<!--         </div>-->
-<!--         <span v-else>-->
-<!--                    {{slotProps.placeholder}}-->
-<!--                </span>-->
-<!--       </template>-->
-<!--       <template #option="slotProps">-->
-<!--         <div>-->
-<!--           <div>{{slotProps.option.name}}</div>-->
-<!--         </div>-->
-<!--       </template>-->
-<!--     </Dropdown>-->
-<!--   </div>-->
-<!-- </div>-->
-<!--  <hr style="width: 95%; margin-top: 20px;">-->
-<!--  <ScrollPanel style="width: 95%; height: 200px; margin-top: 5%; margin-bottom: 50px;">-->
-<!--    <div class="source-list">-->
-<!--      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.-->
-<!--      Vitae et leo duis ut diam.-->
-<!--      Ultricies mi quis hendrerit dolor magna eget est lorem. Amet consectetur adipiscing elit ut.-->
-<!--      Nam libero justo laoreet sit amet. Pharetra massa massa ultricies mi quis hendrerit dolor magna.-->
-<!--      Est ultricies integer quis auctor elit sed vulputate. Consequat ac felis donec et. Tellus orci ac auctor augue mauris.-->
-<!--      Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a. Tincidunt arcu non sodales neque sodales.-->
-<!--      Metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices. Sodales ut etiam sit amet nisl purus.-->
-<!--      Cursus sit amet dictum sit amet. Tristique senectus et netus et malesuada fames ac turpis egestas.-->
-<!--      Et tortor consequat id porta nibh venenatis cras sed. Diam maecenas ultricies mi eget mauris.-->
-<!--      Eget egestas purus viverra accumsan in nisl nisi. Suscipit adipiscing bibendum est ultricies integer.-->
-<!--      Mattis aliquam faucibus purus in massa tempor nec.-->
-<!--      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.-->
-<!--      Vitae et leo duis ut diam.-->
-<!--      Ultricies mi quis hendrerit dolor magna eget est lorem. Amet consectetur adipiscing elit ut.-->
-<!--      Nam libero justo laoreet sit amet. Pharetra massa massa ultricies mi quis hendrerit dolor magna.-->
-<!--      Est ultricies integer quis auctor elit sed vulputate. Consequat ac felis donec et. Tellus orci ac auctor augue mauris.-->
-<!--      Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a. Tincidunt arcu non sodales neque sodales.-->
-<!--      Metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices. Sodales ut etiam sit amet nisl purus.-->
-<!--      Cursus sit amet dictum sit amet. Tristique senectus et netus et malesuada fames ac turpis egestas.-->
-<!--      Et tortor consequat id porta nibh venenatis cras sed. Diam maecenas ultricies mi eget mauris.-->
-<!--      Eget egestas purus viverra accumsan in nisl nisi. Suscipit adipiscing bibendum est ultricies integer.-->
-<!--      Mattis aliquam faucibus purus in massa tempor nec.-->
-<!--      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.-->
-<!--      Vitae et leo duis ut diam.-->
-<!--      Ultricies mi quis hendrerit dolor magna eget est lorem. Amet consectetur adipiscing elit ut.-->
-<!--      Nam libero justo laoreet sit amet. Pharetra massa massa ultricies mi quis hendrerit dolor magna.-->
-<!--      Est ultricies integer quis auctor elit sed vulputate. Consequat ac felis donec et. Tellus orci ac auctor augue mauris.-->
-<!--      Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a. Tincidunt arcu non sodales neque sodales.-->
-<!--      Metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices. Sodales ut etiam sit amet nisl purus.-->
-<!--      Cursus sit amet dictum sit amet. Tristique senectus et netus et malesuada fames ac turpis egestas.-->
-<!--      Et tortor consequat id porta nibh venenatis cras sed. Diam maecenas ultricies mi eget mauris.-->
-<!--      Eget egestas purus viverra accumsan in nisl nisi. Suscipit adipiscing bibendum est ultricies integer.-->
-<!--      Mattis aliquam faucibus purus in massa tempor nec.-->
-<!--    </div>-->
-<!--  </ScrollPanel>-->
-<!--  <router-link title="AddDatasources" class="icon" to="/addDataSources"><Button label="Add Data Source" class="p-button-text"/></router-link>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--export default {-->
-<!--  name: "Datasources.vue",-->
-<!--  data(){-->
-<!--    return{-->
-<!--      selectedBackend: null,-->
-<!--      selectedType: null,-->
-<!--      selectedTag1: null,-->
-<!--      selectedTag2: null,-->
-<!--      backends:[-->
-<!--        {name: 'backend1'},-->
-<!--        {name: 'backend2'},-->
-<!--        {name: 'backend3'}-->
-<!--      ],-->
-<!--      types: [-->
-<!--        {name: 'text'},-->
-<!--        {name: 'webpage'},-->
-<!--        {name: 'repository'}-->
-<!--      ],-->
-<!--      tags: [-->
-<!--        {name: 'blue'},-->
-<!--        {name: 'red'},-->
-<!--        {name: 'green'}-->
-<!--      ]-->
-<!--    }-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
-
-<!--<style scoped>-->
-
-<!--h2{-->
-<!--  margin: 20px 20px 20px 100px;-->
-<!--}-->
-
-<!--.p-dropdown {-->
-<!--  background-color: #242424;-->
-<!--  width: 14rem;-->
-<!--  margin-left: 5%;-->
-<!--}-->
-
-<!--.options{-->
-<!--  margin-left: 5%;-->
-<!--  margin-top: 2%;-->
-<!--}-->
-
-<!--.p-button-text{-->
-<!--  float: right;-->
-<!--  margin-right: 10%;-->
-<!--}-->
-
-<!--.source-list{-->
-<!--  margin-left: 10%;-->
-<!--  margin-right: 10%;-->
-<!--}-->
-
-<!--.pi-search{-->
-<!--  padding: 0;-->
-<!--}-->
-
-<!--p-dropdown-filter .pi-search{-->
-<!--  padding: 0;-->
-<!--}-->
-
-
-<!--</style>-->
-
 <template>
   <h2>
     Data Sources
   </h2>
-<!--  <ScrollPanel style="width: 95%; height: 200px">-->
-    <div class="customTable">
-      <DataTable :value="sources" :scrollable="true" scrollHeight="400px" :loading="loading">
-        <Column field="path" header="Path"></Column>
-        <Column field="filename" header="File Name"></Column>
-      </DataTable>
-    </div>
-<!--  </ScrollPanel>-->
   <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" class="p-button-text"/></router-link>
+
+  <div class="card">
+    <DataTable :value="sources" :paginator="true" class="p-datatable-customers" :rows="10"
+               dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=loading responsiveLayout="scroll"
+               :globalFilterFields="['country.name']">
+      <template #header>
+        <div class="p-d-flex p-jc-end">
+        </div>
+      </template>
+      <template #empty>
+        No sources found.
+      </template>
+      <template #loading>
+        Loading data. Please wait.
+      </template>
+      <Column header="Source Location" filterField="path" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.path}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by source location"/>
+        </template>
+      </Column>
+    </DataTable>
+  </div>
 </template>
 
 <script>
 
 import axios from "axios";
-
+import {FilterMatchMode} from 'primevue/api';
 export default {
   data() {
     return {
       sources: null,
-      loading: false
+      loading: false,
+      filters2: {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'path': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+      },
     }
   },
   productService: null,
   mounted() {
     this.loading = true;
 
-    axios.get("http://localhost:3001/textdatasources").then(
+    axios.get("http://localhost:3001/folderdatasources").then(
         resp => {
           console.log(resp.data)
           this.sources = resp.data
           this.loading = false
         }
     )
+  },
+  methods: {
   }
 }
 </script>
@@ -242,4 +86,5 @@ a {
   float: right;
   margin-right: 10%;
 }
+
 </style>
