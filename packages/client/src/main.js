@@ -18,6 +18,7 @@ import Tooltip from 'primevue/tooltip';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import FileUpload from "primevue/fileupload";
+import Dialog from "primevue/dialog";
 
 const app = createApp(App);
 app.use(router);
@@ -36,4 +37,5 @@ app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
 app.component("Button", Button);
 app.component("FileUpload", FileUpload);
+app.component("Dialog", Dialog);
 

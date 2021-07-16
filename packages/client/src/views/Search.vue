@@ -11,6 +11,8 @@
         <span class="p-input-icon-right">
             <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+            <Button></Button>
+          <SignIn></SignIn>
         </span>
       </div>
       <div>
@@ -31,6 +33,7 @@
     import ResultCardText from "../components/results/ResultCardText";
     import ResultCardFolder from "../components/results/ResultCardFolder";
     import ResultCardWebpage from "../components/results/ResultCardWebpage";
+    import SignIn from "@/components/popups/SignIn";
     export default {
       name: "SearchBar",
       data() {
@@ -56,6 +59,7 @@
         }
       },
       components: {
+        SignIn,
         ResultCardWebpage,
         ResultCardFolder,
         ResultCardText
