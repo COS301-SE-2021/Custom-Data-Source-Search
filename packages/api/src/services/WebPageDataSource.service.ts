@@ -1,6 +1,6 @@
 import {WebPageDataSource, WebPageDataSourceList} from "../models/WebPageDataSource.interface";
 import WebPageUnavailableError from "../errors/WebPageError";
-import {WebOccurrencesResponse, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
+import {WebPageOccurrence, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import {randomBytes} from "crypto";
 
 const fetch = require("node-fetch");
@@ -49,7 +49,7 @@ class WebPageDataSourceService {
     }
 
     async searchAllWebPageDataSources(searchString: string) {
-        let result: WebOccurrencesResponse = {};
+        let result: WebPageOccurrence[] = [];
         let pages: Promise<string>[] = [];
         for (let i = 0; i < this.webPageDataSourceArray.length; i++) {
             //let location = this.webPageDataSourceArray[i].path + this.textDataSourceArray[i].filename;
@@ -60,11 +60,11 @@ class WebPageDataSourceService {
         for await (const content of pages) {
             let searchResults: WebStringOccurrence[] = this.searchWebPage(await content, searchString);
             if (searchResults.length > 0) {
-                result[i] = {
+                result.push({
                     type: "webpage",
                     url: this.webPageDataSourceArray[i].url,
                     occurrences: searchResults
-                };
+                });
                 i++;
             }
         }
@@ -72,7 +72,7 @@ class WebPageDataSourceService {
     }
 
     async readWebPage(url: string): Promise<string> {
-        var text: string;
+        let text: string;
         try {
             let page = await fetch(url);
             text = await page.text();

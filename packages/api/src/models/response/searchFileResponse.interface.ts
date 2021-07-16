@@ -8,7 +8,3 @@ export interface FileOccurrence {
     source: string;
     occurrences: StringOccurrence[];
 }
-
-// export interface StringOccurrencesResponse {
-//     [key: number]: FileOccurrence;
-// }
