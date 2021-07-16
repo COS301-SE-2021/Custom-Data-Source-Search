@@ -21,7 +21,8 @@
     "primeicons": "^4.1.0",
     "primevue": "^3.5.1",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-alpha.1"
   },
   "devDependencies": {
     "@electron/remote": "^1.2.0",
