@@ -132,7 +132,11 @@ class TextDataSourceService {
 
     async searchAllTextDataSources(searchString: string) : Promise<[StringOccurrencesResponse, Error]> {
         try {
-            let response: any  = await axios.get('http://localhost:8983/solr/files/select?q=' + searchString + '&q.op=OR&hl=true&hl.fl=content&hl.highlightMultiTerm=false&hl.snippets=3');
+            let response: any  = await axios.get(
+                'http://localhost:8983/solr/files/select?q='
+                + searchString
+                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
+            );
             let result: StringOccurrencesResponse = {};
             let i = 0;
             for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
@@ -193,7 +197,6 @@ class TextDataSourceService {
         }
         return lineNum;
     }
-
 }
 
 const textDataSourceService = new TextDataSourceService();
