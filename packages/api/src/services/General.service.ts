@@ -21,9 +21,8 @@ class GeneralService {
         for (let result of textResults) {
             array.push(result);
         }
-        let i: number = 0;
-        while (pageResults.hasOwnProperty(i)) {
-            array.push(pageResults[i++]);
+        for (let result of pageResults) {
+            array.push(result);
         }
 
         if (textError || folderError || pagError) {
