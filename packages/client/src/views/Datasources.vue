@@ -5,7 +5,7 @@
   <div class="card">
     <DataTable :value="sources" :paginator="true" class="p-datatable-customers" :rows="10"
                dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=loading responsiveLayout="scroll"
-               :globalFilterFields="['country.name']">
+               :globalFilterFields="['path']">
       <template #header>
         <div class="p-d-flex p-jc-end">
           <span class="p-input-icon-left ">
