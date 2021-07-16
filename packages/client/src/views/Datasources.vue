@@ -2,14 +2,18 @@
   <h2>
     Data Sources
   </h2>
-  <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" class="p-button-text"/></router-link>
-
   <div class="card">
     <DataTable :value="sources" :paginator="true" class="p-datatable-customers" :rows="10"
                dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=loading responsiveLayout="scroll"
                :globalFilterFields="['country.name']">
       <template #header>
         <div class="p-d-flex p-jc-end">
+          <span class="p-input-icon-left ">
+            <i class="pi pi-search" />
+            <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
+          </span>
+          <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" class="p-button-text"/></router-link>
+
         </div>
       </template>
       <template #empty>
@@ -28,6 +32,7 @@
       </Column>
     </DataTable>
   </div>
+
 </template>
 
 <script>
@@ -41,7 +46,7 @@ export default {
       loading: false,
       filters2: {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-        'path': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+        'path': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
     }
   },
@@ -64,11 +69,6 @@ export default {
 
 <style scoped lang="scss">
 
-.customTable{
-  width: 90%;
-  margin: 10px auto;
-}
-
 td{
   border-top: 1px solid white;
   border-bottom: 1px solid white;
@@ -87,4 +87,7 @@ a {
   margin-right: 10%;
 }
 
+.pi-search{
+  padding: 0;
+}
 </style>
