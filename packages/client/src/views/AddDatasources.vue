@@ -1,7 +1,9 @@
 <template>
   <div class="grid-content">
     <div class="header">
-      {{ name }}
+      <h2>
+        Add Data Sources
+      </h2>
     </div>
     <div>
       <ConfirmDialog/>
@@ -166,5 +168,9 @@ export default {
 
 .header{
   text-align:center;
+}
+
+h2{
+  margin: 20px 20px 20px 100px;
 }
 </style>
