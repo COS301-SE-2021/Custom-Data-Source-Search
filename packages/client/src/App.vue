@@ -4,9 +4,6 @@
     <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
       <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-
-<!--      <i class="pi pi-cog" style="fontSize: 1.5rem"></i>-->
-<!--      <i class="pi pi-user" style="fontSize: 1.5rem"></i>-->
     </Sidebar>
   </div>
   <div id="grid-div-2">
@@ -82,9 +79,11 @@ input {
   }
 }
 
+
 .icon {
   padding: 10px;
 }
+
 
 button {
   border: none;
@@ -100,6 +99,7 @@ button {
 .pi-search:hover,.pi-list:hover{
   color: #41B3B2;
 }
+
 
 </style>
 

@@ -19,6 +19,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 import ScrollPanel from 'primevue/scrollpanel';
+import FileUpload from "primevue/fileupload";
 
 const app = createApp(App);
 app.use(router);
@@ -38,3 +39,6 @@ app.component('InputText', InputText);
 app.component("Button", Button)
 app.component("Dropdown", Dropdown)
 app.component("ScrollPanel", ScrollPanel)
+app.component("Button", Button);
+app.component("FileUpload", FileUpload);
+
