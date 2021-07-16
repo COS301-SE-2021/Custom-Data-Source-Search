@@ -25,12 +25,26 @@ class TextDataSourceRepository {
         const storedDatasource: StoredTextDataSource = {
             uuid: randomBytes(16).toString("hex"),
             filename: dataSource.filename,
-            path: dataSource.path
+            path: dataSource.path,
+            lastModified: fs.statSync(dataSource.path + dataSource.filename).mtime
         };
+        const [, err] = await this.postToSolr(fs.readFileSync(dataSource.path + dataSource.filename), storedDatasource.uuid, storedDatasource.filename);
+        if (err) {
+            return [null, err];
+        }
+        this.textDataSourceArray.push(storedDatasource);
+        fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
+        return [{
+            "code": 200,
+            "message": "Successfully added text datasource"
+        }, null];
+    }
+
+    async postToSolr(file: Buffer, id: string, fileName: string) {
         let formData = new FormData();
-        formData.append("file", fs.readFileSync(dataSource.path + dataSource.filename), dataSource.filename);
+        formData.append("file", file, fileName);
         try {
-            await axios.post('http://localhost:8983/solr/files/update/extract?commit=true', formData, {
+            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id + 'commit=true', formData, {
                 headers: {
                     ...formData.getHeaders()
                 }
@@ -41,12 +55,14 @@ class TextDataSourceRepository {
                 "message": "Could not post file to solr"
             }]
         }
-        this.textDataSourceArray.push(storedDatasource);
-        fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
         return [{
             "code": 200,
-            "message": "Successfully added text datasource"
-        }, null];
+            "message": "Successfully posted to Solr"
+        }]
+    }
+
+    async updateDatasources() {
+
     }
 
     getDataSource(uuid: string): [StoredTextDataSource, { "code": number, "message": string }] {
