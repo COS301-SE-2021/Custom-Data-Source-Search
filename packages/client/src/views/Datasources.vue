@@ -9,7 +9,7 @@
       <template #header>
         <div class="p-d-flex p-jc-end">
           <span class="p-input-icon-left ">
-            <i class="pi pi-search" />
+            <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
           </span>
           <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" icon="pi pi-plus" class="p-button-text"/></router-link>

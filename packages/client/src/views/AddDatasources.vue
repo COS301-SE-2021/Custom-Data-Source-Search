@@ -131,8 +131,8 @@ export default {
       }
     },
     isExist(title) {
-      for (var i = 0; i < this.tabs.length; i++) {
-        if (this.tabs[i].title === title) {
+      for (let i in this.tabs) {
+        if (i.title === title) {
           return true
         }
       }
