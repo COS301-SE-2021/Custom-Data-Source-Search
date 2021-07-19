@@ -131,7 +131,7 @@ export default {
       }
     },
     isExist(title) {
-      for (let i in this.tabs) {
+      for (let i of this.tabs) {
         if (i.title === title) {
           return true
         }
