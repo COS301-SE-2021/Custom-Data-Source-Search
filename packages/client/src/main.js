@@ -17,7 +17,12 @@ import Sidebar from "primevue/sidebar";
 import Tooltip from 'primevue/tooltip';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import Dropdown from 'primevue/dropdown';
+import ScrollPanel from 'primevue/scrollpanel';
 import FileUpload from "primevue/fileupload";
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';
 
 const app = createApp(App);
 app.use(router);
@@ -34,6 +39,10 @@ app.component('TabPanel', TabPanel);
 app.component('Sidebar', Sidebar);
 app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
-app.component("Button", Button);
+app.component("Button", Button)
+app.component("Dropdown", Dropdown)
+app.component("ScrollPanel", ScrollPanel)
 app.component("FileUpload", FileUpload);
-
+app.component("DataTable",DataTable)
+app.component("Column", Column)
+app.component("ColumnGroup", ColumnGroup)
