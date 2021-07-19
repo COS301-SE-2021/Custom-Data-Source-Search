@@ -1,6 +1,7 @@
 <template>
   <div class="grid-content">
     <div class="header">
+        <router-link class="icon" to="/addDatasources"><Button label="Back to data sources" icon="pi pi-angle-left" class="p-button-text"/></router-link>
       <h2>
         Add Data Sources
       </h2>
@@ -8,7 +9,7 @@
     <div>
       <ConfirmDialog/>
       <Toast position="bottom-right"/>
-      <Splitter style="height: 90vh; background:var(--surface-200)">
+      <Splitter style="height: 88vh; background:var(--surface-200); margin-top: 10px;">
         <SplitterPanel :size=40 style="padding-top: 50px">
           <div class="all-sources">
             <TextDatasource @expand-text="expandText()" @add-text="updateText" ></TextDatasource>
@@ -226,7 +227,13 @@ export default {
   text-align:center;
 }
 
-h2{
-  margin: 20px 20px 20px 100px;
+a {
+  text-decoration: none;
 }
+
+.p-button-text{
+  float: left;
+  padding: 0;
+}
+
 </style>
