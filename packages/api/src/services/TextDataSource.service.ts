@@ -143,7 +143,12 @@ class TextDataSourceService {
                         // @ts-ignore
                         stringOccurrences.push({"lineNumber": 0, "occurrenceString": value["content"][i]});
                     }
-                    result.push({"type": "text", "source": key, "occurrences": stringOccurrences});
+                    let [datasource, err] = textDataSourceRepository.getDataSource(key);
+                    if (err) {
+                        result.push({"type": "text", "source": key, "occurrences": stringOccurrences});
+                    } else {
+                        result.push({"type": "text", "source": datasource.path + datasource.filename, "occurrences": stringOccurrences});
+                    }
                 }
             }
             return [result, null];
