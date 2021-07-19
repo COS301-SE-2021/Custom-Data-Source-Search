@@ -4,10 +4,11 @@
             <div style="font-size: xx-large; padding-top: 10%">
                 REGISTER
             </div>
-            <input v-model="userName" label="Name" class="input" placeholder="Name" />
-            <input v-model="masterEmail" label="Email" class="input" placeholder="Email" />
-            <input v-model="masterPassword" label="MasterPass" class="input" placeholder="Master Password" />
-            <input v-model="masterPassCheck" label="RepeatMasterPass" class="input" placeholder="Repeat Password " />
+            <InputText tpye="text" v-model="userName" label="Name" placeholder="Name" />
+            <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
+            <Password placeholder="Password"/>
+            <input v-model="masterPassword" label="MasterPass" class="input" placeholder="Master Password" type="password" />
+            <input v-model="masterPassCheck" label="RepeatMasterPass" class="input" placeholder="Repeat Password" type="password" />
             <div id="checkboxBox">
                 <input type="checkbox" id="checkbox" v-model="keepSignedIn">
                 <label for="checkbox">Remember me</label>
@@ -32,8 +33,14 @@
 </template>
 
 <script>
+    import Password from '../components/primeComponents/PasswordInputField';
+    import InputText from 'primevue/inputtext';
     export default {
         name: "Register",
+        components: {
+          Password,
+            InputText
+        },
         data () {
             return {
                 userName: '',
@@ -94,8 +101,13 @@
         padding: 10px;
     }
 
+    input #checkbox{
+        width: 10px;
+    }
+
     input::placeholder {
-        color: #3d3d3d;
+        color: #575757;
+        font-weight: bold;
     }
 
     #checkboxBox {
@@ -111,7 +123,5 @@
     label {
         padding: 2%
     }
-
-
 
 </style>
