@@ -1,6 +1,5 @@
 import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrence} from "../models/response/searchFileResponse.interface";
-import FileReadingError from "../errors/FileReadingError";
 import fs from "fs";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 
@@ -127,8 +126,8 @@ describe('TextDataSourceService : Searching Across All Files', () => {
         jest.spyOn(textDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
             return [
                 [
-                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/'},
-                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/'}
+                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/', lastModified: new Date()},
+                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/', lastModified: new Date()}
                 ], null];
         });
     })
@@ -302,12 +301,14 @@ describe('TextDataSourceService : getAllTextDataSources function', () => {
             {
                 "uuid": "testUUID1",
                 "filename": "file1.txt",
-                "path": "some/path/"
+                "path": "some/path/",
+                "lastModified": new Date()
             },
             {
                 "uuid": "testUUID2",
                 "filename": "file2.txt",
-                "path": "some/other/path/"
+                "path": "some/other/path/",
+                "lastModified": new Date()
             }
         ];
         jest.spyOn(textDataSourceRepository, "getAllDataSources").mockReturnValue([response, null]);
@@ -338,7 +339,8 @@ describe('TextDataSourceService : getTextDataSource function', () => {
         const response = {
             "uuid": "testUUID1",
             "filename": "file1.txt",
-            "path": "some/path/"
+            "path": "some/path/",
+            "lastModified": new Date()
         };
         jest.spyOn(textDataSourceRepository, "getDataSource").mockReturnValue([response, null]);
         const id: string = "testUUID1";
