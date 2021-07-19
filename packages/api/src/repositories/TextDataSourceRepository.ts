@@ -64,13 +64,12 @@ class TextDataSourceRepository {
     async updateDatasources() {
         this.readFile();
         for (let storedDatasrouce of this.textDataSourceArray) {
-            if (storedDatasrouce.lastModified.toString() != fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime.toString()) {
-                console.log("Trying to update: " + storedDatasrouce.filename);
-                console.log(storedDatasrouce.lastModified);
-                console.log(fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime);
-                console.log(typeof storedDatasrouce.lastModified);
-                console.log(typeof fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime);
-                console.log("--------------------------")
+            let lastModified: Date = fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime;
+            if (new Date(storedDatasrouce.lastModified).getTime() !== lastModified.getTime()) {
+                let index: number = this.textDataSourceArray.indexOf(storedDatasrouce);
+                storedDatasrouce.lastModified = lastModified;
+                this.textDataSourceArray[index] = storedDatasrouce;
+                fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
                 try {
                     await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
                 } catch (e) {
