@@ -11,9 +11,9 @@
       <Splitter style="height: 90vh; background:var(--surface-200)">
         <SplitterPanel :size=40 style="padding-top: 50px">
           <div class="all-sources">
-            <TextDatasource @expand-text="expandText()"></TextDatasource>
-            <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
-            <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
+            <TextDatasource @expand-text="expandText()" @add-text="updateText" ></TextDatasource>
+            <FolderDatasource @expand-folder="expandFolder()" @add-folder="updateFolder"></FolderDatasource>
+            <WebpageDatasource @expand-webpage="expandWebpage()" @add-webpage="updateWebpage"></WebpageDatasource>
           </div>
         </SplitterPanel>
         <SplitterPanel>
@@ -30,6 +30,7 @@
                         :key=index :title="item.path + item.filename"
                         :id="item.uuid"
                         endpoint="http://localhost:3001/textdatasources"
+                        @delete-item="deleteItem(tab.title)"
                 >
                 </DataSourceCard>
               </div>
@@ -39,6 +40,7 @@
                         :key=index :title="item.path"
                         :id="item.uuid"
                         endpoint="http://localhost:3001/folderdatasources"
+                        @delete-item="deleteItem(tab.title)"
                 ></DataSourceCard>
               </div>
               <div v-else-if="tab.title==='Webpage'" id="webpage-datasources">
@@ -48,6 +50,7 @@
                         :title="item.url"
                         :id="item.uuid"
                         endpoint="http://localhost:3001/webpagedatasources"
+                        @delete-item="deleteItem(tab.title)"
                 >
                 </DataSourceCard>
               </div>
@@ -133,6 +136,59 @@ export default {
         }
       }
       return false
+    },
+    updateFolder(){
+      axios.get("http://localhost:3001/folderdatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.folderDataSources = resp.data
+          }
+      )
+    },
+    updateWebpage(){
+      axios.get("http://localhost:3001/webpagedatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.webDataSources = resp.data
+          }
+      )
+    },
+    updateText(){
+      axios.get("http://localhost:3001/textdatasources").then(
+          resp => {
+            console.log(resp.data)
+            this.textDataSources = resp.data
+          }
+      )
+    },
+    deleteItem(type){
+      if(type==="Folder"){
+        axios.get("http://localhost:3001/folderdatasources").then(
+            resp => {
+              console.log(resp.data)
+              this.folderDataSources = resp.data
+              console.log(this.folderDataSources)
+            }
+        )
+      }
+      else if(type==="Text"){
+        axios.get("http://localhost:3001/textdatasources").then(
+            resp => {
+              console.log(resp.data)
+              this.textDataSources = resp.data
+              console.log(this.textDataSources)
+            }
+        )
+      }
+      else if(type==="Webpage"){
+        axios.get("http://localhost:3001/webpagedatasources").then(
+            resp => {
+              console.log(resp.data)
+              this.webDataSources = resp.data
+              console.log(this.webDataSources)
+            }
+        )
+      }
     }
   }
 }
