@@ -4,8 +4,8 @@
     <div class="header" >
 
     </div>
-    <div class="logo-div">
-      <img src="../assets/demo_logo.png" height="300" alt="">
+    <div v-if="firstSearch" class="logo-div">
+      <img  src="../assets/search_logo.png" height="300" alt="">
     </div>
       <div class="search-div">
         <span class="p-input-icon-right">
@@ -38,11 +38,13 @@
           notDeleted: true,
           query: "",
           searchResults: [],
-          name: "Search"
+          name: "Search",
+          firstSearch: true
         }
       },
       methods: {
         queryServer() {
+          this.firstSearch = false
           this.searchResults = []
           axios
                   .get("http://localhost:3001/general/" + this.query)

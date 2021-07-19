@@ -2,11 +2,7 @@
  * Data Model Interfaces
  */
 import {TextDataSource} from "../models/TextDataSource.interface";
-import {
-    StringOccurrence,
-    StringOccurrences,
-    StringOccurrencesResponse
-} from "../models/response/searchFileResponse.interface";
+import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
@@ -137,7 +133,7 @@ class TextDataSourceService {
                 + searchString
                 + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
-            let result: StringOccurrencesResponse = {};
+            let result: FileOccurrence[] = [];
             let i = 0;
             for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
                 // @ts-ignore
@@ -148,7 +144,7 @@ class TextDataSourceService {
                         // @ts-ignore
                         stringOccurrences.push({"lineNumber": 0, "occurrenceString": value["content"][i]});
                     }
-                    result[i++] = {"type": "text", "source": key, "occurrences": stringOccurrences};
+                    result.push({"type": "text", "source": key, "occurrences": stringOccurrences});
                 }
             }
             return [result, null];
@@ -172,19 +168,19 @@ class TextDataSourceService {
      */
 
 
-    searchFile(fileContents: string, searchString: string): StringOccurrences {
+    searchFile(fileContents: string, searchString: string): StringOccurrence[] {
         if (searchString === "" || fileContents === "") {
-            return {};
+            return [];
         }
         let stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
-        let matches: StringOccurrences = {};
+        let matches: StringOccurrence[] = [];
         let numOccurrence: number = 0;
         for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
             let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
-            matches[numOccurrence] = {
+            matches.push({
                 lineNumber: lineNum,
                 occurrenceString: '...' + fileContents.substring(index - 12, index + searchString.length + 13) + '...'
-            };
+            });
             numOccurrence++;
         }
         return matches;

@@ -367,30 +367,30 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             }));
 
         jest.spyOn(textDataSourceService, "searchFile")
-            .mockReturnValueOnce({
-                "0": {
+            .mockReturnValueOnce([
+                {
                     "lineNumber": 1,
                     "occurrenceString": "first file searched"
                 }
-            })
-            .mockReturnValueOnce({
-                "0": {
+            ])
+            .mockReturnValueOnce([
+                {
                     "lineNumber": 1,
                     "occurrenceString": "second file searched"
                 }
-            })
-            .mockReturnValueOnce({
-                "0": {
+            ])
+            .mockReturnValueOnce([
+                {
                     "lineNumber": 1,
                     "occurrenceString": "third file searched"
                 }
-            })
-            .mockReturnValueOnce({
-                "0": {
+            ])
+            .mockReturnValueOnce([
+                {
                     "lineNumber": 1,
                     "occurrenceString": "fourth file searched"
                 }
-            });
+            ]);
         //when
         const [result,] = await service.searchAllFolderDataSources("file");
         //then
@@ -407,48 +407,48 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
         expect(textDataSourceService.searchFile).toBeCalledWith("File contents of third file searched", "file");
         expect(textDataSourceService.searchFile).toBeCalledWith("File contents of fourth file searched", "file");
 
-        expect(result).toEqual({
-            "0": {
+        expect(result).toEqual([
+            {
                 "type": "folder",
                 "source": "test/path/file1.txt",
-                "occurrences": {
-                    "0": {
+                "occurrences": [
+                    {
                         "lineNumber": 1,
                         "occurrenceString": "first file searched"
                     }
-                }
+                ]
             },
-            "1": {
+            {
                 "type": "folder",
                 "source": "test/path/file2.js",
-                "occurrences": {
-                    "0": {
+                "occurrences": [
+                    {
                         "lineNumber": 1,
                         "occurrenceString": "second file searched"
                     }
-                }
+                ]
             },
-            "2": {
+            {
                 "type": "folder",
                 "source": "second/test/path/otherFile1.txt",
-                "occurrences": {
-                    "0": {
+                "occurrences": [
+                    {
                         "lineNumber": 1,
                         "occurrenceString": "third file searched"
                     }
-                }
+                ]
             },
-            "3": {
+            {
                 "type": "folder",
                 "source": "second/test/path/otherFile2.js",
-                "occurrences": {
-                    "0": {
+                "occurrences": [
+                    {
                         "lineNumber": 1,
                         "occurrenceString": "fourth file searched"
                     }
-                }
+                ]
             }
-        });
+        ]);
     });
     it("Should not break when trying to search files that are not accessible", async () => {
         //given
@@ -469,12 +469,12 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             }));
 
         jest.spyOn(textDataSourceService, "searchFile")
-            .mockReturnValue({});
+            .mockReturnValue([]);
         //when
         const [result,] = await service.searchAllFolderDataSources("file");
         //then
         expect(textDataSourceService.searchFile).toBeCalledWith("", "file");
         expect(textDataSourceService.searchFile).toBeCalledWith("", "file");
-        expect(result).toEqual({});
+        expect(result).toEqual([]);
     });
 });

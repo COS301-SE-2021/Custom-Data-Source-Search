@@ -11,26 +11,21 @@ class GeneralService {
     async getResults(searchString: string) {
 
         const [folderResults, folderError] = await folderDataSourceService.searchAllFolderDataSources(searchString);
-        const [textResults, texterror] = await textDataSourceService.searchAllTextDataSources(searchString);
-
-        const [pageResults,pagerror] = await webPageDataSourceService.searchAllWebPageDataSources(searchString);
+        const [textResults, textError] = await textDataSourceService.searchAllTextDataSources(searchString);
+        const [pageResults, pagError] = await webPageDataSourceService.searchAllWebPageDataSources(searchString);
 
         let array: any[] = [];
-        let i: number = 0;
-        while (folderResults.hasOwnProperty(i)) {
-            array.push(folderResults[i++]);
+        for (let result of folderResults) {
+            array.push(result);
         }
-        i = 0;
-        while (textResults.hasOwnProperty(i)) {
-            array.push(textResults[i++]);
+        for (let result of textResults) {
+            array.push(result);
         }
-        i = 0;
-        while (pageResults.hasOwnProperty(i)) {
-            array.push(pageResults[i++]);
+        for (let result of pageResults) {
+            array.push(result);
         }
 
-        //const results await Promise.all([textResults]);
-        if (texterror || folderError || pagerror) {
+        if (textError || folderError || pagError) {
             return {
                 "code": 500,
                 "body": {

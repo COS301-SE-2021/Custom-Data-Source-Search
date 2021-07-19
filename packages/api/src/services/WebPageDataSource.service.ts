@@ -1,6 +1,6 @@
 import {WebPageDataSource, WebPageDataSourceList} from "../models/WebPageDataSource.interface";
 import WebPageUnavailableError from "../errors/WebPageError";
-import {WebOccurrencesResponse, WebStringOccurrences} from "../models/response/searchWebPageResponse.interface";
+import {WebPageOccurrence, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import {randomBytes} from "crypto";
 
 const fetch = require("node-fetch");
@@ -9,44 +9,37 @@ class WebPageDataSourceService {
 
     webPageDataSourceArray: WebPageDataSource[];
 
-    constructor(){
+    constructor() {
         this.webPageDataSourceArray = [];
     }
 
-    getAllWebPageDataSources() : WebPageDataSourceList{
-
+    getAllWebPageDataSources(): WebPageDataSourceList {
         return this.webPageDataSourceArray;
-
     }
 
-    getWebPageDataSource(uuid : string) {
-
+    getWebPageDataSource(uuid: string) {
         let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             return this.webPageDataSourceArray[index];
         }
-
-
     }
 
     removeWebPageDataSource(uuid: string) {
-
         let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.webPageDataSourceArray.splice(index, 1);
         }
     }
 
-
-    async addWebPageDataSource(webUrl: string): Promise<WebPageUnavailableError>{
-        const temp: WebPageDataSource = {uuid: randomBytes(16).toString("hex") ,url: webUrl};
+    async addWebPageDataSource(webUrl: string): Promise<WebPageUnavailableError> {
+        const temp: WebPageDataSource = {uuid: randomBytes(16).toString("hex"), url: webUrl};
         let page;
         try {
             page = await fetch(webUrl);
-        } catch(err) {
+        } catch (err) {
             return new WebPageUnavailableError("Web Page not available", 400)
         }
-        if(page.status == 200) {
+        if (page.status == 200) {
             this.webPageDataSourceArray.push(temp);
             return null;
         } else {
@@ -55,30 +48,30 @@ class WebPageDataSourceService {
     }
 
     async searchAllWebPageDataSources(searchString: string) {
-        let result: WebOccurrencesResponse = {};
+        let result: WebPageOccurrence[] = [];
         let pages: Promise<string>[] = [];
         for (let i = 0; i < this.webPageDataSourceArray.length; i++) {
             //let location = this.webPageDataSourceArray[i].path + this.textDataSourceArray[i].filename;
-           let url = this.webPageDataSourceArray[i].url;
+            let url = this.webPageDataSourceArray[i].url;
             pages.push(this.readWebPage(url));
         }
         let i = 0;
         for await (const content of pages) {
-            let searchResults: WebStringOccurrences = this.searchWebPage(await content, searchString);
-            if (searchResults.hasOwnProperty('0')) {
-                result[i] = {
+            let searchResults: WebStringOccurrence[] = this.searchWebPage(await content, searchString);
+            if (searchResults.length > 0) {
+                result.push({
                     type: "webpage",
                     url: this.webPageDataSourceArray[i].url,
                     occurrences: searchResults
-                };
+                });
                 i++;
             }
         }
         return [result, null];
     }
 
-    async readWebPage(url : string) : Promise<string>{
-        var text : string;
+    async readWebPage(url: string): Promise<string> {
+        let text: string;
         try {
             let page = await fetch(url);
             text = await page.text();
@@ -89,26 +82,23 @@ class WebPageDataSourceService {
         }
     }
 
-    searchWebPage(pageContents : string, searchString : string) : WebStringOccurrences{
-
+    searchWebPage(pageContents: string, searchString: string): WebStringOccurrence[] {
         if (searchString === "" || pageContents === "") {
-            return {};
+            return [];
         }
         //let stringWithStandardLineBreaks = pageContents.replace(/(\r\n|\n|\r)/gm, "\n");
         let stringWithStandardLineBreaks = pageContents
-        let matches: WebStringOccurrences = {};
+        let matches: WebStringOccurrence[] = [];
         let numOccurrence = 0;
         for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
             //let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
-            matches[numOccurrence] = {
+            matches.push({
                 occurrenceString: '...' + pageContents.substring(index - 12, index + searchString.length + 13) + '...'
-            };
+            });
             numOccurrence++;
         }
         return matches;
     }
-
-
 }
 
 const webPageDataSourceService = new WebPageDataSourceService();
