@@ -91,9 +91,15 @@ export default {
     }
   },
   methods: {
-    deleteTab(input){
-      this.tabs.splice(input,1)
+    /**
+     *@param input - The index of the tab we want to delete.
+     */
+    deleteTab(index){
+      this.tabs.splice(index,1)
     },
+    /**
+     * All expandX() methods make an API call to retrieve the data sources.
+     */
     expandText(){
       axios.get("http://localhost:3001/textdatasources").then(
           resp => {
@@ -130,6 +136,12 @@ export default {
         this.tabs.push({title: 'Webpage'})
       }
     },
+    /**
+     *This function prevents multiple tabs from being created
+     *
+     * @param title - The name of the tab we want to create
+     * @returns {boolean} - Whether tab already exists or not
+     */
     isExist(title) {
       for (let i of this.tabs) {
         if (i.title === title) {
@@ -138,6 +150,9 @@ export default {
       }
       return false
     },
+    /**
+     * All updateX() methods update the contents of the tabs dynamically.
+     */
     updateFolder(){
       axios.get("http://localhost:3001/folderdatasources").then(
           resp => {
@@ -162,6 +177,11 @@ export default {
           }
       )
     },
+    /**
+     *Updates tabs accordingly after a source has been deleted.
+     *
+     * @param type - The type of data source that we have deleted
+     */
     deleteItem(type){
       if(type==="Folder"){
         axios.get("http://localhost:3001/folderdatasources").then(
