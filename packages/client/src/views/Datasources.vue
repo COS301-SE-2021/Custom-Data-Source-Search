@@ -12,7 +12,7 @@
             <i class="pi pi-search" />
             <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
           </span>
-          <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" class="p-button-text"/></router-link>
+          <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" icon="pi pi-plus" class="p-button-text"/></router-link>
 
         </div>
       </template>
