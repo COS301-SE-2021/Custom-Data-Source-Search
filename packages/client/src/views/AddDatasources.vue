@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     /**
-     *@param input - The index of the tab we want to delete.
+     *@param index - The index of the tab we want to delete.
      */
     deleteTab(index){
       this.tabs.splice(index,1)
