@@ -2,7 +2,7 @@
  * Data Model Interfaces
  */
 import {TextDataSource} from "../models/TextDataSource.interface";
-import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
+import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
 import FileReadingError from "../errors/FileReadingError";
@@ -104,27 +104,27 @@ class TextDataSourceService {
     }
 
 
-    async searchAllTextDataSources(searchString: string) : Promise<[StringOccurrencesResponse, Error]> {
+    async searchAllTextDataSources(searchString: string) : Promise<[FileOccurrence[], Error]> {
 
         // TODO make this right
         let [data] = textDataSourceRepository.getAllDataSources();
         // Above this is placeholder implementation
 
-        let result: StringOccurrencesResponse = {};
         let file: Promise<string>[] = [];
         for (let i = 0; i < data.length; i++) {
             let location = data[i].path + data[i].filename;
             file.push(this.readFile(location));
         }
         let i = 0;
+        let result: FileOccurrence[] = [];
         for await (const content of file) {
-            let searchResults: StringOccurrences = this.searchFile(content, searchString);
-            if (searchResults.hasOwnProperty('0')) {
-                result[i] = {
+            let searchResults: StringOccurrence[] = this.searchFile(content, searchString);
+            if (searchResults.length > 0) {
+                result.push({
                     type: "text",
                     source: data[i].path + data[i].filename,
                     occurrences: searchResults
-                };
+                });
                 i++;
             }
         }
@@ -146,19 +146,19 @@ class TextDataSourceService {
      */
 
 
-    searchFile(fileContents: string, searchString: string): StringOccurrences {
+    searchFile(fileContents: string, searchString: string): StringOccurrence[] {
         if (searchString === "" || fileContents === "") {
-            return {};
+            return [];
         }
         let stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
-        let matches: StringOccurrences = {};
+        let matches: StringOccurrence[] = [];
         let numOccurrence: number = 0;
         for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
             let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
-            matches[numOccurrence] = {
+            matches.push({
                 lineNumber: lineNum,
                 occurrenceString: '...' + fileContents.substring(index - 12, index + searchString.length + 13) + '...'
-            };
+            });
             numOccurrence++;
         }
         return matches;

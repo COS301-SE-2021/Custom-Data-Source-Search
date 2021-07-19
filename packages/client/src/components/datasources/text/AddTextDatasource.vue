@@ -22,8 +22,7 @@
                   buttonLabel: "Select",
                 filters: [
                   {
-                    name: 'Text Files',
-                    extensions: ['txt', 'ts', 'js', 'vue', 'css'] //Will need to expand in the future.
+                    name: 'All Files', extensions: ['*'] //Will need to expand in the future.
                   }, ],
 
                   properties: ['openFile', 'multiSelections'] })
