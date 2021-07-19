@@ -11,11 +11,14 @@
         <span class="p-input-icon-right">
             <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
-            <Button></Button>
-          <SignIn></SignIn>
+
         </span>
+        <Button icon="pi pi-info-circle" class="p-button-rounded p-button-danger" style="margin-left: 5px"></Button>
       </div>
-      <div>
+    <SignIn :show="true" ></SignIn>
+
+
+    <div>
         <div
                 v-for="(r,i) in searchResults"
                 :key="i"
