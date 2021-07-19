@@ -4,13 +4,21 @@
             <div style="font-size: xx-large; padding-top: 10%">
                 REGISTER
             </div>
-            <input label="Name" class="input" placeholder="Name" />
-            <input label="Email" class="input" placeholder="Email" />
-            <input label="MasterPass" class="input" placeholder="Master Password" />
-            <input label="RepeatMasterPass" class="input" placeholder="Repeat Password " />
+            <input v-model="userName" label="Name" class="input" placeholder="Name" />
+            <input v-model="masterEmail" label="Email" class="input" placeholder="Email" />
+            <input v-model="masterPassword" label="MasterPass" class="input" placeholder="Master Password" />
+            <input v-model="masterPassCheck" label="RepeatMasterPass" class="input" placeholder="Repeat Password " />
             <div id="checkboxBox">
-                <input type="checkbox" id="checkbox" v-model="checked">
+                <input type="checkbox" id="checkbox" v-model="keepSignedIn">
                 <label for="checkbox">Remember me</label>
+            </div>
+            <div style="text-align: left">
+               <span>Already have an account?</span>
+                <br><br>
+                <a style="hover: #94D8CE"><u>Sign in</u></a>
+            </div>
+            <div>
+                <button @click="loadValues"/>
             </div>
         </div>
         <div>
@@ -25,7 +33,25 @@
 
 <script>
     export default {
-        name: "Register"
+        name: "Register",
+        data () {
+            return {
+                userName: '',
+                keepSignedIn: true,
+                masterEmail: '',
+                masterPassword: '',
+                masterPassCheck: ''
+            }
+        },
+        methods: {
+            loadValues() {
+                console.log(this.userName),
+                console.log(this.masterEmail),
+                console.log(this.masterPassword),
+                console.log(this.masterPassCheck),
+                console.log(this.keepSignedIn)
+            }
+        }
     }
 </script>
 
@@ -35,8 +61,8 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         height: 100%;
-        padding-left: 5%;
-        padding-right: 5%;
+        padding-left: 10%;
+        padding-right: 10%;
     }
 
     .registration-grid div {
@@ -46,8 +72,7 @@
 
     .registration-box {
         display: grid;
-        grid-template-rows: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-        padding: 30px;
+        grid-template-rows: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 3fr;
         margin: 4%;
         font-size: larger;
     }
