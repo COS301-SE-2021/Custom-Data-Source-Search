@@ -130,7 +130,7 @@ class TextDataSourceService {
         try {
             let response: any  = await axios.get(
                 'http://localhost:8983/solr/files/select?q='
-                + searchString
+                + encodeURIComponent(searchString)
                 + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
             let result: FileOccurrence[] = [];
