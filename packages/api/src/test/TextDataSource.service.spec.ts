@@ -1,6 +1,5 @@
 import textDataSourceService from "../services/TextDataSource.service";
 import {StringOccurrence} from "../models/response/searchFileResponse.interface";
-import FileReadingError from "../errors/FileReadingError";
 import fs from "fs";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 
@@ -127,35 +126,11 @@ describe('TextDataSourceService : Searching Across All Files', () => {
         jest.spyOn(textDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
             return [
                 [
-                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/'},
-                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/'}
+                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/', lastModified: new Date()},
+                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/', lastModified: new Date()}
                 ], null];
         });
     })
-    it('Should return search results when there are multiple occurrences of the search string in any files ', async () => {
-        //given
-        const searchString = "Jeff";
-        //when
-        const [response, error] = await service.searchAllTextDataSources(searchString);
-        //then
-        expect(error).toBe(null);
-        expect(response).not.toBe(null);
-        expect(response).not.toEqual({});
-        if (response) {
-            //hello.txt
-            expect(response[0]).not.toBe(undefined);
-            expect(response[0].source).toEqual("../test/hello.txt");
-            expect(response[0]["occurrences"][0].lineNumber).toEqual(1);
-            expect(response[0]["occurrences"][1].lineNumber).toEqual(3);
-            expect(response[0]["occurrences"][2].lineNumber).toEqual(5);
-            //beans.txt
-            expect(response[1]).not.toBe(undefined);
-            expect(response[1].source).toEqual("../test/beans.txt");
-            expect(response[1]["occurrences"][0].lineNumber).toEqual(5);
-            expect(response[1]["occurrences"][1].lineNumber).toEqual(6);
-        }
-    });
-
     it('Should return empty object when no occurrences of the search string are in any files ', async () => {
         //given
         const searchString = "awordthatshouldntbethere";
@@ -181,81 +156,107 @@ describe('TextDataSourceService : addTextDataSource function', () => {
     let fileName: string = "";
     let filePath: string = "";
 
-    function add() {
-        service.addTextDataSource(fileName, filePath);
-    }
+    // async function add() {
+    //     await service.addTextDataSource(fileName, filePath);
+    // }
 
-    it('Should make a call to text repository to store valid datasource', () => {
+    it('Should make a call to text repository to store valid datasource', async () => {
         //given
         fileName = "file.txt";
         filePath = "valid/path/";
         jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(textDataSourceRepository, "addDataSource").mockReturnValue([null, null]);
+        jest.spyOn(textDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, null]});
         //when
-        expect(add).not.toThrow(FileReadingError);
+        const [, error] = await service.addTextDataSource(fileName, filePath);
+        expect(error).toEqual(null);
         //then
         expect(textDataSourceRepository.addDataSource).toBeCalledWith({filename: fileName, path: filePath});
     });
-    it('Should throw FileReadingError with appropriate message when datasource already exists', () => {
+    it('Should throw FileReadingError with appropriate message when datasource already exists', async () => {
         //given
         fileName = "file.txt";
         filePath = "valid/path/";
         jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(textDataSourceRepository, "addDataSource").mockReturnValue([null, {
+        jest.spyOn(textDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, {
             "code": 400,
             "message": "already exists"
-        }]);
+        }]});
+        //when
+        const [, error] = await service.addTextDataSource(fileName, filePath);
         //then
-        expect(add).toThrow(FileReadingError);
-        expect(add).toThrow('DATASOURCE ALREADY EXISTS');
+        expect(error).toEqual({
+            "code": 400,
+            "message": "Datasource already exists"
+        });
     });
-    it('Should throw FileReadingError with appropriate message when no file path is specified', () => {
+    it('Should throw FileReadingError with appropriate message when no file path is specified', async () => {
         //given
         fileName = "file.txt";
         filePath = "";
+        //when
+        const [, error] = await service.addTextDataSource(fileName, filePath);
         //then
-        expect(add).toThrow(FileReadingError);
-        expect(add).toThrow("NO FILE PATH");
+        expect(error).toEqual({
+            "code": 400,
+            "message": "No file path"
+        });
     });
-    it('Should throw FileReadingError with appropriate message when no file name is specified', () => {
+    it('Should throw FileReadingError with appropriate message when no file name is specified', async () => {
         //given
         fileName = "";
         filePath = "/somePath";
+        //when
+        const [, error] = await service.addTextDataSource(fileName, filePath);
         //then
-        expect(add).toThrow(FileReadingError);
-        expect(add).toThrow("NO FILE NAME");
+        expect(error).toEqual({
+            "code": 400,
+            "message": "No file name"
+        });
     });
-    it('Should throw correct error when readFileSync throws file not found error', () => {
+    it('Should throw correct error when readFileSync throws file not found error', async () => {
         //given
         fileName = "file.txt";
         filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'ENOENT');
         });
-        expect(add).toThrow(FileReadingError);
-        expect(add).toThrow("FILE NOT FOUND");
+        //when
+        const [, error] = await service.addTextDataSource(fileName, filePath);
+        //then
+        expect(error).toEqual({
+            "code": 404,
+            "message": "File not found"
+        });
     });
-    it('Should throw correct error when readFileSync throws access prohibited error', () => {
+    it('Should throw correct error when readFileSync throws access prohibited error', async () => {
         //given
         fileName = "file.txt";
         filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'EACCES');
         });
+        //when
+        const [, error] = await service.addTextDataSource(fileName, filePath);
         //then
-        expect(add).toThrow(FileReadingError);
-        expect(add).toThrow("ACCESS FORBIDDEN");
+        expect(error).toEqual({
+            "code": 403,
+            "message": "Access forbidden"
+        });
     });
-    it('Should pass on error when readFileSync throws error with unknown code', () => {
+    it('Should pass on error when readFileSync throws error with unknown code', async () => {
         //given
         fileName = "file.txt";
         filePath = "/somePath";
         jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
             throw new TestError('TEST', 'UNKNOWN');
         });
+        //when
+        const [, error] = await service.addTextDataSource(fileName, filePath);
         //then
-        expect(add).toThrow(TestError);
-        expect(add).toThrow("TEST");
+        expect(error).toEqual({
+            "code": 500,
+            "message": "Unknown error"
+        });
     });
 });
 describe('TextDataSourceService : removeTextDataSource function', () => {
@@ -300,12 +301,14 @@ describe('TextDataSourceService : getAllTextDataSources function', () => {
             {
                 "uuid": "testUUID1",
                 "filename": "file1.txt",
-                "path": "some/path/"
+                "path": "some/path/",
+                "lastModified": new Date()
             },
             {
                 "uuid": "testUUID2",
                 "filename": "file2.txt",
-                "path": "some/other/path/"
+                "path": "some/other/path/",
+                "lastModified": new Date()
             }
         ];
         jest.spyOn(textDataSourceRepository, "getAllDataSources").mockReturnValue([response, null]);
@@ -336,7 +339,8 @@ describe('TextDataSourceService : getTextDataSource function', () => {
         const response = {
             "uuid": "testUUID1",
             "filename": "file1.txt",
-            "path": "some/path/"
+            "path": "some/path/",
+            "lastModified": new Date()
         };
         jest.spyOn(textDataSourceRepository, "getDataSource").mockReturnValue([response, null]);
         const id: string = "testUUID1";
