@@ -19,6 +19,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import FileUpload from "primevue/fileupload";
 import Dialog from "primevue/dialog";
+import Password from "primevue/password";
 
 const app = createApp(App);
 app.use(router);
@@ -38,4 +39,5 @@ app.component('InputText', InputText);
 app.component("Button", Button);
 app.component("FileUpload", FileUpload);
 app.component("Dialog", Dialog);
+app.component("Password", Password);
 

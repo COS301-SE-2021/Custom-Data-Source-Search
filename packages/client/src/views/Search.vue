@@ -13,9 +13,9 @@
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
 
         </span>
-        <Button icon="pi pi-info-circle" class="p-button-rounded p-button-danger" style="margin-left: 5px"></Button>
+        <Button @click="showSignIn" icon="pi pi-info-circle " class="p-button-rounded p-button-danger p-button-lg" style="margin-left: 5px;"></Button>
       </div>
-    <SignIn :show="true" ></SignIn>
+    <SignIn v-model:show="displaySignIn" ></SignIn>
 
 
     <div>
@@ -41,6 +41,7 @@
       name: "SearchBar",
       data() {
         return {
+          displaySignIn: false,
           notDeleted: true,
           query: "",
           searchResults: [],
@@ -59,6 +60,10 @@
                   }).catch(() => {
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           })
+        },
+        showSignIn() {
+          this.displaySignIn = true;
+          console.log(this.displaySignIn);
         }
       },
       components: {

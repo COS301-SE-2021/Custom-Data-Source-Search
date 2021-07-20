@@ -1,5 +1,5 @@
 <template>
-  <Dialog header="Sign In" v-model:visible="display" :draggable="false" :closable="true">
+  <Dialog header="Sign In" v-model:visible="display" :draggable="false" :closable="true" :dismissable-mask="true">
 
     <div class="p-field p-grid">
       <label for="firstname" class="p-col-fixed" style="width:100px">Email Address</label>
@@ -8,13 +8,15 @@
       </div>
     </div>
     <div class="p-field p-grid">
-      <label for="lastname" class="p-col-fixed" style="width:100px">Password</label>
+      <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
-        <InputText id="lastname" type="text" />
+        <Password id="password" v-model="value" :toggle-mask="true" :feedback="false"/>
       </div>
     </div>
 
+    <div class="p-field p-grid">
     <Button type="button" label="Submit" />
+    </div>
 
 
   </Dialog>
@@ -26,6 +28,7 @@ export default {
   props: ['show'],
   data() {
     return {
+      value: null,
       display: this.show
     }
   }
