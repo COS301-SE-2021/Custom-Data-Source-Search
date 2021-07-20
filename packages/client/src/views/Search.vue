@@ -15,7 +15,7 @@
         </span>
         <Button icon="pi pi-info-circle" class="p-button-rounded p-button-danger" style="margin-left: 5px" v-on:click="showPopup"></Button>
       </div>
-    <SignIn :show="displaySignIn"></SignIn>
+    <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
 
 
     <div>
