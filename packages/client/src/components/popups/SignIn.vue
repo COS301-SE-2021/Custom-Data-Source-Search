@@ -25,11 +25,18 @@
 <script>
 export default {
   name: "SignIn",
-  props: ['show'],
+  props: {
+    show: Boolean,
+  },
   data() {
     return {
       value: null,
       display: this.show
+    }
+  },
+  watch:{
+    show: function(){
+      this.display = this.show
     }
   }
 }

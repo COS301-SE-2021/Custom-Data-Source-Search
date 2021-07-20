@@ -13,9 +13,9 @@
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
 
         </span>
-        <Button @click="showSignIn" icon="pi pi-info-circle " class="p-button-rounded p-button-danger p-button-lg" style="margin-left: 5px;"></Button>
+        <Button icon="pi pi-info-circle" class="p-button-rounded p-button-danger" style="margin-left: 5px" v-on:click="showPopup"></Button>
       </div>
-    <SignIn v-model:show="displaySignIn" ></SignIn>
+    <SignIn :show="displaySignIn"></SignIn>
 
 
     <div>
@@ -46,7 +46,7 @@
           query: "",
           searchResults: [],
           name: "Search",
-          firstSearch: true
+          firstSearch: true,
         }
       },
       methods: {
@@ -61,9 +61,8 @@
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           })
         },
-        showSignIn() {
-          this.displaySignIn = true;
-          console.log(this.displaySignIn);
+        showPopup(){
+          this.displaySignIn = !this.displaySignIn
         }
       },
       components: {
