@@ -5,8 +5,8 @@ import {TextDataSource} from "../models/TextDataSource.interface";
 import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
-import FileReadingError from "../errors/FileReadingError";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import axios from "axios";
 
 
 class TextDataSourceService {
@@ -59,11 +59,17 @@ class TextDataSourceService {
         }
     }
 
-    addTextDataSource(fileName: string, filePath: string) {
+    async addTextDataSource(fileName: string, filePath: string) {
         if (fileName === '') {
-            throw new FileReadingError('NO FILE NAME', 400);
+            return [null, {
+                "code": 400,
+                "message": "No file name"
+            }]
         } else if (filePath === '') {
-            throw new FileReadingError('NO FILE PATH', 400);
+            return [null, {
+                "code": 400,
+                "message": "No file path"
+            }]
         }
         if (filePath[filePath.length - 1] !== '/') {
             filePath += '/';
@@ -72,17 +78,33 @@ class TextDataSourceService {
             fs.readFileSync(filePath + fileName);
         } catch (err) {
             if (err.code == 'ENOENT') {
-                throw new FileReadingError('FILE NOT FOUND', 404);
+                return [null, {
+                    "code": 404,
+                    "message": "File not found"
+                }]
             } else if (err.code == 'EACCES') {
-                throw new FileReadingError('ACCESS FORBIDDEN', 403);
+                return [null, {
+                    "code": 403,
+                    "message": "Access forbidden"
+                }]
             }
-            throw err;
+            return [null, {
+                "code": 500,
+                "message": "Unknown error"
+            }];
         }
         const temp: TextDataSource = {filename: fileName, path: filePath};
-        let [, e] = textDataSourceRepository.addDataSource(temp);
+        let [, e] = await textDataSourceRepository.addDataSource(temp);
         if (e) {
-            throw new FileReadingError('DATASOURCE ALREADY EXISTS', 400);
+            return [null, {
+                "code": 400,
+                "message": "Datasource already exists"
+            }]
         }
+        return [{
+            "code": 200,
+            "message": "Success"
+        }, null];
     }
 
     removeTextDataSource(uuid: string) {
@@ -105,30 +127,34 @@ class TextDataSourceService {
 
 
     async searchAllTextDataSources(searchString: string) : Promise<[FileOccurrence[], Error]> {
-
-        // TODO make this right
-        let [data] = textDataSourceRepository.getAllDataSources();
-        // Above this is placeholder implementation
-
-        let file: Promise<string>[] = [];
-        for (let i = 0; i < data.length; i++) {
-            let location = data[i].path + data[i].filename;
-            file.push(this.readFile(location));
-        }
-        let i = 0;
-        let result: FileOccurrence[] = [];
-        for await (const content of file) {
-            let searchResults: StringOccurrence[] = this.searchFile(content, searchString);
-            if (searchResults.length > 0) {
-                result.push({
-                    type: "text",
-                    source: data[i].path + data[i].filename,
-                    occurrences: searchResults
-                });
-                i++;
+        try {
+            let response: any  = await axios.get(
+                'http://localhost:8983/solr/files/select?q='
+                + encodeURIComponent(searchString)
+                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
+            );
+            let result: FileOccurrence[] = [];
+            for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
+                // @ts-ignore
+                if (value["content"] != undefined) {
+                    let stringOccurrences: StringOccurrence[] = [];
+                    // @ts-ignore
+                    for (let i = 0; i < value["content"].length; i++) {
+                        // @ts-ignore
+                        stringOccurrences.push({"lineNumber": 0, "occurrenceString": value["content"][i]});
+                    }
+                    let [datasource, err] = textDataSourceRepository.getDataSource(key);
+                    if (err) {
+                        result.push({"type": "text", "source": key, "occurrences": stringOccurrences});
+                    } else {
+                        result.push({"type": "text", "source": datasource.path + datasource.filename, "occurrences": stringOccurrences});
+                    }
+                }
             }
+            return [result, null];
+        } catch (e) {
+            console.error(e)
         }
-        return [result, null];
     }
 
     async readFile(location: string): Promise<string> {
@@ -171,7 +197,6 @@ class TextDataSourceService {
         }
         return lineNum;
     }
-
 }
 
 const textDataSourceService = new TextDataSourceService();

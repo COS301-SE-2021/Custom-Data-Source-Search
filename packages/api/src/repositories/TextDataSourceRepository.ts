@@ -1,6 +1,8 @@
 import {StoredTextDataSource, TextDataSource} from "../models/TextDataSource.interface";
 import {randomBytes} from "crypto";
 import fs from "fs";
+import axios from "axios";
+import FormData from "form-data";
 
 
 class TextDataSourceRepository {
@@ -11,8 +13,8 @@ class TextDataSourceRepository {
         this.textDataSourceArray = [];
     }
 
-    addDataSource(dataSource: TextDataSource) {
-        this.readFile()
+    async addDataSource(dataSource: TextDataSource): Promise<[{code: number, message: string}, {code: number, message: string}]> {
+        this.readFile();
         let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {
             return [null, {
@@ -20,11 +22,17 @@ class TextDataSourceRepository {
                 "message": "Text datasource already exists"
             }];
         }
-        this.textDataSourceArray.push({
+        const storedDatasource: StoredTextDataSource = {
             uuid: randomBytes(16).toString("hex"),
             filename: dataSource.filename,
-            path: dataSource.path
-        });
+            path: dataSource.path,
+            lastModified: fs.statSync(dataSource.path + dataSource.filename).mtime
+        };
+        const [, err] = await this.postToSolr(fs.readFileSync(dataSource.path + dataSource.filename), storedDatasource.uuid, storedDatasource.filename);
+        if (err) {
+            return [null, err];
+        }
+        this.textDataSourceArray.push(storedDatasource);
         fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
         return [{
             "code": 200,
@@ -32,8 +40,47 @@ class TextDataSourceRepository {
         }, null];
     }
 
+    async postToSolr(file: Buffer, id: string, fileName: string) {
+        let formData = new FormData();
+        formData.append("file", file, fileName);
+        try {
+            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id + '&commit=true', formData, {
+                headers: {
+                    ...formData.getHeaders()
+                }
+            });
+        } catch (e) {
+            return [null, {
+                "code": 500,
+                "message": "Could not post file to solr"
+            }]
+        }
+        return [{
+            "code": 200,
+            "message": "Successfully posted to Solr"
+        }]
+    }
+
+    async updateDatasources() {
+        this.readFile();
+        for (let storedDatasrouce of this.textDataSourceArray) {
+            let lastModified: Date = fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime;
+            if (new Date(storedDatasrouce.lastModified).getTime() !== lastModified.getTime()) {
+                let index: number = this.textDataSourceArray.indexOf(storedDatasrouce);
+                storedDatasrouce.lastModified = lastModified;
+                this.textDataSourceArray[index] = storedDatasrouce;
+                fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
+                try {
+                    await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
+                } catch (e) {
+                    console.log("Error posting file to solr");
+                }
+            }
+        }
+    }
+
     getDataSource(uuid: string): [StoredTextDataSource, { "code": number, "message": string }] {
-        this.readFile()
+        this.readFile();
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             return [this.textDataSourceArray[index], null];
@@ -45,7 +92,7 @@ class TextDataSourceRepository {
     }
 
     getAllDataSources(): [StoredTextDataSource[], { "code": number, "message": string }] {
-        this.readFile()
+        this.readFile();
         return [this.textDataSourceArray, null];
     }
 
@@ -66,7 +113,7 @@ class TextDataSourceRepository {
     }
 
     deleteDataSource(uuid: string) {
-        this.readFile()
+        this.readFile();
         let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.textDataSourceArray.splice(index, 1);
