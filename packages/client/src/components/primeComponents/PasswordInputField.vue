@@ -216,6 +216,7 @@
                     this.resizeListener = () => {
                         if (this.overlayVisible) {
                             this.overlayVisible = false;
+                            console.log(this.meter)
                         }
                     };
                     window.addEventListener('resize', this.resizeListener);
