@@ -51,11 +51,11 @@
         },
         methods: {
             loadValues() {
-                console.log(this.userName),
-                console.log(this.masterEmail),
-                console.log(this.masterPassword),
-                console.log(this.masterPassCheck),
-                console.log(this.keepSignedIn)
+                console.log(this.userName);
+                console.log(this.masterEmail);
+                console.log(this.masterPassword);
+                console.log(this.masterPassCheck);
+                console.log(this.keepSignedIn);
             },
             checkUsers() {
                 this.name = 'Toodles'

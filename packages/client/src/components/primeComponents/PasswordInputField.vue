@@ -1,7 +1,7 @@
 <template>
     <div :class="containerClass" :style="style" id="password">
         <PInputText ref="input" :class="inputFieldClass" :style="inputStyle" :type="inputType" :value="modelValue" @input="onInput" @focus="onFocus" @blur="onBlur" @keyup="onKeyUp" v-bind="$attrs" />
-        <i v-if="toggleMask" :class="toggleIconClass" @click="onMaskToggle" />
+        <em v-if="toggleMask" :class="toggleIconClass" @click="onMaskToggle" />
         <Teleport :to="appendTarget" :disabled="appendDisabled">
             <transition name="p-connected-overlay" @enter="onOverlayEnter" @leave="onOverlayLeave" @after-leave="onOverlayAfterLeave">
                 <div :ref="overlayRef" :class="panelStyleClass" v-if="overlayVisible" @click="onOverlayClick">
