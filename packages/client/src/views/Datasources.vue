@@ -46,12 +46,18 @@
           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Sort by type"/>
         </template>
       </Column>
-      <Column header="Tag 1" filterField="tag1" style="min-width:12rem">
+      <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem">
         <template #body="{data}">
           <span class="image-text">{{data.tag1}}</span>
         </template>
         <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Sort by tag"/>
+          <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
+            <template #option="slotProps">
+              <div class="p-multiselect-tag1-option">
+                <span class="image-text">{{slotProps.option}}</span>
+              </div>
+            </template>
+          </MultiSelect>
         </template>
       </Column>
       <Column header="Tag 2" filterField="tag2" style="min-width:12rem">
@@ -91,9 +97,12 @@ export default {
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'backend': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'type': {value: null, matchMode: FilterMatchMode.CONTAINS},
-        'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag1': {value: null, matchMode: FilterMatchMode.IN},
         'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
+      tags: [
+        'Fun', 'Business', 'Home'
+      ],
     }
   },
   productService: null,

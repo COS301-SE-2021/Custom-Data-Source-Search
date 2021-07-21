@@ -23,6 +23,7 @@ import FileUpload from "primevue/fileupload";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
+import MultiSelect from 'primevue/multiselect';
 
 const app = createApp(App);
 app.use(router);
@@ -39,10 +40,11 @@ app.component('TabPanel', TabPanel);
 app.component('Sidebar', Sidebar);
 app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
-app.component("Button", Button)
-app.component("Dropdown", Dropdown)
-app.component("ScrollPanel", ScrollPanel)
+app.component("Button", Button);
+app.component("Dropdown", Dropdown);
+app.component("ScrollPanel", ScrollPanel);
 app.component("FileUpload", FileUpload);
-app.component("DataTable",DataTable)
-app.component("Column", Column)
-app.component("ColumnGroup", ColumnGroup)
+app.component("DataTable",DataTable);
+app.component("Column", Column);
+app.component("ColumnGroup", ColumnGroup);
+app.component("MultiSelect", MultiSelect);
