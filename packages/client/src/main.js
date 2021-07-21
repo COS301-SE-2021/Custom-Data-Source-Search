@@ -20,9 +20,12 @@ import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 import ScrollPanel from 'primevue/scrollpanel';
 import FileUpload from "primevue/fileupload";
+import Dialog from "primevue/dialog";
+import Password from "primevue/password";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
+
 
 const app = createApp(App);
 app.use(router);
@@ -43,6 +46,8 @@ app.component("Button", Button)
 app.component("Dropdown", Dropdown)
 app.component("ScrollPanel", ScrollPanel)
 app.component("FileUpload", FileUpload);
+app.component("Dialog", Dialog);
+app.component("Password", Password);
 app.component("DataTable",DataTable)
 app.component("Column", Column)
 app.component("ColumnGroup", ColumnGroup)

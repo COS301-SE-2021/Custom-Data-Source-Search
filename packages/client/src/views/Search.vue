@@ -11,9 +11,14 @@
         <span class="p-input-icon-right">
             <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+
         </span>
+        <Button icon="pi pi-info-circle" class="p-button-rounded p-button-danger" style="margin-left: 5px" v-on:click="showPopup"></Button>
       </div>
-      <div>
+    <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+
+
+    <div>
         <div
                 v-for="(r,i) in searchResults"
                 :key="i"
@@ -31,15 +36,17 @@
     import ResultCardText from "../components/results/ResultCardText";
     import ResultCardFolder from "../components/results/ResultCardFolder";
     import ResultCardWebpage from "../components/results/ResultCardWebpage";
+    import SignIn from "@/components/popups/SignIn";
     export default {
       name: "SearchBar",
       data() {
         return {
+          displaySignIn: false,
           notDeleted: true,
           query: "",
           searchResults: [],
           name: "Search",
-          firstSearch: true
+          firstSearch: true,
         }
       },
       methods: {
@@ -54,9 +61,13 @@
                   }).catch(() => {
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           })
+        },
+        showPopup(){
+          this.displaySignIn = !this.displaySignIn
         }
       },
       components: {
+        SignIn,
         ResultCardWebpage,
         ResultCardFolder,
         ResultCardText
