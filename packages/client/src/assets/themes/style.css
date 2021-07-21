@@ -662,7 +662,7 @@
 }
 
 .p-dropdown {
-    background: #1e1e1e;
+    background: #242424;
     border: 1px solid rgba(255, 255, 255, 0.3);
     transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, background-size 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
     border-radius: 4px;
@@ -727,6 +727,7 @@
 .p-dropdown-panel .p-dropdown-header .p-dropdown-filter-icon {
     right: 1rem;
     color: rgba(255, 255, 255, 0.6);
+    padding: 0;
 }
 .p-dropdown-panel .p-dropdown-items {
     padding: 0;
@@ -2111,7 +2112,7 @@
     border-radius: 0;
 }
 .p-datatable .p-datatable-header {
-    background: #1e1e1e;
+    background: #242424;
     color: rgba(255, 255, 255, 0.87);
     padding: 1rem 1rem;
     font-weight: 500;
@@ -2127,7 +2128,7 @@
     padding: 1rem 1rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.87);
-    background: #1e1e1e;
+    background: #242424;
     transition: none;
 }
 .p-datatable .p-datatable-tfoot > tr > td {
@@ -2176,7 +2177,7 @@
     outline: 0 none;
 }
 .p-datatable .p-datatable-tbody > tr {
-    background: #1e1e1e;
+    background: #242424;
     color: rgba(255, 255, 255, 0.87);
     transition: none;
     outline-color: transparent;
@@ -2184,6 +2185,8 @@
 .p-datatable .p-datatable-tbody > tr > td {
     text-align: left;
     padding: 1rem 1rem;
+    border-top: 1px solid #303030;
+    border-bottom: 1px solid #303030;
 }
 .p-datatable .p-datatable-tbody > tr > td .p-row-toggler,
 .p-datatable .p-datatable-tbody > tr > td .p-row-editor-init,
@@ -2719,6 +2722,7 @@
     height: 3rem;
 }
 .p-paginator .p-dropdown .p-dropdown-label {
+    height: 40px;
     padding-right: 0;
 }
 .p-paginator .p-paginator-current {
