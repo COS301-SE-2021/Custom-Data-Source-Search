@@ -187,7 +187,6 @@
                             break;
                         default:
                             label = this.promptText;
-                            meter = null;
                             break;
                     }
                     this.meter = meter;
@@ -220,6 +219,9 @@
                         }
                     };
                     window.addEventListener('resize', this.resizeListener);
+                    console.log(
+                        this.meter
+                    )
                 }
             },
             unbindResizeListener() {
