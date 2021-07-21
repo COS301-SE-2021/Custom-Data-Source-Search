@@ -3,9 +3,9 @@
     Data Sources
   </h2>
   <div class="card">
-    <DataTable :value="sources" :paginator="true" class="p-datatable-customers" :rows="10"
-               dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=loading responsiveLayout="scroll"
-               :globalFilterFields="['path']">
+    <DataTable :value="endpoint" :paginator="true" class="p-datatable-customers" :rows="10"
+               dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
+               :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
       <template #header>
         <div class="p-d-flex p-jc-end">
           <span class="p-input-icon-left ">
@@ -22,12 +22,44 @@
       <template #loading>
         Loading data. Please wait.
       </template>
-      <Column header="Source Location" filterField="path" style="min-width:12rem">
+      <Column header="Source Location" filterField="location" style="min-width:12rem">
         <template #body="{data}">
-          <span class="image-text">{{data.path}}</span>
+          <span class="image-text">{{data.location}}</span>
         </template>
         <template #filter="{filterModel,filterCallback}">
           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by source location"/>
+        </template>
+      </Column>
+      <Column header="Backend" filterField="backend" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.backend}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by backend"/>
+        </template>
+      </Column>
+      <Column header="Type" filterField="type" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.type}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Sort by type"/>
+        </template>
+      </Column>
+      <Column header="Tag 1" filterField="tag1" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.tag1}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Sort by tag"/>
+        </template>
+      </Column>
+      <Column header="Tag 2" filterField="tag2" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.tag2}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Sort by tag"/>
         </template>
       </Column>
     </DataTable>
@@ -44,9 +76,23 @@ export default {
     return {
       sources: null,
       loading: false,
+      //Template for the endpoint
+      endpoint:[
+        {
+          location: "desktop",
+          backend: "Sonic Co",
+          type: "Folder",
+          tag1: "Business",
+          tag2: "Fun"
+        }
+      ],
       filters2: {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-        'path': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'backend': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'type': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
     }
   },
