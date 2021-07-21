@@ -149,4 +149,10 @@ a {
 .p-inputtext{
   background-color: #242424;
 }
+
+.p-multiselect{
+  background-color: #242424;
+  height: 34px;
+}
+
 </style>
