@@ -2,7 +2,7 @@
   <div id="container">
     <div class="grid">
       <div v-on:click="$emit('expandWebpage')">
-        <icon-web/>
+        <icon-web />
       </div>
       <div v-on:click="$emit('expandWebpage')" id="header">Webpages</div>
       <div>

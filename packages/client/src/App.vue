@@ -1,9 +1,10 @@
 <template>
 <div class="grid-app">
-  <div id="grid-div-1">
-    <Sidebar v-model:visible="visibleLeft" id="Sidebar" >
-      <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+  <div id="grid-div-1" >
+    <Sidebar id="Sidebar" v-if="navBar">
+      <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
     </Sidebar>
   </div>
   <div id="grid-div-2">
@@ -91,7 +92,7 @@ button {
   padding: 10px;
 }
 
-.pi-search, .pi-list{
+.pi-search, .pi-list, .pi-user{
   color: grey;
   padding: 20px 10px 10px;
 }
@@ -109,8 +110,17 @@ export default {
   },
   data() {
     return{
-      name: "Data Sleuth"
+      name: "Data Sleuth",
+      navBar: true
+    }
+  },
+  methods: {
+    hideNavBar() {
+      this.navBar = false;
     }
   }
 }
+
+
+
 </script>
