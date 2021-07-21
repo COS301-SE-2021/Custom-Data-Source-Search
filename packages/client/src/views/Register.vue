@@ -1,25 +1,24 @@
 <template>
     <div class="registration-grid">
         <div class="registration-box">
-            <div style="font-size: xx-large; padding-top: 10%">
+            <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee">
                 REGISTER
             </div>
             <InputText tpye="text" v-model="userName" label="Name" placeholder="Name" />
             <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
-            <Password placeholder="Password"/>
-            <input v-model="masterPassword" label="MasterPass" class="input" placeholder="Master Password" type="password" />
-            <input v-model="masterPassCheck" label="RepeatMasterPass" class="input" placeholder="Repeat Password" type="password" />
+            <InputText type="password" v-model="masterPassword" lebel="MasterPass" placeholder=" Master Password"/>
+            <InputText type="password" v-model="masterPassCheck" label="RepeatMasterPass"  placeholder="Repeat Password" />
+            <Password />
             <div id="checkboxBox">
                 <input type="checkbox" id="checkbox" v-model="keepSignedIn">
                 <label for="checkbox">Remember me</label>
             </div>
-            <div style="text-align: left">
-               <span>Already have an account?</span>
-                <br><br>
-                <a style="hover: #94D8CE"><u>Sign in</u></a>
+            <div style="text-align: left; vertical-align: center">
+               <span>Already have an account? </span> <u>Sign in</u>
+                <Button @click="loadValues" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
             </div>
             <div>
-                <button @click="loadValues"/>
+
             </div>
         </div>
         <div>
@@ -33,12 +32,12 @@
 </template>
 
 <script>
-    import Password from '../components/primeComponents/PasswordInputField';
-    import InputText from 'primevue/inputtext';
+    import InputText from 'primevue/inputtext'
+    import Password from 'primevue/password'
     export default {
         name: "Register",
         components: {
-          Password,
+            Password,
             InputText
         },
         data () {
@@ -57,6 +56,9 @@
                 console.log(this.masterPassword),
                 console.log(this.masterPassCheck),
                 console.log(this.keepSignedIn)
+            },
+            checkUsers() {
+                this.name = 'Toodles'
             }
         }
     }
@@ -79,9 +81,10 @@
 
     .registration-box {
         display: grid;
-        grid-template-rows: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 3fr;
+        grid-template-rows: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 4fr;
         margin: 4%;
         font-size: larger;
+
     }
 
     .logo-box {
@@ -103,6 +106,7 @@
 
     input #checkbox{
         width: 10px;
+        color: #41B3B2
     }
 
     input::placeholder {
@@ -112,7 +116,6 @@
 
     #checkboxBox {
         text-align: left;
-
     }
 
     #checkbox {
@@ -123,5 +126,15 @@
     label {
         padding: 2%
     }
+
+    Button {
+      float: right;
+    }
+
+    u {
+        color: #41B3B2
+    }
+
+
 
 </style>
