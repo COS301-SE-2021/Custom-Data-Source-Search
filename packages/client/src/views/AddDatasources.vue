@@ -82,7 +82,6 @@ export default {
   data() {
     return {
       msg: "No data source chosen",
-      expand: false,
       textDataSources: [],
       webDataSources: [],
       folderDataSources: [],
@@ -92,7 +91,7 @@ export default {
   },
   methods: {
     /**
-     *@param input - The index of the tab we want to delete.
+     *@param index - The index of the tab we want to delete.
      */
     deleteTab(index){
       this.tabs.splice(index,1)
@@ -107,7 +106,7 @@ export default {
             this.textDataSources = resp.data
           }
       )
-      this.expand = !this.expand
+      //Checking whether the tab already exists.
       if (!this.isExist('Text')) {
         this.tabs.push({title: 'Text'})
       }
@@ -119,7 +118,7 @@ export default {
             this.folderDataSources = resp.data
           }
       )
-      this.expand = !this.expand
+      //Checking whether the tab already exists.
       if (!this.isExist('Folder')) {
         this.tabs.push({title: 'Folder'})
       }
@@ -131,13 +130,13 @@ export default {
             this.webDataSources = resp.data
           }
       )
-      this.expand = !this.expand
+      //Checking whether the tab already exists.
       if (!this.isExist('Webpage')) {
         this.tabs.push({title: 'Webpage'})
       }
     },
     /**
-     *This function prevents multiple tabs from being created
+     *This function prevents multiple tabs from being created by looping through the tab array.
      *
      * @param title - The name of the tab we want to create
      * @returns {boolean} - Whether tab already exists or not
