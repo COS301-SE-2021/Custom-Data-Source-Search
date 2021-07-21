@@ -15,7 +15,7 @@
     </div>
 
     <div class="p-field p-grid">
-    <Button type="button" label="Submit" />
+    <Button type="button" class="p-button-sm" label="Submit" />
     </div>
 
 
