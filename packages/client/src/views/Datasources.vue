@@ -46,7 +46,7 @@
           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Sort by type"/>
         </template>
       </Column>
-      <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem">
+      <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:14rem">
         <template #body="{data}">
           <span class="image-text">{{data.tag1}}</span>
         </template>
