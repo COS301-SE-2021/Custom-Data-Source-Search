@@ -4,18 +4,18 @@
     <div class="p-field p-grid">
       <label for="firstname" class="p-col-fixed" style="width:100px">Email Address</label>
       <div class="p-col">
-        <InputText id="firstname" type="text" />
+        <InputText id="firstname" type="text" v-model="email"/>
       </div>
     </div>
     <div class="p-field p-grid">
       <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
-        <Password id="password" v-model="value" :toggle-mask="true" :feedback="false"/>
+        <Password id="password" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
       </div>
     </div>
-
-    <div class="p-field p-grid">
-    <Button type="button" class="p-button-sm" label="Submit" />
+<br>
+    <div class="p-field p-grid" style="text-align: center">
+    <Button type="button" class="p-button-sm" label="Submit" onclick="assignData"/>
     </div>
 
 
@@ -30,8 +30,14 @@ export default {
   },
   data() {
     return {
-      value: null,
-      display: this.show
+      masterPass: null,
+      display: this.show,
+      email: ''
+    }
+  },
+  methods: {
+    assignData () {
+
     }
   },
   watch:{
@@ -48,4 +54,7 @@ export default {
   margin : 9px;
 }
 
+ input {
+   width: 100%
+ }
 </style>

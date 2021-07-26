@@ -3483,6 +3483,7 @@
 
 .p-dialog-mask.p-component-overlay {
     background-color: rgba(0, 0, 0, 0.32);
+    color: rgba(0, 0, 0, 0.63);
 }
 
 .p-overlaypanel {

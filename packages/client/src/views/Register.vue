@@ -8,15 +8,17 @@
             <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
             <InputText type="password" v-model="masterPassword" lebel="MasterPass" placeholder=" Master Password"/>
             <InputText type="password" v-model="masterPassCheck" label="RepeatMasterPass"  placeholder="Repeat Password" />
-            <Password />
+            <Password id="masterPassword" />
             <div id="checkboxBox">
                 <input type="checkbox" id="checkbox" v-model="keepSignedIn">
                 <label for="checkbox">Remember me</label>
             </div>
             <div style="text-align: left; vertical-align: center">
-               <span>Already have an account? </span> <u>Sign in</u>
+               <span>Already have an account? </span> <u><a v-on:click="showPopup">Sign in</a></u>
                 <Button @click="loadValues" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
             </div>
+            <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+
             <div>
 
             </div>
@@ -34,9 +36,11 @@
 <script>
     import InputText from 'primevue/inputtext'
     import Password from 'primevue/password'
+    import SignIn from "../components/popups/SignIn";
     export default {
         name: "Register",
         components: {
+            SignIn,
             Password,
             InputText
         },
@@ -46,7 +50,8 @@
                 keepSignedIn: true,
                 masterEmail: '',
                 masterPassword: '',
-                masterPassCheck: ''
+                masterPassCheck: '',
+                displaySignIn: false
             }
         },
         methods: {
@@ -58,7 +63,10 @@
                 console.log(this.keepSignedIn);
             },
             checkUsers() {
-                this.name = 'Toodles'
+
+            },
+            showPopup(){
+                this.displaySignIn = !this.displaySignIn
             }
         }
     }
@@ -132,7 +140,8 @@
     }
 
     u {
-        color: #41B3B2
+        color: #41B3B2;
+        cursor: pointer;
     }
 
 
