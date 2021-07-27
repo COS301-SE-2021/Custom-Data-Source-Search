@@ -2,7 +2,7 @@
   <h2>
     Data Sources
   </h2>
-  <div class="card">
+  <div class="card" >
     <DataTable :value="endpoint" :paginator="true" :rows="10"
                paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                :rowsPerPageOptions="[10,20,50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
@@ -15,9 +15,17 @@
             <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
           </span>
           <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" icon="pi pi-plus" class="p-button-text"/></router-link>
-          <Button label="Add Data Source Test" icon="pi pi-plus" class="p-button-text" @click="toggle" />
+          <Button label="Add Data Source Test" icon="pi pi-plus" class="p-button-text" @click="toggle"/>
           <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
-            <span>Hello there</span>
+            <div class="overlay-header">
+              <span>What type of source would you like to add?</span>
+            </div>
+            <div class="overlay-buttons">
+<!--              Id's added for future styling of buttons. Default severity colours are used for the time being.-->
+              <Button label="Primary" class="button p-button-secondary" id="text-button">Text</Button>
+              <Button label="Primary" class="button p-button-info" id="folder-button">Folder</Button>
+              <Button label="Primary" class="button p-button-danger" id="web-button">Webpage</Button>
+            </div>
           </OverlayPanel>
         </div>
       </template>
@@ -169,5 +177,15 @@ a {
   height: 34px;
 }
 
+.overlay-header{
+  margin-bottom: 30px;
+}
 
+.overlay-buttons{
+  text-align: center;
+}
+
+.button{
+  margin-right: 40px;
+}
 </style>
