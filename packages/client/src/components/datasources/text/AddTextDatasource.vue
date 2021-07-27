@@ -1,8 +1,6 @@
 <template>
-    <div>
+      <span>Select one or more Text Files to add as Data Sources</span>
       <Button label="Browse" icon="pi pi-plus" class="p-button-sm p-button-outlined" @click="addDataSource()"/>
-      <div class="p-text-normal">Select one or more Text Files to add as Data Sources</div>
-      </div>
 </template>
 
 <script>
@@ -92,12 +90,12 @@ input {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
-.p-text-normal {
-  display: inline-flex;
-}
-
 .p-button-sm {
   vertical-align: middle;
+}
+
+.p-button-sm{
+  margin-top: 30px;
 }
 
 </style>

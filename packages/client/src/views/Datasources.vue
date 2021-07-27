@@ -29,10 +29,7 @@
               </div>
             </div>
             <div v-else-if="clicked">
-              <div>
-                {{ type }} was clicked.
-              </div>
-
+              <add-text-datasource/>
             </div>
           </OverlayPanel>
         </div>
@@ -104,6 +101,7 @@
 
 import axios from "axios";
 import {FilterMatchMode} from 'primevue/api';
+import AddTextDatasource from "@/components/datasources/text/AddTextDatasource";
 export default {
   data() {
     return {
@@ -133,6 +131,9 @@ export default {
         'Fun', 'Business', 'Home'
       ],
     }
+  },
+  components: {
+    AddTextDatasource
   },
   productService: null,
   mounted() {
