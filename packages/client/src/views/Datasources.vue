@@ -28,8 +28,14 @@
                 <Button label="Primary" class="button p-button-danger" id="web-button" @click="clicked=!clicked; type='Webpage'">Webpage</Button>
               </div>
             </div>
-            <div v-else-if="clicked">
+            <div v-else-if="type==='Text'">
               <add-text-datasource/>
+            </div>
+            <div v-else-if="type==='Folder'">
+              <add-folder-datasource/>
+            </div>
+            <div v-else-if="type==='Webpage'">
+              <add-webpage-datasource/>
             </div>
           </OverlayPanel>
         </div>
@@ -102,6 +108,8 @@
 import axios from "axios";
 import {FilterMatchMode} from 'primevue/api';
 import AddTextDatasource from "@/components/datasources/text/AddTextDatasource";
+import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
+import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
 export default {
   data() {
     return {
@@ -133,7 +141,9 @@ export default {
     }
   },
   components: {
-    AddTextDatasource
+    AddTextDatasource,
+    AddFolderDatasource,
+    AddWebpageDatasource
   },
   productService: null,
   mounted() {
