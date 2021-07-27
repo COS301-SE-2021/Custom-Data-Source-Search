@@ -3,7 +3,7 @@
     Data Sources
   </h2>
   <div class="card">
-    <DataTable :value="endpoint" :paginator="true" class="p-datatable-customers" :rows="10"
+    <DataTable :value="endpoint" :paginator="true" :rows="10"
                dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
                :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
       <template #header>
@@ -101,10 +101,10 @@ export default {
       filters2: {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
-        'backend': {value: null, matchMode: FilterMatchMode.CONTAINS},
-        'type': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'backend': {value: null, matchMode: FilterMatchMode.IN},
+        'type': {value: null, matchMode: FilterMatchMode.IN},
         'tag1': {value: null, matchMode: FilterMatchMode.IN},
-        'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag2': {value: null, matchMode: FilterMatchMode.IN},
       },
       tags: [
         'Fun', 'Business', 'Home'
