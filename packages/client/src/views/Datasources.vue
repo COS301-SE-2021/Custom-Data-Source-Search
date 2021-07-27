@@ -17,14 +17,19 @@
           <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" icon="pi pi-plus" class="p-button-text"/></router-link>
           <Button label="Add Data Source Test" icon="pi pi-plus" class="p-button-text" @click="toggle"/>
           <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
-            <div class="overlay-header">
-              <span>What type of source would you like to add?</span>
+            <div v-if="!clicked">
+              <div class="overlay-header">
+                <span>What type of source would you like to add?</span>
+              </div>
+              <div class="overlay-buttons">
+                <!--              Id's added for future styling of buttons. Default severity colours are used for the time being.-->
+                <Button label="Primary" class="button p-button-secondary" id="text-button" @click="clicked=!clicked">Text</Button>
+                <Button label="Primary" class="button p-button-info" id="folder-button">Folder</Button>
+                <Button label="Primary" class="button p-button-danger" id="web-button">Webpage</Button>
+              </div>
             </div>
-            <div class="overlay-buttons">
-<!--              Id's added for future styling of buttons. Default severity colours are used for the time being.-->
-              <Button label="Primary" class="button p-button-secondary" id="text-button">Text</Button>
-              <Button label="Primary" class="button p-button-info" id="folder-button">Folder</Button>
-              <Button label="Primary" class="button p-button-danger" id="web-button">Webpage</Button>
+            <div v-else-if="clicked">
+              Text was clicked.
             </div>
           </OverlayPanel>
         </div>
@@ -99,6 +104,7 @@ import {FilterMatchMode} from 'primevue/api';
 export default {
   data() {
     return {
+      clicked: false,
       sources: null,
       loading: false,
       //Template for the endpoint
@@ -139,6 +145,7 @@ export default {
   methods: {
     toggle(event) {
       this.$refs.op.toggle(event);
+      this.clicked = false;
     }
   }
 }
