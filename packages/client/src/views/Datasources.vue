@@ -23,13 +23,16 @@
               </div>
               <div class="overlay-buttons">
                 <!--              Id's added for future styling of buttons. Default severity colours are used for the time being.-->
-                <Button label="Primary" class="button p-button-secondary" id="text-button" @click="clicked=!clicked">Text</Button>
-                <Button label="Primary" class="button p-button-info" id="folder-button">Folder</Button>
-                <Button label="Primary" class="button p-button-danger" id="web-button">Webpage</Button>
+                <Button label="Primary" class="button p-button-secondary" id="text-button" @click="clicked=!clicked; type='Text'">Text</Button>
+                <Button label="Primary" class="button p-button-info" id="folder-button" @click="clicked=!clicked; type='Folder'">Folder</Button>
+                <Button label="Primary" class="button p-button-danger" id="web-button" @click="clicked=!clicked; type='Webpage'">Webpage</Button>
               </div>
             </div>
             <div v-else-if="clicked">
-              Text was clicked.
+              <div>
+                {{ type }} was clicked.
+              </div>
+
             </div>
           </OverlayPanel>
         </div>
@@ -104,6 +107,7 @@ import {FilterMatchMode} from 'primevue/api';
 export default {
   data() {
     return {
+      type: null,
       clicked: false,
       sources: null,
       loading: false,
