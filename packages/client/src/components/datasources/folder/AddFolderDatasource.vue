@@ -1,8 +1,6 @@
 <template>
-    <div>
+      <span>Select one or more Folders to add as Data Sources</span>
       <Button label="Browse" icon="pi pi-plus" class="p-button-sm p-button-outlined" @click="addDataSource()"/>
-      <div class="p-text-normal">Select one or more Folders to add as Data Sources</div>
-    </div>
 </template>
 
 <script>
@@ -78,6 +76,7 @@ input {
 
 .p-button-sm {
   vertical-align: middle;
+  margin-top: 30px;
 }
 
 .p-inputtext:enabled:focus {

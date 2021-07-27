@@ -1,7 +1,8 @@
 <template>
     <div>
-      <InputText placeholder="Add WebPage URL..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
-      <Button label="Add" class="p-button-text p-button-plain" style="height: 35px;" v-on:click="addDataSource()" />
+      <span>Enter the URL of desired webpage</span>
+      <InputText id="input" placeholder="Add WebPage URL..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
+      <Button icon="pi pi-check" class="p-button-rounded p-button-text" v-on:click="addDataSource()" />
     </div>
 </template>
 
@@ -32,12 +33,8 @@
 
 <style scoped>
 
-div {
-    padding: 15px;
-}
-
 input {
-  min-width: 90%;
+  min-width: 100%;
   font-size: 15px;
   font-style: italic;
   height: 5px;
@@ -47,5 +44,14 @@ input {
 .p-inputtext:enabled:focus {
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+#input{
+  margin-top: 30px;
+}
+
+.p-button-rounded{
+  float: right;
+  margin: 7px;
 }
 </style>

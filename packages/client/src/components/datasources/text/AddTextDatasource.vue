@@ -92,9 +92,6 @@ input {
 
 .p-button-sm {
   vertical-align: middle;
-}
-
-.p-button-sm{
   margin-top: 30px;
 }
 
