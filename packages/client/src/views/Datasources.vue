@@ -4,6 +4,8 @@
   </h2>
   <div class="card">
     <DataTable :value="endpoint" :paginator="true" :rows="10"
+               paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+               :rowsPerPageOptions="[10,20,50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
                :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
       <template #header>
@@ -161,4 +163,7 @@ a {
   height: 34px;
 }
 
+.p-dropdown{
+  background: none;
+}
 </style>
