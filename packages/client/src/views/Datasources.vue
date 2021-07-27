@@ -1,4 +1,5 @@
 <template>
+  <Toast position="bottom-right"/>
   <h2>
     Data Sources
   </h2>
