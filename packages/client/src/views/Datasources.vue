@@ -22,7 +22,7 @@
       <template #loading>
         Loading data. Please wait.
       </template>
-      <Column header="Source Location" filterField="location" style="min-width:12rem">
+      <Column header="Source Location" filterField="location" style="min-width:12rem" :sortable="true">
         <template #body="{data}">
           <span class="image-text">{{data.location}}</span>
         </template>
@@ -30,7 +30,7 @@
           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by source location"/>
         </template>
       </Column>
-      <Column header="Backend" filterField="backend" style="min-width:12rem">
+      <Column header="Backend" filterField="backend" style="min-width:12rem" :sortable="true">
         <template #body="{data}">
           <span class="image-text">{{data.backend}}</span>
         </template>
@@ -38,7 +38,7 @@
           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by backend"/>
         </template>
       </Column>
-      <Column header="Type" filterField="type" style="min-width:12rem">
+      <Column header="Type" filterField="type" style="min-width:12rem" :sortable="true">
         <template #body="{data}">
           <span class="image-text">{{data.type}}</span>
         </template>
