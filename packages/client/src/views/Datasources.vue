@@ -15,7 +15,10 @@
             <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
           </span>
           <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" icon="pi pi-plus" class="p-button-text"/></router-link>
-
+          <Button label="Add Data Source Test" icon="pi pi-plus" class="p-button-text" @click="toggle" />
+          <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
+            <span>Hello there</span>
+          </OverlayPanel>
         </div>
       </template>
       <template #empty>
@@ -126,6 +129,9 @@ export default {
     )
   },
   methods: {
+    toggle(event) {
+      this.$refs.op.toggle(event);
+    }
   }
 }
 </script>
@@ -163,7 +169,5 @@ a {
   height: 34px;
 }
 
-.p-dropdown{
-  background: none;
-}
+
 </style>
