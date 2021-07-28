@@ -15,8 +15,7 @@
             <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
           </span>
-          <router-link class="icon" to="/addDatasources"><Button label="Add Data Source" icon="pi pi-plus" class="p-button-text"/></router-link>
-          <Button label="Add Data Source Test" icon="pi pi-plus" class="p-button-text" @click="toggle"/>
+          <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"/>
           <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
             <div v-if="!clicked">
               <div class="overlay-header">
@@ -47,7 +46,7 @@
       <template #loading>
         Loading data. Please wait.
       </template>
-      <Column header="Source Location" filterField="location" style="min-width:12rem" :sortable="true">
+      <Column header="Source Location" filterField="location" style="min-width:12rem">
         <template #body="{data}">
           <span class="image-text">{{data.location}}</span>
         </template>
@@ -55,23 +54,35 @@
           <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by source location"/>
         </template>
       </Column>
-      <Column header="Backend" filterField="backend" style="min-width:12rem" :sortable="true">
+      <Column header="Backend" filterField="backend" :showFilterMenu="false" style="min-width:12rem">
         <template #body="{data}">
           <span class="image-text">{{data.backend}}</span>
         </template>
         <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by backend"/>
+          <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="backends" placeholder="Any" class="p-column-filter">
+            <template #option="slotProps">
+              <div class="p-multiselect-backends-option">
+                <span class="image-text">{{slotProps.option}}</span>
+              </div>
+            </template>
+          </MultiSelect>
         </template>
       </Column>
-      <Column header="Type" filterField="type" style="min-width:12rem" :sortable="true">
+      <Column header="Type" filterField="type" :showFilterMenu="false" style="min-width:12rem">
         <template #body="{data}">
           <span class="image-text">{{data.type}}</span>
         </template>
         <template #filter="{filterModel,filterCallback}">
-          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Sort by type"/>
+          <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="types" placeholder="Any" class="p-column-filter">
+            <template #option="slotProps">
+              <div class="p-multiselect-types-option">
+                <span class="image-text">{{slotProps.option}}</span>
+              </div>
+            </template>
+          </MultiSelect>
         </template>
       </Column>
-      <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:14rem;">
+      <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem;">
         <template #body="{data}">
           <span class="image-text">{{data.tag1}}</span>
         </template>
@@ -85,7 +96,7 @@
           </MultiSelect>
         </template>
       </Column>
-      <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:14rem">
+      <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
         <template #body="{data}">
           <span class="image-text">{{data.tag2}}</span>
         </template>
@@ -139,6 +150,12 @@ export default {
       tags: [
         'Fun', 'Business', 'Home'
       ],
+      types: [
+        'Text', 'Folder', 'Webpage'
+      ],
+      backends: [
+          'Backend 1', 'Sonic Co', 'This one'
+      ]
     }
   },
   components: {
@@ -184,7 +201,7 @@ a {
 
 .p-button-text{
   float: right;
-  margin-right: 10%;
+  //margin-right: 10%;
 }
 
 .pi-search{
@@ -210,5 +227,10 @@ a {
 
 .button{
   margin-right: 40px;
+}
+
+.card{
+  width: 95%;
+  margin-left: 2.5%;
 }
 </style>
