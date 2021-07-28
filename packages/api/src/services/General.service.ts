@@ -8,7 +8,7 @@ class GeneralService {
         console.log("general Service Created");
     }
 
-    async getResults(searchString: string) {
+    async searchAllDataSources(searchString: string) {
 
         const [folderResults, folderError] = await folderDataSourceService.searchAllFolderDataSources(searchString);
         const [textResults, textError] = await textDataSourceService.searchAllTextDataSources(searchString);

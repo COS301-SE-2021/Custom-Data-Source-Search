@@ -19,7 +19,7 @@ export const generalRouter = express.Router();
  */
 generalRouter.get("/:searchstring", async (req: Request, res: Response) => {
 
-    const result = await generalService.getResults(req.params.searchstring);
+    const result = await generalService.searchAllDataSources(req.params.searchstring);
     res.status(result.code).send(result.body);
 
 });
