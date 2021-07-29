@@ -44,7 +44,10 @@ class TextDataSourceRepository {
         let formData = new FormData();
         formData.append("file", file, fileName);
         try {
-            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id + '&commit=true&literal.datasource_type=text', formData, {
+            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
+                + '&commit=true&literal.datasource_type=text',
+                formData,
+                {
                 headers: {
                     ...formData.getHeaders()
                 }
