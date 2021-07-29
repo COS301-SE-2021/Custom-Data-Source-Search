@@ -50,11 +50,16 @@
         }
       },
       methods: {
+        escapeSpecialCharacters(query) {
+          return query.replace(/[{}/\[\]+-^.:()]/gm, function (match) {
+            return '\\' + match
+          })
+        },
         queryServer() {
           this.firstSearch = false
           this.searchResults = []
           axios
-                  .get("http://localhost:3001/general/" + this.query)
+                  .get("http://localhost:3001/general/" + encodeURI(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
                     console.log(resp.data)
                     this.searchResults = resp.data.searchResults

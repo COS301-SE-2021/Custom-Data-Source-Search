@@ -129,8 +129,7 @@ class TextDataSourceService {
     async searchAllTextDataSources(searchString: string) : Promise<[FileOccurrence[], Error]> {
         try {
             let response: any  = await axios.get(
-                'http://localhost:8983/solr/files/select?q='
-                + encodeURIComponent(searchString)
+                'http://localhost:8983/solr/files/select?q=' + searchString
                 + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
             let result: FileOccurrence[] = [];
