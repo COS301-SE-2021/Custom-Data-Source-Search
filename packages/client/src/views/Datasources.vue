@@ -17,15 +17,15 @@
           </span>
           <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle" style="float: right;"/>
           <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
-            <div v-if="!clicked && backend">
+            <div v-if="!clicked && backend===null">
               <div class="overlay-header">
                 <span>Which backend would you like to add to?</span>
               </div>
               <div class="overlay-buttons">
-                <Button v-for="i in backends" :key="i.id" label="Backend" class="button p-button-raised p-button-text p-button-plain" @click="backend=!backend">{{i}}</Button>
+                <Button v-for="i in backends" :key="i.id" label="Backend" class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{i}}</Button>
               </div>
             </div>
-            <div v-else-if="!clicked && !backend">
+            <div v-else-if="!clicked && backend!=null">
               <div class="overlay-header">
                 <span>What type of source would you like to add?</span>
               </div>
@@ -137,7 +137,7 @@ export default {
       clicked: false,
       sources: null,
       loading: false,
-      backend: false,
+      backend: null,
       //Template for the endpoint
       endpoint:[
         {
@@ -188,7 +188,7 @@ export default {
     toggle(event) {
       this.$refs.op.toggle(event);
       this.clicked = false;
-      this.backend = ' ';
+      this.backend = null;
     }
   }
 }
