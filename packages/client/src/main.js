@@ -25,6 +25,8 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import MultiSelect from 'primevue/multiselect';
 import OverlayPanel from 'primevue/overlaypanel';
+import Tag from 'primevue/tag';
+import Chip from 'primevue/chip';
 
 const app = createApp(App);
 app.use(router);
@@ -50,3 +52,5 @@ app.component("Column", Column);
 app.component("ColumnGroup", ColumnGroup);
 app.component("MultiSelect", MultiSelect);
 app.component("OverlayPanel", OverlayPanel);
+app.component("Tag", Tag);
+app.component("Chip", Chip);

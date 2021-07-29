@@ -15,7 +15,7 @@
             <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
           </span>
-          <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"/>
+          <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle" style="float: right;"/>
           <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
             <div v-if="!clicked">
               <div class="overlay-header">
@@ -23,9 +23,9 @@
               </div>
               <div class="overlay-buttons">
                 <!--              Id's added for future styling of buttons. Default severity colours are used for the time being.-->
-                <Button label="Primary" class="button p-button-secondary" id="text-button" @click="clicked=!clicked; type='Text'">Text</Button>
-                <Button label="Primary" class="button p-button-info" id="folder-button" @click="clicked=!clicked; type='Folder'">Folder</Button>
-                <Button label="Primary" class="button p-button-danger" id="web-button" @click="clicked=!clicked; type='Webpage'">Webpage</Button>
+                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>
+                <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>
+                <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>
               </div>
             </div>
             <div v-else-if="type==='Text'">
@@ -84,7 +84,7 @@
       </Column>
       <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem;">
         <template #body="{data}">
-          <span class="image-text">{{data.tag1}}</span>
+          <Tag class="p-mr-2" severity="success" style="margin-left: 2px;">{{data.tag1}}</Tag>
         </template>
         <template #filter="{filterModel,filterCallback}">
           <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
@@ -98,7 +98,7 @@
       </Column>
       <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
         <template #body="{data}">
-          <span class="image-text">{{data.tag2}}</span>
+          <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{data.tag2}}</Tag>
         </template>
         <template #filter="{filterModel,filterCallback}">
           <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
@@ -199,17 +199,16 @@ a {
   text-decoration: none;
 }
 
-.p-button-text{
-  float: right;
-  //margin-right: 10%;
-}
-
 .pi-search{
   padding: 0;
 }
 
 .p-inputtext{
   background-color: #242424;
+}
+
+.button{
+  margin-left: 8px;
 }
 
 .p-multiselect{
@@ -221,16 +220,9 @@ a {
   margin-bottom: 30px;
 }
 
-.overlay-buttons{
-  text-align: center;
-}
-
-.button{
-  margin-right: 40px;
-}
-
 .card{
   width: 95%;
   margin-left: 2.5%;
 }
+
 </style>
