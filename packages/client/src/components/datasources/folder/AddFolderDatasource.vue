@@ -55,7 +55,7 @@
 
 <style scoped>
 div {
-    padding: 15px;
+    padding: 0 15px 15px 0;
 }
 
 .data-input {
@@ -72,6 +72,7 @@ input {
 
 .p-text-normal {
   display: inline-flex;
+    padding-left: 15px;
 }
 
 .p-button-sm {

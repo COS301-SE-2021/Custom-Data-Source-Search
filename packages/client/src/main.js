@@ -20,6 +20,8 @@ import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 import ScrollPanel from 'primevue/scrollpanel';
 import FileUpload from "primevue/fileupload";
+import Dialog from "primevue/dialog";
+import Password from "primevue/password";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
@@ -27,6 +29,7 @@ import MultiSelect from 'primevue/multiselect';
 import OverlayPanel from 'primevue/overlaypanel';
 import Tag from 'primevue/tag';
 import Chip from 'primevue/chip';
+
 
 const app = createApp(App);
 app.use(router);
@@ -54,3 +57,7 @@ app.component("MultiSelect", MultiSelect);
 app.component("OverlayPanel", OverlayPanel);
 app.component("Tag", Tag);
 app.component("Chip", Chip);
+app.component("Dialog", Dialog);
+app.component("Password", Password);
+
+
