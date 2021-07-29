@@ -17,22 +17,24 @@
           </span>
           <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle" style="float: right;"/>
           <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
-            <div v-if="!clicked">
+            <div v-if="!clicked && backend">
               <div class="overlay-header">
                 <span>Which backend would you like to add to?</span>
               </div>
               <div class="overlay-buttons">
-                <Button v-for="backend in backends" :key="backend.id" label="Backend" class="button p-button-raised p-button-text p-button-plain" @click="backend='{{backend}}'">{{backend}}</Button>
+                <Button v-for="i in backends" :key="i.id" label="Backend" class="button p-button-raised p-button-text p-button-plain" @click="backend=!backend">{{i}}</Button>
               </div>
-<!--              <div v-else class="overlay-header">-->
-<!--                <span>What type of source would you like to add?</span>-->
-<!--              </div>-->
-<!--              <div class="overlay-buttons">-->
-<!--                &lt;!&ndash;              Id's added for future styling of buttons. Default severity colours are used for the time being.&ndash;&gt;-->
-<!--                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>-->
-<!--                <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>-->
-<!--                <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>-->
-<!--              </div>-->
+            </div>
+            <div v-else-if="!clicked && !backend">
+              <div class="overlay-header">
+                <span>What type of source would you like to add?</span>
+              </div>
+              <div class="overlay-buttons">
+                <!--              Id's added for future styling of buttons. Default severity colours are used for the time being.-->
+                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>
+                <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>
+                <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>
+              </div>
             </div>
             <div v-else-if="type==='Text'">
               <add-text-datasource/>
@@ -135,7 +137,7 @@ export default {
       clicked: false,
       sources: null,
       loading: false,
-      backend: " ",
+      backend: false,
       //Template for the endpoint
       endpoint:[
         {
@@ -161,7 +163,7 @@ export default {
         'Text', 'Folder', 'Webpage'
       ],
       backends: [
-          'Backend 1', 'Sonic Co', 'This one'
+          'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
       ]
     }
   },
@@ -186,6 +188,7 @@ export default {
     toggle(event) {
       this.$refs.op.toggle(event);
       this.clicked = false;
+      this.backend = ' ';
     }
   }
 }
@@ -216,6 +219,7 @@ a {
 
 .button{
   margin-left: 8px;
+  margin-bottom: 5px;
 }
 
 .p-multiselect{
