@@ -1,5 +1,3 @@
-import folderDataSourceService from "./FolderDataSource.service";
-import webPageDataSourceService from "./WebPageDataSource.service";
 import axios from "axios";
 import textDataSourceRepository from "../repositories/TextDataSourceRepository";
 
@@ -11,26 +9,13 @@ class GeneralService {
 
     async getResults(searchString: string) {
 
-        const [folderResults, folderError] = await folderDataSourceService.searchAllFolderDataSources(searchString);
-        const [textResults, textError] = await this.searchAllDataSources(searchString);
-        const [pageResults, pagError] = await webPageDataSourceService.searchAllWebPageDataSources(searchString);
+        const [results, error] = await this.searchAllDataSources(searchString);
 
-        let array: any[] = [];
-        for (let result of folderResults) {
-            array.push(result);
-        }
-        for (let result of textResults) {
-            array.push(result);
-        }
-        for (let result of pageResults) {
-            array.push(result);
-        }
-
-        if (textError || folderError || pagError) {
+        if (error) {
             return {
-                "code": 500,
+                "code": error.code,
                 "body": {
-                    "message": "Error has occurred"
+                    "message": error.message
                 }
             }
         }
@@ -38,12 +23,12 @@ class GeneralService {
             "code": 200,
             "body": {
                 "message": "success",
-                "searchResults": array
+                "searchResults": results
             }
         }
     }
 
-    async searchAllDataSources(searchString: string) : Promise<[any[], Error]> {
+    async searchAllDataSources(searchString: string) : Promise<[any[], {code: number, message: string}]> {
         try {
             let response: any  = await axios.get(
                 'http://localhost:8983/solr/files/select?q='
@@ -78,6 +63,10 @@ class GeneralService {
             return [result, null];
         } catch (e) {
             console.error(e)
+            return [null, {
+                "code": 500,
+                "message": "Error when trying to search through solr"
+            }]
         }
     }
 }
