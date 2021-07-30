@@ -13,6 +13,8 @@
         <label for="tag2">Tag 2</label>
       </span>
     </div>
+  <!--  Below button does not function yet-->
+  <Button icon="pi pi-check" class="p-button-rounded p-button-text"/>
 </template>
 
 <script>
@@ -92,10 +94,6 @@
 
 <style scoped>
 
-div {
-    padding: 0 15px 15px 0;
-}
-
 input {
   font-size: 15px;
   font-style: italic;
@@ -115,6 +113,11 @@ input {
 
 .p-float-label{
   margin-top: 15px;
+}
+
+.p-button-rounded{
+  float: right;
+  margin: 7px;
 }
 
 </style>
