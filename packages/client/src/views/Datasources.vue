@@ -37,24 +37,13 @@
               </div>
             </div>
             <div v-else-if="type==='Text'">
-              <add-text-datasource/>
-              <div>
-                <span>Add optional tags</span><br/>
-                <span class="p-float-label">
-                  <InputText id="tag1" type="text" v-model="tag1"/>
-                  <label for="tag1">Tag 1</label>
-                </span>
-                <span class="p-float-label">
-                  <InputText id="tag2" type="text" v-model="tag2"/>
-                  <label for="tag2">Tag 2</label>
-                </span>
-              </div>
+              <add-text-datasource :backend="backend"/>
             </div>
             <div v-else-if="type==='Folder'">
-              <add-folder-datasource/>
+              <add-folder-datasource :backend="backend"/>
             </div>
             <div v-else-if="type==='Webpage'">
-              <add-webpage-datasource/>
+              <add-webpage-datasource :backend="backend"/>
             </div>
           </OverlayPanel>
         </div>
@@ -103,7 +92,7 @@
       </Column>
       <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem;">
         <template #body="{data}">
-          <Tag class="p-mr-2" severity="success" style="margin-left: 2px;">{{data.tag1}}</Tag>
+          <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{data.tag1}}</Tag>
         </template>
         <template #filter="{filterModel,filterCallback}">
           <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
@@ -177,6 +166,9 @@ export default {
       ],
       backends: [
           'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
+      ],
+      colours:[
+          'success','secondary','info','warning','help','danger'
       ]
     }
   },
@@ -249,7 +241,4 @@ a {
   margin-left: 2.5%;
 }
 
-.p-float-label{
-  margin-top: 15px;
-}
 </style>

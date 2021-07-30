@@ -1,6 +1,17 @@
 <template>
-      <span>Select one or more Folders to add as Data Sources</span>
+      <span>Select one or more Folders to add as Data Sources</span><br/>
       <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
+    <div>
+      <span>Add optional tags</span><br/>
+      <span class="p-float-label">
+        <InputText id="tag1" type="text" v-model="tag1"/>
+        <label for="tag1">Tag 1</label>
+      </span>
+      <span class="p-float-label">
+        <InputText id="tag2" type="text" v-model="tag2"/>
+        <label for="tag2">Tag 2</label>
+      </span>
+    </div>
 </template>
 
 <script>
@@ -8,9 +19,15 @@
     const electron = require('@electron/remote');
     export default {
         name: "AddFolderDatasource",
+        props:{
+          backend: String,
+          colour: String
+        },
         data() {
             return {
-                dataSourceURI: ""
+              dataSourceURI: "",
+              tag1: null,
+              tag2: null
             }
         },
         methods: {
@@ -63,11 +80,10 @@ div {
 }
 
 input {
-    min-width: 90%;
     font-size: 15px;
     font-style: italic;
     height: 5px;
-    background: #2a2a2a;
+    background-color: #242424;
 }
 
 .p-text-normal {
@@ -89,4 +105,9 @@ input {
   margin-top: 15px;
   margin-bottom: 15px;
 }
+
+.p-float-label{
+  margin-top: 15px;
+}
+
 </style>

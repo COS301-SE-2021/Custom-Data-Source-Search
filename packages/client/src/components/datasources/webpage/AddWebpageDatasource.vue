@@ -2,6 +2,17 @@
     <div>
       <span>Enter the URL of desired webpage</span>
       <InputText id="input" placeholder="Add WebPage URL..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
+      <div>
+        <span>Add optional tags</span><br/>
+        <span class="p-float-label">
+        <InputText id="tag1" type="text" v-model="tag1"/>
+        <label for="tag1">Tag 1</label>
+      </span>
+        <span class="p-float-label">
+        <InputText id="tag2" type="text" v-model="tag2"/>
+        <label for="tag2">Tag 2</label>
+      </span>
+      </div>
       <Button icon="pi pi-check" class="p-button-rounded p-button-text" v-on:click="addDataSource()" />
     </div>
 </template>
@@ -10,9 +21,15 @@
     import axios from 'axios'
     export default {
         name: "AddDataURI",
+        props:{
+          backend: String,
+          colour: String
+        },
         data() {
             return {
-                dataSourceURI: ""
+              dataSourceURI: "",
+              tag1: null,
+              tag2: null
             }
         },
         methods: {
@@ -34,7 +51,6 @@
 <style scoped>
 
 input {
-  min-width: 100%;
   font-size: 15px;
   font-style: italic;
   height: 5px;
@@ -47,11 +63,20 @@ input {
 }
 
 #input{
-  margin-top: 30px;
+  min-width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .p-button-rounded{
   float: right;
   margin: 7px;
 }
+
+.p-float-label{
+  margin-top: 15px;
+}
+
+
+
 </style>
