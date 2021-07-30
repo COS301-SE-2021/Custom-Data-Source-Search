@@ -13,7 +13,7 @@
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
 
         </span>
-        <i id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></i>
+        <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
 
         </div>
     <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
