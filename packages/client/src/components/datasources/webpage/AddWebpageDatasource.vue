@@ -2,6 +2,7 @@
     <div>
       <span>Enter the URL of desired webpage</span>
       <InputText id="input" placeholder="Add WebPage URL..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
+      <!--  Please be aware that the below code is simply the skeleton for tags, this functionality does not work as of yet.-->
       <div>
         <span>Add optional tags</span><br/>
         <span class="p-float-label">
