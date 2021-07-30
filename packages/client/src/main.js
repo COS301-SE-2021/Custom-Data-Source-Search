@@ -25,6 +25,7 @@ import Password from "primevue/password";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
+import BadgeDirective from "primevue/badgedirective";
 
 
 const app = createApp(App);
@@ -51,3 +52,4 @@ app.component("Password", Password);
 app.component("DataTable",DataTable)
 app.component("Column", Column)
 app.component("ColumnGroup", ColumnGroup)
+app.directive('badge', BadgeDirective)

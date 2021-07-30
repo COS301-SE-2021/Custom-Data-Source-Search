@@ -13,8 +13,9 @@
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
 
         </span>
-        <Button icon="pi pi-info-circle" class="p-button-rounded p-button-danger" style="margin-left: 5px" v-on:click="showPopup"></Button>
-      </div>
+        <i class="pi pi-info-circle p-text-secondary" style="font-size: 2rem; color: #d69b2c; position: relative; display: inline-block; margin-left: 0.4rem; margin-top : auto; margin-bottom : 0.3rem" v-on:click="showPopup" v-badge.custom-warning="'5'"></i>
+
+        </div>
     <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
 
 
@@ -90,8 +91,9 @@
 }
 
 .search-div {
-  vertical-align: center;
-  text-align: center;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   padding: 30px;
   max-height: 100px;
 }
