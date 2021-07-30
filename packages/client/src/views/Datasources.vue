@@ -31,12 +31,12 @@
                 <span>What type of source would you like to add?</span>
               </div>
               <div class="overlay-buttons">
-                <!--              Id's added for future styling of buttons. Default severity colours are used for the time being.-->
                 <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>
                 <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>
                 <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>
               </div>
             </div>
+<!--            Different contents for the overlay are shown for different types-->
             <div v-else-if="type==='Text'">
               <add-text-datasource :backend="backend"/>
             </div>
