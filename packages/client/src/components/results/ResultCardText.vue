@@ -3,12 +3,15 @@
         <div class="card-icon">
             <span id="text" title="File Datasource"><icon-file/></span>
         </div>
-        <p
-                v-for="(line, index) in result.occurrences"
-                :key="index"
-        >
-          <span v-html="line.occurrenceString"></span> <br>
-        </p>
+        <div style="width:900px;overflow:auto">
+          <pre
+                  v-for="(line, index) in result.occurrences"
+                  :key="index"
+          >
+            <span v-html="line.occurrenceString"></span> <br>
+            <span>------------------------------------</span>
+          </pre>
+        </div>
         <small> {{ result.source }} </small>
     </div>
 </template>
