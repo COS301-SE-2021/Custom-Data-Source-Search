@@ -23,13 +23,15 @@
         name: "AddDataURI",
         props:{
           backend: String,
-          colour: String
+          colour: String,
+
         },
         data() {
             return {
               dataSourceURI: "",
               tag1: null,
-              tag2: null
+              tag2: null,
+              type: 'webpage'
             }
         },
         methods: {

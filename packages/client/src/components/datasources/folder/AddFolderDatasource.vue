@@ -27,7 +27,8 @@
             return {
               dataSourceURI: "",
               tag1: null,
-              tag2: null
+              tag2: null,
+              type: 'folder'
             }
         },
         methods: {

@@ -138,8 +138,6 @@ export default {
       sources: null,
       loading: false,
       backend: null,
-      tag1: null,
-      tag2: null,
       //Template for the endpoint
       endpoint:[
         {
@@ -148,6 +146,27 @@ export default {
           type: "Folder",
           tag1: "Business",
           tag2: "Fun"
+        },
+        {
+          location: "elsewhere",
+          backend: "Backend 1",
+          type: "Text",
+          tag1: "Home",
+          tag2: "Fun"
+        },
+        {
+          location: "D:\\Users\\Laurens-PC\\Desktop\\332",
+          backend: "This one",
+          type: "Folder",
+          tag1: "University",
+          tag2: null
+        },
+        {
+          location: "https://www.itsafishthing.com/pure-goldfish-is-now-its-a-fish-thing/",
+          backend: "This one",
+          type: "Webpage",
+          tag1: "Fun",
+          tag2: null
         }
       ],
       filters2: {
@@ -159,7 +178,7 @@ export default {
         'tag2': {value: null, matchMode: FilterMatchMode.IN},
       },
       tags: [
-        'Fun', 'Business', 'Home'
+        'Fun', 'Business', 'Home', 'University'
       ],
       types: [
         'Text', 'Folder', 'Webpage'
