@@ -55,6 +55,14 @@ class GeneralService {
                         // @ts-ignore
                         result.push({"type": currentObject["datasource_type"], "source": key, "occurrences": occurrences});
                     } else {
+                        switch(currentObject["datasource_type"]) {
+                            case "file":
+                                // code block
+                                break;
+                            default:
+                            // code block
+                                console.log("invalid datasource type");
+                        }
                         // @ts-ignore
                         result.push({"type": currentObject["datasource_type"], "source": datasource.path + datasource.filename, "occurrences": occurrences});
                     }
