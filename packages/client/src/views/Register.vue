@@ -1,17 +1,20 @@
 <template>
     <div class="registration-grid">
         <div class="registration-box">
-            <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee">
+            <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
                 REGISTER
             </div>
             <InputText tpye="text" v-model="userName" label="Name" placeholder="Name" />
             <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
-            <InputText type="password" v-model="masterPassword" lebel="MasterPass" placeholder=" Master Password"/>
-            <InputText type="password" v-model="masterPassCheck" label="RepeatMasterPass"  placeholder="Repeat Password" />
-            <Password id="masterPassword" />
+            <div>
+                <Password style="width: 100%" id="masterPassword" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
+            </div>
+            <div>
+                <Password style="width: 100%" id="masterPassCheck" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
+            </div>
             <div id="checkboxBox">
-                <input type="checkbox" id="checkbox" v-model="keepSignedIn">
-                <label for="checkbox">Remember me</label>
+              <checkbox id="checkBox" name="checkbox" v-model="backupVault" />
+                <label for="checkBox">Enable remote access to account?</label>
             </div>
             <div style="text-align: left; vertical-align: center">
                <span>Already have an account? </span> <u><a v-on:click="showPopup">Sign in</a></u>
@@ -19,8 +22,8 @@
             </div>
             <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
 
-            <div>
-
+            <div style="display: none">
+                <PasswordInputField/>
             </div>
         </div>
         <div>
@@ -37,17 +40,21 @@
     import InputText from 'primevue/inputtext'
     import Password from 'primevue/password'
     import SignIn from "../components/popups/SignIn";
+    import Checkbox from 'primevue/checkbox';
+    import PasswordInputField from "../components/primeComponents/PasswordInputField";
     export default {
         name: "Register",
         components: {
+            Checkbox,
             SignIn,
             Password,
-            InputText
+            InputText,
+            PasswordInputField
         },
         data () {
             return {
                 userName: '',
-                keepSignedIn: true,
+                backupVault: true,
                 masterEmail: '',
                 masterPassword: '',
                 masterPassCheck: '',
@@ -83,8 +90,6 @@
     }
 
     .registration-grid div {
-        text-align: center;
-        vertical-align: center;
     }
 
     .registration-box {
@@ -92,7 +97,7 @@
         grid-template-rows: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 4fr;
         margin: 4%;
         font-size: larger;
-
+        vertical-align: center;
     }
 
     .logo-box {
@@ -112,11 +117,6 @@
         padding: 10px;
     }
 
-    input #checkbox{
-        width: 10px;
-        color: #41B3B2
-    }
-
     input::placeholder {
         color: #575757;
         font-weight: bold;
@@ -126,13 +126,10 @@
         text-align: left;
     }
 
-    #checkbox {
-        height: 18px;
-        width: 18px
-    }
 
     label {
-        padding: 2%
+        padding-bottom: 4%;
+        padding-left: 2%;
     }
 
     Button {
@@ -143,7 +140,5 @@
         color: #41B3B2;
         cursor: pointer;
     }
-
-
 
 </style>
