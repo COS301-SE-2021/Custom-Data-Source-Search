@@ -29,6 +29,7 @@ import MultiSelect from 'primevue/multiselect';
 import OverlayPanel from 'primevue/overlaypanel';
 import Tag from 'primevue/tag';
 import Chip from 'primevue/chip';
+import BadgeDirective from "primevue/badgedirective";
 
 
 const app = createApp(App);
@@ -59,5 +60,4 @@ app.component("Tag", Tag);
 app.component("Chip", Chip);
 app.component("Dialog", Dialog);
 app.component("Password", Password);
-
-
+app.directive('badge', BadgeDirective)

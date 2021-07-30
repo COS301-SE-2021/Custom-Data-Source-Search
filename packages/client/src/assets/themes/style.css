@@ -4786,6 +4786,16 @@
     background-color: #EF9A9A;
     color: #212121;
 }
+
+.p-badge.p-badge-custom-warning {
+    background-color: rgb(214, 155, 44);
+    color: #212121;
+    font-size:  0.65rem;
+    min-width: 1.125rem;
+    height: 1.125rem;
+    line-height: 1.125rem;
+}
+
 .p-badge.p-badge-lg {
     font-size: 1.125rem;
     min-width: 2.25rem;
