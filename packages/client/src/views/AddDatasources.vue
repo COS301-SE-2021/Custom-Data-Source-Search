@@ -12,7 +12,7 @@
       <Splitter style="height: 88vh; background:var(--surface-200); margin-top: 10px;">
         <SplitterPanel :size=40 style="padding-top: 50px">
           <div class="all-sources">
-            <TextDatasource @expand-text="expandText()" @add-text="updateText" ></TextDatasource>
+            <FileDatasource @expand-file="expandFile()" @add-file="updateFile" ></FileDatasource>
             <FolderDatasource @expand-folder="expandFolder()" @add-folder="updateFolder"></FolderDatasource>
             <WebpageDatasource @expand-webpage="expandWebpage()" @add-webpage="updateWebpage"></WebpageDatasource>
           </div>
@@ -25,12 +25,12 @@
                 <em class="pi pi-times" style="color: gray" @click="deleteTab(index)"></em>
               </template>
               <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
-              <div v-if="tab.title==='Text'" id="text-datasources">
+              <div v-if="tab.title==='File'" id="file-datasources">
                 <DataSourceCard
-                        v-for="(item, index) in textDataSources"
+                        v-for="(item, index) in fileDataSources"
                         :key=index :title="item.path + item.filename"
                         :id="item.uuid"
-                        endpoint="http://localhost:3001/textdatasources"
+                        endpoint="http://localhost:3001/filedatasources"
                         @delete-item="deleteItem(tab.title)"
                 >
                 </DataSourceCard>
@@ -68,21 +68,21 @@
 
 <script>
 import WebpageDatasource from "../components/datasources/webpage/WebpageDatasource";
-import TextDatasource from "../components/datasources/text/TextDatasource";
+import FileDatasource from "../components/datasources/file/FileDatasource";
 import FolderDatasource from "../components/datasources/folder/FolderDatasource";
 import DataSourceCard from "@/components/datasources/DataSourceCard";
 import axios from "axios";
 export default {
   components: {
     WebpageDatasource,
-    TextDatasource,
+    FileDatasource,
     FolderDatasource,
     DataSourceCard
   },
   data() {
     return {
       msg: "No data source chosen",
-      textDataSources: [],
+      fileDataSources: [],
       webDataSources: [],
       folderDataSources: [],
       tabs: [],
@@ -99,16 +99,16 @@ export default {
     /**
      * All expandX() methods make an API call to retrieve the data sources.
      */
-    expandText(){
-      axios.get("http://localhost:3001/textdatasources").then(
+    expandFile(){
+      axios.get("http://localhost:3001/filedatasources").then(
           resp => {
             console.log(resp.data)
-            this.textDataSources = resp.data
+            this.fileDataSources = resp.data
           }
       )
       //Checking whether the tab already exists.
-      if (!this.isExist('Text')) {
-        this.tabs.push({title: 'Text'})
+      if (!this.isExist('File')) {
+        this.tabs.push({title: 'File'})
       }
     },
     expandFolder(){
@@ -168,11 +168,11 @@ export default {
           }
       )
     },
-    updateText(){
-      axios.get("http://localhost:3001/textdatasources").then(
+    updateFile(){
+      axios.get("http://localhost:3001/filedatasources").then(
           resp => {
             console.log(resp.data)
-            this.textDataSources = resp.data
+            this.fileDataSources = resp.data
           }
       )
     },
@@ -191,12 +191,12 @@ export default {
             }
         )
       }
-      else if(type==="Text"){
-        axios.get("http://localhost:3001/textdatasources").then(
+      else if(type==="File"){
+        axios.get("http://localhost:3001/filedatasources").then(
             resp => {
               console.log(resp.data)
-              this.textDataSources = resp.data
-              console.log(this.textDataSources)
+              this.fileDataSources = resp.data
+              console.log(this.fileDataSources)
             }
         )
       }

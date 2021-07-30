@@ -32,7 +32,7 @@ export default {
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         acceptClass: "p-button-danger",
-        rejectClass: "p-button-text p-button-plain",
+        rejectClass: "p-button-file p-button-plain",
         accept: () => {
           axios
               .delete(endpoint, {"data": {"id": id}})

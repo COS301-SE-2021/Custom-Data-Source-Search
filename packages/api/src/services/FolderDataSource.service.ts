@@ -1,9 +1,9 @@
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import fs from "fs";
 import {FolderDataSource} from "../models/FolderDataSource.interface";
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
-import textDataSourceService from "./TextDataSource.service";
+import fileDataSourceService from "./FileDataSource.service";
 
 class FolderDataSourceService {
 
@@ -98,7 +98,7 @@ class FolderDataSourceService {
         let filePromises: Promise<string>[] = [];
         for (let i = 0; i < files.length; i++) {
             let location = paths[i] + files[i];
-            filePromises.push(textDataSourceService.readFile(location));
+            filePromises.push(fileDataSourceService.readFile(location));
         }
         let file: string[];
         file = await Promise.all(filePromises.map((promise) =>
@@ -108,7 +108,7 @@ class FolderDataSourceService {
         let i = 0;
         let result: FileOccurrence[] = [];
         for (const content of file) {
-            let searchResults: StringOccurrence[] = textDataSourceService.searchFile(content, searchString);
+            let searchResults: StringOccurrence[] = fileDataSourceService.searchFile(content, searchString);
             if (searchResults.length > 0) {
                 result.push({
                     type: "folder",
@@ -124,7 +124,7 @@ class FolderDataSourceService {
     getFilesInFolder(path: string) {
         let fileNames: string[] = fs.readdirSync(path);
         let results: string[] = [];
-        let [separateFiles,] = textDataSourceRepository.getAllDataSources();
+        let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
         fileNames.forEach((file) => {
             if (file.indexOf(".") !== -1 && file.indexOf(".ini") == -1 && !separateFiles.some(x => x.filename === file)) {
                 results.push(file);

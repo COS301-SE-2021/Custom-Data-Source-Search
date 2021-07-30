@@ -1,28 +1,28 @@
-import {StoredTextDataSource, TextDataSource} from "../models/TextDataSource.interface";
+import {StoredFileDataSource, FileDataSource} from "../models/FileDataSource.interface";
 import {randomBytes} from "crypto";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
 
 
-class TextDataSourceRepository {
+class FileDataSourceRepository {
 
-    textDataSourceArray: StoredTextDataSource[];
+    fileDataSourceArray: StoredFileDataSource[];
 
     constructor() {
-        this.textDataSourceArray = [];
+        this.fileDataSourceArray = [];
     }
 
-    async addDataSource(dataSource: TextDataSource): Promise<[{code: number, message: string}, {code: number, message: string}]> {
+    async addDataSource(dataSource: FileDataSource): Promise<[{code: number, message: string}, {code: number, message: string}]> {
         this.readFile();
-        let index: number = this.textDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
+        let index: number = this.fileDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {
             return [null, {
                 "code": 400,
-                "message": "Text datasource already exists"
+                "message": "File datasource already exists"
             }];
         }
-        const storedDatasource: StoredTextDataSource = {
+        const storedDatasource: StoredFileDataSource = {
             uuid: randomBytes(16).toString("hex"),
             filename: dataSource.filename,
             path: dataSource.path,
@@ -32,11 +32,11 @@ class TextDataSourceRepository {
         if (err) {
             return [null, err];
         }
-        this.textDataSourceArray.push(storedDatasource);
-        fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
+        this.fileDataSourceArray.push(storedDatasource);
+        fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
         return [{
             "code": 200,
-            "message": "Successfully added text datasource"
+            "message": "Successfully added file datasource"
         }, null];
     }
 
@@ -45,7 +45,7 @@ class TextDataSourceRepository {
         formData.append("file", file, fileName);
         try {
             await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
-                + '&commit=true&literal.datasource_type=text',
+                + '&commit=true&literal.datasource_type=file',
                 formData,
                 {
                 headers: {
@@ -66,13 +66,13 @@ class TextDataSourceRepository {
 
     async updateDatasources() {
         this.readFile();
-        for (let storedDatasrouce of this.textDataSourceArray) {
+        for (let storedDatasrouce of this.fileDataSourceArray) {
             let lastModified: Date = fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime;
             if (new Date(storedDatasrouce.lastModified).getTime() !== lastModified.getTime()) {
-                let index: number = this.textDataSourceArray.indexOf(storedDatasrouce);
+                let index: number = this.fileDataSourceArray.indexOf(storedDatasrouce);
                 storedDatasrouce.lastModified = lastModified;
-                this.textDataSourceArray[index] = storedDatasrouce;
-                fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
+                this.fileDataSourceArray[index] = storedDatasrouce;
+                fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
                 try {
                     await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
                 } catch (e) {
@@ -82,11 +82,11 @@ class TextDataSourceRepository {
         }
     }
 
-    getDataSource(uuid: string): [StoredTextDataSource, { "code": number, "message": string }] {
+    getDataSource(uuid: string): [StoredFileDataSource, { "code": number, "message": string }] {
         this.readFile();
-        let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
+        let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
-            return [this.textDataSourceArray[index], null];
+            return [this.fileDataSourceArray[index], null];
         }
         return [null, {
             "code": 404,
@@ -94,16 +94,16 @@ class TextDataSourceRepository {
         }]
     }
 
-    getAllDataSources(): [StoredTextDataSource[], { "code": number, "message": string }] {
+    getAllDataSources(): [StoredFileDataSource[], { "code": number, "message": string }] {
         this.readFile();
-        return [this.textDataSourceArray, null];
+        return [this.fileDataSourceArray, null];
     }
 
-    updateDataSource(uuid: string, dataSource: TextDataSource) {
-        let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
+    updateDataSource(uuid: string, dataSource: FileDataSource) {
+        let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
-            this.textDataSourceArray[index].path = dataSource.path;
-            this.textDataSourceArray[index].filename = dataSource.filename;
+            this.fileDataSourceArray[index].path = dataSource.path;
+            this.fileDataSourceArray[index].filename = dataSource.filename;
             return [{
                 "code": 200,
                 "message": "Successfully updated datasource"
@@ -117,29 +117,29 @@ class TextDataSourceRepository {
 
     deleteDataSource(uuid: string) {
         this.readFile();
-        let index: number = this.textDataSourceArray.findIndex(x => x.uuid === uuid);
+        let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
-            this.textDataSourceArray.splice(index, 1);
-            fs.writeFileSync('./src/repositories/store/textDataStore.json', JSON.stringify(this.textDataSourceArray));
+            this.fileDataSourceArray.splice(index, 1);
+            fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
             return [{
                 "code": 204,
-                "message": "Successfully deleted Text datasource"
+                "message": "Successfully deleted File datasource"
             }, null]
         }
         return [null, {
             "code": 404,
-            "message": "Text datasource not found"
+            "message": "File datasource not found"
         }]
     }
 
     readFile() {
         try {
-            this.textDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/textDataStore.json', 'utf-8'));
+            this.fileDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/fileDataStore.json', 'utf-8'));
         } catch (err) {
-            this.textDataSourceArray = [];
+            this.fileDataSourceArray = [];
         }
     }
 }
 
-const textDataSourceRepository = new TextDataSourceRepository();
-export default textDataSourceRepository;
+const fileDataSourceRepository = new FileDataSourceRepository();
+export default fileDataSourceRepository;

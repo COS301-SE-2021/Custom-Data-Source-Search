@@ -1,7 +1,7 @@
 <template>
     <div>
       <Button label="Browse" icon="pi pi-plus" class="p-button-sm p-button-outlined" @click="addDataSource()"/>
-      <div class="p-text-normal">Select one or more Text Files to add as Data Sources</div>
+      <div class="p-text-normal">Select one or more Files to add as Data Sources</div>
       </div>
 </template>
 
@@ -9,7 +9,7 @@
     import axios from 'axios';
     const electron = require('@electron/remote');
     export default {
-        name: "AddTextDatasource",
+        name: "AddFileDatasource",
         data() {
             return {
                 dataSourceURI: ""
@@ -18,7 +18,7 @@
         methods: {
             addDataSource() {
               electron.dialog.showOpenDialog({
-                  title: 'Select Text Files to Add as Data Sources',
+                  title: 'Select Files to Add as Data Sources',
                   buttonLabel: "Select",
                 filters: [
                   {
@@ -47,7 +47,7 @@
 
                     let respObject = {"fileName": filename, "filePath": path}
                     axios
-                        .post("http://localhost:3001/textdatasources", respObject)
+                        .post("http://localhost:3001/filedatasources", respObject)
                         .then(resp => {
                           this.$toast.add({
                             severity: 'success',
@@ -55,13 +55,13 @@
                             detail: resp.data.message,
                             life: 3000
                           })
-                          this.$emit('addText')
+                          this.$emit('addFile')
                         })
                         .catch(() => {
                           this.$toast.add({
                             severity: 'error',
                             summary: 'Error',
-                            detail: 'Could Not Add Text Datasource.',
+                            detail: 'Could Not Add File Datasource.',
                             life: 3000
                           })
                         })
@@ -85,11 +85,6 @@ input {
   font-style: italic;
   height: 5px;
   background: #2a2a2a;
-}
-
-.p-inputtext:enabled:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
 .p-text-normal {

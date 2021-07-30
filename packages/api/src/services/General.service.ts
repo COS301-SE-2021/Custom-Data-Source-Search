@@ -1,5 +1,5 @@
 import axios from "axios";
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 
 class GeneralService {
 
@@ -49,7 +49,7 @@ class GeneralService {
                         // @ts-ignore
                         occurrences.push({"occurrenceString": value["content"][i]});
                     }
-                    let [datasource, err] = textDataSourceRepository.getDataSource(key);
+                    let [datasource, err] = fileDataSourceRepository.getDataSource(key);
                     // @ts-ignore
                     if (err) {
                         // @ts-ignore
@@ -63,7 +63,6 @@ class GeneralService {
                             // code block
                                 console.log("invalid datasource type");
                         }
-                        // @ts-ignore
                         result.push({"type": currentObject["datasource_type"], "source": datasource.path + datasource.filename, "occurrences": occurrences});
                     }
                 }

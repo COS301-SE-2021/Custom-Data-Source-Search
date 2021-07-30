@@ -1,11 +1,11 @@
-import textDataSourceService from "../services/TextDataSource.service";
+import fileDataSourceService from "../services/FileDataSource.service";
 import {StringOccurrence} from "../models/response/searchFileResponse.interface";
 import fs from "fs";
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 
-const service = textDataSourceService;
+const service = fileDataSourceService;
 
-describe('TextDataSourceService : Individual File Searching', () => {
+describe('FileDataSourceService : Individual File Searching', () => {
     it('Should return empty object on empty string search', () => {
         //given
         const mockFileContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
@@ -121,9 +121,9 @@ describe('TextDataSourceService : Individual File Searching', () => {
 });
 
 
-describe('TextDataSourceService : Searching Across All Files', () => {
+describe('FileDataSourceService : Searching Across All Files', () => {
     beforeAll(() => {
-        jest.spyOn(textDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
+        jest.spyOn(fileDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
             return [
                 [
                     {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/', lastModified: new Date()},
@@ -135,7 +135,7 @@ describe('TextDataSourceService : Searching Across All Files', () => {
         //given
         const searchString = "awordthatshouldntbethere";
         //when
-        const [response, error] = await service.searchAllTextDataSources(searchString);
+        const [response, error] = await service.searchAllFileDataSources(searchString);
         //then
         expect(error).toBe(null);
         expect(response).not.toBe(null);
@@ -143,7 +143,7 @@ describe('TextDataSourceService : Searching Across All Files', () => {
     });
 });
 
-describe('TextDataSourceService : addTextDataSource function', () => {
+describe('FileDataSourceService : addFileDataSource function', () => {
     class TestError extends Error {
         constructor(message: string, code: string) {
             super(message);
@@ -157,32 +157,32 @@ describe('TextDataSourceService : addTextDataSource function', () => {
     let filePath: string = "";
 
     // async function add() {
-    //     await service.addTextDataSource(fileName, filePath);
+    //     await service.addFileDataSource(fileName, filePath);
     // }
 
-    it('Should make a call to text repository to store valid datasource', async () => {
+    it('Should make a call to file repository to store valid datasource', async () => {
         //given
         fileName = "file.txt";
         filePath = "valid/path/";
         jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(textDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, null]});
+        jest.spyOn(fileDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, null]});
         //when
-        const [, error] = await service.addTextDataSource(fileName, filePath);
+        const [, error] = await service.addFileDataSource(fileName, filePath);
         expect(error).toEqual(null);
         //then
-        expect(textDataSourceRepository.addDataSource).toBeCalledWith({filename: fileName, path: filePath});
+        expect(fileDataSourceRepository.addDataSource).toBeCalledWith({filename: fileName, path: filePath});
     });
     it('Should throw FileReadingError with appropriate message when datasource already exists', async () => {
         //given
         fileName = "file.txt";
         filePath = "valid/path/";
         jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(textDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, {
+        jest.spyOn(fileDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, {
             "code": 400,
             "message": "already exists"
         }]});
         //when
-        const [, error] = await service.addTextDataSource(fileName, filePath);
+        const [, error] = await service.addFileDataSource(fileName, filePath);
         //then
         expect(error).toEqual({
             "code": 400,
@@ -194,7 +194,7 @@ describe('TextDataSourceService : addTextDataSource function', () => {
         fileName = "file.txt";
         filePath = "";
         //when
-        const [, error] = await service.addTextDataSource(fileName, filePath);
+        const [, error] = await service.addFileDataSource(fileName, filePath);
         //then
         expect(error).toEqual({
             "code": 400,
@@ -206,7 +206,7 @@ describe('TextDataSourceService : addTextDataSource function', () => {
         fileName = "";
         filePath = "/somePath";
         //when
-        const [, error] = await service.addTextDataSource(fileName, filePath);
+        const [, error] = await service.addFileDataSource(fileName, filePath);
         //then
         expect(error).toEqual({
             "code": 400,
@@ -221,7 +221,7 @@ describe('TextDataSourceService : addTextDataSource function', () => {
             throw new TestError('TEST', 'ENOENT');
         });
         //when
-        const [, error] = await service.addTextDataSource(fileName, filePath);
+        const [, error] = await service.addFileDataSource(fileName, filePath);
         //then
         expect(error).toEqual({
             "code": 404,
@@ -236,7 +236,7 @@ describe('TextDataSourceService : addTextDataSource function', () => {
             throw new TestError('TEST', 'EACCES');
         });
         //when
-        const [, error] = await service.addTextDataSource(fileName, filePath);
+        const [, error] = await service.addFileDataSource(fileName, filePath);
         //then
         expect(error).toEqual({
             "code": 403,
@@ -251,7 +251,7 @@ describe('TextDataSourceService : addTextDataSource function', () => {
             throw new TestError('TEST', 'UNKNOWN');
         });
         //when
-        const [, error] = await service.addTextDataSource(fileName, filePath);
+        const [, error] = await service.addFileDataSource(fileName, filePath);
         //then
         expect(error).toEqual({
             "code": 500,
@@ -259,19 +259,19 @@ describe('TextDataSourceService : addTextDataSource function', () => {
         });
     });
 });
-describe('TextDataSourceService : removeTextDataSource function', () => {
+describe('FileDataSourceService : removeFileDataSource function', () => {
     it("Should return results returned by repository upon successful deletion of datasource", () => {
         //given
-        const message: string = "Successfully deleted Text datasource";
-        jest.spyOn(textDataSourceRepository, "deleteDataSource").mockReturnValue([{
+        const message: string = "Successfully deleted File datasource";
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockReturnValue([{
             "code": 204,
             "message": message
         }, null]);
         const id: string = "testUUID";
         //when
-        const result = textDataSourceService.removeTextDataSource(id);
+        const result = fileDataSourceService.removeFileDataSource(id);
         //then
-        expect(textDataSourceRepository.deleteDataSource).toBeCalledWith(id);
+        expect(fileDataSourceRepository.deleteDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(204);
         expect(result.body.message).toEqual(message);
     });
@@ -279,22 +279,22 @@ describe('TextDataSourceService : removeTextDataSource function', () => {
         //given
         const errorCode: number = 42;
         const errorMessage: string = "some error";
-        jest.spyOn(textDataSourceRepository, "deleteDataSource").mockReturnValue([null, {
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockReturnValue([null, {
             "code": errorCode,
             "message": errorMessage
         }]);
         const id: string = "testUUID";
         //when
-        const result = textDataSourceService.removeTextDataSource(id);
+        const result = fileDataSourceService.removeFileDataSource(id);
         //then
-        expect(textDataSourceRepository.deleteDataSource).toBeCalledWith(id);
+        expect(fileDataSourceRepository.deleteDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(errorCode);
         expect(result.body).toEqual({
             "message": errorMessage
         });
     });
 });
-describe('TextDataSourceService : getAllTextDataSources function', () => {
+describe('FileDataSourceService : getAllFileDataSources function', () => {
     it("Should return results returned by repository if no error occurred", () => {
         //given
         const response = [
@@ -311,21 +311,21 @@ describe('TextDataSourceService : getAllTextDataSources function', () => {
                 "lastModified": new Date()
             }
         ];
-        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockReturnValue([response, null]);
+        jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockReturnValue([response, null]);
         //when
-        const result = textDataSourceService.getAllTextDataSources()
+        const result = fileDataSourceService.getAllFileDataSources()
         //then
         expect(result.code).toEqual(200);
         expect(result.body).toEqual(response);
     });
     it("Should return appropriate error if error occurred inside repository", () => {
         //given
-        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockReturnValue([null, {
+        jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockReturnValue([null, {
             "code": 500,
             "message": "some unknown error"
         }]);
         //when
-        const result = textDataSourceService.getAllTextDataSources()
+        const result = fileDataSourceService.getAllFileDataSources()
         //then
         expect(result.code).toEqual(500);
         expect(result.body).toEqual({
@@ -333,7 +333,7 @@ describe('TextDataSourceService : getAllTextDataSources function', () => {
         });
     });
 });
-describe('TextDataSourceService : getTextDataSource function', () => {
+describe('FileDataSourceService : getFileDataSource function', () => {
     it("Should return requested datasource if repository finds it", () => {
         //given
         const response = {
@@ -342,12 +342,12 @@ describe('TextDataSourceService : getTextDataSource function', () => {
             "path": "some/path/",
             "lastModified": new Date()
         };
-        jest.spyOn(textDataSourceRepository, "getDataSource").mockReturnValue([response, null]);
+        jest.spyOn(fileDataSourceRepository, "getDataSource").mockReturnValue([response, null]);
         const id: string = "testUUID1";
         //when
-        const result = textDataSourceService.getTextDataSource(id);
+        const result = fileDataSourceService.getFileDataSource(id);
         //then
-        expect(textDataSourceRepository.getDataSource).toBeCalledWith(id);
+        expect(fileDataSourceRepository.getDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(200);
         expect(result.body).toEqual({
             "message": "Success",
@@ -358,24 +358,24 @@ describe('TextDataSourceService : getTextDataSource function', () => {
         //given
         const errorCode = 42;
         const errorMessage = "Some very unique error message";
-        jest.spyOn(textDataSourceRepository, "getDataSource").mockReturnValue([null, {
+        jest.spyOn(fileDataSourceRepository, "getDataSource").mockReturnValue([null, {
             "code": errorCode,
             "message": errorMessage
         }]);
         const id: string = "testUUID1";
         //when
-        const result = textDataSourceService.getTextDataSource(id);
+        const result = fileDataSourceService.getFileDataSource(id);
         //then
-        expect(textDataSourceRepository.getDataSource).toBeCalledWith(id);
+        expect(fileDataSourceRepository.getDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(errorCode);
         expect(result.body.message).toEqual(errorMessage);
     });
 });
-describe('TextDataSourceService : readFile function', () => {
+describe('FileDataSourceService : readFile function', () => {
     it("Should reject with a promise if fs failed to read file", async () => {
         //given
         const filePath: string = "some, invalid file path";
         //then
-        await expect(textDataSourceService.readFile(filePath)).rejects.not.toEqual("this");
+        await expect(fileDataSourceService.readFile(filePath)).rejects.not.toEqual("this");
     });
 });
