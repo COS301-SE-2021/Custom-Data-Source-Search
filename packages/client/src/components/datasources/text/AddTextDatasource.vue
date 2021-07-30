@@ -1,5 +1,5 @@
 <template>
-      <span>Select one or more documents to add as Data Sources</span>
+      <span>Select one or more documents to add to data sources</span>
       <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
 </template>
 
@@ -91,7 +91,8 @@ input {
 }
 
 .p-button-text{
-  margin-top: 30px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 </style>

@@ -38,6 +38,17 @@
             </div>
             <div v-else-if="type==='Text'">
               <add-text-datasource/>
+              <div>
+                <span>Add optional tags</span><br/>
+                <span class="p-float-label">
+                  <InputText id="tag1" type="text" v-model="tag1"/>
+                  <label for="tag1">Tag 1</label>
+                </span>
+                <span class="p-float-label">
+                  <InputText id="tag2" type="text" v-model="tag2"/>
+                  <label for="tag2">Tag 2</label>
+                </span>
+              </div>
             </div>
             <div v-else-if="type==='Folder'">
               <add-folder-datasource/>
@@ -138,6 +149,8 @@ export default {
       sources: null,
       loading: false,
       backend: null,
+      tag1: null,
+      tag2: null,
       //Template for the endpoint
       endpoint:[
         {
@@ -236,4 +249,7 @@ a {
   margin-left: 2.5%;
 }
 
+.p-float-label{
+  margin-top: 15px;
+}
 </style>
