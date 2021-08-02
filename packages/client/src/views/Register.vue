@@ -1,29 +1,39 @@
 <template>
     <div class="registration-grid">
-        <div class="registration-box">
+        <div  class="registration-box">
             <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
                 REGISTER
             </div>
-            <InputText tpye="text" v-model="userName" label="Name" placeholder="Name" />
-            <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
-            <div>
-                <Password style="width: 100%" id="masterPassword" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
-            </div>
-            <div>
-                <Password style="width: 100%" id="masterPassCheck" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
-            </div>
-            <div id="checkboxBox">
-              <checkbox id="checkBox" name="checkbox" v-model="backupVault" />
-                <label for="checkBox">Enable remote access to account?</label>
-            </div>
-            <div style="text-align: left; vertical-align: center">
-               <span>Already have an account? </span> <u><a v-on:click="showPopup">Sign in</a></u>
-                <Button @click="loadValues" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
-            </div>
-            <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+            <div v-if="notContinue" class="input-fields">
+                <InputText tpye="text" v-model="userName" label="Name" placeholder="Name" />
+                <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
+                <div>
+                    <Password style="width: 100%" id="masterPassword" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
+                </div>
+                <div>
+                    <Password style="width: 100%" id="masterPassCheck" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
+                </div>
+                <div id="checkboxBox">
+                    <checkbox id="checkBox" name="checkbox" v-model="backupVault" :binary="true"/>
+                    <label for="checkBox">Enable remote access to account?</label>
+                </div>
+                <div style="text-align: left; vertical-align: center">
+                    <span>Already have an account? </span> <u><a v-on:click="showPopup">Sign in</a></u>
+                    <Button @click="loadValues" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
+                </div>
+                <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
 
-            <div style="display: none">
-                <PasswordInputField/>
+                <div style="display: none">
+                    <PasswordInputField/>
+                </div>
+            </div>
+            <div v-else class="set-up-backend-box">
+                Do you want to continue on to configure backends?
+               <div>
+                   <Button @click="loadValues" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
+                   <Button @click="loadValues"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
+               </div>
+
             </div>
         </div>
         <div>
@@ -54,26 +64,31 @@
         data () {
             return {
                 userName: '',
-                backupVault: true,
+                backupVault: false,
                 masterEmail: '',
                 masterPassword: '',
                 masterPassCheck: '',
-                displaySignIn: false
+                displaySignIn: false,
+                notContinue: true
             }
         },
         methods: {
             loadValues() {
-                console.log(this.userName);
-                console.log(this.masterEmail);
-                console.log(this.masterPassword);
-                console.log(this.masterPassCheck);
-                console.log(this.keepSignedIn);
+                this.continue();
+                console.log("Username: " + this.userName);
+                console.log("Master Email: " + this.masterEmail);
+                console.log("Master Password: " + this.masterPassword);
+                console.log("Master Pass Check: " + this.masterPassCheck);
+                console.log("Backup to Vault: " + this.backupVault);
             },
             checkUsers() {
 
             },
             showPopup(){
                 this.displaySignIn = !this.displaySignIn
+            },
+            continue() {
+                this.notContinue = false;
             }
         }
     }
@@ -85,19 +100,30 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         height: 100%;
-        padding-left: 10%;
-        padding-right: 10%;
-    }
-
-    .registration-grid div {
+        padding-left: 5%;
+        padding-right: 5%;
     }
 
     .registration-box {
         display: grid;
-        grid-template-rows: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 4fr;
+        grid-template-rows: 2fr 10fr;
         margin: 4%;
         font-size: larger;
         vertical-align: center;
+        text-align: center;
+    }
+
+    .input-fields {
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 4fr;
+        margin: 4%;
+    }
+
+
+    .set-up-backend-box {
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr 5fr;
+        margin: 4%;
     }
 
     .logo-box {
