@@ -56,7 +56,7 @@ input {
 }
 
 #grid-div-1 {
-  padding-top: 50px;
+  padding-top: 20px;
   background-color: #1e1e1e;
 }
 
@@ -67,25 +67,9 @@ input {
   height: 100%;
 }
 
-#nav {
-  padding: 30px;
-  text-align: left;
-
-  a {
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.58);
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
-
 .icon {
   padding: 10px;
 }
-
 
 button {
   border: none;
@@ -99,7 +83,8 @@ button {
 }
 
 .pi-cog{
-  margin-top: 1100%;
+  position: fixed;
+  bottom: 0;
 }
 
 .pi-search:hover,.pi-list:hover, .pi-cog:hover {
