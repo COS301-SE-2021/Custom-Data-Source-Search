@@ -8,10 +8,10 @@
                 <InputText tpye="text" v-model="userName" label="Name" placeholder="Name" />
                 <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
                 <div>
-                    <Password style="width: 100%" id="masterPassword" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
+                    <PasswordInputField style="width: 100%" id="masterPassword" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
                 </div>
                 <div>
-                    <Password style="width: 100%" id="masterPassCheck" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
+                    <PasswordInputField style="width: 100%" id="masterPassCheck" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
                 </div>
                 <div id="checkboxBox">
                     <checkbox id="checkBox" name="checkbox" v-model="backupVault" :binary="true"/>
@@ -23,9 +23,6 @@
                 </div>
                 <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
 
-                <div style="display: none">
-                    <PasswordInputField/>
-                </div>
             </div>
             <div v-else class="set-up-backend-box">
                 Do you want to continue on to configure backends?
@@ -48,18 +45,16 @@
 
 <script>
     import InputText from 'primevue/inputtext'
-    import Password from 'primevue/password'
     import SignIn from "../components/popups/SignIn";
     import Checkbox from 'primevue/checkbox';
     import PasswordInputField from "../components/primeComponents/PasswordInputField";
     export default {
         name: "Register",
         components: {
+            PasswordInputField,
             Checkbox,
             SignIn,
-            Password,
-            InputText,
-            PasswordInputField
+            InputText
         },
         data () {
             return {
@@ -141,6 +136,10 @@
 
     #imageInRegistration {
         padding: 10px;
+    }
+
+    input {
+        min-width: 100% !important;
     }
 
     input::placeholder {
