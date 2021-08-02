@@ -31,7 +31,7 @@ export default {
       dataSourceURI: "",
       tag1: null,
       tag2: null,
-      type: 'text'
+      type: 'file'
     }
   },
   methods: {
