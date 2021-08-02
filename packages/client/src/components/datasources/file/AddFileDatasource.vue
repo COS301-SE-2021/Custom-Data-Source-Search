@@ -101,11 +101,10 @@ div {
 }
 
 input {
-  min-width: 90%;
   font-size: 15px;
   font-style: italic;
   height: 5px;
-  background: #2a2a2a;
+  background: #242424;
 }
 
 .p-button-text{

@@ -5,12 +5,15 @@
     <div>
       <span>Add optional tags</span><br/>
       <span class="p-float-label">
-        <InputText id="tag1" type="text" v-model="tag1"/>
-        <label for="tag1">Tag 1</label>
+        <InputText id="tagInput1" type="text" v-model="tag1"/>
+        <label for="tagInput1">Tag 1</label>
+        <ColorPicker v-model="colour1" />
+        <Tag id= 'tag1' value="Example" :style="style"></Tag>
       </span>
       <span class="p-float-label">
-        <InputText id="tag2" type="text" v-model="tag2"/>
-        <label for="tag2">Tag 2</label>
+        <InputText id="tagInput2" type="text" v-model="tag2"/>
+        <label for="tagInput2">Tag 2</label>
+        <ColorPicker v-model="colour2" />
       </span>
     </div>
 <!--  Below button does not function yet-->
@@ -24,16 +27,26 @@
         name: "AddFolderDatasource",
         props:{
           backend: String,
-          colour: String
         },
         data() {
             return {
               dataSourceURI: "",
               tag1: null,
               tag2: null,
+              colour1: "f4a261",
+              colour2: "457b9d",
               type: 'folder'
             }
         },
+      computed: {
+        style(){
+          return{
+            //Colours for the example tags shown in the overlay
+            '--colour-1': '#' + (this.colour1),
+            '--colour-2': '#' + (this.colour2)
+          }
+        }
+      },
         methods: {
             addDataSource() {
 
@@ -111,4 +124,14 @@ input {
   float: right;
   margin: 7px;
 }
+
+.p-colorpicker{
+  margin-left: 10px;
+}
+
+#tag1{
+  background: var(--colour-1);
+  margin-left: 20px;
+}
+
 </style>
