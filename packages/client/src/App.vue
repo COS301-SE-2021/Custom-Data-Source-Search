@@ -4,7 +4,8 @@
     <Sidebar id="Sidebar" v-if="navBar">
       <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
+      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" v-on:click="hideNavBar"/></router-link>
+      <router-link title="Settings" class="icon" to="/settings"><em class="pi pi-cog" style="font-size:1.5rem" /></router-link>
     </Sidebar>
   </div>
   <div id="grid-div-2">
@@ -92,12 +93,16 @@ button {
   padding: 10px;
 }
 
-.pi-search, .pi-list, .pi-user{
+.pi-search, .pi-list, .pi-user, .pi-cog{
   color: grey;
   padding: 20px 10px 10px;
 }
 
-.pi-search:hover,.pi-list:hover{
+.pi-cog{
+  margin-top: 1100%;
+}
+
+.pi-search:hover,.pi-list:hover, .pi-cog:hover {
   color: #41B3B2;
 }
 
