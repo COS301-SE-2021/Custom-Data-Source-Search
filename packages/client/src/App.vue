@@ -1,7 +1,7 @@
 <template>
-<div class="grid-app">
+<div class="grid-app" v-if="navBar">
   <div id="grid-div-1" >
-    <Sidebar id="Sidebar" v-if="navBar">
+    <Sidebar id="Sidebar">
       <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
       <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
@@ -11,6 +11,7 @@
     <router-view/>
   </div>
 </div>
+  <router-view v-else/>
 </template>
 
 <style lang="scss">
@@ -111,7 +112,7 @@ export default {
   data() {
     return{
       name: "Data Sleuth",
-      navBar: true
+      navBar: false
     }
   },
   methods: {
