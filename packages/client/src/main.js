@@ -25,6 +25,10 @@ import Password from "primevue/password";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
+import MultiSelect from 'primevue/multiselect';
+import OverlayPanel from 'primevue/overlaypanel';
+import Tag from 'primevue/tag';
+import Chip from 'primevue/chip';
 import BadgeDirective from "primevue/badgedirective";
 
 
@@ -43,13 +47,17 @@ app.component('TabPanel', TabPanel);
 app.component('Sidebar', Sidebar);
 app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
-app.component("Button", Button)
-app.component("Dropdown", Dropdown)
-app.component("ScrollPanel", ScrollPanel)
+app.component("Button", Button);
+app.component("Dropdown", Dropdown);
+app.component("ScrollPanel", ScrollPanel);
 app.component("FileUpload", FileUpload);
+app.component("DataTable",DataTable);
+app.component("Column", Column);
+app.component("ColumnGroup", ColumnGroup);
+app.component("MultiSelect", MultiSelect);
+app.component("OverlayPanel", OverlayPanel);
+app.component("Tag", Tag);
+app.component("Chip", Chip);
 app.component("Dialog", Dialog);
 app.component("Password", Password);
-app.component("DataTable",DataTable)
-app.component("Column", Column)
-app.component("ColumnGroup", ColumnGroup)
 app.directive('badge', BadgeDirective)

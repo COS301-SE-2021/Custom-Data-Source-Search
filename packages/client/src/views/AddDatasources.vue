@@ -1,7 +1,7 @@
 <template>
   <div class="grid-content">
     <div class="header">
-        <router-link class="icon" to="/addDatasources"><Button label="Back to data sources" icon="pi pi-angle-left" class="p-button-text"/></router-link>
+        <router-link to="/datasources"><Button label="Back to data sources" icon="pi pi-angle-left" class="p-button-text"/></router-link>
       <h2>
         Add Data Sources
       </h2>
