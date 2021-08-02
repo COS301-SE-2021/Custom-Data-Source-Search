@@ -1,5 +1,5 @@
 <template>
-      <span>Select one or more documents to add to data sources</span><br/>
+      <span>Select one or more Files to add to data sources</span><br/>
       <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
   <!--  Please be aware that the below code is simply the skeleton for tags, this functionality does not work as of yet.-->
     <div>
@@ -99,11 +99,6 @@ input {
   font-style: italic;
   height: 5px;
   background-color: #242424;
-}
-
-.p-inputtext:enabled:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
 .p-button-text{
