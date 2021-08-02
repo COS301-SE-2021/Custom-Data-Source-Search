@@ -24,7 +24,7 @@
     import OverlayEventBus from 'primevue/overlayeventbus';
     import InputText from 'primevue/inputtext';
     export default {
-        name: 'Password',
+        name: 'PasswordInputField',
         emits: ['update:modelValue'],
         inheritAttrs: false,
         props: {
@@ -313,8 +313,7 @@
         color: #575757;
         font-weight: bold;
     }
-
-
+    
     .p-password-panel {
         position: absolute;
         top: 0;
