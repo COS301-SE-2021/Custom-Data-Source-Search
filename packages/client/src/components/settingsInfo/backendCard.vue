@@ -1,5 +1,7 @@
 <template>
-    
+    <div class="backend-info-card">
+
+    </div>
 </template>
 
 <script>
@@ -9,5 +11,9 @@
 </script>
 
 <style scoped>
+
+    .backend-info-card {
+        display: grid;
+    }
 
 </style>

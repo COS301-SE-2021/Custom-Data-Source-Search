@@ -1,6 +1,9 @@
 <template>
     <div class="settings-box">
         <div class="info-div">
+            <span><h1>Settings</h1></span>
+        </div>
+        <div class="info-div">
             <span><b>Personal Information</b></span>
             <div>
                 //User information
@@ -12,7 +15,7 @@
                 //v-for all the backends information
             </div>
         </div>
-        <InputSwitch v-model="checked" />
+        <InputSwitch v-model="checked"/>
     </div>
 </template>
 
@@ -34,7 +37,7 @@
 <style scoped>
 
     .settings-box {
-        padding: 5px;
+        padding-left: 30px;
     }
 
     b {
@@ -46,7 +49,7 @@
     }
 
     .info-div {
-        padding: 5%;
+        padding: 20px;
     }
 
 </style>
