@@ -1,5 +1,5 @@
 <template>
-  <span>Select one or more Files to add to data sources</span><br/>
+  <span>Select one or more files to add to data sources</span><br/>
   <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
   <!--  Please be aware that the below code is simply the skeleton for tags, this functionality does not work as of yet.-->
   <div>

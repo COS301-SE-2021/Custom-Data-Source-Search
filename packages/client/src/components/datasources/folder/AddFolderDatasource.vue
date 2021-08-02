@@ -1,5 +1,5 @@
 <template>
-      <span>Select one or more Folders to add as Data Sources</span><br/>
+      <span>Select one or more folders to add as data sources</span><br/>
       <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
 <!--  Please be aware that the below code is simply the skeleton for tags, this functionality does not work as of yet.-->
     <div>
@@ -14,6 +14,7 @@
         <InputText id="tagInput2" type="text" v-model="tag2"/>
         <label for="tagInput2">Tag 2</label>
         <ColorPicker v-model="colour2" />
+        <Tag id= 'tag2' value="Example" :style="style"></Tag>
       </span>
     </div>
 <!--  Below button does not function yet-->
@@ -131,6 +132,11 @@ input {
 
 #tag1{
   background: var(--colour-1);
+  margin-left: 20px;
+}
+
+#tag2{
+  background: var(--colour-2);
   margin-left: 20px;
 }
 

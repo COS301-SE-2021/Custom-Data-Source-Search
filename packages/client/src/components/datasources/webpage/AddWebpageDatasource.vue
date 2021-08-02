@@ -6,12 +6,16 @@
       <div>
         <span>Add optional tags</span><br/>
         <span class="p-float-label">
-        <InputText id="tag1" type="text" v-model="tag1"/>
-        <label for="tag1">Tag 1</label>
+        <InputText id="tagInput1" type="text" v-model="tag1"/>
+        <label for="tagInput1">Tag 1</label>
+          <ColorPicker v-model="colour1" />
+          <Tag id= 'tag1' value="Example" :style="style"></Tag>
       </span>
         <span class="p-float-label">
-        <InputText id="tag2" type="text" v-model="tag2"/>
-        <label for="tag2">Tag 2</label>
+        <InputText id="tagInput2" type="text" v-model="tag2"/>
+        <label for="tagInput2">Tag 2</label>
+          <ColorPicker v-model="colour2" />
+          <Tag id= 'tag2' value="Example" :style="style"></Tag>
       </span>
       </div>
       <Button icon="pi pi-check" class="p-button-rounded p-button-text" v-on:click="addDataSource()" />
@@ -32,8 +36,19 @@
               dataSourceURI: "",
               tag1: null,
               tag2: null,
+              colour1: "f4a261",
+              colour2: "457b9d",
               type: 'webpage'
             }
+        },
+        computed: {
+          style(){
+            return{
+              //Colours for the example tags shown in the overlay
+              '--colour-1': '#' + (this.colour1),
+              '--colour-2': '#' + (this.colour2)
+            }
+          }
         },
         methods: {
             addDataSource() {
@@ -80,6 +95,19 @@ input {
   margin-top: 15px;
 }
 
+.p-colorpicker{
+  margin-left: 10px;
+}
+
+#tag1{
+  background: var(--colour-1);
+  margin-left: 20px;
+}
+
+#tag2{
+  background: var(--colour-2);
+  margin-left: 20px;
+}
 
 
 </style>
