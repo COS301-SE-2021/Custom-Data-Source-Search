@@ -24,7 +24,7 @@
                 v-for="(r,i) in searchResults"
                 :key="i"
         >
-          <result-card-text v-if="r.type === 'text'" :result="r"/>
+          <result-card-file v-if="r.type === 'file'" :result="r"/>
           <result-card-folder v-if="r.type === 'folder'" :result="r"/>
           <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
         </div>
@@ -34,7 +34,7 @@
 
   <script>
     import axios from "axios";
-    import ResultCardText from "../components/results/ResultCardText";
+    import ResultCardFile from "../components/results/ResultCardFile";
     import ResultCardFolder from "../components/results/ResultCardFolder";
     import ResultCardWebpage from "../components/results/ResultCardWebpage";
     import SignIn from "@/components/popups/SignIn";
@@ -51,11 +51,16 @@
         }
       },
       methods: {
+        escapeSpecialCharacters(query) {
+          return query.replace(/[{}/\[\]+-^.:()]/gm, function (match) {
+            return '\\' + match
+          })
+        },
         queryServer() {
           this.firstSearch = false
           this.searchResults = []
           axios
-                  .get("http://localhost:3001/general/" + this.query)
+                  .get("http://localhost:3001/general/" + encodeURI(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
                     console.log(resp.data)
                     this.searchResults = resp.data.searchResults
@@ -71,7 +76,7 @@
         SignIn,
         ResultCardWebpage,
         ResultCardFolder,
-        ResultCardText
+        ResultCardFile
       }
     }
   </script>

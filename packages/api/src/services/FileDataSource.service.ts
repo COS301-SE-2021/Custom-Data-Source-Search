@@ -1,31 +1,31 @@
 /**
  * Data Model Interfaces
  */
-import {TextDataSource} from "../models/TextDataSource.interface";
+import {FileDataSource} from "../models/FileDataSource.interface";
 import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
 import path from 'path';
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import axios from "axios";
 
 
-class TextDataSourceService {
+class FileDataSourceService {
 
     /**
      * In-Memory Store
      */
 
-    textDataSourceArray: TextDataSource[];
+    fileDataSourceArray: FileDataSource[];
 
     constructor() {
-        this.textDataSourceArray = [];
+        this.fileDataSourceArray = [];
     }
 
     /**
      * Service Methods
      */
-    getAllTextDataSources() {
-        let [result, err] = textDataSourceRepository.getAllDataSources();
+    getAllFileDataSources() {
+        let [result, err] = fileDataSourceRepository.getAllDataSources();
         if (err) {
             return {
                 "code": 500,
@@ -40,8 +40,8 @@ class TextDataSourceService {
         };
     }
 
-    getTextDataSource(uuid: string) {
-        let [result, err] = textDataSourceRepository.getDataSource(uuid);
+    getFileDataSource(uuid: string) {
+        let [result, err] = fileDataSourceRepository.getDataSource(uuid);
         if (err) {
             return {
                 "code": err.code,
@@ -59,7 +59,7 @@ class TextDataSourceService {
         }
     }
 
-    async addTextDataSource(fileName: string, filePath: string) {
+    async addFileDataSource(fileName: string, filePath: string) {
         if (fileName === '') {
             return [null, {
                 "code": 400,
@@ -93,13 +93,10 @@ class TextDataSourceService {
                 "message": "Unknown error"
             }];
         }
-        const temp: TextDataSource = {filename: fileName, path: filePath};
-        let [, e] = await textDataSourceRepository.addDataSource(temp);
+        const temp: FileDataSource = {filename: fileName, path: filePath};
+        let [, e] = await fileDataSourceRepository.addDataSource(temp);
         if (e) {
-            return [null, {
-                "code": 400,
-                "message": "Datasource already exists"
-            }]
+            return [null, e]
         }
         return [{
             "code": 200,
@@ -107,8 +104,8 @@ class TextDataSourceService {
         }, null];
     }
 
-    removeTextDataSource(uuid: string) {
-        let [result, err] = textDataSourceRepository.deleteDataSource(uuid);
+    removeFileDataSource(uuid: string) {
+        let [result, err] = fileDataSourceRepository.deleteDataSource(uuid);
         if (err) {
             return {
                 "code": err.code,
@@ -126,11 +123,10 @@ class TextDataSourceService {
     }
 
 
-    async searchAllTextDataSources(searchString: string) : Promise<[FileOccurrence[], Error]> {
+    async searchAllFileDataSources(searchString: string) : Promise<[FileOccurrence[], Error]> {
         try {
             let response: any  = await axios.get(
-                'http://localhost:8983/solr/files/select?q='
-                + encodeURIComponent(searchString)
+                'http://localhost:8983/solr/files/select?q=' + searchString
                 + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
             let result: FileOccurrence[] = [];
@@ -143,11 +139,11 @@ class TextDataSourceService {
                         // @ts-ignore
                         stringOccurrences.push({"lineNumber": 0, "occurrenceString": value["content"][i]});
                     }
-                    let [datasource, err] = textDataSourceRepository.getDataSource(key);
+                    let [datasource, err] = fileDataSourceRepository.getDataSource(key);
                     if (err) {
-                        result.push({"type": "text", "source": key, "occurrences": stringOccurrences});
+                        result.push({"type": "file", "source": key, "occurrences": stringOccurrences});
                     } else {
-                        result.push({"type": "text", "source": datasource.path + datasource.filename, "occurrences": stringOccurrences});
+                        result.push({"type": "file", "source": datasource.path + datasource.filename, "occurrences": stringOccurrences});
                     }
                 }
             }
@@ -199,5 +195,5 @@ class TextDataSourceService {
     }
 }
 
-const textDataSourceService = new TextDataSourceService();
-export default textDataSourceService;
+const fileDataSourceService = new FileDataSourceService();
+export default fileDataSourceService;

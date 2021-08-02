@@ -37,8 +37,8 @@
               </div>
             </div>
 <!--            Different contents for the overlay are shown for different types-->
-            <div v-else-if="type==='Text'">
-              <add-text-datasource :backend="backend"/>
+            <div v-else-if="type==='File'">
+              <add-file-datasource :backend="backend"/>
             </div>
             <div v-else-if="type==='Folder'">
               <add-folder-datasource :backend="backend"/>
@@ -128,7 +128,7 @@
 
 import axios from "axios";
 import {FilterMatchMode} from 'primevue/api';
-import AddTextDatasource from "@/components/datasources/text/AddTextDatasource";
+import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
 import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
 import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
 export default {
@@ -151,7 +151,7 @@ export default {
         {
           location: "elsewhere",
           backend: "Backend 1",
-          type: "Text",
+          type: "File",
           tag1: "Home",
           tag2: "Fun"
         },
@@ -182,7 +182,7 @@ export default {
         'Fun', 'Business', 'Home', 'University'
       ],
       types: [
-        'Text', 'Folder', 'Webpage'
+        'File', 'Folder', 'Webpage'
       ],
       backends: [
           'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
@@ -193,7 +193,7 @@ export default {
     }
   },
   components: {
-    AddTextDatasource,
+    AddFileDatasource,
     AddFolderDatasource,
     AddWebpageDatasource
   },

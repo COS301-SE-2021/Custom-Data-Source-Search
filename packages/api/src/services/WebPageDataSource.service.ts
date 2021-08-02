@@ -51,7 +51,6 @@ class WebPageDataSourceService {
         let result: WebPageOccurrence[] = [];
         let pages: Promise<string>[] = [];
         for (let i = 0; i < this.webPageDataSourceArray.length; i++) {
-            //let location = this.webPageDataSourceArray[i].path + this.textDataSourceArray[i].filename;
             let url = this.webPageDataSourceArray[i].url;
             pages.push(this.readWebPage(url));
         }
@@ -75,7 +74,6 @@ class WebPageDataSourceService {
         try {
             let page = await fetch(url);
             text = await page.text();
-            //   console.log(text);
             return text;
         } catch {
             return "";
