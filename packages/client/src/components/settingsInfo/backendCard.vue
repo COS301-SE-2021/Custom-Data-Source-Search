@@ -3,7 +3,19 @@
         <div class="backend-info-sum">
             <em class="pi pi-circle-on" />
             <span>LEGO</span>
-            <InputSwitch v-model="checked"/>
+            <InputSwitch id="inputswitch" style="float: right; margin-top: 2px" v-model="checked"/>
+            <div class="expanded-backend-info" v-if="expand">
+                <div><i>Name: </i></div>
+                <div>LEGO</div>
+                <div><i>Link: </i></div>
+                <div>www.linktoLegoBackend/156WqezhgHf</div>
+                <div><i>Pass Key: </i></div>
+                <div>•••••••••••••••••••••••••••••••••••</div>
+                <div></div>
+                <div>
+                    <Button style="text-align: center; margin-right: 2%; float: right" class="p-button-sm p-button-outlined">Edit</Button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -17,7 +29,8 @@
         name: "backendCard",
         data () {
             return {
-                checked: false
+                checked: false,
+                expand: true
             }
         }
     }
@@ -26,15 +39,48 @@
 <style scoped>
 
     .backend-info-card {
+        margin-top: 5px;
         padding: 5px;
+        border: solid 1px #363636;
+        border-radius: 5px;
+        max-width: 500px;
     }
 
-    .backend-info-sum {
+    .expanded-backend-info {
+        background-color: rgba(189, 189, 189, 0.05);
+        border-radius: 5px;
+        margin-top: 4px;
+        padding-top: 4px;
+        padding-left: 4px;
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-row-gap: 5px;
+    }
+
+    .expanded-backend-info div {
+        max-height: 50px;
     }
 
     .pi-circle-on {
         color: #41B3B2;
+        padding-top: 2px;
+        padding-left: 2px;
+        padding-bottom: 2px;
     }
+
+    .p-button-sm {
+        max-height: 30px;
+    }
+
+    span {
+        padding-left: 15px;
+    }
+
+    span:hover {
+        cursor: pointer;
+    }
+
 
 
 </style>
