@@ -46,7 +46,7 @@ fileDataSourceRouter.post("/", async (req: Request, res: Response) => {
 /**
  * Remove a data source by it's id
  */
-fileDataSourceRouter.delete("/", (req: Request, res: Response) => {
-        const result = fileDataSourceService.removeFileDataSource(req.body.id);
+fileDataSourceRouter.delete("/", async (req: Request, res: Response) => {
+        const result = await fileDataSourceService.removeFileDataSource(req.body.id);
         res.status(result.code).send(result.body);
 });

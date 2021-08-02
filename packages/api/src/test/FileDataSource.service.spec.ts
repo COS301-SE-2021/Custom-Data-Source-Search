@@ -260,32 +260,32 @@ describe('FileDataSourceService : addFileDataSource function', () => {
     });
 });
 describe('FileDataSourceService : removeFileDataSource function', () => {
-    it("Should return results returned by repository upon successful deletion of datasource", () => {
+    it("Should return results returned by repository upon successful deletion of datasource", async () => {
         //given
         const message: string = "Successfully deleted File datasource";
-        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockReturnValue([{
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementation(async () => {return[{
             "code": 204,
             "message": message
-        }, null]);
+        }, null]});
         const id: string = "testUUID";
         //when
-        const result = fileDataSourceService.removeFileDataSource(id);
+        const result = await fileDataSourceService.removeFileDataSource(id);
         //then
         expect(fileDataSourceRepository.deleteDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(204);
         expect(result.body.message).toEqual(message);
     });
-    it("Should return appropriate error if error occurred inside repository while deleting", () => {
+    it("Should return appropriate error if error occurred inside repository while deleting", async () => {
         //given
         const errorCode: number = 42;
         const errorMessage: string = "some error";
-        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockReturnValue([null, {
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementation(async () => {return[null, {
             "code": errorCode,
             "message": errorMessage
-        }]);
+        }]});
         const id: string = "testUUID";
         //when
-        const result = fileDataSourceService.removeFileDataSource(id);
+        const result = await fileDataSourceService.removeFileDataSource(id);
         //then
         expect(fileDataSourceRepository.deleteDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(errorCode);

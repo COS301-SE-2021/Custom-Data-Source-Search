@@ -104,8 +104,8 @@ class FileDataSourceService {
         }, null];
     }
 
-    removeFileDataSource(uuid: string) {
-        let [result, err] = fileDataSourceRepository.deleteDataSource(uuid);
+    async removeFileDataSource(uuid: string) {
+        let [result, err] = await fileDataSourceRepository.deleteDataSource(uuid);
         if (err) {
             return {
                 "code": err.code,
