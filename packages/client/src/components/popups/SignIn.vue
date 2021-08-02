@@ -1,8 +1,8 @@
 <template>
-  <Dialog header="Sign In" v-model:visible="display" :draggable="false" :closable="true" :dismissable-mask="true" @hide="$emit('display-popup')">
+  <Dialog header="Sign In" v-model:visible="display" :draggable="false" :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup')">
 
     <div class="p-field p-grid">
-      <label for="firstname" class="p-col-fixed" style="width:100px">Email Address</label>
+      <label for="firstname" class="p-col-fixed" style="width:100px;">Email Address</label>
       <div class="p-col">
         <InputText id="firstname" type="text" v-model="email"/>
       </div>
@@ -51,7 +51,7 @@ export default {
 <style scoped>
 
 .p-field {
-  margin : 9px;
+  margin : 1rem;
 }
 
  input {
