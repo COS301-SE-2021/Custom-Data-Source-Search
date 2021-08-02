@@ -96,10 +96,7 @@ class FileDataSourceService {
         const temp: FileDataSource = {filename: fileName, path: filePath};
         let [, e] = await fileDataSourceRepository.addDataSource(temp);
         if (e) {
-            return [null, {
-                "code": 400,
-                "message": "Datasource already exists"
-            }]
+            return [null, e]
         }
         return [{
             "code": 200,

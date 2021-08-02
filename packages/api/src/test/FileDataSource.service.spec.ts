@@ -172,21 +172,21 @@ describe('FileDataSourceService : addFileDataSource function', () => {
         //then
         expect(fileDataSourceRepository.addDataSource).toBeCalledWith({filename: fileName, path: filePath});
     });
-    it('Should throw FileReadingError with appropriate message when datasource already exists', async () => {
+    it('Should return error with appropriate message when datasource already exists', async () => {
         //given
         fileName = "file.txt";
         filePath = "valid/path/";
         jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
         jest.spyOn(fileDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, {
             "code": 400,
-            "message": "already exists"
+            "message": "File datasource already exists"
         }]});
         //when
         const [, error] = await service.addFileDataSource(fileName, filePath);
         //then
         expect(error).toEqual({
             "code": 400,
-            "message": "Datasource already exists"
+            "message": "File datasource already exists"
         });
     });
     it('Should throw FileReadingError with appropriate message when no file path is specified', async () => {
