@@ -199,7 +199,12 @@ class FileDataSourceService {
         return lineNum;
     }
 
-    getSearchSnippet(snippet: string) {
+    getSearchSnippet(snippet: string, fileName: string) {
+        let temp: string[] = fileName.split('.');
+        let extension: string = temp[temp.length - 1];
+        if (["java","cpp","js","ts","vue","html","css","yml","json","xml"].indexOf(extension) != -1) {
+            console.log("is code file");
+        }
         snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g,'<em style=\u0027color: #88ffff\u0027>');
         snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g,'</em>');
         return snippet;

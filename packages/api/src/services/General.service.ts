@@ -57,7 +57,7 @@ class GeneralService {
                             case "file":
                                 // @ts-ignore
                                 for (let occurrence of value["content"]) {
-                                    occurrences.push({"occurrenceString": fileDataSourceService.getSearchSnippet(occurrence)});
+                                    occurrences.push({"occurrenceString": fileDataSourceService.getSearchSnippet(occurrence, datasource.filename)});
                                 }
                                 break;
                             default:

@@ -40,8 +40,15 @@ class FileDataSourceRepository {
         }, null];
     }
 
+    makeDefaultExtension(fileName: string) {
+        let lastIndex: number = fileName.lastIndexOf(".");
+        fileName = fileName.substring(0, lastIndex);
+        return fileName;
+    }
+
     async postToSolr(file: Buffer, id: string, fileName: string) {
         let formData = new FormData();
+        fileName = this.makeDefaultExtension(fileName);
         formData.append("file", file, fileName);
         try {
             await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
