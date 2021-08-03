@@ -957,10 +957,10 @@
 }
 .p-inputswitch .p-inputswitch-slider:before {
     background: #bdbdbd;
-    width: 0.7rem;
-    height: 0.7rem;
-    left: 3px;
-    margin-top: -0.39rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    left: -1px;
+    margin-top: -0.6rem;
     border-radius: 50%;
     transition-duration: 0.5s;
 }

@@ -13,7 +13,7 @@
                 <div>•••••••••••••••••••••••••••••••••••</div>
                 <div></div>
                 <div>
-                    <Button style="text-align: center; margin-right: 2%; float: right" class="p-button-sm p-button-outlined">Edit</Button>
+                    <Button @click="loadValues" style="float: right" class="p-button p-button-outlined">Edit </Button>
                 </div>
             </div>
         </div>
@@ -55,7 +55,6 @@
         display: grid;
         grid-template-columns: 1fr 3fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
-        grid-row-gap: 5px;
     }
 
     .expanded-backend-info div {
@@ -69,8 +68,13 @@
         padding-bottom: 2px;
     }
 
-    .p-button-sm {
+    Button {
+        float: right;
         max-height: 30px;
+        text-align: center;
+        margin-right: 2%;
+        margin-bottom: 2%;
+        max-width: 30px;
     }
 
     span {
