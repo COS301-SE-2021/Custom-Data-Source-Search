@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import axios from "axios";
+import hljs from "highlight.js";
 
 
 class FileDataSourceService {
@@ -204,9 +205,15 @@ class FileDataSourceService {
         let extension: string = temp[temp.length - 1];
         if (["java","cpp","js","ts","vue","html","css","yml","json","xml"].indexOf(extension) != -1) {
             console.log("is code file");
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g,'');
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g,'');
+            console.log("Call to highlight");
+            snippet = hljs.highlightAuto(snippet).value;
+            console.log("done");
+        } else {
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g,'<em style=\u0027color: #88ffff\u0027>');
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g,'</em>');
         }
-        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g,'<em style=\u0027color: #88ffff\u0027>');
-        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g,'</em>');
         return snippet;
     }
 }
