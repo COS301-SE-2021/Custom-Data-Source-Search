@@ -6,7 +6,7 @@
         <div class="info-div">
             <span><b>Personal Information</b></span>
             <div>
-                //User information
+                <user-info-card/>
             </div>
         </div>
         <div class="info-div">
@@ -20,8 +20,10 @@
 
 <script>
     import BackendCard from "../components/settingsInfo/backendCard";
+    import UserInfoCard from "../components/settingsInfo/userInfoCard";
     export default {
         components: {
+            UserInfoCard,
             BackendCard
         },
         data () {
