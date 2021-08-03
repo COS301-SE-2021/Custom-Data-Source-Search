@@ -1,10 +1,16 @@
 <template>
     <div class="backend-info-card">
         <div class="backend-info-sum">
-            <em class="pi pi-circle-on" />
-            <span>LEGO</span>
-            <InputSwitch id="inputswitch" style="float: right; margin-top: 2px" v-model="checked"/>
-            <div class="expanded-backend-info" v-if="expand">
+            <div class="minimised-backend-info" >
+                <div style="cursor: pointer" @click="change">
+                    <em class="pi pi-circle-on" />
+                    <span>LEGO</span>
+                </div>
+                <div>
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 2px" v-model="checked"/>
+                </div>
+            </div>
+            <div class="expanded-backend-info" v-if="expand && !editBackendBool">
                 <div><i>Name: </i></div>
                 <div>LEGO</div>
                 <div><i>Link: </i></div>
@@ -13,7 +19,20 @@
                 <div>•••••••••••••••••••••••••••••••••••</div>
                 <div></div>
                 <div>
-                    <Button @click="loadValues" style="float: right" class="p-button p-button-outlined">Edit </Button>
+                    <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
+                </div>
+            </div>
+            <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
+                <div><i>Name: </i></div>
+                <input-text/>
+                <div><i>Link: </i></div>
+                <input-text/>
+                <div><i>Pass Key: </i></div>
+                <input-text/>
+                <div></div>
+                <div>
+                    <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined">Save </Button>
+                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
                 </div>
             </div>
         </div>
@@ -30,7 +49,27 @@
         data () {
             return {
                 checked: false,
-                expand: true
+                expand: true,
+                editBackendBool: false
+            }
+        },
+        methods: {
+            change() {
+                this.expand = !this.expand
+            },
+            editBackend() {
+                console.log(this.edit);
+                console.log(this.change);
+                this.expand = !this.expand;
+                this.editBackendBool = !this.editBackendBool;
+            },
+            saveChanges() {
+                this.expand = true;
+                this.editBackendBool = false;
+            },
+            cancelChanges() {
+                this.expand = true;
+                this.editBackendBool = false;
             }
         }
     }
@@ -47,7 +86,6 @@
     }
 
     .expanded-backend-info {
-        background-color: rgba(189, 189, 189, 0.05);
         border-radius: 5px;
         margin-top: 4px;
         padding-top: 4px;
@@ -55,6 +93,10 @@
         display: grid;
         grid-template-columns: 1fr 3fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
+    }
+
+    input {
+        width: unset;
     }
 
     .expanded-backend-info div {
@@ -74,15 +116,20 @@
         text-align: center;
         margin-right: 2%;
         margin-bottom: 2%;
-        max-width: 30px;
+        max-width: 40px;
     }
 
     span {
         padding-left: 15px;
     }
 
-    span:hover {
-        cursor: pointer;
+    .minimised-backend-info {
+        height: 30px;
+        padding-top: 4px;
+        padding-left: 4px;
+        background-color: rgba(189, 189, 189, 0.05);
+        display: grid;
+        grid-template-columns: 3fr 1fr;
     }
 
 
