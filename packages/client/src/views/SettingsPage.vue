@@ -41,11 +41,6 @@
         padding-left: 1%;
     }
 
-    b {
-
-    }
-
-
     .info-div {
         padding: 20px;
     }

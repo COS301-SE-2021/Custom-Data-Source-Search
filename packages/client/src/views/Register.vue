@@ -138,10 +138,6 @@
         padding: 10px;
     }
 
-    input {
-        min-width: 100% !important;
-    }
-
     input::placeholder {
         color: #575757;
         font-weight: bold;

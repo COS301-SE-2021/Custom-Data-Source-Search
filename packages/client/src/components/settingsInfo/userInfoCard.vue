@@ -43,7 +43,7 @@
 
 <style scoped>
     .user-information {
-        max-width: 500px;
+        max-width: 600px;
         margin-top: 0.5%;
         font-size: small;
         display: grid;

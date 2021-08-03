@@ -58,7 +58,7 @@
             change() {
                 this.expand = !this.expand;
                 if (this.editBackendBool) {
-                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "", life: 3000})
+                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please save or cancel changes", life: 3000})
                 }
             },
             editBackend() {
@@ -86,7 +86,7 @@
         padding: 5px;
         border: solid 1px #363636;
         border-radius: 5px;
-        max-width: 500px;
+        max-width: 600px;
     }
 
     .expanded-backend-info {
