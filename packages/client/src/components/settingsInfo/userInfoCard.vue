@@ -53,6 +53,6 @@
     }
 
     .user-information div {
-        border-bottom: solid rgba(128, 128, 128, 0.28) 1px;
+            border-bottom: solid rgba(128, 128, 128, 0.28) 1px;
     }
 </style>

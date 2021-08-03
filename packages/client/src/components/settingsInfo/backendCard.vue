@@ -1,5 +1,6 @@
 <template>
     <div class="backend-info-card">
+        <Toast position="top-right"/>
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
@@ -56,6 +57,9 @@
         methods: {
             change() {
                 this.expand = !this.expand;
+                if (this.editBackendBool) {
+                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "", life: 3000})
+                }
             },
             editBackend() {
                 console.log(this.edit);
@@ -90,13 +94,14 @@
         margin-top: 4px;
         padding-top: 4px;
         padding-left: 4px;
+        padding-bottom: 4px;
         display: grid;
         grid-template-columns: 1fr 3fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
     }
 
     .expanded-backend-info div {
-        max-height: 50px;
+        max-height: 40px;
     }
 
     .pi-circle-on {
