@@ -4,6 +4,9 @@
       <h1 class="header">Who's Sleuthin' ?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
+    <div class="user-select">
+      <AddUser></AddUser>
+    </div>
 
   </div>
 
@@ -11,8 +14,10 @@
 </template>
 
 <script>
+import AddUser from "@/components/users/AddUser";
 export default {
-  name: "Welcome"
+  name: "Welcome",
+  components: {AddUser}
 }
 </script>
 
@@ -42,6 +47,13 @@ export default {
 .description {
   text-align: center;
   color: #e9e9e9;
+}
+
+.user-select {
+  grid-row-start: 2;
+  grid-column-start: 2;
+
+
 }
 
 </style>
