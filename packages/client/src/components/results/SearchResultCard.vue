@@ -3,7 +3,7 @@
     <div class="card-icon">
       <span v-html="icon"></span>
     </div>
-    <div class="23">
+    <div>
       <h3>{{name}}</h3>
     </div>
     <div>
@@ -29,19 +29,59 @@ export default {
       let valid_word = `(?:[A-Za-z_][\\w\\s\\-:;,.()]+)`
       let valid_attribute_type = `(?:class|style|href|xmlns|height|viewBox|width)`
       let valid_attribute =`(?:\\s${valid_attribute_type}=(?:"${valid_word}"|'${valid_word}'))*`
-      let regExp = new RegExp(
-          [`(<div${valid_attribute}>)|(<\/div>)|`,
-            `(<h1${valid_attribute}>)|(<\/h1>)|`,
-            `(<h2${valid_attribute}>)|(<\/h2>)|`,
-            `(<svg${valid_attribute}>)|(<\/svg>|)|`,
-            `(<span${valid_attribute}>)|(<\/span>)|`,
-            `(<code${valid_attribute}>)|(<\/code>)|`,
-            `(<pre${valid_attribute}>)|(<\/pre>)|`,
-            `(<p${valid_attribute}>)|(<\/p>)|`,
-            `(<path${valid_attribute}>)|(<\/path>)`].join('')
+      let whitelist = new RegExp(
+          [ `(<div${valid_attribute}>|<\/div>|`,
+            `<h1${valid_attribute}>|<\/h1>|`,
+            `<h2${valid_attribute}>|<\/h2>|`,
+            `<svg${valid_attribute}>|<\/svg>|`,
+            `<span${valid_attribute}>|<\/span>|`,
+            `<code${valid_attribute}>|<\/code>|`,
+            `<pre${valid_attribute}>|<\/pre>|`,
+            `<p${valid_attribute}>|<\/p>|`,
+            `<path${valid_attribute}>|<\/path>)`
+          ].join(''),
+          "g"
       )
-      console.log(regExp)
-      return content.split(regExp)
+      let matches = content.match(whitelist)
+      if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
+        return this.escapeAllExceptMatches(content, matches);
+      } else {
+        return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
+      }
+    },
+    escapeAllExceptMatches(content, matches) {
+      let processedString = "";
+      for (let i = 0; i < matches.length; i++) {
+        console.log(content)
+        let start_index_of_whitelisted_section = content.search(matches[i]);
+        processedString += this.escapeHtml(content.substr(0, start_index_of_whitelisted_section)) + matches[i];
+        content = content.substr(start_index_of_whitelisted_section + matches[i].length);
+      }
+      return processedString;
+    },
+    // Warning: This does not escape ' or " ensure it is only used to insert escaped code BETWEEN html tags, not INSIDE
+    escapeHtml (string) {
+      let pre = document.createElement('pre');
+      let text = document.createTextNode(string);
+      pre.appendChild(text);
+      return pre.innerHTML;
+    },
+    extractTagName(tag) {
+      return tag.match(/[A-Za-z0-9]+/)[0];
+    },
+    confirmThatAllOpenedTagsAreClosed(matches) {
+      let stack = []
+      for (let i = 0; i < matches.length; i++) {
+        let tag = matches[i]
+        if (tag.substr(0, 2) === "</") {
+          if (stack.length === 0 || stack.pop() !== this.extractTagName(tag)) {
+            return false;
+          }
+        } else {
+          stack.push(this.extractTagName(tag))
+        }
+      }
+      return stack.length === 0;
     }
   }
 }
