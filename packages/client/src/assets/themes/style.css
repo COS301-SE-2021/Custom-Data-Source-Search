@@ -4926,6 +4926,37 @@
     background-color: #EF9A9A;
     color: #212121;
 }
+
+.p-tag.p-tag-colour1 {
+    background-color: #f4a261;
+    color: #212121;
+}
+
+.p-tag.p-tag-colour2 {
+    background-color: #a8dadc;
+    color: #212121;
+}
+
+.p-tag.p-tag-colour3 {
+    background-color: #f08080;
+    color: #212121;
+}
+
+.p-tag.p-tag-colour4 {
+    background-color: #99d98c;
+    color: #212121;
+}
+
+.p-tag.p-tag-colour5 {
+    background-color: #c3baba;
+    color: #212121;
+}
+
+.p-tag.p-tag-colour6 {
+    background-color: #e4c1f9;
+    color: #212121;
+}
+
 .p-tag .p-tag-icon {
     margin-right: 0.25rem;
     font-size: 0.75rem;

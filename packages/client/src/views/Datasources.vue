@@ -93,7 +93,7 @@
       </Column>
       <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem;">
         <template #body="{data}">
-          <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{data.tag1}}</Tag>
+          <Tag v-if="data.tag1" :class="'p-tag p-tag-' + data.colour1" style="margin-left: 2px;">{{data.tag1}}</Tag>
         </template>
         <template #filter="{filterModel,filterCallback}">
           <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
@@ -107,7 +107,7 @@
       </Column>
       <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
         <template #body="{data}">
-          <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{data.tag2}}</Tag>
+          <Tag v-if="data.tag2" :class="'p-tag p-tag-' + data.colour1" style="margin-left: 2px;">{{data.tag2}}</Tag>
         </template>
         <template #filter="{filterModel,filterCallback}">
           <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
@@ -132,6 +132,9 @@ import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
 import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
 import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
 export default {
+  props: {
+
+  },
   data() {
     return {
       type: null,
@@ -139,6 +142,8 @@ export default {
       sources: null,
       loading: false,
       backend: null,
+      colour1: "ffb4a2",
+      colour2: "457b9d",
       //Template for the endpoint
       endpoint:[
         {
@@ -146,28 +151,36 @@ export default {
           backend: "Sonic Co",
           type: "Folder",
           tag1: "Business",
-          tag2: "Fun"
+          tag2: "Fun",
+          colour1: "colour1",
+          colour2: "colour3"
         },
         {
           location: "elsewhere",
           backend: "Backend 1",
           type: "File",
           tag1: "Home",
-          tag2: "Fun"
+          tag2: "Fun",
+          colour1: "colour2",
+          colour2: "colour1"
         },
         {
           location: "D:\\Users\\Laurens-PC\\Desktop\\332",
           backend: "This one",
           type: "Folder",
           tag1: "University",
-          tag2: null
+          tag2: null,
+          colour1: "colour3",
+          colour2: "colour6"
         },
         {
           location: "https://www.itsafishthing.com/pure-goldfish-is-now-its-a-fish-thing/",
           backend: "This one",
           type: "Webpage",
           tag1: "Fun",
-          tag2: null
+          tag2: null,
+          colour1: "colour4",
+          colour2: "colour5"
         }
       ],
       filters2: {
@@ -192,6 +205,15 @@ export default {
       ]
     }
   },
+  computed: {
+    style(){
+      return{
+        //Colours for the tags shown in the columns
+        '--colour-1': '#' + (this.colour1),
+        '--colour-2': '#' + (this.colour2)
+      }
+    }
+  },
   components: {
     AddFileDatasource,
     AddFolderDatasource,
@@ -214,6 +236,9 @@ export default {
       this.$refs.op.toggle(event);
       this.clicked = false;
       this.backend = null;
+    },
+    setColours(payload){
+      this.colour1 = payload;
     }
   }
 }
@@ -260,5 +285,4 @@ a {
   width: 95%;
   margin-left: 2.5%;
 }
-
 </style>
