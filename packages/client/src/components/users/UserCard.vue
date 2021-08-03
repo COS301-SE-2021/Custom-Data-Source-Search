@@ -1,6 +1,6 @@
 <template>
 
-  <div class="user-container">
+  <div class="user-container p-ripple" v-ripple>
     <div class="image-container">
 
       <div class="image-ring">
@@ -16,29 +16,44 @@
 
 <script>
 export default {
-  name: "AddUser"
+  name: "UserCard"
 }
 </script>
 
 <style scoped>
 
 .user-container {
-
+  margin-left: 2vw;
   width: 10vw;
   height: 12vw;
-  background-color: #2a2a2a;
   border-radius: 5px ;
+  border-style: solid;
+  border-width: 2px;
+  border-color: rgba(158,41,34,0);
 
+  padding-top: 2vw;
+
+  background-color: #2c2c2c;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+
+}
+
+.user-container:hover{
+  border-style: solid;
+  border-width: 2px;
+  border-color: #787878;
+  cursor: pointer;
 }
 
 .name-field {
   font-size: medium;
   text-align: center;
   color: #e9e9e9;
+  margin-top: 2vw;
 }
 
 .email-field {
-  font-size: smaller;
+  font-size: small;
   font-weight: lighter;
   text-align: center;
   color: #e9e9e9;
@@ -46,8 +61,9 @@ export default {
 
 .image-container {
   margin: auto;
-  width: 5vw;
-  height: 5vw;
+  width: 4.6vw;
+  height: 4.6vw;
+
 
 }
 
@@ -56,13 +72,14 @@ export default {
   height: 100%;
   border-style: solid;
   border-radius: 100px;
-  border-width: thick;
-  border-color: #00bcd4;
+  border-width: 3px;
+  border-color: #00d4b4;
+  background-color: #2d2d2d;
 }
 
 .name-initial {
 
-  color: #bd3931;
+  color: #cf4c44;
   font-size: 2.5vw;
   margin: auto;
   width: 100%;

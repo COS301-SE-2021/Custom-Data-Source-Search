@@ -29,14 +29,16 @@ import MultiSelect from 'primevue/multiselect';
 import OverlayPanel from 'primevue/overlaypanel';
 import Tag from 'primevue/tag';
 import Chip from 'primevue/chip';
+import Ripple from 'primevue/ripple';
 import BadgeDirective from "primevue/badgedirective";
 
 
 const app = createApp(App);
 app.use(router);
-app.use(PrimeVue);
+//app.use(PrimeVue);
 app.use(ConfirmationService);
 app.use(ToastService);
+app.use(PrimeVue, {ripple: true});
 app.mount('#app');
 app.component('ConfirmDialog', ConfirmDialog);
 app.component('Toast', Toast);
@@ -60,4 +62,5 @@ app.component("Tag", Tag);
 app.component("Chip", Chip);
 app.component("Dialog", Dialog);
 app.component("Password", Password);
-app.directive('badge', BadgeDirective)
+app.directive('badge', BadgeDirective);
+app.directive('ripple', Ripple);

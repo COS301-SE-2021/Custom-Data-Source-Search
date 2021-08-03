@@ -1,11 +1,18 @@
 <template >
   <div class="page">
     <div class="heading-and-info">
-      <h1 class="header">Who's Sleuthin' ?</h1>
+      <h1 class="header">Who's Sleuthing ?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
     <div class="user-select">
-      <AddUser></AddUser>
+      <UserCard></UserCard>
+      <UserCard></UserCard>
+      <UserCard></UserCard>
+      <UserCard></UserCard>
+      <UserCard></UserCard>
+      <UserCard></UserCard>
+      <UserCard></UserCard>
+      <AddUserCard></AddUserCard>
     </div>
 
   </div>
@@ -14,10 +21,12 @@
 </template>
 
 <script>
-import AddUser from "@/components/users/AddUser";
+//import AddUser from "@/components/users/UserCard";
+import UserCard from "@/components/users/UserCard";
+import AddUserCard from "@/components/users/AddUserCard";
 export default {
   name: "Welcome",
-  components: {AddUser}
+  components: {AddUserCard, UserCard}
 }
 </script>
 
@@ -52,6 +61,11 @@ export default {
 .user-select {
   grid-row-start: 2;
   grid-column-start: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 3vw;
 
 
 }
