@@ -13,8 +13,9 @@
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
 
         </span>
-        <Button icon="pi pi-info-circle" class="p-button-rounded p-button-danger" style="margin-left: 5px" v-on:click="showPopup"></Button>
-      </div>
+        <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
+
+        </div>
     <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
 
 
@@ -23,7 +24,7 @@
                 v-for="(r,i) in searchResults"
                 :key="i"
         >
-          <result-card-text v-if="r.type === 'text'" :result="r"/>
+          <result-card-file v-if="r.type === 'file'" :result="r"/>
           <result-card-folder v-if="r.type === 'folder'" :result="r"/>
           <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
         </div>
@@ -33,7 +34,7 @@
 
   <script>
     import axios from "axios";
-    import ResultCardText from "../components/results/ResultCardText";
+    import ResultCardFile from "../components/results/ResultCardFile";
     import ResultCardFolder from "../components/results/ResultCardFolder";
     import ResultCardWebpage from "../components/results/ResultCardWebpage";
     import SignIn from "@/components/popups/SignIn";
@@ -75,12 +76,13 @@
         SignIn,
         ResultCardWebpage,
         ResultCardFolder,
-        ResultCardText
+        ResultCardFile
       }
     }
   </script>
 
 <style scoped>
+@import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
 
 .header{
   padding: 30px;
@@ -95,8 +97,9 @@
 }
 
 .search-div {
-  vertical-align: center;
-  text-align: center;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   padding: 30px;
   max-height: 100px;
 }
@@ -122,5 +125,15 @@ input {
 .logo-div {
   text-align: center;
   margin-bottom: 10px;
+}
+
+#expiration-indicator {
+  font-size: 2rem;
+  color: #d69b2c;
+  position: relative;
+  display: inline-block;
+  margin-left: 0.4rem;
+  margin-top : auto;
+  margin-bottom : 0.3rem;
 }
 </style>

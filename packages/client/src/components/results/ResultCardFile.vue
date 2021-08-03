@@ -1,7 +1,7 @@
 <template>
     <div class="result-card">
         <div class="card-icon">
-            <span id="text" title="File Datasource"><icon-file/></span>
+            <span id="file" title="File Datasource"><icon-file/></span>
         </div>
         <div style="width:900px;overflow:auto">
           <pre
@@ -19,7 +19,7 @@
 <script>
     import IconFile from "../icons/IconFile";
     export default {
-        name: "ResultCardText",
+        name: "ResultCardFile",
         components: {IconFile},
         props: {
             result: Object

@@ -1,9 +1,9 @@
 import folderDataSourceService from "../services/FolderDataSource.service";
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import fs from "fs";
-import textDataSourceService from "../services/TextDataSource.service";
+import fileDataSourceService from "../services/FileDataSource.service";
 
 const service = folderDataSourceService;
 
@@ -199,7 +199,7 @@ describe("Folder data source service: removeFolderDataSource function", () => {
     });
 });
 describe("Folder data source service: getFilesInFolder function", () => {
-    it("Should return no file paths if the files exist in text datasource repository", () => {
+    it("Should return no file paths if the files exist in file datasource repository", () => {
         //given
         // @ts-ignore
         jest.spyOn(fs, "readdirSync").mockImplementation(() => {
@@ -208,17 +208,19 @@ describe("Folder data source service: getFilesInFolder function", () => {
                 "testFile2.txt"
             ];
         });
-        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+        jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockImplementation(() => {
             return [[
                 {
                     "uuid": "someTestUUID",
                     "path": "some/test/path/",
-                    "filename": "testFile1.txt"
+                    "filename": "testFile1.txt",
+                    "lastModified": new Date("2021/03/07 12:13:46")
                 },
                 {
                     "uuid": "someTestUUID2",
                     "path": "some/test/path/",
-                    "filename": "testFile2.txt"
+                    "filename": "testFile2.txt",
+                    "lastModified": new Date("2011/01/08 11:13:46")
                 }
             ], null];
         });
@@ -233,17 +235,19 @@ describe("Folder data source service: getFilesInFolder function", () => {
         jest.spyOn(fs, "readdirSync").mockImplementation(() => {
             return [];
         });
-        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+        jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockImplementation(() => {
             return [[
                 {
                     "uuid": "someTestUUID",
                     "path": "some/test/path/",
-                    "filename": "testFile1.txt"
+                    "filename": "testFile1.txt",
+                    "lastModified": new Date("2021/03/07 12:13:46")
                 },
                 {
                     "uuid": "someTestUUID2",
                     "path": "some/test/path/",
-                    "filename": "testFile2.txt"
+                    "filename": "testFile2.txt",
+                    "lastModified": new Date("2011/01/08 11:13:46")
                 }
             ], null];
         });
@@ -262,17 +266,19 @@ describe("Folder data source service: getFilesInFolder function", () => {
                 "another/path/to/directory/"
             ];
         });
-        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+        jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockImplementation(() => {
             return [[
                 {
                     "uuid": "someTestUUID",
                     "path": "some/test/path/",
-                    "filename": "testFile1.txt"
+                    "filename": "testFile1.txt",
+                    "lastModified": new Date("2021/03/07 12:13:46")
                 },
                 {
                     "uuid": "someTestUUID2",
                     "path": "some/test/path/",
-                    "filename": "testFile2.txt"
+                    "filename": "testFile2.txt",
+                    "lastModified": new Date("2011/01/08 11:13:46")
                 }
             ], null];
         });
@@ -282,7 +288,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         //then
         expect(results).toEqual([]);
     });
-    it("Should return only file paths that are not also in text datasource repository", () => {
+    it("Should return only file paths that are not also in file datasource repository", () => {
         //given
         // @ts-ignore
         jest.spyOn(fs, "readdirSync").mockImplementation(() => {
@@ -291,17 +297,19 @@ describe("Folder data source service: getFilesInFolder function", () => {
                 "fileThatShouldBeInResults.txt"
             ];
         });
-        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+        jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockImplementation(() => {
             return [[
                 {
                     "uuid": "someTestUUID",
                     "path": "some/test/path/",
-                    "filename": "testFile1.txt"
+                    "filename": "testFile1.txt",
+                    "lastModified": new Date("2021/03/07 12:13:46")
                 },
                 {
                     "uuid": "someTestUUID2",
                     "path": "some/test/path/",
-                    "filename": "testFile2.txt"
+                    "filename": "testFile2.txt",
+                    "lastModified": new Date("2011/01/08 11:13:46")
                 }
             ], null];
         });
@@ -311,7 +319,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         //then
         expect(results).toEqual(["fileThatShouldBeInResults.txt"]);
     });
-    it("Should return all files in folder if they are not in text datasource repository", () => {
+    it("Should return all files in folder if they are not in file datasource repository", () => {
         //given
         // @ts-ignore
         jest.spyOn(fs, "readdirSync").mockImplementation(() => {
@@ -320,7 +328,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
                 "testFile2.txt",
             ];
         });
-        jest.spyOn(textDataSourceRepository, "getAllDataSources").mockImplementation(() => {
+        jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockImplementation(() => {
             return [[], null];
         });
         const path: string = "testPath/";
@@ -352,7 +360,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             .mockReturnValueOnce(["file1.txt", "file2.js"])
             .mockReturnValueOnce(["otherFile1.txt", "otherFile2.js"]);
 
-        jest.spyOn(textDataSourceService, "readFile")
+        jest.spyOn(fileDataSourceService, "readFile")
             .mockReturnValueOnce(new Promise(resolve => {
                 resolve("File contents of first file searched");
             }))
@@ -366,7 +374,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
                 resolve("File contents of fourth file searched");
             }));
 
-        jest.spyOn(textDataSourceService, "searchFile")
+        jest.spyOn(fileDataSourceService, "searchFile")
             .mockReturnValueOnce([
                 {
                     "lineNumber": 1,
@@ -397,15 +405,15 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
         expect(folderDataSourceService.getFilesInFolder).toBeCalledWith("test/path/");
         expect(folderDataSourceService.getFilesInFolder).toBeCalledWith("second/test/path/");
 
-        expect(textDataSourceService.readFile).toBeCalledWith("test/path/file1.txt");
-        expect(textDataSourceService.readFile).toBeCalledWith("test/path/file2.js");
-        expect(textDataSourceService.readFile).toBeCalledWith("second/test/path/otherFile1.txt");
-        expect(textDataSourceService.readFile).toBeCalledWith("second/test/path/otherFile2.js");
+        expect(fileDataSourceService.readFile).toBeCalledWith("test/path/file1.txt");
+        expect(fileDataSourceService.readFile).toBeCalledWith("test/path/file2.js");
+        expect(fileDataSourceService.readFile).toBeCalledWith("second/test/path/otherFile1.txt");
+        expect(fileDataSourceService.readFile).toBeCalledWith("second/test/path/otherFile2.js");
 
-        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of first file searched", "file");
-        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of second file searched", "file");
-        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of third file searched", "file");
-        expect(textDataSourceService.searchFile).toBeCalledWith("File contents of fourth file searched", "file");
+        expect(fileDataSourceService.searchFile).toBeCalledWith("File contents of first file searched", "file");
+        expect(fileDataSourceService.searchFile).toBeCalledWith("File contents of second file searched", "file");
+        expect(fileDataSourceService.searchFile).toBeCalledWith("File contents of third file searched", "file");
+        expect(fileDataSourceService.searchFile).toBeCalledWith("File contents of fourth file searched", "file");
 
         expect(result).toEqual([
             {
@@ -463,18 +471,18 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
         jest.spyOn(folderDataSourceService, "getFilesInFolder")
             .mockReturnValueOnce(["file1.txt", "file2.js"]);
 
-        jest.spyOn(textDataSourceService, "readFile")
+        jest.spyOn(fileDataSourceService, "readFile")
             .mockReturnValue(new Promise((resolve, reject) => {
                 reject("Promise is rejected");
             }));
 
-        jest.spyOn(textDataSourceService, "searchFile")
+        jest.spyOn(fileDataSourceService, "searchFile")
             .mockReturnValue([]);
         //when
         const [result,] = await service.searchAllFolderDataSources("file");
         //then
-        expect(textDataSourceService.searchFile).toBeCalledWith("", "file");
-        expect(textDataSourceService.searchFile).toBeCalledWith("", "file");
+        expect(fileDataSourceService.searchFile).toBeCalledWith("", "file");
+        expect(fileDataSourceService.searchFile).toBeCalledWith("", "file");
         expect(result).toEqual([]);
     });
 });

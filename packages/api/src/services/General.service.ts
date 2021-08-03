@@ -1,5 +1,6 @@
 import axios from "axios";
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
+import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
+import fileDataSourceService from "./FileDataSource.service";
 
 class GeneralService {
 
@@ -33,7 +34,7 @@ class GeneralService {
             let response: any  = await axios.get(
                 'http://localhost:8983/solr/files/select?q='
                 + encodeURIComponent(searchString)
-                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
+                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=3'
             );
             let docs: any[] = response["data"]["response"]["docs"];
             let result: any[] = [];
@@ -44,18 +45,25 @@ class GeneralService {
                 // @ts-ignore
                 if (value["content"] != undefined) {
                     let occurrences: any[] = [];
-                    // @ts-ignore
-                    for (let i = 0; i < value["content"].length; i++) {
-                        // @ts-ignore
-                        occurrences.push({"occurrenceString": value["content"][i]});
-                    }
-                    let [datasource, err] = textDataSourceRepository.getDataSource(key);
-                    // @ts-ignore
+                    let [datasource, err] = fileDataSourceRepository.getDataSource(key);
                     if (err) {
                         // @ts-ignore
+                        for (let occurrence of value["content"]) {
+                            occurrences.push({"occurrenceString": occurrence});
+                        }
                         result.push({"type": currentObject["datasource_type"], "source": key, "occurrences": occurrences});
                     } else {
-                        // @ts-ignore
+                        switch(currentObject["datasource_type"]) {
+                            case "file":
+                                // @ts-ignore
+                                for (let occurrence of value["content"]) {
+                                    occurrences.push({"occurrenceString": fileDataSourceService.getSearchSnippet(occurrence, datasource.filename)});
+                                }
+                                break;
+                            default:
+                            // code block
+                                console.log("invalid datasource type");
+                        }
                         result.push({"type": currentObject["datasource_type"], "source": datasource.path + datasource.filename, "occurrences": occurrences});
                     }
                 }
