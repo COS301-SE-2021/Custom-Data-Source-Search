@@ -60,6 +60,7 @@ class FileDataSourceService {
     }
 
     async addFileDataSource(fileName: string, filePath: string) {
+        filePath = this.correctPath(filePath);
         if (fileName === '') {
             return [null, {
                 "code": 400,
@@ -102,6 +103,10 @@ class FileDataSourceService {
             "code": 200,
             "message": "Success"
         }, null];
+    }
+
+    correctPath(filePath: string) {
+        return filePath.replace(/\\/g, "/");
     }
 
     async removeFileDataSource(uuid: string) {
