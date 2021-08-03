@@ -5,7 +5,7 @@
                 REGISTER
             </div>
             <div v-if="notContinue" class="input-fields">
-                <InputText tpye="text" v-model="userName" label="Name" placeholder="Name" />
+                <InputText type="text" v-model="userName" label="Name" placeholder="Name" />
                 <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
                 <div>
                     <PasswordInputField style="width: 100%" id="masterPassword" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
