@@ -3,13 +3,13 @@
         <div>
             User Name:
         </div>
-        <div>
+        <div style="text-align: right">
             {{ userName }}
         </div>
         <div>
             Master Email:
         </div>
-        <div>
+        <div style="text-align: right">
             {{ masterEmail}}
         </div>
     </div>
@@ -43,11 +43,16 @@
 
 <style scoped>
     .user-information {
+        max-width: 500px;
         margin-top: 0.5%;
         font-size: small;
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
-        row-gap: 20%;
+        row-gap: 30%;
+    }
+
+    .user-information div {
+        border-bottom: solid rgba(128, 128, 128, 0.28) 1px;
     }
 </style>

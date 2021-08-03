@@ -95,10 +95,6 @@
         grid-template-rows: 1fr 1fr 1fr 1fr;
     }
 
-    input {
-        width: unset;
-    }
-
     .expanded-backend-info div {
         max-height: 50px;
     }
@@ -110,13 +106,18 @@
         padding-bottom: 2px;
     }
 
+    input {
+        margin-right: 2%;
+    }
+
     Button {
         float: right;
         max-height: 30px;
         text-align: center;
         margin-right: 2%;
         margin-bottom: 2%;
-        max-width: 40px;
+        margin-top: 1%;
+        max-width: fit-content;
     }
 
     span {
