@@ -49,13 +49,13 @@
         data () {
             return {
                 checked: false,
-                expand: true,
+                expand: false,
                 editBackendBool: false
             }
         },
         methods: {
             change() {
-                this.expand = !this.expand
+                this.expand = !this.expand;
             },
             editBackend() {
                 console.log(this.edit);

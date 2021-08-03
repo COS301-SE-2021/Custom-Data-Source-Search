@@ -36,7 +36,7 @@
 <style scoped>
 
     .settings-box {
-        padding-left: 30px;
+        padding-left: 1%;
     }
 
     b {
