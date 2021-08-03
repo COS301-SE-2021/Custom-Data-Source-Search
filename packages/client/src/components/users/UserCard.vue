@@ -3,20 +3,23 @@
   <div class="user-container p-ripple" v-ripple>
     <div class="image-container">
 
-      <div class="image-ring">
-        <h3 class="name-initial"> N</h3>
+      <div class="image-ring " v-bind:class="{ active: userDetails.isActive }">
+        <h3 class="name-initial"> {{ userDetails.name.charAt(0).toUpperCase() }}</h3>
       </div>
 
     </div>
-    <h1 class="name-field"> Name </h1>
-    <h2 class="email-field"> email@address.com</h2>
+    <h1 class="name-field"> {{ userDetails.name }} </h1>
+    <h2 class="email-field"> {{userDetails.email }}</h2>
 
   </div>
 </template>
 
 <script>
 export default {
-  name: "UserCard"
+  name: "UserCard",
+  props: {
+    userDetails: Object
+  }
 }
 </script>
 
@@ -54,6 +57,7 @@ export default {
 
 .email-field {
   font-size: small;
+  font-size: 0.8em;
   font-weight: lighter;
   text-align: center;
   color: #e9e9e9;
@@ -73,8 +77,14 @@ export default {
   border-style: solid;
   border-radius: 100px;
   border-width: 3px;
-  border-color: #00d4b4;
+  border-color: #969696;
   background-color: #2d2d2d;
+}
+
+.active {
+
+  border-color: #00d4b4;
+
 }
 
 .name-initial {

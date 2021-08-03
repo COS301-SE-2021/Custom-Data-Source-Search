@@ -4,14 +4,9 @@
       <h1 class="header">Who's Sleuthing ?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
-    <div class="user-select">
-      <UserCard></UserCard>
-      <UserCard></UserCard>
-      <UserCard></UserCard>
-      <UserCard></UserCard>
-      <UserCard></UserCard>
-      <UserCard></UserCard>
-      <UserCard></UserCard>
+    <div class="user-select" >
+      <UserCard v-for="(user, i) in users" :key="i" :userDetails="user" ></UserCard>
+
       <AddUserCard></AddUserCard>
     </div>
 
@@ -26,7 +21,17 @@ import UserCard from "@/components/users/UserCard";
 import AddUserCard from "@/components/users/AddUserCard";
 export default {
   name: "Welcome",
-  components: {AddUserCard, UserCard}
+  components: {AddUserCard, UserCard},
+  data () {
+    return {
+      users : [
+        {name : "Josh", email: "joshwalkerdev99@gmail.com", isActive: true},
+        {name : "Lauren", email: "lauren@gmail.com", isActive: false},
+        {name : "Marike", email: "marike@gmail.com", isActive: true}
+      ]
+    }
+
+  }
 }
 </script>
 
