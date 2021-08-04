@@ -30,7 +30,7 @@ export default {
   margin-right: 1vw;
   width: 10vw;
   height: 12vw;
-  border-radius: 5px ;
+  border-radius: 7px ;
   border-style: solid;
   border-width: 2px;
   border-color: rgba(158,41,34,0);

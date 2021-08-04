@@ -37,7 +37,7 @@ export default {
   margin-right: 1vw;
   width: 10vw;
   height: 12vw;
-  border-radius: 5px ;
+  border-radius: 7px ;
   border-style: solid;
   border-width: 2px;
   border-color: rgba(158,41,34,0);
@@ -59,7 +59,7 @@ export default {
 .name-field {
   font-size: 1vw;
   text-align: center;
-  color: #e9e9e9;
+  color: #f5f5f5;
   margin-top: 1.2vw;
 }
 
@@ -67,7 +67,7 @@ export default {
   font-size: 0.7vw;
   font-weight: lighter;
   text-align: center;
-  color: #e9e9e9;
+  color: #c8c8c8;
 }
 
 .image-container {
@@ -83,7 +83,7 @@ export default {
   height: 100%;
   background:
       linear-gradient(#2d2d2d, #2d2d2d) padding-box,
-      linear-gradient(to right bottom, #747474, #505050) border-box;
+      linear-gradient(to right bottom, #777777, #4d4d4d) border-box;
   border-radius: 50em;
   border: 4px solid transparent;
 }
@@ -92,14 +92,14 @@ export default {
 
   background:
       linear-gradient(#2d2d2d, #2d2d2d) padding-box,
-      linear-gradient(to right bottom, #2bc8d6, #3b5c93) border-box;
+      linear-gradient(to right bottom, #2bd3d6, #3b6393) border-box;
   border-radius: 50em;
   border: 4px solid transparent;
 }
 
 .name-initial {
 
-  color: #ffffff;
+  color: #f3f3f3;
   font-size: 2.3vw;
   margin: auto;
   width: 100%;

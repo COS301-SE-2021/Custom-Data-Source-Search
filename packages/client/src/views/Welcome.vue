@@ -59,12 +59,12 @@ export default {
 
 .header {
   text-align: center;
-  color: #e9e9e9;
+  color: #ededed;
 }
 
 .description {
   text-align: center;
-  color: #e9e9e9;
+  color: #ededed;
 }
 
 .user-select {
