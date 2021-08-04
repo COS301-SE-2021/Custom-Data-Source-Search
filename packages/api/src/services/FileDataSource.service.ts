@@ -205,9 +205,12 @@ class FileDataSourceService {
         let extension: string = temp[temp.length - 1];
         if (["java","cpp","js","ts","vue","html","css","yml","json","xml","py","php"].indexOf(extension) != -1) {
             let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
+            if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
+                snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
+            }
             snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g,'');
             snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g,'');
-            snippet = hljs.highlightAuto(snippet).value;
+            snippet = hljs.highlight(snippet, {language: extension}).value;
             let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #88ffff;color: dimgrey;\u0027>' + searchTerm + '</span>')
         } else {
