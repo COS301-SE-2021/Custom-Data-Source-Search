@@ -33,7 +33,8 @@ export default {
 <style scoped>
 
 .user-container {
-  margin-left: 2vw;
+  margin-left: 1vw;
+  margin-right: 1vw;
   width: 10vw;
   height: 12vw;
   border-radius: 5px ;
