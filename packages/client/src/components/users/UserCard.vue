@@ -57,15 +57,14 @@ export default {
 }
 
 .name-field {
-  font-size: medium;
+  font-size: 1vw;
   text-align: center;
   color: #e9e9e9;
-  margin-top: 2vw;
+  margin-top: 1.2vw;
 }
 
 .email-field {
-  font-size: small;
-  font-size: 0.8em;
+  font-size: 0.7vw;
   font-weight: lighter;
   text-align: center;
   color: #e9e9e9;
@@ -82,23 +81,26 @@ export default {
 .image-ring {
   width: 100%;
   height: 100%;
-  border-style: solid;
-  border-radius: 100px;
-  border-width: 3px;
-  border-color: #969696;
-  background-color: #2d2d2d;
+  background:
+      linear-gradient(#2d2d2d, #2d2d2d) padding-box,
+      linear-gradient(to right bottom, #747474, #505050) border-box;
+  border-radius: 50em;
+  border: 4px solid transparent;
 }
 
 .active {
 
-  border-color: #00d4b4;
-
+  background:
+      linear-gradient(#2d2d2d, #2d2d2d) padding-box,
+      linear-gradient(to right bottom, #2bc8d6, #3b5c93) border-box;
+  border-radius: 50em;
+  border: 4px solid transparent;
 }
 
 .name-initial {
 
   color: #ffffff;
-  font-size: 2.5vw;
+  font-size: 2.3vw;
   margin: auto;
   width: 100%;
   height: 100%;

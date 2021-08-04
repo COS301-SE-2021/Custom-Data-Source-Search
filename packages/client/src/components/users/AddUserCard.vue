@@ -50,7 +50,7 @@ export default {
 }
 
 .name-field {
-  font-size: medium;
+  font-size: 1vw;
   text-align: center;
   color: #e9e9e9;
   margin-top: 2vw;
@@ -72,6 +72,7 @@ export default {
   border-width: 3px;
   border-color: #969696;
   background-color: #2d2d2d;
+
 }
 
 .name-initial {
