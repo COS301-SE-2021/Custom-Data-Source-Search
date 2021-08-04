@@ -8,7 +8,7 @@
                     <span>LEGO</span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 2px" v-model="checked"/>
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="checked"/>
                 </div>
             </div>
             <div class="expanded-backend-info" v-if="expand && !editBackendBool">
@@ -51,14 +51,15 @@
             return {
                 checked: false,
                 expand: false,
-                editBackendBool: false
+                editBackendBool: false,
+
             }
         },
         methods: {
             change() {
                 this.expand = !this.expand;
                 if (this.editBackendBool) {
-                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please save or cancel changes", life: 3000})
+                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please save or cancel changes", life: 2000})
                 }
             },
             editBackend() {
