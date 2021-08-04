@@ -1,7 +1,7 @@
 <template>
     <div class="grid-app">
       <div class="nav-bar-top">
-        <button class="profile-button" @click="toggle">Profile test</button>
+        <button class="profile-button" @click="toggle">Profile</button>
         <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 450px" :breakpoints="{'960px': '75vw'}">
         </OverlayPanel>
       </div>
@@ -43,7 +43,7 @@ input {
 }
 
 #Sidebar {
-  max-width: 30px
+  min-width: 30px;
 }
 
 .header{
@@ -56,7 +56,7 @@ input {
 .grid-app {
   display: grid;
   grid-template-rows: 1fr 30fr;
-  grid-template-columns: 1.5fr 30fr;
+  grid-template-columns: 1fr 30fr;
   height: 100%;
 }
 
@@ -120,7 +120,7 @@ button {
   border: none;
   color: rgba(255, 255, 255, 0.58);
   float: right;
-  margin-right: 70px;
+  margin-right: 2%;
   font-size: 15px;
   transition-duration: 0.4s;
   border-radius: 3px;
