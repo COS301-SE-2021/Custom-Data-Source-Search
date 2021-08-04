@@ -219,8 +219,6 @@ class FileDataSourceService {
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #88ffff;color: dimgrey;\u0027>' + searchTerm + '</span>')
         } else {
             snippet = this.escapeAndHighlight(snippet);
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '<em style=\u0027color: #88ffff\u0027>');
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '</em>');
         }
         return snippet;
     }
