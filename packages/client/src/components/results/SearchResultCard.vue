@@ -1,13 +1,11 @@
 <template>
   <div class="result-card">
-    <div class="card-icon">
-      <span v-html="icon"></span>
+    <div class="card-icon" v-html="this.whitelistStrip(icon)">
     </div>
     <div>
       <h3>{{name}}</h3>
     </div>
-    <div>
-      <span v-html="this.whitelistStrip(content)"></span>
+    <div class="content" v-html="this.whitelistStrip(content)">
     </div>
     <div>
       {{source}}
