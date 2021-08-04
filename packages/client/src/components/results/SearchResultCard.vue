@@ -27,14 +27,15 @@ export default {
   methods: {
     whitelistStrip(content) {
       let valid_word = "[A-Za-z_][\\w\\s\\-:;,.]+";
-      let valid_attribute_types = ["class", "d", "fill",  "height", "style", "viewBox", "width"];
-      let valid_html_tags = ["code", "div", "h1", "h2", "pre", "path", "span", "svg"];
+      let valid_attribute_types = ["class", "d", "fill", "height", "style", "viewBox", "width"];
+      let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
+      // special case where strings of code like "<" and "</" and ">" should be allowed through for highlight.js to work
+      let highlight_js_valid_html_partial = "\"[<>|\"|\"<\/\""
 
       let valid_attribute =`(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
-      let whitelist_production_line = []
+      let whitelist_production_line = [].push(highlight_js_valid_html_partial)
       for (let i = 0; i < valid_html_tags.length; i++) {
-        let tag_name = valid_html_tags[i];
-        whitelist_production_line.push(`<${tag_name}${valid_attribute}>|<\/${tag_name}>`)
+        whitelist_production_line.push(`<${valid_html_tags[i]}${valid_attribute}>|<\/${valid_html_tags[i]}>`)
       }
       let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
       let matches = content.match(whitelistRegex)
@@ -54,16 +55,11 @@ export default {
       return processedString;
     },
     escapeHtml (string) {
-      return string.replace(/[<>'"]/g, (match) => {
-        switch (match) {
-          case "<":
-            return "&lt;";
-          case ">":
-            return "&gt;";
-          case "'":
-            return "&#039;";
-          default:
-            return "&quot;";
+      return string.replace(/[<>]/g, (match) => {
+        if (match === "<") {
+          return "&lt;";
+        } else {
+          return "&gt;"
         }
       })
     },
@@ -71,6 +67,10 @@ export default {
       let stack = []
       for (let i = 0; i < matches.length; i++) {
         let tag = matches[i]
+        if (tag in ["\"<\"", "\">\"", "\"</\"",]) {
+          // tag is the special exception written in for highlight.js
+          continue
+        }
         if (tag.substr(0, 2) === "</") {
           if (stack.length === 0 || stack.pop() !== this.extractTagName(tag)) {
             return false;

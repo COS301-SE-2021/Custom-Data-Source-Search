@@ -11,4 +11,7 @@ describe("whitelistStrip function", () => {
         let striped = SearchResultCard.methods.whitelistStrip(content)
         expect(striped).toEqual("<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>")
     })
+    it("Should allow whitelisted highlight.js snippets through", () => {
+        let content = "<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>"
+    })
 })
