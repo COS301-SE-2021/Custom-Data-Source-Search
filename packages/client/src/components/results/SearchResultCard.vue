@@ -60,12 +60,19 @@ export default {
       }
       return processedString;
     },
-    // Warning: This does not escape ' or " ensure it is only used to insert escaped code BETWEEN html tags, not INSIDE
     escapeHtml (string) {
-      let pre = document.createElement('pre');
-      let text = document.createTextNode(string);
-      pre.appendChild(text);
-      return pre.innerHTML;
+      return string.replace(/[<>'"]/g, (match) => {
+        switch (match) {
+          case "<":
+            return "&lt;";
+          case ">":
+            return "&gt;";
+          case "'":
+            return "&#039;";
+          default:
+            return "&quot;";
+        }
+      })
     },
     extractTagName(tag) {
       return tag.match(/[A-Za-z0-9]+/)[0];
