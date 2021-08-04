@@ -24,9 +24,12 @@
                 v-for="(r,i) in searchResults"
                 :key="i"
         >
-          <result-card-file v-if="r.type === 'file'" :result="r"/>
-          <result-card-folder v-if="r.type === 'folder'" :result="r"/>
-          <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
+          <search-result-card
+              :icon="r.icon"
+              :name="r.name"
+              :content="r.content"
+              :source="r.source"
+          />
         </div>
       </div>
   </div>
@@ -34,10 +37,8 @@
 
   <script>
     import axios from "axios";
-    import ResultCardFile from "../components/results/ResultCardFile";
-    import ResultCardFolder from "../components/results/ResultCardFolder";
-    import ResultCardWebpage from "../components/results/ResultCardWebpage";
     import SignIn from "@/components/popups/SignIn";
+    import SearchResultCard from "@/components/results/SearchResultCard";
     export default {
       name: "SearchBar",
       data() {
@@ -76,10 +77,8 @@
         }
       },
       components: {
-        SignIn,
-        ResultCardWebpage,
-        ResultCardFolder,
-        ResultCardFile
+        SearchResultCard,
+        SignIn
       }
     }
   </script>
