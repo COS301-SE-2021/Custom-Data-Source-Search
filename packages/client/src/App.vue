@@ -1,11 +1,11 @@
 <template>
 <div class="grid-app" v-if="this.$store.getters.getSignedIn">
   <div id="grid-div-1" >
-    <Sidebar  id="sidebar" :visible="true" :show-close-icon="false" :dismissable="true" :modal="false" >
+    <div id="sidebar" :visible="true" :show-close-icon="false" :dismissable="true" :modal="false" >
       <router-link title="Search" class="icon" to="/search"><em class="pi pi-search" style="font-size:1.5rem"  /></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem"  /></router-link>
       <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
-    </Sidebar>
+    </div>
   </div>
   <div id="grid-div-2">
     <router-view/>
@@ -39,9 +39,6 @@ input {
   border: none;
 }
 
-#sidebar {
-  width: 60px
-}
 
 .header{
   padding: 30px;
