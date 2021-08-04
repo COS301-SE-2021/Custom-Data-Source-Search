@@ -1,16 +1,19 @@
 <template>
-<div class="grid-app">
-  <div id="grid-div-1" >
-    <Sidebar id="Sidebar" v-if="navBar">
-      <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
-    </Sidebar>
-  </div>
-  <div id="grid-div-2">
-    <router-view/>
-  </div>
-</div>
+    <div class="grid-app">
+      <div class="nav-bar-top">
+        
+      </div>
+      <div id="grid-div-1" >
+        <Sidebar id="Sidebar" v-if="navBar">
+          <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+          <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+          <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
+        </Sidebar>
+      </div>
+      <div id="grid-div-2">
+        <router-view/>
+      </div>
+    </div>
 </template>
 
 <style lang="scss">
@@ -50,6 +53,7 @@ input {
 
 .grid-app {
   display: grid;
+  grid-template-rows: 1fr 30fr;
   grid-template-columns: 1fr 30fr;
   height: 100%;
 }
@@ -57,6 +61,7 @@ input {
 #grid-div-1 {
   padding-top: 50px;
   background-color: #1e1e1e;
+  grid-row-start: 2;
 }
 
 #grid-div-2 {
@@ -64,6 +69,13 @@ input {
   border-right-style: solid;
   border-left-style: solid;
   height: 100%;
+  grid-row-start: 2;
+}
+
+.nav-bar-top{
+  grid-column-start: 1;
+  grid-column-end: end;
+  background-color: #1e1e1e;
 }
 
 #nav {
