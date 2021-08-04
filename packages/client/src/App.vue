@@ -1,14 +1,16 @@
 <template>
     <div class="grid-app">
       <div class="nav-bar-top">
-        <button class="profile-button">Profile</button>
+        <button class="profile-button" @click="toggle">Profile test</button>
+        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 450px" :breakpoints="{'960px': '75vw'}">
+        </OverlayPanel>
       </div>
       <div id="grid-div-1" >
-        <Sidebar id="Sidebar" v-if="navBar">
-          <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
-        </Sidebar>
+        <div id="Sidebar" v-if="navBar">
+          <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+          <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+          <router-link title="Register" class="icon" to="/register"><i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="hideNavBar"/></router-link>
+        </div>
       </div>
       <div id="grid-div-2">
         <router-view/>
@@ -54,12 +56,12 @@ input {
 .grid-app {
   display: grid;
   grid-template-rows: 1fr 30fr;
-  grid-template-columns: 1fr 30fr;
+  grid-template-columns: 1.5fr 30fr;
   height: 100%;
 }
 
 #grid-div-1 {
-  padding-top: 50px;
+  padding-top: 20px;
   background-color: #1e1e1e;
   grid-row-start: 2;
 }
@@ -125,14 +127,18 @@ button {
 }
 
 .profile-button:hover{
-  //background-color: #343434;
   color: white;
+  cursor: pointer;
 }
 </style>
 
 <script>
+import OverlayPanel from 'primevue/overlaypanel';
+import Sidebar from "primevue/sidebar";
 export default {
   components: {
+    OverlayPanel,
+    Sidebar
   },
   data() {
     return{
@@ -143,7 +149,10 @@ export default {
   methods: {
     hideNavBar() {
       this.navBar = false;
-    }
+    },
+    toggle(event) {
+      this.$refs.op.toggle(event);
+    },
   }
 }
 
