@@ -5,19 +5,19 @@
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
                     <em class="pi pi-circle-on" />
-                    <span>LEGO</span>
+                    <span> {{backend.name}} </span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="checked"/>
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="backend.active"/>
                 </div>
             </div>
             <div class="expanded-backend-info" v-if="expand && !editBackendBool">
                 <div><i>Name: </i></div>
-                <div>LEGO</div>
+                <div> {{backend.name}} </div>
                 <div><i>Link: </i></div>
-                <div>www.linktoLegoBackend/156WqezhgHf</div>
+                <div> {{backend.link}} </div>
                 <div><i>Pass Key: </i></div>
-                <div>•••••••••••••••••••••••••••••••••••</div>
+                <div> {{backend.passKey}} </div>
                 <div></div>
                 <div>
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
@@ -25,11 +25,11 @@
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><i>Name: </i></div>
-                <input-text/>
+                <input-text :placeholder="backend.name"/>
                 <div><i>Link: </i></div>
-                <input-text/>
+                <input-text :placeholder="backend.link"/>
                 <div><i>Pass Key: </i></div>
-                <input-text/>
+                <input-text :placeholder="backend.passKey"/>
                 <div></div>
                 <div>
                     <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined">Save </Button>
@@ -52,9 +52,19 @@
                 checked: false,
                 expand: false,
                 editBackendBool: false,
-
+                name: '',
+                link: '',
+                passKey: ''
             }
         },
+        props: {
+          backend: Object
+        },
+        // mounted() {
+        //     this.name = backend.name;
+        //     this.link = backend.link;
+        //     this.passKey = backend.passKey;
+        // },
         methods: {
             change() {
                 this.expand = !this.expand;

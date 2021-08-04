@@ -12,7 +12,7 @@
         <div class="info-div">
             <span><b>Backends</b></span>
             <div>
-                <backend-card/>
+                <backend-card  :backend="testBackend"/>
             </div>
         </div>
     </div>
@@ -28,7 +28,13 @@
         },
         data () {
             return {
-                checked: false
+                testBackend: {
+                    active: true,
+                    name: 'LEGO',
+                //    color: 'Green',
+                    link: 'www.linktoLegoBackend/156WqezhgHf',
+                    passKey: '3w498thedfijvn234t098weyhf92iu4nt8y'
+                }
             }
         },
         name: "SettingsPage"
