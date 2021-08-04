@@ -129,9 +129,9 @@ class FileDataSourceService {
     }
 
 
-    async searchAllFileDataSources(searchString: string) : Promise<[FileOccurrence[], Error]> {
+    async searchAllFileDataSources(searchString: string): Promise<[FileOccurrence[], Error]> {
         try {
-            let response: any  = await axios.get(
+            let response: any = await axios.get(
                 'http://localhost:8983/solr/files/select?q=' + searchString
                 + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
@@ -149,7 +149,11 @@ class FileDataSourceService {
                     if (err) {
                         result.push({"type": "file", "source": key, "occurrences": stringOccurrences});
                     } else {
-                        result.push({"type": "file", "source": datasource.path + datasource.filename, "occurrences": stringOccurrences});
+                        result.push({
+                            "type": "file",
+                            "source": datasource.path + datasource.filename,
+                            "occurrences": stringOccurrences
+                        });
                     }
                 }
             }
@@ -203,25 +207,60 @@ class FileDataSourceService {
     getSearchSnippet(snippet: string, fileName: string) {
         let temp: string[] = fileName.split('.');
         let extension: string = temp[temp.length - 1];
-        if (["java","cpp","js","ts","vue","html","css","yml","json","xml","py","php"].indexOf(extension) != -1) {
+        if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
             let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
             if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g,'');
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g,'');
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
             snippet = hljs.highlight(snippet, {language: extension}).value;
             let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #88ffff;color: dimgrey;\u0027>' + searchTerm + '</span>')
         } else {
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g,'<em style=\u0027color: #88ffff\u0027>');
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g,'</em>');
+            snippet = this.escapeAndHighlight(snippet);
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '<em style=\u0027color: #88ffff\u0027>');
+            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '</em>');
         }
         return snippet;
     }
 
     escapeRegExp(string: string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    escapeAndHighlight(snippet: string) {
+        let result: string = "";
+        let openIndex: number = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>");
+        let closeIndex: number = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
+        while (openIndex != -1) {
+            result += this.escapeHtml(snippet.substring(0, openIndex));
+            result += '<em style=\u0027color: #88ffff\u0027>';
+            result += this.escapeHtml(snippet.substring(openIndex + 42, closeIndex));
+            result += '</em>';
+            snippet = snippet.substring(closeIndex + 43, snippet.length);
+            openIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>");
+            closeIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
+        }
+        result += snippet;
+        return result;
+    }
+
+    escapeHtml(string: string) {
+        return string.replace(new RegExp(/[<>&"']/g), (match) => {
+            switch (match) {
+                case "<":
+                    return "&lt"
+                case ">":
+                    return "&gt"
+                case "&":
+                    return "&amp;"
+                case '"':
+                    return "&quot";
+                default:
+                    return '&#039;';
+            }
+        })
     }
 }
 
