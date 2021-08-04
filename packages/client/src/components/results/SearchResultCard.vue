@@ -24,23 +24,16 @@ export default {
     content: String,
     source: String
   },
-  data() {
-    return {
-      whitelist: {
-        valid_html_tags: ["code", "div", "h1", "h2", "pre", "path", "span", "svg"],
-        valid_attribute_types: ["class", "d", "fill",  "height", "style", "viewBox", "width"],
-        valid_word_regex: "(?:[A-Za-z_][\\w\\s\\-:;,.]+)"
-      }
-    }
-  },
   methods: {
     whitelistStrip(content) {
-      let valid_word = this.valid_word_regex;
-      let valid_attribute_type = "(?:" + this.valid_attribute_types.join("|") + ")";
-      let valid_attribute =`(?:\\s${valid_attribute_type}=(?:"${valid_word}"|'${valid_word}'))*`;
+      let valid_word = "[A-Za-z_][\\w\\s\\-:;,.]+";
+      let valid_attribute_types = ["class", "d", "fill",  "height", "style", "viewBox", "width"];
+      let valid_html_tags = ["code", "div", "h1", "h2", "pre", "path", "span", "svg"];
+
+      let valid_attribute =`(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
       let whitelist_production_line = []
-      for (let i = 0; i < this.valid_html_tags.length; i++) {
-        let tag_name = this.valid_html_tags[i];
+      for (let i = 0; i < valid_html_tags.length; i++) {
+        let tag_name = valid_html_tags[i];
         whitelist_production_line.push(`<${tag_name}${valid_attribute}>|<\/${tag_name}>`)
       }
       let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
@@ -74,9 +67,6 @@ export default {
         }
       })
     },
-    extractTagName(tag) {
-      return tag.match(/[A-Za-z0-9]+/)[0];
-    },
     confirmThatAllOpenedTagsAreClosed(matches) {
       let stack = []
       for (let i = 0; i < matches.length; i++) {
@@ -90,6 +80,9 @@ export default {
         }
       }
       return stack.length === 0;
+    },
+    extractTagName(tag) {
+      return tag.match(/[A-Za-z0-9]+/)[0];
     }
   }
 }

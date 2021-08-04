@@ -52,7 +52,7 @@
       },
       methods: {
         escapeSpecialCharacters(query) {
-          return query.replace(/[{}/\[\]+-^.:()]/gm, function (match) {
+          return query.replace(/[{}/\[\]+-^.:()]/gm, (match) => {
             return '\\' + match
           })
         },
