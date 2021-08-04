@@ -31,7 +31,7 @@ import Tag from 'primevue/tag';
 import Chip from 'primevue/chip';
 import BadgeDirective from "primevue/badgedirective";
 import ColorPicker from 'primevue/colorpicker';
-
+import RadioButton from 'primevue/radiobutton';
 
 const app = createApp(App);
 app.use(router);
@@ -61,5 +61,6 @@ app.component("Tag", Tag);
 app.component("Chip", Chip);
 app.component("Dialog", Dialog);
 app.component("Password", Password);
-app.directive('badge', BadgeDirective)
-app.component('ColorPicker', ColorPicker)
+app.directive('badge', BadgeDirective);
+app.component('ColorPicker', ColorPicker);
+app.component('RadioButton', RadioButton);
