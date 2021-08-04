@@ -1,7 +1,7 @@
 <template>
     <div class="grid-app">
       <div class="nav-bar-top">
-        
+        <button class="profile-button">Profile</button>
       </div>
       <div id="grid-div-1" >
         <Sidebar id="Sidebar" v-if="navBar">
@@ -113,7 +113,21 @@ button {
   color: #41B3B2;
 }
 
+.profile-button{
+  background-color: #1e1e1e;
+  border: none;
+  color: rgba(255, 255, 255, 0.58);
+  float: right;
+  margin-right: 70px;
+  font-size: 15px;
+  transition-duration: 0.4s;
+  border-radius: 3px;
+}
 
+.profile-button:hover{
+  //background-color: #343434;
+  color: white;
+}
 </style>
 
 <script>
