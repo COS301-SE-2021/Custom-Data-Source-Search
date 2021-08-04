@@ -1,14 +1,14 @@
 <template>
   <div class="result-card">
-    <div class="card-icon" v-html="this.whitelistStrip(icon)">
+    <div class="card-icon" v-html="whitelistStrip(icon)">
     </div>
     <div>
       <h3>{{name}}</h3>
     </div>
-    <div class="content" v-html="this.whitelistStrip(content)">
+    <div class="content" v-html="whitelistStrip(content)">
     </div>
     <div>
-      {{source}}
+      <small>{{source}}</small>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     whitelistStrip(content) {
-      let valid_word = "[A-Za-z_][\\w\\s\\-:;,.]+";
+      let valid_word = "[A-Za-z_][\\w\\s\\-:;,#.]+";
       let valid_attribute_types = ["class", "d", "fill", "height", "style", "viewBox", "width"];
       let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
 
@@ -35,7 +35,9 @@ export default {
       }
       let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
       let matches = content.match(whitelistRegex)
-      if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
+      if (matches === null) {
+        return this.escapeHtml(content)
+      } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
         return this.escapeAllExceptMatches(content, matches);
       } else {
         return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"

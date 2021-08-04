@@ -64,7 +64,12 @@ class GeneralService {
                             // code block
                                 console.log("invalid datasource type");
                         }
-                        result.push({"type": currentObject["datasource_type"], "source": datasource.path + datasource.filename, "occurrences": occurrences});
+                        result.push({
+                                "icon": "<p>Hello</p>",
+                                "type": currentObject["datasource_type"],
+                                "source": datasource.path + datasource.filename,
+                                "content": "<pre>" + occurrences[0]["occurrenceString"] + "</pre>"
+                            });
                     }
                 }
             }
