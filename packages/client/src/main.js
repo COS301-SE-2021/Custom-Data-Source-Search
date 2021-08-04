@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import Vuex from "vuex";
 import router from './router'
+import store from "@/store/Store";
 import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmDialog from 'primevue/confirmdialog'
@@ -36,9 +38,11 @@ import BadgeDirective from "primevue/badgedirective";
 const app = createApp(App);
 app.use(router);
 //app.use(PrimeVue);
+app.use(store);
 app.use(ConfirmationService);
 app.use(ToastService);
 app.use(PrimeVue, {ripple: true});
+app.use(Vuex);
 app.mount('#app');
 app.component('ConfirmDialog', ConfirmDialog);
 app.component('Toast', Toast);

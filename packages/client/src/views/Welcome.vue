@@ -24,13 +24,17 @@ export default {
   components: {AddUserCard, UserCard},
   data () {
     return {
+      isSignedIn: true,
       users : [
-        {name : "Josh", email: "joshwalkerdev99@gmail.com", isActive: true},
+        {name : "Josh", email: "joshwalkerdev@gmail.com", isActive: true},
         {name : "Lauren", email: "lauren@gmail.com", isActive: false},
         {name : "Marike", email: "marike@gmail.com", isActive: true}
       ]
     }
 
+  },
+  mounted(){
+    this.isSignedIn = this.$store.getters.getSignedIn;
   }
 }
 </script>

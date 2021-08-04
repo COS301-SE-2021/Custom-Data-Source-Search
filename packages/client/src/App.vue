@@ -1,16 +1,17 @@
 <template>
-<div class="grid-app" v-if="navBar">
+<div class="grid-app" v-if="this.$store.getters.getSignedIn">
   <div id="grid-div-1" >
-    <Sidebar id="Sidebar">
-      <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
+    <Sidebar  id="sidebar" :visible="true" :show-close-icon="false" :dismissable="true" :modal="false" >
+      <router-link title="Search" class="icon" to="/search"><em class="pi pi-search" style="font-size:1.5rem"  /></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem"  /></router-link>
+      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
     </Sidebar>
   </div>
   <div id="grid-div-2">
     <router-view/>
   </div>
 </div>
+
   <router-view v-else/>
 </template>
 
@@ -38,8 +39,8 @@ input {
   border: none;
 }
 
-#Sidebar {
-  max-width: 30px
+#sidebar {
+  width: 60px
 }
 
 .header{
@@ -106,6 +107,7 @@ button {
 </style>
 
 <script>
+
 export default {
   components: {
   },

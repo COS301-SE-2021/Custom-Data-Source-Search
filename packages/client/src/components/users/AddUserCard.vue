@@ -1,9 +1,9 @@
 <template>
-  <div class="user-container p-ripple" v-ripple>
+  <div class="user-container p-ripple" v-ripple @click="addUser">
     <div class="image-container">
 
       <div class="image-ring">
-        <i class="pi pi-plus add-icon" style="fontSize: 3rem"></i>
+        <i class="pi pi-plus add-icon" style="fontSize: 2.2vw"></i>
       </div>
 
     </div>
@@ -14,7 +14,12 @@
 
 <script>
 export default {
-  name: "AddUserCard"
+  name: "AddUserCard",
+  methods : {
+    addUser(){
+      this.$router.push('Register');
+    }
+  }
 }
 </script>
 

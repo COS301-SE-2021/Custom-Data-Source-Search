@@ -1,6 +1,6 @@
 <template>
 
-  <div class="user-container p-ripple" v-ripple>
+  <div class="user-container p-ripple" v-ripple @click="signIn">
     <div class="image-container">
 
       <div class="image-ring " v-bind:class="{ active: userDetails.isActive }">
@@ -19,6 +19,13 @@ export default {
   name: "UserCard",
   props: {
     userDetails: Object
+  },
+  methods: {
+    signIn() {
+      console.log("ayyyyyyyyyy")
+      this.$router.push('Search');
+      this.$store.commit("setSignedIn", true)
+    }
   }
 }
 </script>
@@ -89,7 +96,7 @@ export default {
 
 .name-initial {
 
-  color: #cf4c44;
+  color: #ffffff;
   font-size: 2.5vw;
   margin: auto;
   width: 100%;
