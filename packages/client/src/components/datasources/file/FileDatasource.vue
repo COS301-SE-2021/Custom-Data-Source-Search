@@ -1,25 +1,25 @@
 <template>
   <div id="container">
     <div class="grid">
-      <div v-on:click="$emit('expandText')">
+      <div v-on:click="$emit('expandFile')">
         <icon-file />
       </div>
-      <div v-on:click="$emit('expandText')" id="header">Text Files</div>
+      <div v-on:click="$emit('expandFile')" id="header">Files</div>
       <div>
         <icon-min @click="add=!add" class="add" v-if="add"/>
         <icon-add @click="add=!add" class="add" v-else />
       </div>
     </div>
     <div v-if="add">
-      <add-text-datasource @add-text="$emit('addText')"/>
+      <add-file-datasource @add-File="$emit('addFile')"/>
     </div>
-    <div v-if="expanded" id="text-datasources">
+    <div v-if="expanded" id="file-datasources">
       <data-source-card
           v-for="(item, index) in dataSources"
           :key=index
           :title="item.path + item.filename"
           :id="item.uuid"
-          endpoint="http://localhost:3001/textdatasources"
+          endpoint="http://localhost:3001/filedatasources"
       >
       </data-source-card>
     </div>
@@ -28,7 +28,7 @@
 
 <script>
 import DataSourceCard from "../DataSourceCard";
-import AddTextDatasource from "@/components/datasources/text/AddTextDatasource";
+import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
 import IconFile from "../../icons/IconFile";
 import axios from "axios";
 import IconMin from "../../icons/IconMin";
@@ -48,11 +48,11 @@ export default {
     IconMin,
     IconFile,
     DataSourceCard,
-    AddTextDatasource
+    AddFileDatasource
   },
   methods: {
     fetchDataSources() {
-      axios.get("http://localhost:3001/textdatasources").then(
+      axios.get("http://localhost:3001/filedatasources").then(
           resp => {
             console.log(resp.data)
             this.dataSources = resp.data
@@ -86,10 +86,6 @@ export default {
   padding-top: 20px;
 }
 
-.expand {
-  float: right;
-}
-
 .grid {
   display: grid;
   grid-template-columns: 1fr 10fr 1fr;
@@ -103,7 +99,7 @@ export default {
   padding-bottom: 8px;
 }
 
-#text-datasources {
+#file-datasources {
   padding-bottom: 10px;
 }
 

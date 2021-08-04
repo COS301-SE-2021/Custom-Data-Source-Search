@@ -300,7 +300,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .p-password {
         border-radius: 10px;
     }
