@@ -24,25 +24,27 @@ export default {
     content: String,
     source: String
   },
+  data() {
+    return {
+      whitelist: {
+        valid_html_tags: ["code", "div", "h1", "h2", "pre", "path", "span", "svg"],
+        valid_attribute_types: ["class", "d", "fill",  "height", "style", "viewBox", "width"],
+        valid_word_regex: "(?:[A-Za-z_][\\w\\s\\-:;,.]+)"
+      }
+    }
+  },
   methods: {
     whitelistStrip(content) {
-      let valid_word = `(?:[A-Za-z_][\\w\\s\\-:;,.()]+)`
-      let valid_attribute_type = `(?:class|style|href|xmlns|height|viewBox|width)`
-      let valid_attribute =`(?:\\s${valid_attribute_type}=(?:"${valid_word}"|'${valid_word}'))*`
-      let whitelist = new RegExp(
-          [ `(<div${valid_attribute}>|<\/div>|`,
-            `<h1${valid_attribute}>|<\/h1>|`,
-            `<h2${valid_attribute}>|<\/h2>|`,
-            `<svg${valid_attribute}>|<\/svg>|`,
-            `<span${valid_attribute}>|<\/span>|`,
-            `<code${valid_attribute}>|<\/code>|`,
-            `<pre${valid_attribute}>|<\/pre>|`,
-            `<p${valid_attribute}>|<\/p>|`,
-            `<path${valid_attribute}>|<\/path>)`
-          ].join(''),
-          "g"
-      )
-      let matches = content.match(whitelist)
+      let valid_word = this.valid_word_regex;
+      let valid_attribute_type = "(?:" + this.valid_attribute_types.join("|") + ")";
+      let valid_attribute =`(?:\\s${valid_attribute_type}=(?:"${valid_word}"|'${valid_word}'))*`;
+      let whitelist_production_line = []
+      for (let i = 0; i < this.valid_html_tags.length; i++) {
+        let tag_name = this.valid_html_tags[i];
+        whitelist_production_line.push(`<${tag_name}${valid_attribute}>|<\/${tag_name}>`)
+      }
+      let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
+      let matches = content.match(whitelistRegex)
       if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
         return this.escapeAllExceptMatches(content, matches);
       } else {
@@ -52,7 +54,6 @@ export default {
     escapeAllExceptMatches(content, matches) {
       let processedString = "";
       for (let i = 0; i < matches.length; i++) {
-        console.log(content)
         let start_index_of_whitelisted_section = content.search(matches[i]);
         processedString += this.escapeHtml(content.substr(0, start_index_of_whitelisted_section)) + matches[i];
         content = content.substr(start_index_of_whitelisted_section + matches[i].length);

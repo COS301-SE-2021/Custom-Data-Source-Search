@@ -1,7 +1,6 @@
 <template>
     <div class="icon-base">
         <svg
-                :xmlns="xmlns"
                 :title="iconTitle"
                 :height="height"
                 :width="width"
