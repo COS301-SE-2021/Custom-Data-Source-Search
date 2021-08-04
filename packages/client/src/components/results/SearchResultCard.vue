@@ -29,11 +29,9 @@ export default {
       let valid_word = "[A-Za-z_][\\w\\s\\-:;,.]+";
       let valid_attribute_types = ["class", "d", "fill", "height", "style", "viewBox", "width"];
       let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
-      // special case where strings of code like "<" and "</" and ">" should be allowed through for highlight.js to work
-      let highlight_js_valid_html_partial = "\"[<>|\"|\"<\/\""
 
       let valid_attribute =`(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
-      let whitelist_production_line = [].push(highlight_js_valid_html_partial)
+      let whitelist_production_line = []
       for (let i = 0; i < valid_html_tags.length; i++) {
         whitelist_production_line.push(`<${valid_html_tags[i]}${valid_attribute}>|<\/${valid_html_tags[i]}>`)
       }
@@ -67,10 +65,6 @@ export default {
       let stack = []
       for (let i = 0; i < matches.length; i++) {
         let tag = matches[i]
-        if (tag in ["\"<\"", "\">\"", "\"</\"",]) {
-          // tag is the special exception written in for highlight.js
-          continue
-        }
         if (tag.substr(0, 2) === "</") {
           if (stack.length === 0 || stack.pop() !== this.extractTagName(tag)) {
             return false;
