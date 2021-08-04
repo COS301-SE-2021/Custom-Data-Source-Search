@@ -13,7 +13,7 @@
             </div>
             <div class="expanded-backend-info" v-if="expand && !editBackendBool">
                 <div><i>Name: </i></div>
-                <div> {{backend.name}} </div>
+                <div> {{ $store.state.users[0].backends[0].name }} </div>
                 <div><i>Link: </i></div>
                 <div> {{backend.link}} </div>
                 <div><i>Pass Key: </i></div>
@@ -25,11 +25,11 @@
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><i>Name: </i></div>
-                <input-text :placeholder="backend.name"/>
+                <input-text :model-value="backend.name"/>
                 <div><i>Link: </i></div>
-                <input-text :placeholder="backend.link"/>
+                <input-text :model-value="backend.link"/>
                 <div><i>Pass Key: </i></div>
-                <input-text :placeholder="backend.passKey"/>
+                <input-text :model-value="backend.passKey"/>
                 <div></div>
                 <div>
                     <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined">Save </Button>
@@ -49,6 +49,7 @@
         name: "backendCard",
         data () {
             return {
+
                 checked: false,
                 expand: false,
                 editBackendBool: false,
@@ -60,11 +61,6 @@
         props: {
           backend: Object
         },
-        // mounted() {
-        //     this.name = backend.name;
-        //     this.link = backend.link;
-        //     this.passKey = backend.passKey;
-        // },
         methods: {
             change() {
                 this.expand = !this.expand;
@@ -81,6 +77,7 @@
             saveChanges() {
                 this.expand = true;
                 this.editBackendBool = false;
+                this.$
             },
             cancelChanges() {
                 this.expand = true;

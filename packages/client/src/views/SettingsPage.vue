@@ -12,7 +12,7 @@
         <div class="info-div">
             <span><b>Backends</b></span>
             <div>
-                <backend-card  :backend="testBackend"/>
+                <backend-card @update-backend="updateBackend()" :backend="testBackend"/>
             </div>
         </div>
     </div>
@@ -37,7 +37,12 @@
                 }
             }
         },
-        name: "SettingsPage"
+        name: "SettingsPage",
+        methods: {
+            updateBackend ( newInfo ) {
+                this.testBackend = newInfo;
+            }
+        }
     }
 </script>
 

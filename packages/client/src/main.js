@@ -30,13 +30,14 @@ import OverlayPanel from 'primevue/overlaypanel';
 import Tag from 'primevue/tag';
 import Chip from 'primevue/chip';
 import BadgeDirective from "primevue/badgedirective";
-
+import store from './store/Store';
 
 const app = createApp(App);
 app.use(router);
 app.use(PrimeVue);
 app.use(ConfirmationService);
 app.use(ToastService);
+app.use(store);
 app.mount('#app');
 app.component('ConfirmDialog', ConfirmDialog);
 app.component('Toast', Toast);
