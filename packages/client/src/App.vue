@@ -2,7 +2,7 @@
     <div class="grid-app">
       <div class="nav-bar-top">
         <button class="profile-button" @click="toggle">Profile</button>
-        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 450px" :breakpoints="{'960px': '75vw'}">
+        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 450px" :breakpoints="{'960px': '50vw'}">
         </OverlayPanel>
       </div>
       <div id="grid-div-1" >
@@ -99,7 +99,6 @@ input {
   padding: 10px;
 }
 
-
 button {
   border: none;
   border-radius: 12px;
@@ -129,6 +128,10 @@ button {
 .profile-button:hover{
   color: white;
   cursor: pointer;
+}
+
+.profile-button:focus{
+  color: white;
 }
 </style>
 
