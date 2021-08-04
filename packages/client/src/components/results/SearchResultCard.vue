@@ -26,23 +26,17 @@ export default {
   },
   methods: {
     whitelistStrip(content) {
-      let valid_word = `(?:[A-Za-z_][\\w\\s\\-:;,.()]+)`
-      let valid_attribute_type = `(?:class|style|href|xmlns|height|viewBox|width)`
-      let valid_attribute =`(?:\\s${valid_attribute_type}=(?:"${valid_word}"|'${valid_word}'))*`
-      let whitelist = new RegExp(
-          [ `(<div${valid_attribute}>|<\/div>|`,
-            `<h1${valid_attribute}>|<\/h1>|`,
-            `<h2${valid_attribute}>|<\/h2>|`,
-            `<svg${valid_attribute}>|<\/svg>|`,
-            `<span${valid_attribute}>|<\/span>|`,
-            `<code${valid_attribute}>|<\/code>|`,
-            `<pre${valid_attribute}>|<\/pre>|`,
-            `<p${valid_attribute}>|<\/p>|`,
-            `<path${valid_attribute}>|<\/path>)`
-          ].join(''),
-          "g"
-      )
-      let matches = content.match(whitelist)
+      let valid_word = "[A-Za-z_][\\w\\s\\-:;,.]+";
+      let valid_attribute_types = ["class", "d", "fill", "height", "style", "viewBox", "width"];
+      let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
+
+      let valid_attribute =`(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
+      let whitelist_production_line = []
+      for (let i = 0; i < valid_html_tags.length; i++) {
+        whitelist_production_line.push(`<${valid_html_tags[i]}${valid_attribute}>|<\/${valid_html_tags[i]}>`)
+      }
+      let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
+      let matches = content.match(whitelistRegex)
       if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
         return this.escapeAllExceptMatches(content, matches);
       } else {
@@ -52,22 +46,20 @@ export default {
     escapeAllExceptMatches(content, matches) {
       let processedString = "";
       for (let i = 0; i < matches.length; i++) {
-        console.log(content)
         let start_index_of_whitelisted_section = content.search(matches[i]);
         processedString += this.escapeHtml(content.substr(0, start_index_of_whitelisted_section)) + matches[i];
         content = content.substr(start_index_of_whitelisted_section + matches[i].length);
       }
       return processedString;
     },
-    // Warning: This does not escape ' or " ensure it is only used to insert escaped code BETWEEN html tags, not INSIDE
     escapeHtml (string) {
-      let pre = document.createElement('pre');
-      let text = document.createTextNode(string);
-      pre.appendChild(text);
-      return pre.innerHTML;
-    },
-    extractTagName(tag) {
-      return tag.match(/[A-Za-z0-9]+/)[0];
+      return string.replace(/[<>]/g, (match) => {
+        if (match === "<") {
+          return "&lt;";
+        } else {
+          return "&gt;"
+        }
+      })
     },
     confirmThatAllOpenedTagsAreClosed(matches) {
       let stack = []
@@ -82,6 +74,9 @@ export default {
         }
       }
       return stack.length === 0;
+    },
+    extractTagName(tag) {
+      return tag.match(/[A-Za-z0-9]+/)[0];
     }
   }
 }

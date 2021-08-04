@@ -2,9 +2,9 @@ import SearchResultCard from "@/components/results/SearchResultCard";
 
 describe("whitelistStrip function", () => {
     it("Should return small correct string unchanged", () => {
-        let content = "<div><h1>Hello</h1><h2>World</h2><div style='color: red'></div></div>"
+        let content = "<div><h1>Hello</h1><h2>Wor<ld</h2><div style='color: red'></div></div>"
         let result = SearchResultCard.methods.whitelistStrip(content)
-        expect(result).toEqual("<div><h1>Hello</h1><h2>World</h2><div style='color: red'></div></div>")
+        expect(result).toEqual("<div><h1>Hello</h1><h2>Wor&lt;ld</h2><div style='color: red'></div></div>")
     })
     it("Should not return a malformed html string", () => {
         let content = "<div onclick=\"alert(this)\"><h1>Hello</h1><h2>World</h2><div style='color: red'></div></div>"
