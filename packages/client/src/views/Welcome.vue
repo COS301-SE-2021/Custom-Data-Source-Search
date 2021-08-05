@@ -16,7 +16,6 @@
 </template>
 
 <script>
-//import AddUser from "@/components/users/UserCard";
 import UserCard from "@/components/users/UserCard";
 import AddUserCard from "@/components/users/AddUserCard";
 export default {
