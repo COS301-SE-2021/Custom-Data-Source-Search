@@ -1,16 +1,18 @@
 <template>
-<div class="grid-app">
+<div class="grid-app" v-if="this.$store.getters.getSignedIn">
   <div id="grid-div-1" >
-    <Sidebar id="Sidebar" v-if="navBar">
-      <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem" aria-hiddn="true" v-on:click="hideNavBar"/></router-link>
-    </Sidebar>
+    <div id="sidebar" :visible="true" :show-close-icon="false" :dismissable="true" :modal="false" >
+      <router-link title="Search" class="icon" to="/search"><em class="pi pi-search" style="font-size:1.5rem"  /></router-link>
+      <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem"  /></router-link>
+      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
+    </div>
   </div>
   <div id="grid-div-2">
     <router-view/>
   </div>
 </div>
+
+  <router-view v-else/>
 </template>
 
 <style lang="scss">
@@ -37,9 +39,6 @@ input {
   border: none;
 }
 
-#Sidebar {
-  max-width: 30px
-}
 
 .header{
   padding: 30px;
@@ -105,13 +104,14 @@ button {
 </style>
 
 <script>
+
 export default {
   components: {
   },
   data() {
     return{
       name: "Data Sleuth",
-      navBar: true
+      navBar: false
     }
   },
   methods: {
