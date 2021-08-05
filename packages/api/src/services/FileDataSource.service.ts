@@ -216,7 +216,7 @@ class FileDataSourceService {
             snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
             snippet = hljs.highlight(snippet, {language: extension}).value;
             let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
-            snippet = snippet.replace(reg, '<span style=\u0027background-color: #88ffff;color: dimgrey;\u0027>' + searchTerm + '</span>')
+            snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>')
         } else {
             snippet = this.escapeAndHighlight(snippet);
         }
@@ -233,9 +233,9 @@ class FileDataSourceService {
         let closeIndex: number = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
         while (openIndex != -1) {
             result += this.escapeHtml(snippet.substring(0, openIndex));
-            result += '<em style=\u0027color: #88ffff\u0027>';
+            result += '<span style=\u0027background-color: #0067e6;color: white;\u0027>';
             result += this.escapeHtml(snippet.substring(openIndex + 42, closeIndex));
-            result += '</em>';
+            result += '</span>';
             snippet = snippet.substring(closeIndex + 43, snippet.length);
             openIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>");
             closeIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
