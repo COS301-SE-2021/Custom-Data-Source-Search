@@ -8,9 +8,9 @@ export default createStore({
                 email: 'exaple@funsail.co.za',
                 backends: [
                     {
-                        index: 1,
+                        index: 0,
                         name: 'BIRDS',
-                        active: 'true',
+                        active: true,
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
                     }
@@ -19,6 +19,14 @@ export default createStore({
         ]
     },
     getters:{},
-    mutations: {},
+    mutations: {
+        editBackend(state, payload) {
+            console.log ('Payload name: ' + payload.name);
+            state.users[payload.userIndex].backends[payload.backendIndex].name = payload.name;
+            state.users[payload.userIndex].backends[payload.backendIndex].link = payload.link;
+            state.users[payload.userIndex].backends[payload.backendIndex].passKey = payload.passKey;
+
+        }
+    },
     actions:{}
 })

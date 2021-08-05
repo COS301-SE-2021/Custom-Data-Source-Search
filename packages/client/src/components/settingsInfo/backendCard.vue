@@ -5,19 +5,19 @@
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
                     <em class="pi pi-circle-on" />
-                    <span> {{backend.name}} </span>
+                    <span> {{$store.state.users[userIndex].backends[backendIndex].name}} </span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="backend.active"/>
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="$store.state.users[userIndex].backends[backendIndex].active"/>
                 </div>
             </div>
             <div class="expanded-backend-info" v-if="expand && !editBackendBool">
                 <div><i>Name: </i></div>
-                <div> {{ $store.state.users[0].backends[0].name }} </div>
+                <div> {{ $store.state.users[userIndex].backends[backendIndex].name }} </div>
                 <div><i>Link: </i></div>
-                <div> {{backend.link}} </div>
+                <div> {{$store.state.users[userIndex].backends[backendIndex].link}} </div>
                 <div><i>Pass Key: </i></div>
-                <div> {{backend.passKey}} </div>
+                <div> {{$store.state.users[userIndex].backends[backendIndex].passKey}} </div>
                 <div></div>
                 <div>
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
@@ -25,11 +25,11 @@
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><i>Name: </i></div>
-                <input-text :model-value="backend.name"/>
+                <input-text v-model="tempName"/>
                 <div><i>Link: </i></div>
-                <input-text :model-value="backend.link"/>
+                <input-text v-model="tempLink"/>
                 <div><i>Pass Key: </i></div>
-                <input-text :model-value="backend.passKey"/>
+                <input-text v-model="tempPassKey"/>
                 <div></div>
                 <div>
                     <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined">Save </Button>
@@ -49,19 +49,44 @@
         name: "backendCard",
         data () {
             return {
-
+                backend: {
+                    userIndex: null,
+                    backendIndex: null,
+                    name:'',
+                    link:'',
+                    passKey:''
+                },
                 checked: false,
                 expand: false,
                 editBackendBool: false,
-                name: '',
-                link: '',
-                passKey: ''
+                tempName: '',
+                tempLink: '',
+                tempPassKey: ''
             }
         },
         props: {
-          backend: Object
+          userIndex: {
+              type: Number,
+              default: null
+          },
+          backendIndex: {
+              type: Number,
+              default: null
+          }
+
+        },
+        mounted() {
+            this.setTempVars();
         },
         methods: {
+            setTempVars () {
+                this.tempName = this.$store.state.users[this.userIndex].backends[this.backendIndex].name;
+                // console.log(this.$store.state.users[this.userIndex].backends[this.backendIndex].name);
+                console.log('Initializer called');
+                console.log ('Temp: ' + this.tempName);
+                this.tempLink = this.$store.state.users[this.userIndex].backends[this.backendIndex].link;
+                this.tempPassKey = this.$store.state.users[this.userIndex].backends[this.backendIndex].passKey;
+            },
             change() {
                 this.expand = !this.expand;
                 if (this.editBackendBool) {
@@ -69,15 +94,19 @@
                 }
             },
             editBackend() {
-                console.log(this.edit);
-                console.log(this.change);
+                console.log ("edit birds called" );
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
+                console.log ('Temp: ' + this.tempName);
             },
             saveChanges() {
+                console.log("save changes called");
                 this.expand = true;
                 this.editBackendBool = false;
-                this.$
+                console.log(this.tempName, this.tempLink, this.tempPassKey);
+                this.$store.commit("editBackend", {userIndex: 0, backendIndex: this.backendIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey});
+                console.log ('Temporary name: ' + this.name);
+                this.setTempVars();
             },
             cancelChanges() {
                 this.expand = true;

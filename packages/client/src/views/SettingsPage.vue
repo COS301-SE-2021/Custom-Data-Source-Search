@@ -12,7 +12,11 @@
         <div class="info-div">
             <span><b>Backends</b></span>
             <div>
-                <backend-card @update-backend="updateBackend()" :backend="testBackend"/>
+                <backend-card
+                        @update-backend="updateBackend()"
+                        :user-index="testBackend.userIndex"
+                        :backend-index="testBackend.backendIndex"
+                />
             </div>
         </div>
     </div>
@@ -29,11 +33,8 @@
         data () {
             return {
                 testBackend: {
-                    active: true,
-                    name: 'LEGO',
-                //    color: 'Green',
-                    link: 'www.linktoLegoBackend/156WqezhgHf',
-                    passKey: '3w498thedfijvn234t098weyhf92iu4nt8y'
+                    userIndex: 0,
+                    backendIndex: 0
                 }
             }
         },
