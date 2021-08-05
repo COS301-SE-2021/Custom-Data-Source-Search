@@ -27,7 +27,7 @@
           <search-result-card
               :icon="r.icon"
               :name="r.name"
-              :content="r.content"
+              :occurrences="r.occurrences"
               :source="r.source"
           />
         </div>

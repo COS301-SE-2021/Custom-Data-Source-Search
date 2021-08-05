@@ -3,12 +3,19 @@
     <div class="card-icon" v-html="whitelistStrip(icon)">
     </div>
     <div>
-      <h3>{{name}}</h3>
+      <h3>{{ name }}</h3>
     </div>
-    <div class="content" v-html="whitelistStrip(content)">
+    <div class="content">
+      <div
+          v-for="(occurrence, i) in occurrences"
+          :key="i"
+      >
+        <div v-html="whitelistStrip(occurrence.occurrenceString)"/>
+        <div>--------------------------------</div>
+      </div>
     </div>
     <div>
-      <small>{{source}}</small>
+      <small>{{ source }}</small>
     </div>
   </div>
 </template>
@@ -19,7 +26,7 @@ export default {
   props: {
     icon: String,
     name: String,
-    content: String,
+    occurrences: [],
     source: String
   },
   methods: {
@@ -28,7 +35,7 @@ export default {
       let valid_attribute_types = ["class", "d", "fill", "height", "style", "viewBox", "width"];
       let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
 
-      let valid_attribute =`(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
+      let valid_attribute = `(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
       let whitelist_production_line = []
       for (let i = 0; i < valid_html_tags.length; i++) {
         whitelist_production_line.push(`<${valid_html_tags[i]}${valid_attribute}>|<\/${valid_html_tags[i]}>`)
@@ -52,7 +59,7 @@ export default {
       }
       return processedString;
     },
-    escapeHtml (string) {
+    escapeHtml(string) {
       return string.replace(/[<>]/g, (match) => {
         if (match === "<") {
           return "&lt;";
@@ -83,29 +90,30 @@ export default {
 </script>
 
 <style scoped>
-  .result-card {
-    background-color: rgba(0, 0, 0, 0.2);
-    text-align: left;
-    max-width: 1000px;
-    margin: 10px auto auto;
-    border-radius: 10px;
-    padding: 10px 20px;
-  }
-  h1 {
+.result-card {
+  background-color: rgba(0, 0, 0, 0.2);
+  text-align: left;
+  max-width: 1000px;
+  margin: 10px auto auto;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+h1 {
   font-size: 2em;
-  }
+}
 
-  h2 {
+h2 {
   font-size: 1.5em;
-  }
+}
 
-  p {
+p {
   font-size: 1em;
-  }
+}
 
-  .card-icon {
+.card-icon {
   text-align: right;
   float: right;
   padding-top: 10px;
-  }
+}
 </style>
