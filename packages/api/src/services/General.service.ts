@@ -68,7 +68,7 @@ class GeneralService {
                                 "icon": "<p>Hello</p>",
                                 "type": currentObject["datasource_type"],
                                 "source": datasource.path + datasource.filename,
-                                "content": "<pre>" + occurrences[0]["occurrenceString"] + "</pre>"
+                                "content": occurrences[0]["occurrenceString"]
                             });
                     }
                 }
