@@ -3,7 +3,7 @@
     <div class="image-container">
 
       <div class="image-ring">
-        <i class="pi pi-plus add-icon" style="fontSize: 2.2vw"></i>
+        <em class="pi pi-plus add-icon" style="font-size: 2.2vw"></em>
       </div>
 
     </div>

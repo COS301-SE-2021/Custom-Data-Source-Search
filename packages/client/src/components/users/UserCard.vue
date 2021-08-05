@@ -85,7 +85,7 @@ export default {
       linear-gradient(#2d2d2d, #2d2d2d) padding-box,
       linear-gradient(to right bottom, #777777, #4d4d4d) border-box;
   border-radius: 50em;
-  border: 4px solid transparent;
+  border: 3px solid transparent;
 }
 
 .active {
@@ -94,7 +94,7 @@ export default {
       linear-gradient(#2d2d2d, #2d2d2d) padding-box,
       linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
   border-radius: 50em;
-  border: 4px solid transparent;
+  border: 3px solid transparent;
 }
 
 .name-initial {
