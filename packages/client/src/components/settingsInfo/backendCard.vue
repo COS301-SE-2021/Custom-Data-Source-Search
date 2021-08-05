@@ -5,19 +5,33 @@
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
                     <em class="pi pi-circle-on" />
-                    <span> {{$store.state.users[userIndex].backends[backendIndex].name}} </span>
+<!--                    <span> {{$store.state.users[userIndex].backends[backendIndex].name}} </span>-->
+                    <span> {{fedInBackend.name}} </span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="$store.state.users[userIndex].backends[backendIndex].active"/>
+<!--                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="$store.state.users[userIndex].backends[backendIndex].active"/>-->
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="fedInBackend.active"/>
                 </div>
             </div>
+<!--            <div class="expanded-backend-info" v-if="expand && !editBackendBool">-->
+<!--                <div><i>Name: </i></div>-->
+<!--                <div> {{ $store.state.users[userIndex].backends[backendIndex].name }} </div>-->
+<!--                <div><i>Link: </i></div>-->
+<!--                <div> {{$store.state.users[userIndex].backends[backendIndex].link}} </div>-->
+<!--                <div><i>Pass Key: </i></div>-->
+<!--                <div> {{$store.state.users[userIndex].backends[backendIndex].passKey}} </div>-->
+<!--                <div></div>-->
+<!--                <div>-->
+<!--                    <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="expanded-backend-info" v-if="expand && !editBackendBool">
                 <div><i>Name: </i></div>
-                <div> {{ $store.state.users[userIndex].backends[backendIndex].name }} </div>
+                <div> {{ fedInBackend.name }} </div>
                 <div><i>Link: </i></div>
-                <div> {{$store.state.users[userIndex].backends[backendIndex].link}} </div>
+                <div> {{fedInBackend.link}} </div>
                 <div><i>Pass Key: </i></div>
-                <div> {{$store.state.users[userIndex].backends[backendIndex].passKey}} </div>
+                <div> {{fedInBackend.passKey}} </div>
                 <div></div>
                 <div>
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
@@ -57,36 +71,52 @@
                     passKey:''
                 },
                 checked: false,
-                expand: false,
-                editBackendBool: false,
                 tempName: '',
                 tempLink: '',
-                tempPassKey: ''
+                tempPassKey: '',
+                editBackendBool: false,
+                expand: false
             }
         },
         props: {
           userIndex: {
               type: Number,
-              default: null
+              default: 0
           },
           backendIndex: {
               type: Number,
-              default: null
+              default: 0
+          },
+          newBackend: {
+              type: Boolean,
+              default: false
+          },
+          fedInBackend: {
+              name: String,
+              active: Boolean,
+              link: String,
+              passKey: String
           }
-
         },
         mounted() {
             this.setTempVars();
+
+            // if (this.newBackend) { clearData(); }
+            //
+            // function clearData() {
+            //
+            // }
         },
         methods: {
             setTempVars () {
-                this.tempName = this.$store.state.users[this.userIndex].backends[this.backendIndex].name;
-                // console.log(this.$store.state.users[this.userIndex].backends[this.backendIndex].name);
+                // this.tempName = this.$store.state.users[this.userIndex].backends[this.backendIndex].name;
+                this.tempName = this.fedInBackend.name;
                 console.log('Initializer called');
                 console.log ('Temp: ' + this.tempName);
-                this.tempLink = this.$store.state.users[this.userIndex].backends[this.backendIndex].link;
-                this.tempPassKey = this.$store.state.users[this.userIndex].backends[this.backendIndex].passKey;
-            },
+                // this.tempLink = this.$store.state.users[this.userIndex].backends[this.backendIndex].link;
+                // this.tempPassKey = this.$store.state.users[this.userIndex].backends[this.backendIndex].passKey;
+                this.tempLink = this.fedInBackend.link;
+                this.tempPassKey = this.fedInBackend.passKey;            },
             change() {
                 this.expand = !this.expand;
                 if (this.editBackendBool) {

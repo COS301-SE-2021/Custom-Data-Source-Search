@@ -45,7 +45,6 @@
     .user-information {
         max-width: 600px;
         margin-top: 0.5%;
-        font-size: small;
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
