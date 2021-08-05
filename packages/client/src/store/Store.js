@@ -1,7 +1,8 @@
 import {createStore} from 'vuex'
 
-export default createStore({
+const store = createStore({
     state:{
+        signedIn : false,
         users: [
             {
                 name: 'Marike',
@@ -18,7 +19,11 @@ export default createStore({
             }
         ]
     },
-    getters:{},
+    getters:{
+        getSignedIn(state){
+            return state.signedIn;
+        }
+    },
     mutations: {
         editBackend(state, payload) {
             console.log ('Payload name: ' + payload.name);
@@ -26,7 +31,12 @@ export default createStore({
             state.users[payload.userIndex].backends[payload.backendIndex].link = payload.link;
             state.users[payload.userIndex].backends[payload.backendIndex].passKey = payload.passKey;
 
+        },
+        setSignedIn(state, payload){
+            state.signedIn = payload;
         }
     },
     actions:{}
 })
+
+export default store;
