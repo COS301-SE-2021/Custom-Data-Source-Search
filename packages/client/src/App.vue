@@ -133,18 +133,28 @@ button {
 .profile-button:focus{
   color: white;
 }
+
+.p-overlaypanel:after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  transform: rotate(-45deg);
+  background: #262626;
+  position: absolute;
+  z-index: -1;
+  top: -10px;
+  right: 10px;
+}
 </style>
 
 <script>
 import OverlayPanel from 'primevue/overlaypanel';
-import Sidebar from "primevue/sidebar";
 export default {
   components: {
     OverlayPanel,
-    Sidebar
   },
   data() {
-    return{
+    return {
       name: "Data Sleuth",
       navBar: true
     }
@@ -156,8 +166,22 @@ export default {
     toggle(event) {
       this.$refs.op.toggle(event);
     },
+    something(event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Are you sure you want to proceed?',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          //callback to execute when user confirms the action
+        },
+        reject: () => {
+          //callback to execute when user rejects the action
+        }
+      });
+    }
   }
 }
+
 
 
 
