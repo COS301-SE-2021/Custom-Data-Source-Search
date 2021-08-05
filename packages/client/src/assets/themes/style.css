@@ -5722,7 +5722,7 @@
 .p-float-label .p-inputwrapper-focus ~ label,
 .p-float-label .p-inputwrapper-filled ~ label {
     top: -0.5rem !important;
-    background-color: #1e1e1e;
+    background-color: #262626;
     padding: 2px 4px;
     margin-left: -4px;
     margin-top: 0;
