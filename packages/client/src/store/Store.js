@@ -9,7 +9,8 @@ const store = createStore({
                 id: 0,
                 info: {
                     name: 'Marike',
-                    email: 'example@funsail.co.za'
+                    email: 'example@funsail.co.za',
+                    admin: true
                 },
                 backends: [
                     {
@@ -39,7 +40,8 @@ const store = createStore({
                 id: 1,
                 info: {
                     name: 'Josh',
-                    email: 'newExample@email.co.za'
+                    email: 'newExample@email.co.za',
+                    admin: false
                 },
                 backends: [
                     {
@@ -82,6 +84,9 @@ const store = createStore({
         },
         getSignedInUserId(state){
             return state.signedInUserId;
+        },
+        getUserAdminStatus(state){
+            return state.users[state.signedInUserId].info.admin
         }
     },
 

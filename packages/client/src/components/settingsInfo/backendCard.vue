@@ -34,6 +34,7 @@
                 <input-text v-model="tempBackendInfo.passKey"/>
                 <div></div>
                 <div>
+                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="getUserAdminStatus">Permissions </Button>
                     <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined">Save </Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
                 </div>
@@ -67,7 +68,8 @@
         computed: {
             ...mapGetters([
                 'getUserBackend',
-                'getSignedInUserId'
+                'getSignedInUserId',
+                'getUserAdminStatus'
             ])
         },
         props: {
@@ -143,6 +145,9 @@
                this.tempBackendInfo.active = this.fedInBackend.active;
                this.tempBackendInfo.passKey = this.fedInBackend.passKey;
                this.newBackendT = this.newBackend;
+            },
+            editPermissions() {
+
             }
         },
         watch: {
