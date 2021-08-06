@@ -46,6 +46,7 @@ export default {
   },
   methods:{
     signOut(){
+      this.$store.commit("setSignedIn", false);
       this.$router.push({path: '/'});
     }
   }
