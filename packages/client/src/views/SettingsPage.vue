@@ -15,11 +15,10 @@
                 <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
             </div>
             <div>
-                <backend-card v-if="newBackendBool" :new-backend="true" />
-                <backend-card v-for="(backend, i) in backendArr"
+                <backend-card v-if="newBackendBool" :new-backend="true" :fed-in-backend="newBackendObject" />
+                <backend-card v-for="(backend, i) in getUserBackend(1)"
                         @update-backend="updateBackend()"
-                        :user-index="testBackend.userIndex"
-                        :backend-index="testBackend.backendIndex"
+                        :user-index="userIndex"
                         :fed-in-backend="backend"
                         :key="i"
                 />
@@ -39,10 +38,13 @@
         data () {
             return {
                 newBackendBool: false,
-                testBackend: {
-                    userIndex: 0,
-                    backendIndex: 0
+                newBackendObject: {
+                    name: '',
+                    active: false,
+                    link: '',
+                    passKey: ''
                 },
+                userIndex: 0,
                 backendArr: [
                     {
                         name: 'Butterfly',
@@ -57,7 +59,6 @@
                         passKey: 'new84lLKJREpassKD9e7edfjKey'
                     },
                     {
-                        index: 0,
                         name: 'Fluffy',
                         active: true,
                         link: 'www.fulffy&Bubbles/backend/link',
@@ -72,8 +73,16 @@
                 this.testBackend = newInfo;
             },
             newBackend() {
-                this.newBackendBool = true;
-                console.log("This is the user's backends: " + this.$store.state.users[this.testBackend.userIndex].backends[this.testBackend.backendIndex]);
+                this.newBackendBool = !this.newBackendBool;
+                console.log ( "Backend array size: " + this.$store.getters.getUserBackendSize('0'));
+                console.log ("New backend bool value: " + this.newBackendBool);
+                // console.log("This is the user's backends: " + this.$store.state.users[this.testBackend.userIndex].backends[this.testBackend.backendIndex]);
+            }
+        },
+        computed: {
+            getUserBackend () {
+                console.log(this.$store.getters.getUserBackend(0));
+                return this.$store.getters.getUserBackend;
             }
         }
     }

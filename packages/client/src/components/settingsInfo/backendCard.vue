@@ -13,19 +13,7 @@
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="fedInBackend.active"/>
                 </div>
             </div>
-<!--            <div class="expanded-backend-info" v-if="expand && !editBackendBool">-->
-<!--                <div><i>Name: </i></div>-->
-<!--                <div> {{ $store.state.users[userIndex].backends[backendIndex].name }} </div>-->
-<!--                <div><i>Link: </i></div>-->
-<!--                <div> {{$store.state.users[userIndex].backends[backendIndex].link}} </div>-->
-<!--                <div><i>Pass Key: </i></div>-->
-<!--                <div> {{$store.state.users[userIndex].backends[backendIndex].passKey}} </div>-->
-<!--                <div></div>-->
-<!--                <div>-->
-<!--                    <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>-->
-<!--                </div>-->
-<!--            </div>-->
-            <div class="expanded-backend-info" v-if="expand && !editBackendBool">
+                <div class="expanded-backend-info" v-if="expand && !editBackendBool">
                 <div><i>Name: </i></div>
                 <div> {{ fedInBackend.name }} </div>
                 <div><i>Link: </i></div>
@@ -63,13 +51,13 @@
         name: "backendCard",
         data () {
             return {
-                backend: {
-                    userIndex: null,
-                    backendIndex: null,
-                    name:'',
-                    link:'',
-                    passKey:''
-                },
+                // backend: {
+                //     userIndex: null,
+                //     backendIndex: null,
+                //     name:'',
+                //     link:'',
+                //     passKey:''
+                // },
                 checked: false,
                 tempName: '',
                 tempLink: '',
@@ -101,22 +89,19 @@
         mounted() {
             this.setTempVars();
 
-            // if (this.newBackend) { clearData(); }
-            //
-            // function clearData() {
-            //
-            // }
+            if (this.newBackend) {
+                this.editBackendBool = true;
+                this.expand = false;
+            }
         },
         methods: {
             setTempVars () {
-                // this.tempName = this.$store.state.users[this.userIndex].backends[this.backendIndex].name;
                 this.tempName = this.fedInBackend.name;
                 console.log('Initializer called');
                 console.log ('Temp: ' + this.tempName);
-                // this.tempLink = this.$store.state.users[this.userIndex].backends[this.backendIndex].link;
-                // this.tempPassKey = this.$store.state.users[this.userIndex].backends[this.backendIndex].passKey;
                 this.tempLink = this.fedInBackend.link;
-                this.tempPassKey = this.fedInBackend.passKey;            },
+                this.tempPassKey = this.fedInBackend.passKey;
+            },
             change() {
                 this.expand = !this.expand;
                 if (this.editBackendBool) {
@@ -124,17 +109,20 @@
                 }
             },
             editBackend() {
-                console.log ("edit birds called" );
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
-                console.log ('Temp: ' + this.tempName);
             },
             saveChanges() {
-                console.log("save changes called");
                 this.expand = true;
                 this.editBackendBool = false;
-                console.log(this.tempName, this.tempLink, this.tempPassKey);
-                this.$store.commit("editBackend", {userIndex: 0, backendIndex: this.backendIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey});
+
+                if(this.newBackend) {
+                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey})
+                }
+                else {
+                    console.log("No name: " + this.tempName);
+                    this.$store.commit("editBackend", {userIndex: this.userIndex, backendIndex: this.backendIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey});
+                }
                 console.log ('Temporary name: ' + this.name);
                 this.setTempVars();
             },
