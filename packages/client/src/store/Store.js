@@ -2,14 +2,14 @@ import {createStore} from 'vuex'
 
 const store = createStore({
     state:{
-        signedInUserId: 1,
+        signedInUserId: 0,
         signedIn : false,
         users: [
             {
                 id: 0,
                 info: {
                     name: 'Marike',
-                    email: 'exaple@funsail.co.za'
+                    email: 'example@funsail.co.za'
                 },
                 backends: [
                     {

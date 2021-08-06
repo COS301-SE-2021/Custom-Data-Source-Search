@@ -45,10 +45,10 @@
     import InputSwitch from 'primevue/inputswitch';
     import {mapGetters} from 'vuex';
     export default {
+        name: "backendCard",
         components: {
           InputSwitch
         },
-        name: "backendCard",
         data () {
             return {
                 checked: false,
@@ -61,6 +61,11 @@
                     passKey: ''
                 }
             }
+        },
+        computed: {
+            ...mapGetters([
+                'getUserBackend'
+            ])
         },
         props: {
           userIndex: {
@@ -90,12 +95,13 @@
                 this.expand = false;
             }
         },
+
         methods: {
             change() {
                 this.expand = !this.expand;
-                // if (this.editBackendBool) {
-                //     this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please select save or cancel before minimising", life: 2000})
-                // }
+                if (this.editBackendBool) {
+                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please select save or cancel before minimising", life: 2000})
+                }
             },
             editBackend() {
                 this.expand = !this.expand;
@@ -110,10 +116,10 @@
                     this.$emit('saveNewBackend');
                 }
                 else {
-                    console.log("No name: " + this.tempName);
+                    console.log("No name: " + this.tempBackendInfo.name);
                     this.$store.commit("editBackend", {userIndex: this.userIndex, backendIndex: this.backendIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey});
                 }
-                console.log ('Temporary name: ' + this.name);
+                console.log ('Temporary name: ' + this.tempBackendInfo.name);
                 this.setTempVars();
             },
             cancelChanges() {
@@ -130,22 +136,16 @@
                 this.setTempVars();
             },
             setTempVars() {
-               this.tempBackendInfo = this.fedInBackend;
-                console.log("Temp vars are now: " + this.tempBackendInfo.name + " " + this.tempBackendInfo.link + " " + this.tempBackendInfo.passKey );
-                console.log("Fed in backend is currently: " + this.fedInBackend.name)
-
+               this.tempBackendInfo.name = this.fedInBackend.name;
+               this.tempBackendInfo.link = this.fedInBackend.link;
+               this.tempBackendInfo.active = this.fedInBackend.active;
+               this.tempBackendInfo.passKey = this.fedInBackend.passKey;
             }
         },
-
         watch: {
             fedInBackend() {
-                this.tempBackendInfo = this.fedInBackend;
+                this.setTempVars();
             }
-        },
-        computed: {
-            ...mapGetters([
-                'getUserBackend'
-            ])
         }
     }
 </script>
