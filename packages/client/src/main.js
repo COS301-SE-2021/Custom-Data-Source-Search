@@ -33,7 +33,7 @@ import Tag from 'primevue/tag';
 import Chip from 'primevue/chip';
 import Ripple from 'primevue/ripple';
 import BadgeDirective from "primevue/badgedirective";
-
+import Divider from 'primevue/divider';
 
 const app = createApp(App);
 app.use(router);
@@ -67,3 +67,4 @@ app.component("Dialog", Dialog);
 app.component("Password", Password);
 app.directive('badge', BadgeDirective);
 app.directive('ripple', Ripple);
+app.component('Divider', Divider);

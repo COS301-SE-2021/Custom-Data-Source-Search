@@ -22,9 +22,10 @@ export default {
   },
   methods: {
     signIn() {
-      console.log("ayyyyyyyyyy")
       this.$router.push('Search');
-      this.$store.commit("setSignedIn", true)
+      this.$store.commit("setSignedIn", true);
+      this.$store.commit("setCurrentUserName", this.userDetails.name);
+      this.$store.commit("setCurrentUserEmail", this.userDetails.email);
     }
   }
 }

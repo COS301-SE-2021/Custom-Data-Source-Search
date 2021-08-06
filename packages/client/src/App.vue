@@ -1,13 +1,15 @@
 <template>
     <div class="grid-app" v-if="this.$store.getters.getSignedIn">
+<!--  <div class="grid-app">-->
       <div class="nav-bar-top">
-        <button class="profile-button" @click="toggle">Profile</button>
-        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 450px" :breakpoints="{'960px': '50vw'}">
+        <button class="profile-button" @click="toggle">Hi, {{ this.$store.getters.getName }}!</button>
+        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
+          <ProfileDropdown/>
         </OverlayPanel>
       </div>
       <div id="grid-div-1" >
-        <div id="Sidebar" v-if="navBar">
-          <router-link title="Search" class="icon" to="/"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+        <div id="sidebar">
+          <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
           <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
           <router-link title="Register" class="icon" to="/register"><i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="hideNavBar"/></router-link>
         </div>
@@ -44,7 +46,7 @@ input {
   border: none;
 }
 
-#Sidebar {
+#sidebar {
   min-width: 30px;
 }
 
@@ -151,14 +153,15 @@ button {
 
 <script>
 import OverlayPanel from 'primevue/overlaypanel';
+import ProfileDropdown from "@/components/landing/ProfileDropdown";
 export default {
   components: {
     OverlayPanel,
+    ProfileDropdown
   },
   data() {
     return {
       name: "Data Sleuth",
-      navBar: false
     }
   },
   methods: {
@@ -168,23 +171,6 @@ export default {
     toggle(event) {
       this.$refs.op.toggle(event);
     },
-    something(event) {
-      this.$confirm.require({
-        target: event.currentTarget,
-        message: 'Are you sure you want to proceed?',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-          //callback to execute when user confirms the action
-        },
-        reject: () => {
-          //callback to execute when user rejects the action
-        }
-      });
-    }
   }
 }
-
-
-
-
 </script>
