@@ -6,8 +6,10 @@ const store = createStore({
         users: [
             {
                 id: 0,
-                name: 'Marike',
-                email: 'exaple@funsail.co.za',
+                info: {
+                    name: 'Marike',
+                    email: 'exaple@funsail.co.za'
+                },
                 backends: [
                     {
                         name: 'BIRDS',
@@ -31,8 +33,10 @@ const store = createStore({
             },
             {
                 id: 1,
-                name: 'Josh',
-                email: 'newExample@email.co.za',
+                info: {
+                    name: 'Josh',
+                    email: 'newExample@email.co.za'
+                },
                 backends: [
                     {
                         name: 'CARS',
@@ -59,6 +63,9 @@ const store = createStore({
     getters:{
         getSignedIn(state){
             return state.signedIn;
+        },
+        getUserInfo: (state) => (id) => {
+            return state.users.find(user => user.id === id).info;
         },
         getUserBackend: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
@@ -94,12 +101,7 @@ const store = createStore({
         setSignedIn(state, payload){
             state.signedIn = payload;
         }
-    },
-    actions:{
-        computed () {
-
-        }
-    },
+    }
 });
 
 export default store;

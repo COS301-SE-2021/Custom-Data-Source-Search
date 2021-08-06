@@ -6,7 +6,7 @@
         <div class="info-div">
             <span><b>Personal Information</b></span>
             <div>
-                <user-info-card/>
+                <user-info-card :user-index="userIndex"/>
             </div>
         </div>
         <div class="info-div">
@@ -16,7 +16,7 @@
             </div>
             <div>
                 <backend-card v-if="newBackendBool" :new-backend="true" :fed-in-backend="newBackendObject" />
-                <backend-card v-for="(backend, i) in getUserBackend(1)"
+                <backend-card v-for="(backend, i) in getUserBackend(userIndex)"
                         @update-backend="updateBackend()"
                         :user-index="userIndex"
                         :fed-in-backend="backend"
@@ -30,6 +30,8 @@
 <script>
     import BackendCard from "../components/settingsInfo/backendCard";
     import UserInfoCard from "../components/settingsInfo/userInfoCard";
+    import {mapGetters} from "vuex";
+
     export default {
         components: {
             UserInfoCard,
@@ -44,27 +46,7 @@
                     link: '',
                     passKey: ''
                 },
-                userIndex: 0,
-                backendArr: [
-                    {
-                        name: 'Butterfly',
-                        active: true,
-                        link: 'www.random.com',
-                        passKey: 'a;lseijrf489jeprlgk4n;powe89u'
-                    },
-                    {
-                        name: 'LEGO',
-                        active: false,
-                        link: 'www.justAnotherExample/LEGO/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey'
-                    },
-                    {
-                        name: 'Fluffy',
-                        active: true,
-                        link: 'www.fulffy&Bubbles/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
-                    }
-                ]
+                userIndex: 0
             }
         },
         name: "SettingsPage",
@@ -74,16 +56,19 @@
             },
             newBackend() {
                 this.newBackendBool = !this.newBackendBool;
-                console.log ( "Backend array size: " + this.$store.getters.getUserBackendSize('0'));
+                // console.log ( "Backend array size: " + getUserBackendSize(this.userIndex));
                 console.log ("New backend bool value: " + this.newBackendBool);
                 // console.log("This is the user's backends: " + this.$store.state.users[this.testBackend.userIndex].backends[this.testBackend.backendIndex]);
             }
         },
         computed: {
-            getUserBackend () {
-                console.log(this.$store.getters.getUserBackend(0));
-                return this.$store.getters.getUserBackend;
-            }
+            getUserBackendSize () {
+                return this.$store.getters.getUserBackendSize();
+            },
+            ...mapGetters ([
+                'getUserBackend',
+                'getUserBackendSize'
+             ])
         }
     }
 </script>

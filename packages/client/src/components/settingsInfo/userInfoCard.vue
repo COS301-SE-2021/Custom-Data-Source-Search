@@ -4,39 +4,31 @@
             User Name:
         </div>
         <div style="text-align: right">
-            {{ userName }}
+            {{ getUserInfo(userIndex).name }}
         </div>
         <div>
             Master Email:
         </div>
         <div style="text-align: right">
-            {{ masterEmail}}
+            {{ getUserInfo(userIndex).email }}
         </div>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
     export default {
         name: "UserInfoCard",
-        data () {
-            return {
-                testUser: {
-                    userName: 'Marike',
-                    userEmail: 'example@funsail.co.za'
-                },
-                testLocalStorage: {
-                  userName: '',
-                  userEmail: ''
-                },
-                userName: 'x',
-                masterEmail: 'y'
-            }
+        props: {
+          userIndex: {
+              type: Number,
+              default: null
+          }
         },
-        mounted () {
-            localStorage.setItem('user', JSON.stringify(this.testUser));
-            this.testLocalStorage = JSON.parse(localStorage.getItem('user'));
-            this.userName = this.testLocalStorage.userName;
-            this.masterEmail = this.testLocalStorage.userEmail;
+        computed: {
+            ...mapGetters ([
+                'getUserInfo'
+            ])
         }
     }
 </script>
