@@ -2,7 +2,7 @@ import {createStore} from 'vuex'
 
 const store = createStore({
     state:{
-        signedInUserId: 0,
+        signedInUserId: 1,
         signedIn : false,
         users: [
             {
@@ -88,26 +88,37 @@ const store = createStore({
     //synchronous changes to the store
     mutations: {
         editBackend(state, payload) {
-            console.log ('Payload name: ' + payload.name);
+            console.log ('PAYLOAD NAME: ' + payload.name);
+            console.log ('PAYLOAD ACTIVE: ' + payload.active);
+
             state.users[payload.userIndex].backends[payload.backendIndex].name = payload.name;
             state.users[payload.userIndex].backends[payload.backendIndex].link = payload.link;
             state.users[payload.userIndex].backends[payload.backendIndex].passKey = payload.passKey;
+            state.users[payload.userIndex].backends[payload.backendIndex].active = payload.active;
         },
         addBackend(state, payload){
-            console.log ('Payload name: ' + payload.name);
+
             let newBackend = {
+                id: null,
                 name: '',
                 active: null,
                 link: '',
                 passKey: ''
             };
+
+            newBackend.name = payload.name;
+            newBackend.link = payload.link;
+            newBackend.passKey = payload.passKey;
+            newBackend.active = payload.active;
+
             state.users[payload.userIndex].backends.push(newBackend);
 
             //Console.log results to check
-            for (let i = 0; i < state.users[0].backends.length; i++) {
-                console.log("name: " + state.users[0].backends[i].name);
-                console.log("link: " + state.users[0].backends[i].link);
-                console.log("passKey: " + state.users[0].backends[i].passKey);
+            for (let i = 0; i < state.users[payload.userIndex].backends.length; i++) {
+                console.log("name: " + state.users[payload.userIndex].backends[i].name);
+                console.log("link: " + state.users[payload.userIndex].backends[i].link);
+                console.log("passKey: " + state.users[payload.userIndex].backends[i].passKey);
+                console.log("active: " + state.users[payload.userIndex].backends[i].active);
             }
         },
         setSignedIn(state, payload){

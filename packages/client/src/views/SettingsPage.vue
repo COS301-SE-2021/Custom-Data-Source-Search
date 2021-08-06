@@ -20,6 +20,7 @@
                         :new-backend="true"
                         :fed-in-backend="newBackendObject"
                         @save-new-backend="saveNewBackend()"
+                        :user-index="getSignedInUserId"
                 />
                 <backend-card
                         v-for="(backend, i) in getUserBackend(getSignedInUserId)"

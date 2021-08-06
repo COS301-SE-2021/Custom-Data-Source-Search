@@ -8,7 +8,8 @@
                     <span> {{fedInBackend.name}} </span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="fedInBackend.active"/>
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-if="newBackend" v-model="fedInBackend.active"/>
+                    <InputSwitch id="inputswitchNEW" style="float: right; margin-top: 3px" v-if="!newBackend" v-model="tempBackendInfo.active"/>
                 </div>
             </div>
                 <div class="expanded-backend-info" v-if="expand && !editBackendBool">
@@ -54,9 +55,10 @@
                 checked: false,
                 editBackendBool: false,
                 expand: false,
+                newBackendT: null,
                 tempBackendInfo: {
                     name: '',
-                    active: false,
+                    active: null,
                     link: '',
                     passKey: ''
                 }
@@ -64,17 +66,18 @@
         },
         computed: {
             ...mapGetters([
-                'getUserBackend'
+                'getUserBackend',
+                'getSignedInUserId'
             ])
         },
         props: {
           userIndex: {
               type: Number,
-              default: 0
+              default: null
           },
           backendIndex: {
               type: Number,
-              default: 0
+              default: null
           },
           newBackend: {
               type: Boolean,
@@ -112,14 +115,13 @@
                 this.editBackendBool = false;
 
                 if(this.newBackend) {
-                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey});
+                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey, active: this.tempBackendInfo.active});
+
                     this.$emit('saveNewBackend');
                 }
                 else {
-                    console.log("No name: " + this.tempBackendInfo.name);
                     this.$store.commit("editBackend", {userIndex: this.userIndex, backendIndex: this.backendIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey});
                 }
-                console.log ('Temporary name: ' + this.tempBackendInfo.name);
                 this.setTempVars();
             },
             cancelChanges() {
@@ -140,6 +142,7 @@
                this.tempBackendInfo.link = this.fedInBackend.link;
                this.tempBackendInfo.active = this.fedInBackend.active;
                this.tempBackendInfo.passKey = this.fedInBackend.passKey;
+               this.newBackendT = this.newBackend;
             }
         },
         watch: {
