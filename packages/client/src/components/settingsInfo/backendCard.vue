@@ -21,15 +21,16 @@
                 <div></div>
                 <div>
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
+                    <Button @click="deleteBackend" style="float: right" class="p-button p-button-outlined">Delete </Button>
                 </div>
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><i>Name: </i></div>
-                <input-text v-model="tempName"/>
+                <input-text v-model="tempBackendInfo.name"/>
                 <div><i>Link: </i></div>
-                <input-text v-model="tempLink"/>
+                <input-text v-model="tempBackendInfo.link"/>
                 <div><i>Pass Key: </i></div>
-                <input-text v-model="tempPassKey"/>
+                <input-text v-model="tempBackendInfo.passKey"/>
                 <div></div>
                 <div>
                     <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined">Save </Button>
@@ -41,7 +42,8 @@
 </template>
 
 <script>
-    import InputSwitch from 'primevue/inputswitch'
+    import InputSwitch from 'primevue/inputswitch';
+    import {mapGetters} from 'vuex';
     export default {
         components: {
           InputSwitch
@@ -50,11 +52,14 @@
         data () {
             return {
                 checked: false,
-                tempName: '',
-                tempLink: '',
-                tempPassKey: '',
                 editBackendBool: false,
-                expand: false
+                expand: false,
+                tempBackendInfo: {
+                    name: '',
+                    active: false,
+                    link: '',
+                    passKey: ''
+                }
             }
         },
         props: {
@@ -86,42 +91,61 @@
             }
         },
         methods: {
-            setTempVars () {
-                this.tempName = this.fedInBackend.name;
-                console.log('Initializer called');
-                console.log ('Temp: ' + this.tempName);
-                this.tempLink = this.fedInBackend.link;
-                this.tempPassKey = this.fedInBackend.passKey;
-            },
             change() {
                 this.expand = !this.expand;
-                if (this.editBackendBool) {
-                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please save or cancel changes", life: 2000})
-                }
+                // if (this.editBackendBool) {
+                //     this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please select save or cancel before minimising", life: 2000})
+                // }
             },
             editBackend() {
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
             },
             saveChanges() {
-                this.expand = true;
+                this.expand = false;
                 this.editBackendBool = false;
 
                 if(this.newBackend) {
-                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey});
+                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey});
                     this.$emit('saveNewBackend');
                 }
                 else {
                     console.log("No name: " + this.tempName);
-                    this.$store.commit("editBackend", {userIndex: this.userIndex, backendIndex: this.backendIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey});
+                    this.$store.commit("editBackend", {userIndex: this.userIndex, backendIndex: this.backendIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey});
                 }
                 console.log ('Temporary name: ' + this.name);
                 this.setTempVars();
             },
             cancelChanges() {
-                this.expand = true;
+                this.expand = false;
                 this.editBackendBool = false;
+                if (this.newBackend) {
+                    this.$emit('saveNewBackend');
+                }
+            },
+            deleteBackend() {
+                this.expand = false;
+                this.editBackendBool = false;
+                this.$store.commit("deleteBackend", this.backendIndex);
+                this.setTempVars();
+            },
+            setTempVars() {
+               this.tempBackendInfo = this.fedInBackend;
+                console.log("Temp vars are now: " + this.tempBackendInfo.name + " " + this.tempBackendInfo.link + " " + this.tempBackendInfo.passKey );
+                console.log("Fed in backend is currently: " + this.fedInBackend.name)
+
             }
+        },
+
+        watch: {
+            fedInBackend() {
+                this.tempBackendInfo = this.fedInBackend;
+            }
+        },
+        computed: {
+            ...mapGetters([
+                'getUserBackend'
+            ])
         }
     }
 </script>

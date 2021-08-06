@@ -6,7 +6,7 @@
         <div class="info-div">
             <span><b>Personal Information</b></span>
             <div>
-                <user-info-card :user-index="userIndex"/>
+                <user-info-card :user-index="getSignedInUserId"/>
             </div>
         </div>
         <div class="info-div">
@@ -22,8 +22,8 @@
                         @save-new-backend="saveNewBackend()"
                 />
                 <backend-card
-                        v-for="(backend, i) in getUserBackend(userIndex)"
-                        :user-index="userIndex"
+                        v-for="(backend, i) in getUserBackend(getSignedInUserId)"
+                        :user-index="getSignedInUserId"
                         :backend-index="i"
                         :fed-in-backend="backend"
                         :key="i"
@@ -52,20 +52,18 @@
                     link: '',
                     passKey: ''
                 },
-                userIndex: 0
             }
         },
         name: "SettingsPage",
         methods: {
             newBackend() {
                 this.newBackendBool = !this.newBackendBool;
-                // console.log ( "Backend array size: " + getUserBackendSize(this.userIndex));
                 console.log ("New backend bool value: " + this.newBackendBool);
-                // console.log("This is the user's backends: " + this.$store.state.users[this.testBackend.userIndex].backends[this.testBackend.backendIndex]);
             },
             saveNewBackend() {
                 this.newBackendBool = false;
-            }
+            },
+
         },
         computed: {
             getUserBackendSize () {
@@ -73,7 +71,8 @@
             },
             ...mapGetters ([
                 'getUserBackend',
-                'getUserBackendSize'
+                'getUserBackendSize',
+                'getSignedInUserId'
              ])
         }
     }

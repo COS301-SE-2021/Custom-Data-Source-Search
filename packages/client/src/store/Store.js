@@ -2,6 +2,7 @@ import {createStore} from 'vuex'
 
 const store = createStore({
     state:{
+        signedInUserId: 1,
         signedIn : false,
         users: [
             {
@@ -78,8 +79,13 @@ const store = createStore({
         },
         getUserBackendSize: (state, getters) => {
             return getters.users[0].backends.length;
+        },
+        getSignedInUserId(state){
+            return state.signedInUserId;
         }
     },
+
+    //synchronous changes to the store
     mutations: {
         editBackend(state, payload) {
             console.log ('Payload name: ' + payload.name);
@@ -106,7 +112,19 @@ const store = createStore({
         },
         setSignedIn(state, payload){
             state.signedIn = payload;
+        },
+        deleteBackend(state, payload) {
+            state.users[state.signedInUserId].backends.splice(payload,1);
+            let l = state.users[state.signedInUserId].backends.length;
+            for(let x = 0; x < l; x++) {
+                state.users[state.signedInUserId].backends[x].id = x;
+            }
         }
+    },
+
+    //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
+    actions : {
+
     }
 });
 
