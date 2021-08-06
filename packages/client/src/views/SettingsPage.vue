@@ -4,14 +4,14 @@
             <span><h1>Settings</h1></span>
         </div>
         <div class="info-div">
-            <span><b>Personal Information</b></span>
+            <span><strong>Personal Information</strong></span>
             <div>
                 <user-info-card :user-index="getSignedInUserId"/>
             </div>
         </div>
         <div class="info-div">
             <div class="settings-subheading">
-                <span><b>Backends</b></span>
+                <span><strong>Backends</strong></span>
                 <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
             </div>
             <div>
@@ -94,7 +94,7 @@
         padding-bottom: 20px;
     }
 
-    b {
+    strong {
         font-size: larger;
     }
 

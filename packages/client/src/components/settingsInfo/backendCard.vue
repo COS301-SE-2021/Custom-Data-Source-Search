@@ -13,11 +13,11 @@
                 </div>
             </div>
                 <div class="expanded-backend-info" v-if="expand && !editBackendBool">
-                <div><i>Name: </i></div>
+                <div><em>Name: </em></div>
                 <div> {{ fedInBackend.name }} </div>
-                <div><i>Link: </i></div>
+                <div><em>Link: </em></div>
                 <div> {{fedInBackend.link}} </div>
-                <div><i>Pass Key: </i></div>
+                <div><em>Pass Key: </em></div>
                 <div> {{fedInBackend.passKey}} </div>
                 <div></div>
                 <div>
@@ -26,11 +26,11 @@
                 </div>
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
-                <div><i>Name: </i></div>
+                <div><em>Name: </em></div>
                 <input-text v-model="tempBackendInfo.name"/>
-                <div><i>Link: </i></div>
+                <div><em>Link: </em></div>
                 <input-text v-model="tempBackendInfo.link"/>
-                <div><i>Pass Key: </i></div>
+                <div><em>Pass Key: </em></div>
                 <input-text v-model="tempBackendInfo.passKey"/>
                 <div></div>
                 <div>

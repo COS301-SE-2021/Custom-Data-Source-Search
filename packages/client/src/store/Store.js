@@ -6,7 +6,7 @@ const store = createStore({
         signedIn : false,
         users: [
             {
-                id: 0,
+                id: 1,
                 info: {
                     name: 'Marike',
                     email: 'example@funsail.co.za',
