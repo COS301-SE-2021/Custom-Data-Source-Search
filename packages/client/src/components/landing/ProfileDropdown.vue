@@ -7,8 +7,20 @@
     </div>
 
     <div class="user-detail-container">
-      <div id="name">{{ username }}</div>
+      <div id="name"><b>{{ username }}</b></div>
       <div id="email">{{ email }}</div>
+    </div>
+
+    <div class="backends-container">
+      <div class="backend" v-for="backend in backends" :key="backend.id">
+        <span>{{backend.name}}</span>
+        <InputSwitch v-model="backend.active"/>
+        <Divider/>
+      </div>
+    </div>
+
+    <div class="footer-buttons">
+      <Button icon="pi pi-" label="Plain" class="p-button-text p-button-plain" />
     </div>
   </div>
 </template>
@@ -19,7 +31,12 @@ export default {
   data(){
     return{
       username: null,
-      email: null
+      email: null,
+      backends: [
+        {name: 'Backend 1', active: true},
+        {name: 'Backend 2', active: false},
+        {name: 'Backend 3', active: true}
+      ]
     }
   },
   beforeMount() {
@@ -64,9 +81,24 @@ export default {
 
 .user-detail-container{
   margin-left: 90px;
+  margin-bottom: 50px;
 }
 
 #name{
   margin-bottom: 8px;
 }
+
+.backends-container{
+  margin-left: 25px;
+}
+
+.backend{
+
+}
+
+.p-inputswitch{
+  float: right;
+  margin-right: 30px;
+}
+
 </style>

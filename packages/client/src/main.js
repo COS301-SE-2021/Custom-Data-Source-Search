@@ -34,6 +34,7 @@ import Chip from 'primevue/chip';
 import Ripple from 'primevue/ripple';
 import BadgeDirective from "primevue/badgedirective";
 import Divider from 'primevue/divider';
+import InputSwitch from 'primevue/inputswitch';
 
 const app = createApp(App);
 app.use(router);
@@ -68,3 +69,4 @@ app.component("Password", Password);
 app.directive('badge', BadgeDirective);
 app.directive('ripple', Ripple);
 app.component('Divider', Divider);
+app.component('InputSwitch', InputSwitch);
