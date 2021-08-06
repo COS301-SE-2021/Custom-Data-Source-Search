@@ -12,18 +12,21 @@ const store = createStore({
                 },
                 backends: [
                     {
+                        id: 0,
                         name: 'BIRDS',
                         active: true,
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
                     },
                     {
+                        id: 1,
                         name: 'LEGO',
                         active: false,
                         link: 'www.justAnotherExample/LEGO/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey'
                     },
                     {
+                        id: 2,
                         name: 'Fluffy',
                         active: true,
                         link: 'www.fulffy&Bubbles/backend/link',
@@ -39,18 +42,21 @@ const store = createStore({
                 },
                 backends: [
                     {
+                        id: 0,
                         name: 'CARS',
                         active: true,
                         link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg'
                     },
                     {
+                        id: 1,
                         name: 'WINDOWS',
                         active: false,
                         link: 'www.justAnotherExample/windows/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey'
                     },
                     {
+                        id: 2,
                         name: 'TEST',
                         active: true,
                         link: 'www.doesnotmattermuch/backend/link',

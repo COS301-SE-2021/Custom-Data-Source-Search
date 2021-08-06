@@ -15,10 +15,16 @@
                 <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
             </div>
             <div>
-                <backend-card v-if="newBackendBool" :new-backend="true" :fed-in-backend="newBackendObject" />
-                <backend-card v-for="(backend, i) in getUserBackend(userIndex)"
-                        @update-backend="updateBackend()"
+                <backend-card
+                        v-if="newBackendBool"
+                        :new-backend="true"
+                        :fed-in-backend="newBackendObject"
+                        @save-new-backend="saveNewBackend()"
+                />
+                <backend-card
+                        v-for="(backend, i) in getUserBackend(userIndex)"
                         :user-index="userIndex"
+                        :backend-index="i"
                         :fed-in-backend="backend"
                         :key="i"
                 />
@@ -51,14 +57,14 @@
         },
         name: "SettingsPage",
         methods: {
-            updateBackend ( newInfo ) {
-                this.testBackend = newInfo;
-            },
             newBackend() {
                 this.newBackendBool = !this.newBackendBool;
                 // console.log ( "Backend array size: " + getUserBackendSize(this.userIndex));
                 console.log ("New backend bool value: " + this.newBackendBool);
                 // console.log("This is the user's backends: " + this.$store.state.users[this.testBackend.userIndex].backends[this.testBackend.backendIndex]);
+            },
+            saveNewBackend() {
+                this.newBackendBool = false;
             }
         },
         computed: {

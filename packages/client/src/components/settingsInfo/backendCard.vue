@@ -5,11 +5,9 @@
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
                     <em class="pi pi-circle-on" />
-<!--                    <span> {{$store.state.users[userIndex].backends[backendIndex].name}} </span>-->
                     <span> {{fedInBackend.name}} </span>
                 </div>
                 <div>
-<!--                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="$store.state.users[userIndex].backends[backendIndex].active"/>-->
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-model="fedInBackend.active"/>
                 </div>
             </div>
@@ -51,13 +49,6 @@
         name: "backendCard",
         data () {
             return {
-                // backend: {
-                //     userIndex: null,
-                //     backendIndex: null,
-                //     name:'',
-                //     link:'',
-                //     passKey:''
-                // },
                 checked: false,
                 tempName: '',
                 tempLink: '',
@@ -117,7 +108,8 @@
                 this.editBackendBool = false;
 
                 if(this.newBackend) {
-                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey})
+                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempName, link: this.tempLink, passKey: this.tempPassKey});
+                    this.$emit('saveNewBackend');
                 }
                 else {
                     console.log("No name: " + this.tempName);
