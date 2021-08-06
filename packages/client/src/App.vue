@@ -1,5 +1,5 @@
 <template>
-    <div class="grid-app">
+    <div class="grid-app" v-if="this.$store.getters.getSignedIn">
       <div class="nav-bar-top">
         <button class="profile-button" @click="toggle">Profile</button>
         <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 450px" :breakpoints="{'960px': '50vw'}">
@@ -16,6 +16,8 @@
         <router-view/>
       </div>
     </div>
+
+    <router-view v-else/>
 </template>
 
 <style lang="scss">
@@ -156,7 +158,7 @@ export default {
   data() {
     return {
       name: "Data Sleuth",
-      navBar: true
+      navBar: false
     }
   },
   methods: {
