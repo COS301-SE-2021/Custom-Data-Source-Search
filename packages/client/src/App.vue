@@ -5,6 +5,7 @@
       <router-link title="Search" class="icon" to="/search"><em class="pi pi-search" style="font-size:1.5rem"  /></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem"  /></router-link>
       <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
+      <router-link title="Settings" class="icon" to="/settings"><em class="pi pi-cog" style="font-size:1.5rem" /></router-link>
     </div>
   </div>
   <div id="grid-div-2">
@@ -39,7 +40,6 @@ input {
   border: none;
 }
 
-
 .header{
   padding: 30px;
   border: solid;
@@ -54,7 +54,7 @@ input {
 }
 
 #grid-div-1 {
-  padding-top: 50px;
+  padding-top: 20px;
   background-color: #1e1e1e;
 }
 
@@ -64,21 +64,6 @@ input {
   border-left-style: solid;
   height: 100%;
 }
-
-#nav {
-  padding: 30px;
-  text-align: left;
-
-  a {
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.58);
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
 
 .icon {
   padding: 10px;
@@ -91,12 +76,17 @@ button {
   padding: 10px;
 }
 
-.pi-search, .pi-list, .pi-user{
+.pi-search, .pi-list, .pi-user, .pi-cog{
   color: grey;
   padding: 20px 10px 10px;
 }
 
-.pi-search:hover,.pi-list:hover{
+.pi-cog{
+  position: fixed;
+  bottom: 0;
+}
+
+.pi-search:hover,.pi-list:hover, .pi-cog:hover {
   color: #41B3B2;
 }
 
@@ -104,7 +94,6 @@ button {
 </style>
 
 <script>
-
 export default {
   components: {
   },

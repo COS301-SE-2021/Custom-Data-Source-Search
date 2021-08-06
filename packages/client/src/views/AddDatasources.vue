@@ -1,4 +1,4 @@
-<template>
+    <template>
   <div class="grid-content">
     <div class="header">
         <router-link to="/datasources"><Button label="Back to data sources" icon="pi pi-angle-left" class="p-button-text"/></router-link>
@@ -102,10 +102,10 @@ export default {
     expandFile(){
       axios.get("http://localhost:3001/filedatasources").then(
           resp => {
-            console.log(resp.data)
+            console.log(resp.data);
             this.fileDataSources = resp.data
           }
-      )
+      );
       //Checking whether the tab already exists.
       if (!this.isExist('File')) {
         this.tabs.push({title: 'File'})
@@ -114,10 +114,10 @@ export default {
     expandFolder(){
       axios.get("http://localhost:3001/folderdatasources").then(
           resp => {
-            console.log(resp.data)
+            console.log(resp.data);
             this.folderDataSources = resp.data
           }
-      )
+      );
       //Checking whether the tab already exists.
       if (!this.isExist('Folder')) {
         this.tabs.push({title: 'Folder'})
@@ -126,10 +126,10 @@ export default {
     expandWebpage(){
       axios.get("http://localhost:3001/webpagedatasources").then(
           resp => {
-            console.log(resp.data)
+            console.log(resp.data);
             this.webDataSources = resp.data
           }
-      )
+      );
       //Checking whether the tab already exists.
       if (!this.isExist('Webpage')) {
         this.tabs.push({title: 'Webpage'})
@@ -155,7 +155,7 @@ export default {
     updateFolder(){
       axios.get("http://localhost:3001/folderdatasources").then(
           resp => {
-            console.log(resp.data)
+            console.log(resp.data);
             this.folderDataSources = resp.data
           }
       )
@@ -163,7 +163,7 @@ export default {
     updateWebpage(){
       axios.get("http://localhost:3001/webpagedatasources").then(
           resp => {
-            console.log(resp.data)
+            console.log(resp.data);
             this.webDataSources = resp.data
           }
       )
@@ -171,7 +171,7 @@ export default {
     updateFile(){
       axios.get("http://localhost:3001/filedatasources").then(
           resp => {
-            console.log(resp.data)
+            console.log(resp.data);
             this.fileDataSources = resp.data
           }
       )
@@ -185,8 +185,8 @@ export default {
       if(type==="Folder"){
         axios.get("http://localhost:3001/folderdatasources").then(
             resp => {
-              console.log(resp.data)
-              this.folderDataSources = resp.data
+              console.log(resp.data);
+              this.folderDataSources = resp.data;
               console.log(this.folderDataSources)
             }
         )
@@ -194,8 +194,8 @@ export default {
       else if(type==="File"){
         axios.get("http://localhost:3001/filedatasources").then(
             resp => {
-              console.log(resp.data)
-              this.fileDataSources = resp.data
+              console.log(resp.data);
+              this.fileDataSources = resp.data;
               console.log(this.fileDataSources)
             }
         )
@@ -203,8 +203,8 @@ export default {
       else if(type==="Webpage"){
         axios.get("http://localhost:3001/webpagedatasources").then(
             resp => {
-              console.log(resp.data)
-              this.webDataSources = resp.data
+              console.log(resp.data);
+              this.webDataSources = resp.data;
               console.log(this.webDataSources)
             }
         )
