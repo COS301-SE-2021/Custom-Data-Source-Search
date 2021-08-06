@@ -28,7 +28,7 @@ class FolderDataSourceRepository {
             uuid: randomBytes(16).toString("hex"),
             path: dataSource.path
         });
-        fs.writeFileSync('./src/repositories/store/folderDataStore.json', JSON.stringify(this.folderDataSourceArray));
+        fs.writeFileSync('./store/folderDataStore.json', JSON.stringify(this.folderDataSourceArray));
         return [{
             "code": 200,
             "message": "Successfully added folder datasource"
@@ -57,7 +57,7 @@ class FolderDataSourceRepository {
         let index: number = this.folderDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.folderDataSourceArray.splice(index, 1);
-            fs.writeFileSync('./src/repositories/store/folderDataStore.json', JSON.stringify(this.folderDataSourceArray));
+            fs.writeFileSync('./store/folderDataStore.json', JSON.stringify(this.folderDataSourceArray));
             return [{
                 "code": 204,
                 "message": "Successfully deleted folder datasource"
@@ -71,7 +71,7 @@ class FolderDataSourceRepository {
 
     readFile() {
         try {
-            this.folderDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/folderDataStore.json', 'utf-8'));
+            this.folderDataSourceArray = JSON.parse(fs.readFileSync('./store/folderDataStore.json', 'utf-8'));
         } catch (err) {
             this.folderDataSourceArray = [];
         }

@@ -33,7 +33,7 @@ class FileDataSourceRepository {
             return [null, err];
         }
         this.fileDataSourceArray.push(storedDatasource);
-        fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+        fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
         return [{
             "code": 200,
             "message": "Successfully added file datasource"
@@ -79,7 +79,7 @@ class FileDataSourceRepository {
                 let index: number = this.fileDataSourceArray.indexOf(storedDatasrouce);
                 storedDatasrouce.lastModified = lastModified;
                 this.fileDataSourceArray[index] = storedDatasrouce;
-                fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+                fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
                 try {
                     await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
                 } catch (e) {
@@ -127,7 +127,7 @@ class FileDataSourceRepository {
         let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.fileDataSourceArray.splice(index, 1);
-            fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+            fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
             const [,err] = await this.deleteFromSolr(uuid);
             if (err) {
                 return [null, {
@@ -169,7 +169,7 @@ class FileDataSourceRepository {
 
     readFile() {
         try {
-            this.fileDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/fileDataStore.json', 'utf-8'));
+            this.fileDataSourceArray = JSON.parse(fs.readFileSync('./store/fileDataStore.json', 'utf-8'));
         } catch (err) {
             this.fileDataSourceArray = [];
         }
