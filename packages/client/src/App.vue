@@ -1,6 +1,6 @@
 <template>
-<!--    <div class="grid-app" v-if="this.$store.getters.getSignedIn">-->
-  <div class="grid-app">
+    <div class="grid-app" v-if="this.$store.getters.getSignedIn">
+<!--  <div class="grid-app">-->
       <div class="nav-bar-top">
         <button class="profile-button" @click="toggle">Hi, {{ this.$store.getters.getName }}!</button>
         <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-<!--    <router-view v-else/>-->
+    <router-view v-else/>
 </template>
 
 <style lang="scss">

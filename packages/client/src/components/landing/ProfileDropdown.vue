@@ -20,7 +20,8 @@
     </div>
 
     <div class="footer-buttons">
-      <Button icon="pi pi-" label="Plain" class="p-button-text p-button-plain" />
+      <Button icon="pi pi-users" label="Switch User" class="p-button-text p-button-plain switch-user" @click="signOut"/>
+      <Button icon="pi pi-sign-out" label="Sign Out" class="p-button-text p-button-plain sign-out" @click="signOut"/>
     </div>
   </div>
 </template>
@@ -42,6 +43,11 @@ export default {
   beforeMount() {
     this.username = this.$store.getters.getName;
     this.email = this.$store.getters.getEmail;
+  },
+  methods:{
+    signOut(){
+      this.$router.push({path: '/'});
+    }
   }
 }
 </script>
@@ -101,4 +107,12 @@ export default {
   margin-right: 30px;
 }
 
+.sign-out{
+  float: right;
+  margin-right: 10px;
+}
+
+.switch-user{
+  margin-left: 10px;
+}
 </style>
