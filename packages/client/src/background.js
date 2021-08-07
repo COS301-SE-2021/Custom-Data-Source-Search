@@ -16,6 +16,7 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    title: "Its working",
     webPreferences: {
 
       enableRemoteModule: true,
