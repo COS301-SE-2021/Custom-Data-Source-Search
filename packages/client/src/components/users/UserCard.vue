@@ -18,13 +18,18 @@
 export default {
   name: "UserCard",
   props: {
-    userDetails: Object
+    userDetails: {
+      name: String,
+      email: String,
+      id: Number,
+      admin: Boolean,
+
+    }
   },
   methods: {
     signIn() {
-      console.log("ayyyyyyyyyy")
       this.$router.push('Search');
-      this.$store.commit("setSignedIn", true)
+      this.$store.commit("setSignedInUserID", { userID: this.userDetails.id, signedIn: true})
     }
   }
 }

@@ -4,7 +4,7 @@
     <div id="sidebar" :visible="true" :show-close-icon="false" :dismissable="true" :modal="false" >
       <router-link title="Search" class="icon" to="/search"><em class="pi pi-search" style="font-size:1.5rem"  /></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem"  /></router-link>
-      <router-link title="Register" class="icon" to="/register"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
+      <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
       <router-link title="Settings" class="icon" to="/settings"><em class="pi pi-cog" style="font-size:1.5rem" /></router-link>
     </div>
   </div>

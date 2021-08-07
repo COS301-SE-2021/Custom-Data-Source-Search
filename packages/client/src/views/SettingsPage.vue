@@ -67,9 +67,6 @@
 
         },
         computed: {
-            getUserBackendSize () {
-                return this.$store.getters.getUserBackendSize();
-            },
             ...mapGetters ([
                 'getUserBackend',
                 'getUserBackendSize',

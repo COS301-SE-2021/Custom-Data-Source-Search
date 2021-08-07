@@ -8,9 +8,11 @@ const store = createStore({
             {
                 id: 0,
                 info: {
+                    id: 0,
                     name: 'Marike',
                     email: 'example@funsail.co.za',
-                    admin: true
+                    admin: true,
+                    isActive: true
                 },
                 backends: [
                     {
@@ -39,9 +41,11 @@ const store = createStore({
             {
                 id: 1,
                 info: {
+                    id: 1,
                     name: 'Josh',
-                    email: 'newExample@email.co.za',
-                    admin: false
+                    email: 'joshwalkerdev@gmail.com',
+                    admin: false,
+                    isActive: false
                 },
                 backends: [
                     {
@@ -66,6 +70,39 @@ const store = createStore({
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
                     }
                 ]
+            },
+            {
+                id: 2,
+                info: {
+                    id: 2,
+                    name: 'Lauren',
+                    email: 'lauren@gmail.com',
+                    admin: true,
+                    isActive: true
+                },
+                backends: [
+                    {
+                        id: 0,
+                        name: 'BIRDS',
+                        active: true,
+                        link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
+                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
+                    },
+                    {
+                        id: 1,
+                        name: 'LEGO',
+                        active: false,
+                        link: 'www.justAnotherExample/LEGO/BACKEND',
+                        passKey: 'new84lLKJREpassKD9e7edfjKey'
+                    },
+                    {
+                        id: 2,
+                        name: 'Fluffy',
+                        active: true,
+                        link: 'www.fulffy&Bubbles/backend/link',
+                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
+                    }
+                ]
             }
         ]
     },
@@ -75,6 +112,13 @@ const store = createStore({
         },
         getUserInfo: (state) => (id) => {
             return state.users.find(user => user.id === id).info;
+        },
+        getArrUserInfo(state) {
+            let users = [];
+            for (let x = 0; x < state.users.length; x++) {
+                users.push(state.users[x].info);
+            }
+            return users;
         },
         getUserBackend: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
@@ -119,15 +163,20 @@ const store = createStore({
             state.users[payload.userIndex].backends.push(newBackend);
 
             //Console.log results to check
-            for (let i = 0; i < state.users[payload.userIndex].backends.length; i++) {
-                console.log("name: " + state.users[payload.userIndex].backends[i].name);
-                console.log("link: " + state.users[payload.userIndex].backends[i].link);
-                console.log("passKey: " + state.users[payload.userIndex].backends[i].passKey);
-                console.log("active: " + state.users[payload.userIndex].backends[i].active);
+            for (let i of state.users[payload.userIndex].backends) {
+                console.log("name: " + i.name);
+                console.log("link: " + i.link);
+                console.log("passKey: " + i.passKey);
+                console.log("active: " + i.active);
             }
         },
         setSignedIn(state, payload){
             state.signedIn = payload;
+        },
+        setSignedInUserID(state, payload) {
+            state.signedInUserId = payload.userID;
+            state.users[payload.userID].info.isActive = payload.signedIn;
+            state.signedIn = true;
         },
         deleteBackend(state, payload) {
             state.users[state.signedInUserId].backends.splice(payload,1);

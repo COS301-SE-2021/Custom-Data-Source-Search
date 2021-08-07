@@ -5,8 +5,11 @@
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
     <div class="user-select" >
-      <UserCard v-for="(user, i) in users" :key="i" :userDetails="user" ></UserCard>
-
+      <UserCard
+              v-for="(user, i) in getArrUserInfo"
+              :key="i"
+              :userDetails="user"
+      ></UserCard>
       <AddUserCard></AddUserCard>
     </div>
 
@@ -18,22 +21,24 @@
 <script>
 import UserCard from "@/components/users/UserCard";
 import AddUserCard from "@/components/users/AddUserCard";
+import {mapGetters} from "vuex";
+
 export default {
   name: "Welcome",
   components: {AddUserCard, UserCard},
   data () {
     return {
-      isSignedIn: true,
-      users : [
-        {name : "Josh", email: "joshwalkerdev@gmail.com", isActive: true},
-        {name : "Lauren", email: "lauren@gmail.com", isActive: false},
-        {name : "Marike", email: "marike@gmail.com", isActive: true}
-      ]
+      isSignedIn: null
     }
 
   },
   mounted(){
     this.isSignedIn = this.$store.getters.getSignedIn;
+  },
+  computed: {
+    ...mapGetters([
+            'getArrUserInfo'
+    ])
   }
 }
 </script>
