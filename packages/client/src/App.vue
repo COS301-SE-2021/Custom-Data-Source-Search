@@ -11,14 +11,14 @@
         <div id="sidebar">
           <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
           <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <router-link title="Register" class="icon" to="/register"><i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="hideNavBar"/></router-link>
+          <router-link title="Register" class="icon" to="/register"><i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+          <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
         </div>
       </div>
       <div id="grid-div-2">
         <router-view/>
       </div>
     </div>
-
     <router-view v-else/>
 </template>
 
@@ -84,21 +84,6 @@ input {
   background-color: #1e1e1e;
 }
 
-#nav {
-  padding: 30px;
-  text-align: left;
-
-  a {
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.58);
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
-
 .icon {
   padding: 10px;
 }
@@ -109,12 +94,17 @@ button {
   padding: 10px;
 }
 
-.pi-search, .pi-list, .pi-user{
+.pi-search, .pi-list, .pi-user, .pi-cog{
   color: grey;
   padding: 20px 10px 10px;
 }
 
-.pi-search:hover,.pi-list:hover{
+.pi-cog{
+  position: fixed;
+  bottom: 0;
+}
+
+.pi-search:hover,.pi-list:hover, .pi-cog:hover {
   color: #41B3B2;
 }
 
