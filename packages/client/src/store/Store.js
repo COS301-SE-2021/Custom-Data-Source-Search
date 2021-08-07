@@ -4,7 +4,7 @@ const store = createStore({
     state: {
         signedIn : false,
         name: null,
-        email: null
+        email: null,
         signedInUserId: 1,
         users: [
             {
@@ -150,7 +150,7 @@ const store = createStore({
         setCurrentUserEmail(state, payload){
             state.email = payload;
         }
-    }
+    },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
