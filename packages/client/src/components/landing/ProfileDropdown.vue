@@ -7,7 +7,7 @@
     </div>
 
     <div class="user-detail-container">
-      <div id="name"><b>{{ username }}</b></div>
+      <div id="name"><strong>{{ username }}</strong></div>
       <div id="email">{{ email }}</div>
     </div>
 
