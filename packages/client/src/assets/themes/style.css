@@ -962,7 +962,7 @@
     left: -1px;
     margin-top: -0.65rem;
     border-radius: 50%;
-    transition-duration: 0.5s;
+    transition-duration: 0.8s;
 }
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
     transform: translateX(0.9rem);
@@ -976,14 +976,13 @@
     background: rgba(255, 255, 255, 0.3);
 }
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-    background: rgba(125, 179, 178, 0.5);
-    width: 32px;
+    background: linear-gradient(to right bottom, #2bd6c8, #3b6693);
 }
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
-    background: #41B3B2;
+    background: floralwhite;
 }
 .p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider {
-    background: rgba(121, 179, 177, 0.5);
+    background: linear-gradient(to right bottom, #2bd6c8, #3b6693);
 }
 .p-inputswitch.p-invalid {
     border-color: #f44435;
@@ -5724,7 +5723,7 @@
 .p-float-label .p-inputwrapper-focus ~ label,
 .p-float-label .p-inputwrapper-filled ~ label {
     top: -0.5rem !important;
-    background-color: #1e1e1e;
+    background-color: #262626;
     padding: 2px 4px;
     margin-left: -4px;
     margin-top: 0;

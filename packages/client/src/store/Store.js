@@ -1,9 +1,11 @@
 import {createStore} from 'vuex'
 
 const store = createStore({
-    state:{
-        signedInUserId: 1,
+    state: {
         signedIn : false,
+        name: null,
+        email: null
+        signedInUserId: 1,
         users: [
             {
                 id: 0,
@@ -87,7 +89,13 @@ const store = createStore({
         },
         getUserAdminStatus(state){
             return state.users[state.signedInUserId].info.admin
-        }
+        },
+        getName(state){
+            return state.name;
+        },
+        getEmail(state){
+            return state.email;
+        },
     },
 
     //synchronous changes to the store
@@ -126,17 +134,23 @@ const store = createStore({
                 console.log("active: " + state.users[payload.userIndex].backends[i].active);
             }
         },
+         deleteBackend(state, payload) {
+           state.users[state.signedInUserId].backends.splice(payload,1);
+           let l = state.users[state.signedInUserId].backends.length;
+           for(let x = 0; x < l; x++) {
+               state.users[state.signedInUserId].backends[x].id = x;
+           }
+        },
         setSignedIn(state, payload){
             state.signedIn = payload;
         },
-        deleteBackend(state, payload) {
-            state.users[state.signedInUserId].backends.splice(payload,1);
-            let l = state.users[state.signedInUserId].backends.length;
-            for(let x = 0; x < l; x++) {
-                state.users[state.signedInUserId].backends[x].id = x;
-            }
+        setCurrentUserName(state, payload){
+            state.name = payload;
+        },
+        setCurrentUserEmail(state, payload){
+            state.email = payload;
         }
-    },
+    }
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
