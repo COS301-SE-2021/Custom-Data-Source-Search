@@ -13,7 +13,6 @@ module.exports = {
                     installerIcon: "src/assets/DataSleuth.ico",
                     uninstallerIcon: "src/assets/DataSleuth.ico",
                     uninstallDisplayName: "DataSleuth",
-                    license: "src/assets/licenses/license.txt",
                     oneClick: false,
                     allowToChangeInstallationDirectory: true
                 },
