@@ -27,7 +27,7 @@
           <search-result-card
               :icon="r.icon"
               :name="r.name"
-              :occurrences="r.occurrences"
+              match_snippets="r.occurrences"
               :source="r.source"
           />
         </div>
@@ -43,6 +43,8 @@
       name: "SearchBar",
       data() {
         return {
+          fullFileID: -1,
+          fullFileData: "",
           displaySignIn: false,
           notDeleted: true,
           query: "",
@@ -53,7 +55,7 @@
       },
       methods: {
         escapeSpecialCharacters(query) {
-          return query.replace(/[{}/\[\]+-^.:()]/gm, (match) => {
+          return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
             return '\\' + match
           })
         },
@@ -61,7 +63,7 @@
           this.firstSearch = false
           this.searchResults = []
           axios
-                  .get("http://localhost:3001/general/" + encodeURI(this.escapeSpecialCharacters(this.query)))
+                  .get("http://localhost:3001/general/" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
                     this.searchResults = resp.data.searchResults
                     if (this.searchResults.length === 0) {
@@ -73,6 +75,15 @@
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn
+        },
+        getIdOfCurrentFullFile() {
+          return this.fullFileID;
+        },
+        loadFullFile(fileData) {
+
+        },
+        goToFullFileLine(lineNumber) {
+
         }
       },
       components: {

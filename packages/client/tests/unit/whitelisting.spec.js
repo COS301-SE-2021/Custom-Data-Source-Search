@@ -25,7 +25,7 @@ describe("whitelistStrip function", () => {
         let result = SearchResultCard.methods.whitelistEscape(content);
         expect(result).toEqual(content)
     })
-    it("Should accept?", () => {
+    it("Should accept", () => {
         let content = "<pre>\n" +
             "    <span class=\"hljs-title function_\">getAllFileDataSources</span>(<span class=\"hljs-params\"></span>) {\n" +
             "        <span class=\"hljs-keyword\">let</span> [<span style='background-color: #88ffff;color: dimgrey;'>result</span>, err] = fileDataSourceRepository.<span class=\"hljs-title function_\">getAllDataSources</span>();\n" +
