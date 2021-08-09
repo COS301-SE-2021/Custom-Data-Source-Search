@@ -419,7 +419,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             {
                 "type": "folder",
                 "source": "test/path/file1.txt",
-                "occurrences": [
+                "match_snippets": [
                     {
                         "lineNumber": 1,
                         "snippet": "first file searched"
@@ -429,7 +429,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             {
                 "type": "folder",
                 "source": "test/path/file2.js",
-                "occurrences": [
+                "match_snippets": [
                     {
                         "lineNumber": 1,
                         "snippet": "second file searched"
@@ -439,7 +439,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             {
                 "type": "folder",
                 "source": "second/test/path/otherFile1.txt",
-                "occurrences": [
+                "match_snippets": [
                     {
                         "lineNumber": 1,
                         "snippet": "third file searched"
@@ -449,7 +449,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             {
                 "type": "folder",
                 "source": "second/test/path/otherFile2.js",
-                "occurrences": [
+                "match_snippets": [
                     {
                         "lineNumber": 1,
                         "snippet": "fourth file searched"
