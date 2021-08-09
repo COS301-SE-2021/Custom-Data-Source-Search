@@ -20,21 +20,24 @@ const store = createStore({
                         name: 'BIRDS',
                         active: true,
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
+                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
+                        isAdmin: true
                     },
                     {
                         id: 1,
                         name: 'LEGO',
                         active: false,
                         link: 'www.justAnotherExample/LEGO/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey'
+                        passKey: 'new84lLKJREpassKD9e7edfjKey',
+                        isAdmin: false
                     },
                     {
                         id: 2,
                         name: 'Fluffy',
                         active: true,
                         link: 'www.fulffy&Bubbles/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
+                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
+                        isAdmin: false
                     }
                 ]
             },
@@ -51,21 +54,24 @@ const store = createStore({
                         name: 'CARS',
                         active: true,
                         link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
-                        passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg'
+                        passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg',
+                        isAdmin: true
                     },
                     {
                         id: 1,
                         name: 'WINDOWS',
                         active: false,
                         link: 'www.justAnotherExample/windows/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey'
+                        passKey: 'new84lLKJREpassKD9e7edfjKey',
+                        isAdmin: false
                     },
                     {
                         id: 2,
                         name: 'TEST',
                         active: true,
                         link: 'www.doesnotmattermuch/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
+                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
+                        isAdmin: true
                     }
                 ]
             }
@@ -96,6 +102,12 @@ const store = createStore({
         getEmail(state){
             return state.email;
         },
+        //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
+        //should return true or false
+        //this would allow us to determine whether or not a data source can be edited/deleted by a user
+        getBackendAdminStatus: (state, getters) => (backendName) => {
+            return getters.getUserBackend(state.signedInUserId).find(backend => backend.name === backendName).isAdmin
+        }
     },
 
     //synchronous changes to the store

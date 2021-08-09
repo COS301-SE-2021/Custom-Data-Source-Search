@@ -65,7 +65,10 @@
       </Column>
       <Column header="Backend" filterField="backend" :showFilterMenu="false" style="min-width:12rem">
         <template #body="{data}">
-          <span class="image-text">{{data.backend}}</span>
+<!--          Idea: in this step we can check whether the user has admin privilege for this backend by using the getter
+               created in the store.
+               We can then set a bool and generate the delete button iff bool is true-->
+          <span class="image-text" >{{data.backend}}</span>
         </template>
         <template #filter="{filterModel,filterCallback}">
           <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="backends" placeholder="Any" class="p-column-filter">
@@ -120,8 +123,9 @@
         </template>
       </Column>
       <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
-        <template #body>
-          <Button type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain"></Button>
+        <template #body="{data}">
+<!--          Instead of button, perhaps include check boxes. When boxes are checked an option to delete or edit may appear-->
+          <Button v-if="deleteBackend(data.backend)" type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain"></Button>
         </template>
       </Column>
     </DataTable>
@@ -148,28 +152,28 @@ export default {
       endpoint:[
         {
           location: "desktop",
-          backend: "Sonic Co",
+          backend: "CARS",
           type: "Folder",
           tag1: "Business",
           tag2: "Fun"
         },
         {
           location: "elsewhere",
-          backend: "Backend 1",
+          backend: "WINDOWS",
           type: "File",
           tag1: "Home",
           tag2: "Fun"
         },
         {
           location: "D:\\Users\\Laurens-PC\\Desktop\\332",
-          backend: "This one",
+          backend: "WINDOWS",
           type: "Folder",
           tag1: "University",
           tag2: null
         },
         {
           location: "https://www.itsafishthing.com/pure-goldfish-is-now-its-a-fish-thing/",
-          backend: "This one",
+          backend: "TEST",
           type: "Webpage",
           tag1: "Fun",
           tag2: null
@@ -219,6 +223,9 @@ export default {
       this.$refs.op.toggle(event);
       this.clicked = false;
       this.backend = null;
+    },
+    deleteBackend(backend){
+      return this.$store.getters.getBackendAdminStatus(backend)
     }
   }
 }
