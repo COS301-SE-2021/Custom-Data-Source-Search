@@ -102,14 +102,11 @@ export default {
     },
     goToLineFetchFileIfRequired(lineNumber) {
       if (this.$parent.getIdOfCurrentFullFile() !== this.id) {
-        this.getFullFile()
+        axios.get(`http://localhost:3001/general/${this.type}/${this.id}`).then((resp) => {
+          this.$parent.loadFullFile(this.whitelistEscape(resp.full_markuped_file))
+        })
       }
       this.$parent.goToFullFileLine(lineNumber)
-    },
-    getFullFile() {
-      axios.get(`http://localhost:3001/general/${this.type}/${this.id}`).then((resp) => {
-        this.$parent.loadFullFile(this.whitelistEscape(resp))
-      })
     }
   }
 }
