@@ -135,7 +135,7 @@ class FileDataSourceService {
                 'http://localhost:8983/solr/files/select?q=' + searchString
                 + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
-            let result: FileOccurrence[] = [];
+            let result: any[] = [];
             for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
                 // @ts-ignore
                 if (value["content"] != undefined) {
