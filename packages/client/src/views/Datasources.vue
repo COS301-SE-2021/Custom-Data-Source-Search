@@ -119,6 +119,11 @@
           </MultiSelect>
         </template>
       </Column>
+      <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
+        <template #body>
+          <Button type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain"></Button>
+        </template>
+      </Column>
     </DataTable>
   </div>
 
