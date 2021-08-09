@@ -25,9 +25,11 @@
                 :key="i"
         >
           <search-result-card
-              :icon="r.icon"
-              :name="r.name"
-              match_snippets="r.occurrences"
+              :id="r.id"
+              :icon="r.datasource_icon"
+              :name="r.datasource_name"
+              :type="r.type"
+              :match_snippets="r.match_snippets"
               :source="r.source"
           />
         </div>
