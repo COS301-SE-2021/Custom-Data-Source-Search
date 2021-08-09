@@ -378,25 +378,25 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
             .mockReturnValueOnce([
                 {
                     "lineNumber": 1,
-                    "occurrenceString": "first file searched"
+                    "snippet": "first file searched"
                 }
             ])
             .mockReturnValueOnce([
                 {
                     "lineNumber": 1,
-                    "occurrenceString": "second file searched"
+                    "snippet": "second file searched"
                 }
             ])
             .mockReturnValueOnce([
                 {
                     "lineNumber": 1,
-                    "occurrenceString": "third file searched"
+                    "snippet": "third file searched"
                 }
             ])
             .mockReturnValueOnce([
                 {
                     "lineNumber": 1,
-                    "occurrenceString": "fourth file searched"
+                    "snippet": "fourth file searched"
                 }
             ]);
         //when
@@ -422,7 +422,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
                 "occurrences": [
                     {
                         "lineNumber": 1,
-                        "occurrenceString": "first file searched"
+                        "snippet": "first file searched"
                     }
                 ]
             },
@@ -432,7 +432,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
                 "occurrences": [
                     {
                         "lineNumber": 1,
-                        "occurrenceString": "second file searched"
+                        "snippet": "second file searched"
                     }
                 ]
             },
@@ -442,7 +442,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
                 "occurrences": [
                     {
                         "lineNumber": 1,
-                        "occurrenceString": "third file searched"
+                        "snippet": "third file searched"
                     }
                 ]
             },
@@ -452,7 +452,7 @@ describe("Folder data source service: searchAllFolderDataSources function", () =
                 "occurrences": [
                     {
                         "lineNumber": 1,
-                        "occurrenceString": "fourth file searched"
+                        "snippet": "fourth file searched"
                     }
                 ]
             }
