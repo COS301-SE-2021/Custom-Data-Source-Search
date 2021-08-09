@@ -56,7 +56,7 @@ class WebPageDataSourceService {
         }
         let i = 0;
         for await (const content of pages) {
-            let searchResults: WebStringOccurrence[] = this.searchWebPage(await content, searchString);
+            let searchResults: WebStringOccurrence[] = this.searchWebPage(content, searchString);
             if (searchResults.length > 0) {
                 result.push({
                     type: "webpage",

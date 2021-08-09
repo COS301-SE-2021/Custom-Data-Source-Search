@@ -226,6 +226,7 @@ class FileDataSourceService {
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
             snippet = '<pre>' + snippet + '</pre>';
         } else {
+            snippet = this.newLinesToBreak(snippet);
             snippet = this.escapeAndHighlight(snippet);
         }
         return snippet;
@@ -268,6 +269,10 @@ class FileDataSourceService {
                     return '&#039;';
             }
         })
+    }
+
+    private newLinesToBreak(snippet: string) {
+        return "";
     }
 }
 
