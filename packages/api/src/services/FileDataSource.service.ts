@@ -204,6 +204,13 @@ class FileDataSourceService {
         return lineNum;
     }
 
+    getSnippetLineNumber(snippet: string, content: string) {
+        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
+        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
+        let snippetIndex: number = content.indexOf(snippet);
+        return this.getLineNumber(snippetIndex, content);
+    }
+
     getSearchSnippet(snippet: string, fileName: string) {
         let temp: string[] = fileName.split('.');
         let extension: string = temp[temp.length - 1];
