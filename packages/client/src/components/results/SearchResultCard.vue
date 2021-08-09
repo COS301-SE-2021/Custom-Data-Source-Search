@@ -131,6 +131,6 @@ p {
 }
 small {
   cursor: pointer;
-  color: #8c5400;
+  color: #7e96a1;
 }
 </style>
