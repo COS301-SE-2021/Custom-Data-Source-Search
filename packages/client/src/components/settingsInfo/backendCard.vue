@@ -12,9 +12,9 @@
                     <InputSwitch id="inputswitchNEW" style="float: right; margin-top: 3px" v-if="!newBackend" v-model="tempBackendInfo.active"/>
                 </div>
             </div>
-                <div class="expanded-backend-info" v-if="expand && !editBackendBool">
-                <div><em>Name: </em></div>
-                <div> {{ fedInBackend.name }} </div>
+                <div class="expanded-backend-info" v-if="expand">
+                <div><em>Email: </em></div>
+                <div> {{ fedInBackend.associatedEmail }} </div>
                 <div><em>Link: </em></div>
                 <div> {{fedInBackend.link}} </div>
                 <div><em>Pass Key: </em></div>
@@ -26,16 +26,19 @@
                 </div>
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
-                <div><em>Name: </em></div>
-                <input-text v-model="tempBackendInfo.name"/>
+                <div v-if="!newBackend && getUserAdminStatus(tempBackendInfo.id)"><em>Name: </em></div>
+                <input-text v-if="!newBackend && getUserAdminStatus(tempBackendInfo.id)" v-model="tempBackendInfo.name"/>
+                <div><em>Email: </em></div>
+                <input-text v-model="tempBackendInfo.associatedEmail"/>
                 <div><em>Link: </em></div>
                 <input-text v-model="tempBackendInfo.link"/>
                 <div><em>Pass Key: </em></div>
                 <input-text v-model="tempBackendInfo.passKey"/>
                 <div></div>
                 <div>
-                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="getUserAdminStatus">Permissions </Button>
-                    <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined">Save </Button>
+                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect </Button>
+                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(fedInBackend.id)">Permissions </Button>
+                    <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Save </Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
                 </div>
             </div>
@@ -53,15 +56,19 @@
         },
         data () {
             return {
+                tempNameNo: 0,
                 checked: false,
                 editBackendBool: false,
                 expand: false,
                 newBackendT: null,
                 tempBackendInfo: {
+                    id: null,
                     name: '',
-                    active: null,
+                    active: false,
                     link: '',
-                    passKey: ''
+                    passKey: '',
+                    associatedEmail: '',
+                    admin: null
                 }
             }
         },
@@ -102,13 +109,21 @@
         },
 
         methods: {
+
+            //View changes
             change() {
                 this.expand = !this.expand;
                 if (this.editBackendBool) {
-                    this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please select save or cancel before minimising", life: 2000})
+                    this.editBackendBool = false;
                 }
+                // if (this.editBackendBool) {
+                //     this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please select save or cancel", life: 2000})
+                // }
             },
             editBackend() {
+                this.setTempVars();
+                console.log ("I AM BEING UPDATED");
+                console.log("This backend email: " + this.tempBackendInfo.associatedEmail);
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
             },
@@ -116,13 +131,33 @@
                 this.expand = false;
                 this.editBackendBool = false;
 
+                //Operations changing store
                 if(this.newBackend) {
-                    this.$store.commit("addBackend", {userIndex: this.userIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey, active: this.tempBackendInfo.active});
+                    console.log("New backend Bool: " + this.newBackendT);
+                    this.$store.commit("addBackend", {
+                        userIndex: this.userIndex,
+                        name: this.tempBackendInfo.name,
+                        link: this.tempBackendInfo.link,
+                        passKey: this.tempBackendInfo.passKey,
+                        associatedEmail: this.tempBackendInfo.associatedEmail,
+                        admin: this.tempBackendInfo,
+                        active: this.tempBackendInfo.active,
+                    });
 
                     this.$emit('saveNewBackend');
                 }
                 else {
-                    this.$store.commit("editBackend", {userIndex: this.userIndex, backendIndex: this.backendIndex, name: this.tempBackendInfo.name, link: this.tempBackendInfo.link, passKey: this.tempBackendInfo.passKey});
+                    console.log("Saving to store - email: " + this.tempBackendInfo.associatedEmail);
+                    this.$store.commit("editBackend", {
+                        userIndex: this.userIndex,
+                        backendIndex: this.backendIndex,
+                        name: this.tempBackendInfo.name,
+                        link: this.tempBackendInfo.link,
+                        passKey: this.tempBackendInfo.passKey,
+                        associatedEmail: this.tempBackendInfo.associatedEmail,
+                        admin: this.tempBackendInfo.admin,
+                        active: this.tempBackendInfo.active
+                    });
                 }
                 this.setTempVars();
             },
@@ -133,21 +168,45 @@
                     this.$emit('saveNewBackend');
                 }
             },
+
+            //Operations changing store
             deleteBackend() {
                 this.expand = false;
                 this.editBackendBool = false;
                 this.$store.commit("deleteBackend", this.backendIndex);
                 this.setTempVars();
+                // Still need "are you sure you want to delete this backend?" warning
             },
+
+            editPermissions() {
+
+            },
+
+            connectToBackend() {
+                //Api call to make sure that connection information is valid, then it will call the connect api.
+                //If valid, a backend is added to the user's array of backends, and it returns the Backend's name and if you are an admin or not. (?)
+
+
+                //For now, we will just create a random new backend name and random edit status. (Should you be able to give your own personal backend name?)
+                // this.newBackend = false;
+                this.tempBackendInfo.name = "Temp Backend no: " + this.tempNameNo;
+                this.tempBackendInfo.admin = true;
+                this.saveChanges();
+                this.tempNameNo = this.tempNameNo + 1;
+
+
+
+            },
+            //Initialize component state
             setTempVars() {
                this.tempBackendInfo.name = this.fedInBackend.name;
                this.tempBackendInfo.link = this.fedInBackend.link;
                this.tempBackendInfo.active = this.fedInBackend.active;
                this.tempBackendInfo.passKey = this.fedInBackend.passKey;
+               this.tempBackendInfo.associatedEmail = this.fedInBackend.associatedEmail;
+               this.tempBackendInfo.id = this.fedInBackend.id;
+               this.tempBackendInfo.admin = this.fedInBackend.admin;
                this.newBackendT = this.newBackend;
-            },
-            editPermissions() {
-
             }
         },
         watch: {
@@ -177,10 +236,11 @@
         display: grid;
         grid-template-columns: 1fr 3fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
+        row-gap: 2px;
     }
 
     .expanded-backend-info div {
-        max-height: 40px;
+        max-height: 45px;
     }
 
     .pi-circle-on {
