@@ -1,6 +1,6 @@
 export interface StringOccurrence {
     lineNumber: number;
-    occurrenceString: string;
+    snippet: string;
 }
 
 export interface FileOccurrence {

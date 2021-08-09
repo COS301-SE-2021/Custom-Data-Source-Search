@@ -91,7 +91,7 @@ class WebPageDataSourceService {
         for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
             //let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
             matches.push({
-                occurrenceString: '...' + pageContents.substring(index - 12, index + searchString.length + 13) + '...'
+                snippet: '...' + pageContents.substring(index - 12, index + searchString.length + 13) + '...'
             });
             numOccurrence++;
         }

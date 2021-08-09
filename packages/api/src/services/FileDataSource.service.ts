@@ -143,7 +143,7 @@ class FileDataSourceService {
                     // @ts-ignore
                     for (let i = 0; i < value["content"].length; i++) {
                         // @ts-ignore
-                        stringOccurrences.push({"lineNumber": 0, "occurrenceString": value["content"][i]});
+                        stringOccurrences.push({"lineNumber": 0, "snippet": value["content"][i]});
                     }
                     let [datasource, err] = fileDataSourceRepository.getDataSource(key);
                     if (err) {
@@ -189,7 +189,7 @@ class FileDataSourceService {
             let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
             matches.push({
                 lineNumber: lineNum,
-                occurrenceString: '...' + fileContents.substring(index - 12, index + searchString.length + 13) + '...'
+                snippet: '...' + fileContents.substring(index - 12, index + searchString.length + 13) + '...'
             });
             numOccurrence++;
         }
@@ -208,15 +208,15 @@ class FileDataSourceService {
         let temp: string[] = fileName.split('.');
         let extension: string = temp[temp.length - 1];
         if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
-            let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
+            //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
             if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
             snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
             snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
             snippet = hljs.highlight(snippet, {language: extension}).value;
-            let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
-            snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');
+            /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
+            snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
             snippet = '<pre>' + snippet + '</pre>';
         } else {
             snippet = this.escapeAndHighlight(snippet);

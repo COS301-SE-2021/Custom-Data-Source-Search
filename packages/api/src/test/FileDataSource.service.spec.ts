@@ -35,7 +35,7 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[1]).toBe(undefined);
     });
 
@@ -48,10 +48,10 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[2]).toBe(undefined);
     });
 
@@ -74,11 +74,11 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
     });
@@ -92,11 +92,11 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
     });
@@ -110,11 +110,11 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
     });
@@ -131,16 +131,6 @@ describe('FileDataSourceService : Searching Across All Files', () => {
                 ], null];
         });
     })
-    it('Should return empty object when no occurrences of the search string are in any files ', async () => {
-        //given
-        const searchString = "awordthatshouldntbethere";
-        //when
-        const [response, error] = await service.searchAllFileDataSources(searchString);
-        //then
-        expect(error).toBe(null);
-        expect(response).not.toBe(null);
-        expect(response).toEqual([]);
-    });
 });
 
 describe('FileDataSourceService : addFileDataSource function', () => {
