@@ -1,18 +1,18 @@
 <template>
   <div class="result-card">
-    <div class="card-icon" v-html="whitelistEscape(icon)">
+    <div class="card-icon" v-html="whitelistEscape(datasource_icon)">
     </div>
     <div>
-      <h3>{{ name }}</h3>
+      <h3>{{ datasource_name }}</h3>
     </div>
-    <div class="content">
-      <div
-          v-for="(occurrence, i) in occurrences"
-          :key="i"
-      >
-        <div v-html="whitelistEscape(occurrence.occurrenceString)"/>
-        <div>--------------------------------</div>
-      </div>
+    <div class="snippets">
+      <search-result-card-match-snippet
+        v-for="(match_snippet, i) in match_snippets"
+        :key="i"
+        :line_number="match_snippet.line_number"
+        :snippet="whitelistEscape(match_snippet.snippet)"
+        @click="goToLineFetchFileIfRequired(match_snippet.line_number)"
+      />
     </div>
     <div>
       <small @click=openFile(source) @mousedown.right="openFileUsing(source)" >{{source}}</small>
@@ -22,14 +22,22 @@
 
 <script>
 import {shell} from "electron";
+import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
+import axios from "axios";
 
 export default {
   name: "SearchResultCard",
+  components: {SearchResultCardMatchSnippet},
   props: {
-    icon: String,
-    name: String,
-    occurrences: [],
-    source: String
+    id: String,
+    type: String,
+    source: String,
+    datasource_name: String,
+    datasource_icon: String,
+    match_snippets: [{
+          line_number: Number,
+          snippet: String
+        }],
   },
   methods: {
     openFile(source) {
@@ -45,7 +53,7 @@ export default {
         return ""
       }
       let valid_word = "[A-Za-z_][\\w\\s\\-:;,#.]+";
-      let valid_attribute_types = ["class", "d", "fill", "height", "style", "viewBox", "width"];
+      let valid_attribute_types = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
       let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
 
       let valid_attribute = `(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
@@ -60,9 +68,6 @@ export default {
       } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
         return this.escapeAllExceptMatches(content, matches);
       } else {
-        for (let i = 0; i < matches.length; i++) {
-          console.log(matches[i])
-        }
         return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
       }
     },
@@ -94,6 +99,17 @@ export default {
     },
     extractTagName(tag) {
       return tag.match(/[A-Za-z0-9]+/)[0];
+    },
+    goToLineFetchFileIfRequired(lineNumber) {
+      if (this.$parent.getIdOfCurrentFullFile() !== this.id) {
+        this.getFullFile()
+      }
+      this.$parent.goToFullFileLine(lineNumber)
+    },
+    getFullFile() {
+      axios.get(`http://localhost:3001/general/${this.type}/${this.id}`).then((resp) => {
+        this.$parent.loadFullFile(this.whitelistEscape(resp))
+      })
     }
   }
 }

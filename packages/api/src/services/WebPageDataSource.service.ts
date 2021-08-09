@@ -61,7 +61,7 @@ class WebPageDataSourceService {
                 result.push({
                     type: "webpage",
                     url: this.webPageDataSourceArray[i].url,
-                    occurrences: searchResults
+                    match_snippets: searchResults
                 });
                 i++;
             }

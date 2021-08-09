@@ -147,12 +147,12 @@ class FileDataSourceService {
                     }
                     let [datasource, err] = fileDataSourceRepository.getDataSource(key);
                     if (err) {
-                        result.push({"type": "file", "source": key, "occurrences": stringOccurrences});
+                        result.push({"type": "file", "source": key, "match_snippets": stringOccurrences});
                     } else {
                         result.push({
                             "type": "file",
                             "source": datasource.path + datasource.filename,
-                            "occurrences": stringOccurrences
+                            "match_snippets": stringOccurrences
                         });
                     }
                 }

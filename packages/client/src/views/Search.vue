@@ -27,7 +27,7 @@
           <search-result-card
               :icon="r.icon"
               :name="r.name"
-              :occurrences="r.occurrences"
+              match_snippets="r.occurrences"
               :source="r.source"
           />
         </div>
@@ -43,6 +43,8 @@
       name: "SearchBar",
       data() {
         return {
+          fullFileID: -1,
+          fullFileData: "",
           displaySignIn: false,
           notDeleted: true,
           query: "",
@@ -73,6 +75,15 @@
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn
+        },
+        getIdOfCurrentFullFile() {
+          return this.fullFileID;
+        },
+        loadFullFile(fileData) {
+
+        },
+        goToFullFileLine(lineNumber) {
+
         }
       },
       components: {
