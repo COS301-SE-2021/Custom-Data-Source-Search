@@ -6,5 +6,5 @@ export interface StringOccurrence {
 export interface FileOccurrence {
     type: string;
     source: string;
-    occurrences: StringOccurrence[];
+    match_snippets: StringOccurrence[];
 }
