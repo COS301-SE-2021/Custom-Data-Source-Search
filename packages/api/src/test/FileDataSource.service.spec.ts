@@ -120,19 +120,6 @@ describe('FileDataSourceService : Individual File Searching', () => {
     });
 });
 
-
-describe('FileDataSourceService : Searching Across All Files', () => {
-    beforeAll(() => {
-        jest.spyOn(fileDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
-            return [
-                [
-                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/', lastModified: new Date()},
-                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/', lastModified: new Date()}
-                ], null];
-        });
-    })
-});
-
 describe('FileDataSourceService : addFileDataSource function', () => {
     class TestError extends Error {
         constructor(message: string, code: string) {
