@@ -25,7 +25,7 @@ describe("whitelistStrip function", () => {
         let result = SearchResultCard.methods.whitelistEscape(content);
         expect(result).toEqual(content)
     })
-    it("Should accept?", () => {
+    it("Should accept", () => {
         let content = "<pre>\n" +
             "    <span class=\"hljs-title function_\">getAllFileDataSources</span>(<span class=\"hljs-params\"></span>) {\n" +
             "        <span class=\"hljs-keyword\">let</span> [<span style='background-color: #88ffff;color: dimgrey;'>result</span>, err] = fileDataSourceRepository.<span class=\"hljs-title function_\">getAllDataSources</span>();\n" +
@@ -34,6 +34,11 @@ describe("whitelistStrip function", () => {
             "                <span class=\"hljs-string\">&quot;code&quot;</span>: <span class=\"hljs-number\">500</span>,\n" +
             "                <span class=\"hljs-string\">&quot;body&quot;</span>: {</pre>"
         let result = SearchResultCard.methods.whitelistEscape(content)
+        expect(result).toEqual(content)
+    })
+    it ("Should Accept Correctly Highlighted Code", () => {
+        let content = "<pre><span class=\"hljs-title class_\">Repository<<span style='background-color: #0073ff;color: white;'>/</span>span> <span class=\"hljs-keyword\">from<<span style='background-color: #0073ff;color: white;'>/</span>span> <span class=\"hljs-string\">&quot;..<span style='background-color: #0073ff;color: white;'>/</span>repositories<span style='background-color: #0073ff;color: white;'>/</span>FileDataSourceRepository&quot;<<span style='background-color: #0073ff;color: white;'>/</span>span>;\n<span class=\"hljs-keyword\">import<<span style='background-color: #0073ff;color: white;'>/</span>span> {<span class=\"hljs-title class_\">FileOccurrence<<span style='background-color: #0073ff;color: white;'>/</span>span>, <span class=\"hljs-title class_\">StringOccurrence<<span style='background-color: #0073ff;color: white;'>/</span>span>} <span class=\"hljs-keyword\">from<<span style='background-color: #0073ff;color: white;'>/</span>span> <span class=\"hljs-string\">&quot;..<span style='background-color: #0073ff;color: white;'>/</span>models<span style='background-color: #0073ff;color: white;'>/</span>response<span style='background-color: #0073ff;color: white;'>/</span>searchFileResponse.interface&quot;<<span style='background-color: #0073ff;color: white;'>/</span>span>;\n<span class=\"hljs-keyword\">import<<span style='background-color: #0073ff;color: white;'>/</span>span> fileDataSourceService <span class=\"hljs-keyword\">from<<span style='background-color: #0073ff;color: white;'>/</span>span> <span class=\"hljs-string\">&quot;.<span style='background-color: #0073ff;color: white;'>/</span>FileDataSource<<span style='background-color: #0073ff;color: white;'>/</span>span></pre>"
+        let result = SearchResultCard.methods.whitelistEscape(content);
         expect(result).toEqual(content)
     })
 })

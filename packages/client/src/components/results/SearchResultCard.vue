@@ -60,6 +60,9 @@ export default {
       } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
         return this.escapeAllExceptMatches(content, matches);
       } else {
+        for (let i = 0; i < matches.length; i++) {
+          console.log(matches[i])
+        }
         return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
       }
     },
@@ -73,13 +76,7 @@ export default {
       return processedString;
     },
     escapeHtml(string) {
-      return string.replace(/[<>]/g, (match) => {
-        if (match === "<") {
-          return "&lt;";
-        } else {
-          return "&gt;"
-        }
-      })
+      return string.replace(/</g, "&lt;")
     },
     confirmThatAllOpenedTagsAreClosed(matches) {
       let stack = []
