@@ -135,7 +135,7 @@ class FileDataSourceService {
                 'http://localhost:8983/solr/files/select?q=' + searchString
                 + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
-            let result: any[] = [];
+            let result: FileOccurrence[] = [];
             for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
                 // @ts-ignore
                 if (value["content"] != undefined) {
@@ -226,7 +226,6 @@ class FileDataSourceService {
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
             snippet = '<pre>' + snippet + '</pre>';
         } else {
-            snippet = this.newLinesToBreak(snippet);
             snippet = this.escapeAndHighlight(snippet);
         }
         return snippet;
@@ -269,10 +268,6 @@ class FileDataSourceService {
                     return '&#039;';
             }
         })
-    }
-
-    private newLinesToBreak(snippet: string) {
-        return "";
     }
 }
 
