@@ -103,7 +103,7 @@ class GeneralService {
                 "code": 200,
                 "body": {
                     "message": "success",
-                    "data": this.newLinesToBreaks(docs[0]["content"].toString())
+                    "data": '<div>' + this.newLinesToBreaks(docs[0]["content"].toString()) + '</div>'
                 }
             }
         } catch (e) {
