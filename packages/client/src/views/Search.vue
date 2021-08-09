@@ -80,10 +80,11 @@
           return this.fullFileID;
         },
         loadFullFile(fileData) {
-
+          this.fullFileData = fileData
+          console.log(fileData)
         },
         goToFullFileLine(lineNumber) {
-
+          console.log(lineNumber)
         }
       },
       components: {
