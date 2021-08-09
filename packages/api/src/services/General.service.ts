@@ -91,6 +91,43 @@ class GeneralService {
             }]
         }
     }
+    async getFullFile(type: string, id: string) {
+        try {
+            let response: any = await axios.get(
+                'http://localhost:8983/solr/files/select?q=id%3A'
+                + id
+                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=3'
+            );
+            let docs: any[] = response["data"]["response"]["docs"];
+            return {
+                "code": 200,
+                "body": {
+                    "message": "success",
+                    "data": this.newLinesToBreaks(docs[0]["content"].toString())
+                }
+            }
+        } catch (e) {
+            return {
+                "code": 500,
+                "body": {
+                    "message": "Could not get file from solr"
+                }
+            }
+        }
+    }
+
+    private newLinesToBreaks(content: string) {
+        let result: string = "";
+        let index: number = content.indexOf('\n');
+        let count: number = 1;
+        while (index !== -1) {
+            result += content.substr(0, index) + '<br id="line_number_' + count++ + '">';
+            content = content.substr(index + 1, content.length);
+            index = content.indexOf('\n');
+        }
+        result += content;
+        return result;
+    }
 }
 
 const generalService = new GeneralService();

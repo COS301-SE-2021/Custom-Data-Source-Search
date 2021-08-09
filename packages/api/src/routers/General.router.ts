@@ -23,3 +23,10 @@ generalRouter.get("/:searchstring", async (req: Request, res: Response) => {
     res.status(result.code).send(result.body);
 
 });
+
+generalRouter.get("/fullfile", async (req: Request, res: Response) => {
+    const type: string = req.query.type.toString();
+    const id: string = req.query.id.toString();
+    const result = await generalService.getFullFile(type, id);
+    res.status(result.code).send(result.body);
+});
