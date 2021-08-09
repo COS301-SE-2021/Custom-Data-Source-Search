@@ -15,12 +15,14 @@
       </div>
     </div>
     <div>
-      <small @click=openFile(source) >{{source}}</small>
+      <small @click=openFile(source) @mousedown.right="openFileUsing(source)" >{{source}}</small>
     </div>
   </div>
 </template>
 
 <script>
+import {shell} from "electron";
+
 export default {
   name: "SearchResultCard",
   props: {
@@ -31,9 +33,12 @@ export default {
   },
   methods: {
     openFile(source) {
-      console.log("Open")
       const {shell} = require('electron')
       shell.openPath(source)
+    },
+    openFileUsing(source) {
+      const {shell} = require('electron')
+      shell.showItemInFolder(source)
     },
     whitelistEscape(content) {
       if (content === undefined) {
