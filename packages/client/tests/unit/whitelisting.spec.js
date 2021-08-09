@@ -3,12 +3,12 @@ import SearchResultCard from "@/components/results/SearchResultCard";
 describe("whitelistStrip function", () => {
     it("Should return small correct string unchanged", () => {
         let content = "<div><h1>Hello</h1><h2>Wor<ld</h2><div style='color: red'></div></div>"
-        let result = SearchResultCard.methods.whitelistStrip(content)
+        let result = SearchResultCard.methods.whitelistEscape(content)
         expect(result).toEqual("<div><h1>Hello</h1><h2>Wor&lt;ld</h2><div style='color: red'></div></div>")
     })
     it("Should reject a malformed html string with error message", () => {
         let content = "<div onclick=\"alert('hello')\"><h1>Hello</h1><h2>World</h2><div style='color: red'></div></div>"
-        let striped = SearchResultCard.methods.whitelistStrip(content)
+        let striped = SearchResultCard.methods.whitelistEscape(content)
         expect(striped).toEqual("<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>")
     })
     it("Should accept a correctly formed highlight.js string", () => {
@@ -22,7 +22,7 @@ describe("whitelistStrip function", () => {
             "    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span>Final list item<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n" +
             "<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">ul</span>&gt;</span>\n" +
             "</code></pre>";
-        let result = SearchResultCard.methods.whitelistStrip(content);
+        let result = SearchResultCard.methods.whitelistEscape(content);
         expect(result).toEqual(content)
     })
     it("Should accept?", () => {
@@ -33,7 +33,7 @@ describe("whitelistStrip function", () => {
             "            <span class=\"hljs-keyword\">return</span> {\n" +
             "                <span class=\"hljs-string\">&quot;code&quot;</span>: <span class=\"hljs-number\">500</span>,\n" +
             "                <span class=\"hljs-string\">&quot;body&quot;</span>: {</pre>"
-        let result = SearchResultCard.methods.whitelistStrip(content)
+        let result = SearchResultCard.methods.whitelistEscape(content)
         expect(result).toEqual(content)
     })
 })

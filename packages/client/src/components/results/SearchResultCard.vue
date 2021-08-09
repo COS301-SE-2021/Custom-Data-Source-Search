@@ -1,6 +1,6 @@
 <template>
   <div class="result-card">
-    <div class="card-icon" v-html="whitelistStrip(icon)">
+    <div class="card-icon" v-html="whitelistEscape(icon)">
     </div>
     <div>
       <h3>{{ name }}</h3>
@@ -10,7 +10,7 @@
           v-for="(occurrence, i) in occurrences"
           :key="i"
       >
-        <div v-html="whitelistStrip(occurrence.occurrenceString)"/>
+        <div v-html="whitelistEscape(occurrence.occurrenceString)"/>
         <div>--------------------------------</div>
       </div>
     </div>
@@ -30,7 +30,10 @@ export default {
     source: String
   },
   methods: {
-    whitelistStrip(content) {
+    whitelistEscape(content) {
+      if (content === undefined) {
+        return ""
+      }
       let valid_word = "[A-Za-z_][\\w\\s\\-:;,#.]+";
       let valid_attribute_types = ["class", "d", "fill", "height", "style", "viewBox", "width"];
       let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
