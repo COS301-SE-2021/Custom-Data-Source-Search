@@ -15,7 +15,7 @@
       </div>
     </div>
     <div>
-      <small>{{ source }}</small>
+      <small @click=openFile(source) >{{source}}</small>
     </div>
   </div>
 </template>
@@ -30,6 +30,11 @@ export default {
     source: String
   },
   methods: {
+    openFile(source) {
+      console.log("Open")
+      const {shell} = require('electron')
+      shell.openPath(source)
+    },
     whitelistEscape(content) {
       if (content === undefined) {
         return ""
@@ -118,5 +123,9 @@ p {
   text-align: right;
   float: right;
   padding-top: 10px;
+}
+small {
+  cursor: pointer;
+  color: #8c5400;
 }
 </style>
