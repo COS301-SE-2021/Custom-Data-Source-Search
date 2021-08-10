@@ -91,6 +91,7 @@ class GeneralService {
             }]
         }
     }
+
     async getFullFile(type: string, id: string) {
         try {
             let response: any = await axios.get(
