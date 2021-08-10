@@ -6,7 +6,7 @@
                 <div style="cursor: pointer" @click="change">
                     <em class="pi pi-circle-on" />
                     <span> {{fedInBackend.name}} </span>
-                    <div><em v-if="!newBackend && getUserAdminStatus(getSignedInUserId)">ADMIN</em></div>
+                    <span v-if="fedInBackend.admin" style="float: right">ADMIN</span>
                 </div>
                 <div>
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-if="newBackend" v-model="fedInBackend.active"/>
