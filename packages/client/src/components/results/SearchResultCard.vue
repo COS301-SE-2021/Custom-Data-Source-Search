@@ -19,7 +19,7 @@
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
-        v-for="(match_snippet, i) in match_snippets"
+        v-for="(match_snippet, i) in [match_snippets[0]]"
         :key="i"
         :line_number="match_snippet.line_number"
         :snippet="whitelistEscape(match_snippet.snippet)"
@@ -109,6 +109,8 @@ export default {
     goToLineFetchFileIfRequired(lineNumber) {
       axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
         console.log(resp.data)
+        this.$emit("resultClicked", resp.data.data, this.id)
+        this.$emit("goToLine", lineNumber)
       })
     }
   }
@@ -141,6 +143,7 @@ h2 {
 }
 
 .datasource_name {
+  word-wrap: break-word;
   padding-top: 10px;
   padding-bottom: 5px;
   font-size: 1.1em;
@@ -153,5 +156,13 @@ small {
   cursor: pointer;
   color: #7e96a1;
   padding-bottom: 5px;
+}
+
+.datasource_name:hover {
+  text-decoration: underline;
+}
+
+small:hover {
+  text-decoration: underline;
 }
 </style>

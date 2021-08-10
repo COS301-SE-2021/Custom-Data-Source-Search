@@ -19,7 +19,7 @@ export default {
   padding: 10px;
   border-radius: 10px;
   margin-top: 10px;
-  background-color: #1e1e1e;
+  background-color: #1f1f1f;
 }
 
 .match_snippet:hover {
