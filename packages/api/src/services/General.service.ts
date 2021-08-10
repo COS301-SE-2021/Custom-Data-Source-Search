@@ -1,6 +1,7 @@
 import axios from "axios";
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import fileDataSourceService from "./FileDataSource.service";
+import hljs from "highlight.js";
 
 class GeneralService {
 
@@ -97,14 +98,26 @@ class GeneralService {
             let response: any = await axios.get(
                 'http://localhost:8983/solr/files/select?q=id%3A'
                 + id
-                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=3'
+                + '&q.op=OR'
             );
-            let docs: any[] = response["data"]["response"]["docs"];
+            let result: string;
+            let content: string = response["data"]["response"]["docs"][0]["content"];
+            let [dataSource, err] = fileDataSourceRepository.getDataSource(id);
+            if (err) {
+                result = '<div>' + this.newLinesToBreaks(content.toString()) + '</div>';
+            } else {
+                let temp: string[] = dataSource.filename.split('.');
+                let extension: string = temp[temp.length - 1];
+                if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
+                    let snippet: string = hljs.highlight(content, {language: extension}).value;
+                    result = '<pre>' + this.newLinesToBreaks(snippet) + '</pre>';
+                }
+            }
             return {
                 "code": 200,
                 "body": {
-                    "message": "success",
-                    "data": '<div>' + this.newLinesToBreaks(docs[0]["content"].toString()) + '</div>'
+                    "message": "Success",
+                    "data": result
                 }
             }
         } catch (e) {
