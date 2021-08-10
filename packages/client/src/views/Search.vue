@@ -109,6 +109,7 @@
 .container {
   height: available;
   overflow-y: scroll;
+  font-size: 0.9em;
 }
 
 input {
