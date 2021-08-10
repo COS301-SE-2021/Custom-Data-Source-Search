@@ -183,7 +183,7 @@
             },
 
             editPermissions() {
-
+                console.log("To be implemented");
             },
 
             connectToBackend() {

@@ -182,16 +182,6 @@ const store = createStore({
             for(let x = 0; x < l; x++) {
                 state.users[state.signedInUserId].backends[x].id = x;
             }
-
-            // for (let i of state.users[payload.userIndex].backends) {
-            //     console.log("name: " + i.name);
-            //     console.log("email: " + i.associatedEmail);
-            //     console.log("link: " + i.link);
-            //     console.log("passKey: " + i.passKey);
-            //     console.log("active: " + i.active);
-            //     console.log("admin: " + i.admin);
-            //     console.log("id: " + i.id);
-            // }
         },
         addBackend(state, payload){
 
@@ -217,15 +207,6 @@ const store = createStore({
                 state.users[state.signedInUserId].backends[x].id = x;
             }
 
-            //Console.log results to check
-            for (let i of state.users[payload.userIndex].backends) {
-                console.log("name: " + i.name);
-                // console.log("link: " + i.link);
-                // console.log("passKey: " + i.passKey);
-                // console.log("active: " + i.active);
-                console.log("admin: " + i.admin);
-                console.log("id: " + i.id);
-            }
         },
         setSignedIn(state, payload){
             state.signedIn = payload;
