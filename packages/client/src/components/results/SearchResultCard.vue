@@ -48,7 +48,7 @@ export default {
       if (content === undefined) {
         return ""
       }
-      let valid_word = "[A-Za-z_][\\w\\s\\-:;,#.]+";
+      let valid_word = "[\\w\\s\\-:;,#.]+";
       let valid_attribute_types = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
       let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
 
@@ -97,9 +97,10 @@ export default {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
     goToLineFetchFileIfRequired(lineNumber) {
-      if (this.$parent.getIdOfCurrentFullFile() !== this.id) {
+      if (this.$parent.methods.getIdOfCurrentFullFile() !== this.id) {
         axios.get(`http://localhost:3001/general/fullfile/?type=${this.type}&id=${this.id}`).then((resp) => {
           console.log(resp.data)
+          this.$parent.
           this.$parent.loadFullFile(this.whitelistEscape(resp.data))
         })
       }
