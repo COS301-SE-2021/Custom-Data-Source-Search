@@ -117,6 +117,7 @@ export default {
   border-radius: 10px;
   padding: 10px 20px;
   margin: 10px auto;
+  overflow: hidden;
 }
 
 h1 {

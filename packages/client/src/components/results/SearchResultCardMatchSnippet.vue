@@ -18,7 +18,6 @@ export default {
   cursor: pointer;
   padding: 10px;
   border-radius: 10px;
-
 }
 
 .match_snippet:hover {
