@@ -117,7 +117,6 @@ export default {
 
 <style scoped>
 .result-card {
-  background-color: rgba(0, 0, 0, 0.2);
   text-align: left;
   max-width: 1000px;
   border-radius: 10px;

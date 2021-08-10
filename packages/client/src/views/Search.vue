@@ -2,7 +2,7 @@
   <div class="grid-content">
     <Toast position="bottom-right"/>
     <Splitter style="height: 100vh; background:var(--surface-200);">
-      <SplitterPanel class="container" :size=45 style="padding-top: 50px">
+      <SplitterPanel class="container" :size=100 style="padding-top: 50px">
         <div v-if="firstSearch" class="logo-div">
           <img  src="../assets/search_logo.png" height="300" alt="">
         </div>
@@ -83,6 +83,7 @@
           console.log(fileData)
         },
         goToFullFileLine(lineNumber) {
+          this.$emit("")
           console.log(lineNumber)
         }
       },
