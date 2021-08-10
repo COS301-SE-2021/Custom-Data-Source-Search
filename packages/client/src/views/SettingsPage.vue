@@ -52,7 +52,8 @@
                     active: false,
                     link: '',
                     passKey: '',
-                    admin: false
+                    admin: false,
+                    connected: false
                 },
             }
         },

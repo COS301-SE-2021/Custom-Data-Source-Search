@@ -4,7 +4,8 @@
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
-                    <em class="pi pi-circle-on" />
+                    <em v-if="fedInBackend.connected" class="pi pi-circle-on" />
+                    <em v-if="!fedInBackend.connected" class="pi pi-circle-off" />
                     <span> {{fedInBackend.name}} </span>
                     <span v-if="fedInBackend.admin" style="float: right">ADMIN</span>
                 </div>
@@ -245,12 +246,14 @@
         max-height: 45px;
     }
 
-    .pi-circle-on {
-        color: #41B3B2;
+    .pi-circle-on, .pi-circle-off {
         padding-top: 2px;
         padding-left: 2px;
         padding-bottom: 2px;
     }
+
+    /*color: #41B3B2;*/
+
 
     input {
         margin-right: 2%;

@@ -22,7 +22,8 @@ const store = createStore({
                         active: true,
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
-                        admin: true
+                        admin: true,
+                        connected: true
 
                     },
                     {
@@ -32,8 +33,8 @@ const store = createStore({
                         active: false,
                         link: 'www.justAnotherExample/LEGO/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey',
-                        admin: true
-
+                        admin: true,
+                        connected: true
                     },
                     {
                         id: 2,
@@ -42,7 +43,8 @@ const store = createStore({
                         active: true,
                         link: 'www.fulffy&Bubbles/backend/link',
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
-                        admin: true
+                        admin: true,
+                        connected: true
                     }
                 ]
             },
@@ -62,8 +64,8 @@ const store = createStore({
                         active: true,
                         link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg',
-                        admin: false
-
+                        admin: false,
+                        connected: false
                     },
                     {
                         id: 1,
@@ -72,8 +74,8 @@ const store = createStore({
                         active: false,
                         link: 'www.justAnotherExample/windows/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey',
-                        admin: false
-
+                        admin: false,
+                        connected: true
                     },
                     {
                         id: 2,
@@ -82,7 +84,8 @@ const store = createStore({
                         active: true,
                         link: 'www.doesnotmattermuch/backend/link',
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
-                        admin: false
+                        admin: false,
+                        connected: true
                     }
                 ]
             },
@@ -102,7 +105,8 @@ const store = createStore({
                         active: true,
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
-                        admin: false
+                        admin: false,
+                        connected: false
                     },
                     {
                         id: 1,
@@ -111,7 +115,8 @@ const store = createStore({
                         active: false,
                         link: 'www.justAnotherExample/LEGO/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey',
-                        admin: true
+                        admin: true,
+                        connected: false
                     },
                     {
                         id: 2,
@@ -120,7 +125,8 @@ const store = createStore({
                         active: true,
                         link: 'www.fulffy&Bubbles/backend/link',
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
-                        admin: true
+                        admin: true,
+                        connected: true
                     }
                 ]
             }
