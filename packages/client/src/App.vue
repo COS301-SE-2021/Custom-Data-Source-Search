@@ -1,6 +1,6 @@
 <template>
 <div class="grid-app">
-  <div id="grid-div-1" >
+  <div id="grid-div-1">
     <Sidebar id="Sidebar" v-if="navBar">
       <router-link title="Search" class="icon" to="/"><em class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
       <router-link title="Data Sources" class="icon" to="/datasources"><em class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
@@ -18,7 +18,7 @@
 html,
 body,
 #app {
-  height: 100%;
+  overflow:hidden;
   margin: 0;
   padding: 0;
   background-color: #242424;

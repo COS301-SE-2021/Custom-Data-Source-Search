@@ -3,8 +3,8 @@
     <div class="card-icon" v-html="whitelistEscape(datasource_icon)">
     </div>
     <div>
-      <h3 class="datasource_name" v-if="datasource_name !== undefined">{{ datasource_name }}</h3>
-      <h3 class="datasource_name" v-else>DataSource Not Named</h3>
+      <div class="datasource_name" v-if="datasource_name !== undefined">{{ datasource_name }}</div>
+      <div class="datasource_name" v-else>DataSource Not Named</div>
       <small @click=openFile(source) @mousedown.right="openFileUsing(source)" >{{source}}</small>
     </div>
     <div class="snippets">
@@ -98,7 +98,8 @@ export default {
     },
     goToLineFetchFileIfRequired(lineNumber) {
       if (this.$parent.getIdOfCurrentFullFile() !== this.id) {
-        axios.get(`http://localhost:3001/general/fullfile/?type=${type}&id=${this.id}`).then((resp) => {
+        axios.get(`http://localhost:3001/general/fullfile/?type=${this.type}&id=${this.id}`).then((resp) => {
+          console.log(resp.data)
           this.$parent.loadFullFile(this.whitelistEscape(resp.data))
         })
       }
@@ -126,15 +127,23 @@ h2 {
   font-size: 1.5em;
 }
 
-h3 {
-
-}
-
 .card-icon {
   text-align: right;
   float: right;
   padding-top: 10px;
 }
+
+.datasource_name {
+  padding-top: 10px;
+  padding-bottom: 5px;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+pre, code {
+  white-space:pre-wrap
+}
+
 small {
   cursor: pointer;
   color: #7e96a1;

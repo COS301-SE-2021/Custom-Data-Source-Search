@@ -1,33 +1,36 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <div class="header" >
-
-    </div>
-    <div v-if="firstSearch" class="logo-div">
-      <img  src="../assets/search_logo.png" height="300" alt="">
-    </div>
-      <div class="search-div">
-        <span class="p-input-icon-right">
-            <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
-            <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
-
-        </span>
-        <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
-      </div>
-    <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
-    <div>
-        <search-result-card
-            v-for="(r,i) in searchResults"
-            :key="i"
-            :id="r.id"
-            :icon="r.datasource_icon"
-            :name="r.datasource_name"
-            :type="r.type"
-            :match_snippets="r.match_snippets"
-            :source="r.source"
-        />
-      </div>
+    <Splitter style="height: 100vh; background:var(--surface-200);">
+      <SplitterPanel class="container" :size=45 style="padding-top: 50px">
+        <div v-if="firstSearch" class="logo-div">
+          <img  src="../assets/search_logo.png" height="300" alt="">
+        </div>
+        <div class="search-div">
+          <span class="p-input-icon-right">
+              <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
+              <InputText size="90" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+          </span>
+          <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
+        </div>
+        <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+        <div>
+          <search-result-card
+              v-for="(r,i) in searchResults"
+              :key="i"
+              :id="r.id"
+              :icon="r.datasource_icon"
+              :name="r.datasource_name"
+              :type="r.type"
+              :match_snippets="r.match_snippets"
+              :source="r.source"
+          />
+        </div>
+      </SplitterPanel>
+      <SplitterPanel class="container">
+        <div class="full_file"><p v-if="fullFileID !== -1">Adjust size of panel by dragging divider with mouse</p></div>
+      </SplitterPanel>
+    </Splitter>
   </div>
 </template>
 
@@ -100,9 +103,24 @@
   text-align: center;
 }
 
+.container {
+  height: available;
+  overflow-y: scroll;
+}
+
+input {
+  width: 100%;
+  min-width: 0
+}
+
+.container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 .grid-content {
   display: grid;
-  grid-template-rows: 1fr ;
+  grid-template-rows: 1fr;
 }
 
 .search-div {
@@ -111,10 +129,6 @@
   align-items:center;
   padding: 30px;
   max-height: 100px;
-}
-
-input {
-  width: 600px;
 }
 
 ::placeholder {
