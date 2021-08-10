@@ -99,6 +99,11 @@
   margin-left: 25px;
 }
 
+.p-inputswitch{
+  float: right;
+  margin-right: 30px;
+}
+
 .sign-out{
   float: right;
   margin-right: 10px;

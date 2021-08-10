@@ -4,8 +4,6 @@ const store = createStore({
     state:{
         signedInUserId: 2,
         signedIn : false,
-        name: null,
-        email: null,
         users: [
             {
                 id: 0,
@@ -163,12 +161,6 @@ const store = createStore({
         },
         getUserAdminStatus: (state) => (backendID) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.id === backendID).admin;
-        },
-        getName(state){
-            return state.name;
-        },
-        getEmail(state){
-            return state.email;
         }
     },
 
