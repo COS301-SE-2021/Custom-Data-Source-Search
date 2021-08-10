@@ -111,6 +111,8 @@ class GeneralService {
                 if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
                     let snippet: string = hljs.highlight(content, {language: extension}).value;
                     result = '<pre>' + this.newLinesToBreaks(snippet) + '</pre>';
+                } else {
+                    result = '<div>' + this.newLinesToBreaks(content.toString()) + '</div>';
                 }
             }
             return {
