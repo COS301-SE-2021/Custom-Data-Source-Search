@@ -4,10 +4,10 @@
     Data Sources
   </h2>
   <div class="card" >
-    <DataTable :value="endpoint" :paginator="true" :rows="10"
+    <DataTable :value="endpoint" :paginator="true" :rows="10" v-model:selection="selectedSources"
                paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                :rowsPerPageOptions="[10,20,50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-               dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
+               dataKey="location" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
                :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
       <template #header>
         <div class="p-d-flex p-jc-end">
@@ -53,8 +53,9 @@
         No sources found.
       </template>
       <template #loading>
-        Loading data. Please wait.
+        Loading sources, please wait...
       </template>
+      <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
       <Column header="Source Location" filterField="location" style="min-width:12rem">
         <template #body="{data}">
           <span class="image-text">{{data.location}}</span>
@@ -126,6 +127,8 @@
         <template #body="{data}">
 <!--          Instead of button, perhaps include check boxes. When boxes are checked an option to delete or edit may appear-->
           <Button v-if="deleteBackend(data.backend)" type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain"></Button>
+          <Button v-else type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain" disabled="disabled"></Button>
+
         </template>
       </Column>
     </DataTable>
@@ -148,6 +151,7 @@ export default {
       sources: null,
       loading: false,
       backend: null,
+      selectedSources: null,
       //Template for the endpoint
       endpoint:[
         {
