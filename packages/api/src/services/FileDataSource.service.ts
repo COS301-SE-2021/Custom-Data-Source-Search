@@ -221,10 +221,13 @@ class FileDataSourceService {
             }
             snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
             snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
+            while (snippet.indexOf('\n') == 0) {
+                snippet = snippet.substr(1, snippet.length);
+            }
             snippet = hljs.highlight(snippet, {language: extension}).value;
             /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
-            snippet = '<pre>' + snippet + '</pre>';
+            snippet = '<pre style="margin-top: 0px;margin-bottom: 0px">' + snippet + '</pre>';
         } else {
             snippet = '<div>' + this.escapeAndHighlight(snippet) + '</div>';
         }
