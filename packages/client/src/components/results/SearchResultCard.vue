@@ -111,9 +111,7 @@ export default {
     },
     goToLineFetchFileIfRequired(lineNumber) {
       axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
-        console.log(resp.data)
-        this.$emit("resultClicked", resp.data.data, this.id)
-        this.$emit("goToLine", lineNumber)
+        this.$emit("resultClicked", resp.data.data, this.id, lineNumber)
       })
     }
   }

@@ -2,7 +2,7 @@
   <div class="grid-content">
     <Toast position="bottom-right"/>
     <Splitter style="height: 100vh; background:var(--surface-200);">
-      <SplitterPanel class="container" :size="60" :minSize="20" style="padding-top: 50px">
+      <SplitterPanel class="container" :size="40" :minSize="20" style="padding-top: 50px">
         <div v-if="firstSearch" class="logo-div">
           <img  src="../assets/search_logo.png" height="300" alt="">
         </div>
@@ -28,9 +28,9 @@
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel class="container" :size="40" :minSize="20">
+      <SplitterPanel class="container" :size="60" :minSize="20">
         <p id="divider_usage_message" v-if="fullFileID === -1">to adjust size of panel drag divider left or right</p>
-        <div class="full_file" v-html="fullFileData">
+        <div id="full_file" v-html="fullFileData">
         </div>
       </SplitterPanel>
     </Splitter>
@@ -81,12 +81,16 @@
         getIdOfCurrentFullFile() {
           return this.fullFileID;
         },
-        loadFullFile(fileData, id) {
+        loadFullFile(fileData, id, lineNumber) {
           this.fullFileData = fileData;
           this.fullFileID = id;
+          this.$nextTick().then(() => {
+            this.goToFullFileLine(lineNumber);
+          })
         },
         goToFullFileLine(lineNumber) {
-          console.log(lineNumber);
+          let targetLine = this.$el.querySelector(`#line_number_${lineNumber}`)
+          targetLine.scrollIntoView({behavior: "smooth"})
         }
       },
       components: {
@@ -164,7 +168,7 @@ input {
   margin-bottom : 0.3rem;
 }
 
-.full_file {
+#full_file {
   padding: 10px;
 }
 
