@@ -118,6 +118,7 @@ export default {
   padding: 10px 20px;
   margin: 10px auto;
   overflow: hidden;
+  position: relative;
 }
 
 h1 {
@@ -148,5 +149,6 @@ pre, code {
 small {
   cursor: pointer;
   color: #7e96a1;
+  padding-bottom: 5px;
 }
 </style>
