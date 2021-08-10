@@ -229,7 +229,7 @@ export default {
       return this.$store.getters.getBackendAdminStatus(source)
     },
     deleteSource(){
-
+      this.$toast.add({severity:'info', summary: 'Success', detail:'Button was clicked', life: 3000});
     }
   }
 }
