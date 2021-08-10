@@ -4,7 +4,7 @@
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
-                    <em v-if="fedInBackend.connected" class="pi pi-circle-on" />
+                    <em v-if="fedInBackend.connected"  :style="connectedStyle" class="pi pi-circle-on" />
                     <em v-if="!fedInBackend.connected" class="pi pi-circle-off" />
                     <span> {{fedInBackend.name}} </span>
                     <span v-if="fedInBackend.admin" style="float: right">ADMIN</span>
@@ -79,7 +79,10 @@
                 'getUserBackend',
                 'getSignedInUserId',
                 'getUserAdminStatus'
-            ])
+            ]),
+            connectedStyle () {
+                return 'color: ' + this.fedInBackend.color;
+            }
         },
         props: {
           userIndex: {
@@ -251,8 +254,6 @@
         padding-left: 2px;
         padding-bottom: 2px;
     }
-
-    /*color: #41B3B2;*/
 
 
     input {

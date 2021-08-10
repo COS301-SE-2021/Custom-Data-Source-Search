@@ -2,7 +2,7 @@ import {createStore} from 'vuex'
 
 const store = createStore({
     state:{
-        signedInUserId: 1,
+        signedInUserId: 2,
         signedIn : false,
         users: [
             {
@@ -23,8 +23,8 @@ const store = createStore({
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
                         admin: true,
-                        connected: true
-
+                        connected: true,
+                        color: '#b34e47'
                     },
                     {
                         id: 1,
@@ -34,7 +34,8 @@ const store = createStore({
                         link: 'www.justAnotherExample/LEGO/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey',
                         admin: true,
-                        connected: true
+                        connected: true,
+                        color: '#21b312'
                     },
                     {
                         id: 2,
@@ -44,7 +45,8 @@ const store = createStore({
                         link: 'www.fulffy&Bubbles/backend/link',
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
                         admin: true,
-                        connected: true
+                        connected: true,
+                        color: '#41B3B2'
                     }
                 ]
             },
@@ -65,7 +67,8 @@ const store = createStore({
                         link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg',
                         admin: false,
-                        connected: false
+                        connected: false,
+                        color: '#b30a8c'
                     },
                     {
                         id: 1,
@@ -75,7 +78,8 @@ const store = createStore({
                         link: 'www.justAnotherExample/windows/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey',
                         admin: false,
-                        connected: true
+                        connected: true,
+                        color: '#fdff23'
                     },
                     {
                         id: 2,
@@ -85,7 +89,8 @@ const store = createStore({
                         link: 'www.doesnotmattermuch/backend/link',
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
                         admin: false,
-                        connected: true
+                        connected: true,
+                        color: '#41B3B2'
                     }
                 ]
             },
@@ -106,7 +111,8 @@ const store = createStore({
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
                         passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
                         admin: false,
-                        connected: false
+                        connected: false,
+                        color: '#25b313'
                     },
                     {
                         id: 1,
@@ -116,7 +122,8 @@ const store = createStore({
                         link: 'www.justAnotherExample/LEGO/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey',
                         admin: true,
-                        connected: false
+                        connected: true,
+                        color: '#1616b3'
                     },
                     {
                         id: 2,
@@ -126,7 +133,8 @@ const store = createStore({
                         link: 'www.fulffy&Bubbles/backend/link',
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
                         admin: true,
-                        connected: true
+                        connected: true,
+                        color: '#b3100c'
                     }
                 ]
             }
