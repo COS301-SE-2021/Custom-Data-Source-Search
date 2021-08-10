@@ -227,7 +227,7 @@ class FileDataSourceService {
             snippet = hljs.highlight(snippet, {language: extension}).value;
             /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
-            snippet = '<pre style="margin-top: 0px;margin-bottom: 0px">' + snippet + '</pre>';
+            snippet = '<pre style="margin-top: 0;margin-bottom: 0;">' + snippet + '</pre>';
         } else {
             snippet = '<div>' + this.escapeAndHighlight(snippet) + '</div>';
         }
