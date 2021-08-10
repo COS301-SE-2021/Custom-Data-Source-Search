@@ -3,7 +3,9 @@
     <div class="card-icon" v-html="whitelistEscape(datasource_icon)">
     </div>
     <div>
-      <h3>{{ datasource_name }}</h3>
+      <h3 class="datasource_name" v-if="datasource_name !== undefined">{{ datasource_name }}</h3>
+      <h3 class="datasource_name" v-else>DataSource Not Named</h3>
+      <small @click=openFile(source) @mousedown.right="openFileUsing(source)" >{{source}}</small>
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
@@ -13,9 +15,6 @@
         :snippet="whitelistEscape(match_snippet.snippet)"
         @click="goToLineFetchFileIfRequired(match_snippet.line_number)"
       />
-    </div>
-    <div>
-      <small @click=openFile(source) @mousedown.right="openFileUsing(source)" >{{source}}</small>
     </div>
   </div>
 </template>
@@ -34,10 +33,7 @@ export default {
     source: String,
     datasource_name: String,
     datasource_icon: String,
-    match_snippets: [{
-          line_number: Number,
-          snippet: String
-        }],
+    match_snippets: Array
   },
   methods: {
     openFile(source) {
@@ -117,9 +113,9 @@ export default {
   background-color: rgba(0, 0, 0, 0.2);
   text-align: left;
   max-width: 1000px;
-  margin: 10px auto auto;
   border-radius: 10px;
   padding: 10px 20px;
+  margin: 10px auto;
 }
 
 h1 {
@@ -130,8 +126,8 @@ h2 {
   font-size: 1.5em;
 }
 
-p {
-  font-size: 1em;
+h3 {
+
 }
 
 .card-icon {

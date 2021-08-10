@@ -14,7 +14,12 @@ export default {
 
 <style scoped>
 .match_snippet {
-  background-color: #4d4d4d;
-  cursor: pointer
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.match_snippet:hover {
+  background-color: #2a2a2a;
 }
 </style>

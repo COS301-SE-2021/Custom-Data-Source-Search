@@ -16,22 +16,17 @@
         <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
       </div>
     <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
-
     <div>
-        <div
-                v-for="(r,i) in searchResults"
-                :key="i"
-        >
-          <div>{{r}}</div>
-          <search-result-card
-              :id="r.id"
-              :icon="r.datasource_icon"
-              :name="r.datasource_name"
-              :type="r.type"
-              :match_snippets="r.match_snippets"
-              :source="r.source"
-          />
-        </div>
+        <search-result-card
+            v-for="(r,i) in searchResults"
+            :key="i"
+            :id="r.id"
+            :icon="r.datasource_icon"
+            :name="r.datasource_name"
+            :type="r.type"
+            :match_snippets="r.match_snippets"
+            :source="r.source"
+        />
       </div>
   </div>
 </template>
