@@ -4,10 +4,10 @@
     Data Sources
   </h2>
   <div class="card" >
-    <DataTable :value="endpoint" :paginator="true" :rows="10" v-model:selection="selectedSources"
+    <DataTable :value="endpoint" :paginator="true" :rows="10" v-model:selection="selectedSources" :rowHover="true"
                paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                :rowsPerPageOptions="[10,20,50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-               dataKey="location" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
+               dataKey="location" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
                :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
       <template #header>
         <div class="p-d-flex p-jc-end">
@@ -123,14 +123,14 @@
           </MultiSelect>
         </template>
       </Column>
-      <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
-        <template #body="{data}">
-<!--          Instead of button, perhaps include check boxes. When boxes are checked an option to delete or edit may appear-->
-          <Button v-if="deleteBackend(data.backend)" type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain"></Button>
-          <Button v-else type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain" disabled="disabled"></Button>
+<!--      <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">-->
+<!--        <template #body="{data}">-->
+<!--&lt;!&ndash;          Instead of button, perhaps include check boxes. When boxes are checked an option to delete or edit may appear&ndash;&gt;-->
+<!--          <Button v-if="deleteBackend(data.backend)" type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain"></Button>-->
+<!--          <Button v-else type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain" disabled="disabled"></Button>-->
 
-        </template>
-      </Column>
+<!--        </template>-->
+<!--      </Column>-->
     </DataTable>
   </div>
 
@@ -212,7 +212,7 @@ export default {
   },
   productService: null,
   mounted() {
-    this.loading = true;
+    // this.loading = true;
 
     axios.get("http://localhost:3001/folderdatasources").then(
         resp => {
