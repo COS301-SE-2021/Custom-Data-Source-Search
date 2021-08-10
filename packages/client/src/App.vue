@@ -2,7 +2,7 @@
     <div class="grid-app" v-if="this.$store.getters.getSignedIn">
 <!--  <div class="grid-app">-->
       <div class="nav-bar-top">
-        <button class="profile-button" @click="toggle">Hi, {{ this.$store.getters.getName }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>
+        <button class="profile-button" @click="toggle">Hi, {{ getUserInfo(getSignedInUserId).name }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>
         <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
           <ProfileDropdown/>
         </OverlayPanel>
@@ -148,6 +148,8 @@ button {
 <script>
 import OverlayPanel from 'primevue/overlaypanel';
 import ProfileDropdown from "@/components/landing/ProfileDropdown";
+import {mapGetters} from "vuex";
+
 export default {
   components: {
     OverlayPanel,
@@ -158,6 +160,13 @@ export default {
       name: "Data Sleuth",
     }
   },
+    computed: {
+        ...mapGetters ([
+            'getUserInfo',
+            'getUserBackend',
+            'getSignedInUserId'
+        ])
+    },
   methods: {
     hideNavBar() {
       this.navBar = false;

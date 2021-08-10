@@ -10,8 +10,7 @@
                     <span v-if="fedInBackend.admin" style="float: right; padding-top: 3px">ADMIN</span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-if="newBackend" v-model="fedInBackend.active"/>
-                    <InputSwitch id="inputswitchNEW" style="float: right; margin-top: 3px" v-if="!newBackend" v-model="tempBackendInfo.active"/>
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="fedInBackend.active"/>
                 </div>
             </div>
                 <div class="expanded-backend-info" v-if="expand">
@@ -117,14 +116,13 @@
 
             //View changes
             change() {
-                this.expand = !this.expand;
-                if (this.editBackendBool) {
-                    this.editBackendBool = false;
-                    this.expand = false;
-                }
-                // if (this.editBackendBool) {
-                //     this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please select save or cancel", life: 2000})
-                // }
+              if (!this.newBackend) {
+                  this.expand = !this.expand;
+                  if (this.editBackendBool) {
+                      this.editBackendBool = false;
+                      this.expand = false;
+                  }
+              }
             },
             editBackend() {
                 this.setTempVars();
