@@ -19,8 +19,8 @@
               v-for="(r,i) in searchResults"
               :key="i"
               :id="r.id"
-              :icon="r.datasource_icon"
-              :name="r.datasource_name"
+              :datasource_icon="r.datasource_icon"
+              :datasource_name="r.datasource_name"
               :type="r.type"
               :match_snippets="r.match_snippets"
               :source="r.source"
@@ -62,7 +62,7 @@
           this.firstSearch = false
           this.searchResults = []
           axios
-                  .get("http://localhost:3001/general/" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
+                  .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
                     this.searchResults = resp.data.searchResults
                     if (this.searchResults.length === 0) {

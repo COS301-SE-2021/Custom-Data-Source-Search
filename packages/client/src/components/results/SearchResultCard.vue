@@ -2,10 +2,20 @@
   <div class="result-card">
     <div class="card-icon" v-html="whitelistEscape(datasource_icon)">
     </div>
-    <div>
-      <div class="datasource_name" v-if="datasource_name !== undefined">{{ datasource_name }}</div>
-      <div class="datasource_name" v-else>DataSource Not Named</div>
-      <small @click=openFile(source) @mousedown.right="openFileUsing(source)" >{{source}}</small>
+    <div >
+      <div
+          @click=openFile(source)
+          @mousedown.right="openFileUsing(source)"
+          class="datasource_name" v-if="datasource_name !== undefined"
+      >
+          {{ datasource_name }}
+      </div>
+      <small
+          @click=openFile(source)
+          @mousedown.right="openFileUsing(source)"
+      >
+        {{source}}
+      </small>
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
@@ -48,7 +58,7 @@ export default {
       if (content === undefined) {
         return ""
       }
-      let valid_word = "[A-Za-z_][\\w\\s\\-:;,#.]+";
+      let valid_word = "[\\w\\s\\-:;,#.]+";
       let valid_attribute_types = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
       let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
 
@@ -97,13 +107,9 @@ export default {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
     goToLineFetchFileIfRequired(lineNumber) {
-      if (this.$parent.getIdOfCurrentFullFile() !== this.id) {
-        axios.get(`http://localhost:3001/general/fullfile/?type=${this.type}&id=${this.id}`).then((resp) => {
-          console.log(resp.data)
-          this.$parent.loadFullFile(this.whitelistEscape(resp.data))
-        })
-      }
-      this.$parent.goToFullFileLine(lineNumber)
+      axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
+        console.log(resp.data)
+      })
     }
   }
 }
@@ -138,12 +144,9 @@ h2 {
 .datasource_name {
   padding-top: 10px;
   padding-bottom: 5px;
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
-}
-
-pre, code {
-  white-space:pre-wrap
+  cursor: pointer;
 }
 
 small {
