@@ -55,7 +55,6 @@
       <template #loading>
         Loading sources, please wait...
       </template>
-      <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
       <Column header="Source Location" filterField="location" style="min-width:12rem">
         <template #body="{data}">
           <span class="image-text">{{data.location}}</span>
@@ -123,14 +122,12 @@
           </MultiSelect>
         </template>
       </Column>
-<!--      <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">-->
-<!--        <template #body="{data}">-->
-<!--&lt;!&ndash;          Instead of button, perhaps include check boxes. When boxes are checked an option to delete or edit may appear&ndash;&gt;-->
-<!--          <Button v-if="deleteBackend(data.backend)" type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain"></Button>-->
-<!--          <Button v-else type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain" disabled="disabled"></Button>-->
-
-<!--        </template>-->
-<!--      </Column>-->
+      <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
+        <template #body="{data}">
+          <i v-if="deleteSourceStatus(data.backend)" aria-hidden="true" class="pi pi-trash delete-enabled" @click="deleteSource"></i>
+          <i v-else aria-hidden="true" class="pi pi-trash delete-disabled"></i>
+        </template>
+      </Column>
     </DataTable>
   </div>
 
@@ -151,7 +148,7 @@ export default {
       sources: null,
       loading: false,
       backend: null,
-      selectedSources: null,
+      selectedSources: [],
       //Template for the endpoint
       endpoint:[
         {
@@ -228,8 +225,11 @@ export default {
       this.clicked = false;
       this.backend = null;
     },
-    deleteBackend(backend){
-      return this.$store.getters.getBackendAdminStatus(backend)
+    deleteSourceStatus(source){
+      return this.$store.getters.getBackendAdminStatus(source)
+    },
+    deleteSource(){
+
     }
   }
 }
@@ -277,4 +277,16 @@ a {
   margin-left: 2.5%;
 }
 
+.p-button-sm{
+  padding: 0.2em 0;
+}
+
+.delete-enabled{
+  cursor: pointer;
+}
+
+.delete-disabled{
+  cursor: not-allowed;
+  color: #8a8a8a;
+}
 </style>
