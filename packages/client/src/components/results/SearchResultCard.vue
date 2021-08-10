@@ -149,6 +149,7 @@ h2 {
 }
 
 small {
+  word-wrap: break-word;
   cursor: pointer;
   color: #7e96a1;
   padding-bottom: 5px;

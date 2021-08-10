@@ -23,6 +23,6 @@ export default {
 }
 
 .match_snippet:hover {
-  background-color: #2a2a2a;
+  background-color: #1b1b1b;
 }
 </style>
