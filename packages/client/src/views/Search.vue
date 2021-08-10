@@ -62,7 +62,7 @@
           this.firstSearch = false
           this.searchResults = []
           axios
-                  .get("http://localhost:3001/general/" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
+                  .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
                     this.searchResults = resp.data.searchResults
                     if (this.searchResults.length === 0) {

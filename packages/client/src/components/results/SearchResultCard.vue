@@ -2,10 +2,20 @@
   <div class="result-card">
     <div class="card-icon" v-html="whitelistEscape(datasource_icon)">
     </div>
-    <div>
-      <div class="datasource_name" v-if="datasource_name !== undefined">{{ datasource_name }}</div>
-      <div class="datasource_name" v-else>DataSource Not Named</div>
-      <small @click=openFile(source) @mousedown.right="openFileUsing(source)" >{{source}}</small>
+    <div >
+      <div
+          @click=openFile(source)
+          @mousedown.right="openFileUsing(source)"
+          class="datasource_name" v-if="datasource_name !== undefined"
+      >
+          {{ datasource_name }}
+      </div>
+      <small
+          @click=openFile(source)
+          @mousedown.right="openFileUsing(source)"
+      >
+        {{source}}
+      </small>
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
@@ -97,14 +107,9 @@ export default {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
     goToLineFetchFileIfRequired(lineNumber) {
-      if (this.$parent.methods.getIdOfCurrentFullFile() !== this.id) {
-        axios.get(`http://localhost:3001/general/fullfile/?type=${this.type}&id=${this.id}`).then((resp) => {
-          console.log(resp.data)
-          this.$parent.
-          this.$parent.loadFullFile(this.whitelistEscape(resp.data))
-        })
-      }
-      this.$parent.goToFullFileLine(lineNumber)
+      axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
+        console.log(resp.data)
+      })
     }
   }
 }
@@ -139,12 +144,9 @@ h2 {
 .datasource_name {
   padding-top: 10px;
   padding-bottom: 5px;
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
-}
-
-pre, code {
-  white-space:pre-wrap
+  cursor: pointer;
 }
 
 small {
