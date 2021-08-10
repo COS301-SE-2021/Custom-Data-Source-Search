@@ -13,7 +13,7 @@
             <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
 
         </span>
-        <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
+        <em v-if="unconnectedBackendBool" id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="unconnectedBackendNo"></em>
 
         </div>
     <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
@@ -38,6 +38,7 @@
     import ResultCardFolder from "../components/results/ResultCardFolder";
     import ResultCardWebpage from "../components/results/ResultCardWebpage";
     import SignIn from "@/components/popups/SignIn";
+    import {mapGetters} from 'vuex';
     export default {
       name: "SearchBar",
       data() {
@@ -50,6 +51,15 @@
           firstSearch: true,
         }
       },
+      computed: {
+        ...mapGetters([
+                'unconnectedBackendNo',
+                'unconnectedBackendBool'
+        ])
+      },
+      mounted() {
+
+      },
       methods: {
         escapeSpecialCharacters(query) {
           return query.replace(/[{}/\[\]+-^.:()]/gm, function (match) {
@@ -57,12 +67,12 @@
           })
         },
         queryServer() {
-          this.firstSearch = false
-          this.searchResults = []
+          this.firstSearch = false;
+          this.searchResults = [];
           axios
                   .get("http://localhost:3001/general/" + encodeURI(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
-                    console.log(resp.data)
+                    console.log(resp.data);
                     this.searchResults = resp.data.searchResults
                   }).catch(() => {
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})

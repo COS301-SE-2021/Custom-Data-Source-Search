@@ -161,6 +161,15 @@ const store = createStore({
         },
         getUserAdminStatus: (state) => (backendID) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.id === backendID).admin;
+        },
+        unconnectedBackendNo: (state) => {
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false).length;
+        },
+        unconnectedBackendNames: (state) => {
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false);
+        },
+        unconnectedBackendBool: (state, getters) => {
+            return getters.unconnectedBackendNo !== 0;
         }
     },
 
