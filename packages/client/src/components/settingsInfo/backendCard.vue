@@ -6,6 +6,7 @@
                 <div style="cursor: pointer" @click="change">
                     <em class="pi pi-circle-on" />
                     <span> {{fedInBackend.name}} </span>
+                    <div><em v-if="!newBackend && getUserAdminStatus(getSignedInUserId)">ADMIN</em></div>
                 </div>
                 <div>
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px" v-if="newBackend" v-model="fedInBackend.active"/>
@@ -26,8 +27,8 @@
                 </div>
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
-                <div v-if="!newBackend && getUserAdminStatus(tempBackendInfo.id)"><em>Name: </em></div>
-                <input-text v-if="!newBackend && getUserAdminStatus(tempBackendInfo.id)" v-model="tempBackendInfo.name"/>
+                <div><em>Name: </em></div>
+                <input-text v-model="tempBackendInfo.name"/>
                 <div><em>Email: </em></div>
                 <input-text v-model="tempBackendInfo.associatedEmail"/>
                 <div><em>Link: </em></div>
@@ -115,6 +116,7 @@
                 this.expand = !this.expand;
                 if (this.editBackendBool) {
                     this.editBackendBool = false;
+                    this.expand = false;
                 }
                 // if (this.editBackendBool) {
                 //     this.$toast.add({severity: 'warn', summary: 'Manage changes', detail: "Please select save or cancel", life: 2000})
@@ -162,7 +164,7 @@
                 this.setTempVars();
             },
             cancelChanges() {
-                this.expand = false;
+                this.expand = true;
                 this.editBackendBool = false;
                 if (this.newBackend) {
                     this.$emit('saveNewBackend');
@@ -189,7 +191,7 @@
 
                 //For now, we will just create a random new backend name and random edit status. (Should you be able to give your own personal backend name?)
                 // this.newBackend = false;
-                this.tempBackendInfo.name = "Temp Backend no: " + this.tempNameNo;
+                // this.tempBackendInfo.name = "Temp Backend no: " + this.tempNameNo;
                 this.tempBackendInfo.admin = true;
                 this.saveChanges();
                 this.tempNameNo = this.tempNameNo + 1;
