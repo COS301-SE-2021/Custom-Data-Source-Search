@@ -67,3 +67,4 @@ app.component("Dialog", Dialog);
 app.component("Password", Password);
 app.directive('badge', BadgeDirective);
 app.directive('ripple', Ripple);
+

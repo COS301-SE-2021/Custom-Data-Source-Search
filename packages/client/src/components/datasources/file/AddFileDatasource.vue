@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     addDataSource() {
+      electron.app.get
       electron.dialog.showOpenDialog({
         title: 'Select Files to Add as Data Sources',
         buttonLabel: "Select",

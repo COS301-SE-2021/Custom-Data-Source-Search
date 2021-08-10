@@ -5,6 +5,10 @@ module.exports = {
             builderOptions: {
                 appId: "com.abstraction.datasleuth",
                 productName: "DataSleuth",
+                extraResources: {
+                    from: "res",
+                    to: "res"
+                },
                 win: {
                     target: ["nsis"],
                     icon: 'src/assets/DataSleuth.ico'
