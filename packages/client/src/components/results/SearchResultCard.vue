@@ -1,6 +1,8 @@
 <template>
   <div class="result-card">
-    <div class="card-icon" v-html="whitelistEscape(datasource_icon)">
+    <div class="card-icon">
+      <div v-html="whitelistEscape(datasource_icon)"></div>
+<!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
     </div>
     <div >
       <div
@@ -33,10 +35,11 @@
 import {shell} from "electron";
 import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
 import axios from "axios";
+import IconExpandMore from "@/components/icons/IconExpandMore";
 
 export default {
   name: "SearchResultCard",
-  components: {SearchResultCardMatchSnippet},
+  components: {IconExpandMore, SearchResultCardMatchSnippet},
   props: {
     id: String,
     type: String,
@@ -140,6 +143,7 @@ h2 {
   text-align: right;
   float: right;
   padding-top: 10px;
+  width: 100px;
 }
 
 .datasource_name {
