@@ -31,7 +31,7 @@
                 <span>What type of source would you like to add?</span>
               </div>
               <div class="overlay-buttons">
-                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>
+                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='File'"/>
                 <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>
                 <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>
               </div>
