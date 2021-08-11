@@ -18,7 +18,9 @@
                 <backend-card
                         v-if="newBackendBool"
                         :new-backend="newBackendBool"
-                        :fed-in-backend="newBackendObject"
+                        :local="newBackendObject.local"
+                        :connect="newBackendObject.connect"
+                        :receive="newBackendObject.receive"
                         @save-new-backend="saveNewBackend()"
                         :user-index="getSignedInUserId"
                 />
@@ -54,7 +56,7 @@
                         name: 'New Backend',
                         active: false
                     },
-                    connected: {
+                    connect: {
                         link: '',
                         passKey: ''
                     },

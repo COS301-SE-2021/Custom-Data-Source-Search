@@ -218,7 +218,7 @@ const store = createStore({
             return state.users.find(user => user.id === id).backends;
         },
         getUserAdminStatus: (state) => (backendID) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.id === backendID).receive.admin;
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },
 
         //Unconnected backend related getters
@@ -301,7 +301,7 @@ const store = createStore({
             state.users[state.signedInUserId].backends.splice(payload,1);
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
-                state.users[state.signedInUserId].backends[x].local         .id = x;
+                state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
 

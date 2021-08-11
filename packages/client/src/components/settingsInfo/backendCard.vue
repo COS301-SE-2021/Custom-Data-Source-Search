@@ -110,7 +110,7 @@
               passKey: String
           },
           receive: {
-          admin: Boolean,
+              admin: Boolean,
               connected: Boolean
           }
         },
