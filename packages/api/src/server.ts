@@ -38,6 +38,7 @@ app.use("/webpagedatasources", webPageDataSourceRouter);
 app.use("/folderdatasources", folderDataSourceRouter);
 
 app.listen(PORT , () => {
+    console.log("Server Started");
     console.log(`Listening on port ${PORT}`);
 });
 
