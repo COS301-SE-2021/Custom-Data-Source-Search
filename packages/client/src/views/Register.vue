@@ -31,13 +31,12 @@
             <div v-else class="set-up-backend-box">
                 <span> Do you want to continue on to configure backends?</span>
                 <div class="continue-back-buttons">
-                    <Button @click="loadValues" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
-                    <Button @click="loadValues"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
+                    <Button @click="goToSettings" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
+                    <Button @click="goToSearch"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
                 </div>
             </div>
-            <div class="continue-back-buttons">
-                <Button @click="back" style="float: left" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined" />
-                <Button @click="loadValues" style="float: right" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
+            <div>
+                <Button v-if="notContinue" @click="back" style="float: left" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined">Back</Button>
             </div>
 
         </div>
@@ -99,6 +98,12 @@
                     this.$router.push('/');
                 }
                 this.notContinue = true;
+            },
+            goToSearch() {
+                this.$router.push('Search');
+            },
+            goToSettings() {
+                this.$router.push("Settings");
             }
         }
     }
