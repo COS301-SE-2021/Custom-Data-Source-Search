@@ -1,5 +1,6 @@
 <template >
   <div class="page">
+    <Toast position="bottom-left"/>
     <div class="heading-and-info">
       <h1 class="header">Who's Sleuthing ?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
@@ -11,10 +12,14 @@
     </div>
 
     <div class="lower">
-      <Button class="p-button-text start-backend" label="Start Local Backend" icon="pi pi-home" @click="startLocalBackend" />
+      <Button class="p-button-text start-backend p-button-plain" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
+      <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
+
     </div>
 
   </div>
+
+
 
 
 </template>
@@ -33,16 +38,15 @@ export default {
         {name : "Josh", email: "joshwalkerdev@gmail.com", isActive: true},
         {name : "Lauren", email: "lauren@gmail.com", isActive: false},
         {name : "Marike", email: "marike@gmail.com", isActive: true}
-      ]
+      ],
+      execProcess : null,
+      stopProcess : null
     }
 
   },
   methods: {
     startLocalBackend(){
-
-      const {exec} = require("child_process");
-
-      console.log("Executing command");
+      console.log("Starting Backend");
 
       //log Current Working Directory
       console.log(process.cwd())
@@ -53,85 +57,167 @@ export default {
 
         let spawn = require("child_process").spawn;
 
-        let bat = spawn("cmd.exe", ["/c", "sleuthstart.bat"],
+        this.execProcess = spawn("cmd.exe", ["/c", "sleuthstart.bat"],
             {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin" })
 
-        bat.stdout.on("data", (data) => {
+        this.execProcess.stdout.on("data", (data) => {
+          console.log(data.toString());
+
+          if(data.toString() === "Server Started"){
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: "You can now search files on your Computer.",
+              life: 3000});
+
+          }
+
+
+        });
+
+        this.execProcess.stderr.on("data", (data) => {
           console.log(data.toString());
         });
 
-        bat.stderr.on("data", (data) => {
-          console.log(data.toString());
+        this.execProcess.on("exit", (code) => {
+          console.log("Exec Child exits with: " + code);
+
+          this.$toast.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: "The Local Backend has been stopped.",
+            life: 3000});
+
+        });
         });
 
-        bat.on("exit", (code) => {
-          console.log(code);
-        });
-
+        //Linux and macOS implementation
       }else {
 
-        exec("bash sleuthstart.sh", {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthLinux\\bin"}
+        const {exec} = require("child_process");
+
+        this.execProcess = exec("bash sleuthstart.sh", {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthLinux\\bin"}
             , (error, stdout, stderr) => {
 
 
           if (error) {
             console.log(`error: ${error.message}`);
+
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: "You can now search files on your Computer.",
+              life: 3000});
+
             return;
           }
           if (stderr) {
             console.log(`stderr: ${stderr}`);
+
+            this.$toast.add({
+              severity: 'danger',
+              summary: 'Error',
+              detail: "Something went wrong.",
+              life: 3000});
             return;
           }
           console.log(`stdout: ${stdout}`);
         })
 
       }
+    },
+    stopLocalBackend(){
+
+      const kill = require('kill-port');
+      const http = require('http');
+
+      console.log("Stopping Local Backend");
+
+      //log Current Working Directory
+      console.log(process.cwd())
+
+      //Windows .bat files require a spawned shell to be ran
+      //Implementation differs between Windows and Linux
+      if(process.platform === "win32"){
+
+        let spawn = require("child_process").spawn;
+
+        this.stopProcess = spawn("cmd.exe", ["/c", "sleuthstop.bat"],
+            {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin" })
+
+        this.stopProcess.stdout.on("data", (data) => {
+          console.log(data.toString());
+
+          this.$toast.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: "You can now search files on your Computer.",
+            life: 3000});
+
+        });
+
+        this.stopProcess.stderr.on("data", (data) => {
+          console.log(data.toString());
+          this.$toast.add({
+            severity: 'danger',
+            summary: 'Error',
+            detail: "Something went wrong.",
+            life: 3000});
+        });
+
+        this.stopProcess.on("exit", (code) => {
+
+          console.log("Shutdown Script Finishes")
+
+          kill(3001).then( (d) => {
+
+            console.log("Port has been killed")
+
+            //this.stopProcess.kill()
 
 
-      /*
-      exec("cd resources/res/local_backend/dataSleuthWindows/bin", (error, stdout, stderr) => {
-        if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-      })
+            console.log("Exit child exits with : " + code);
+          })
 
-*/
+        });
 
-      /*
-      exec("cd", (error, stdout, stderr) => {
-        if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-      })
+      }else {
 
-      /*
-      exec("start sleuthstart.bat", (error, stdout, stderr) => {
-        if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-      })
+        const {exec} = require("child_process");
 
+        this.stopProcess = exec("bash sleuthstop.sh", {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthLinux\\bin"}
+            , (error, stdout, stderr) => {
 
-       */
+              if (error) {
+                console.log(`error: ${error.message}`);
 
+                this.$toast.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: "You can now search files on your Computer.",
+                  life: 3000});
+
+                return;
+              }
+              if (stderr) {
+                console.log(`stderr: ${stderr}`);
+
+                this.$toast.add({
+                  severity: 'danger',
+                  summary: 'Error',
+                  detail: "Something went wrong.",
+                  life: 3000});
+                return;
+              }
+              console.log(`stdout: ${stdout}`);
+            })
+
+      }
+
+      //Kill both processes
+      //When childProcess dies, the node server does to
+     // this.execProcess.kill('SIGKILL');
+    //  this.stopProcess.kill('SIGKILL');
 
     }
 
