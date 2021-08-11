@@ -1,47 +1,54 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <div class="header" >
-
-    </div>
-    <div v-if="firstSearch" class="logo-div">
-      <img  src="../assets/search_logo.png" height="300" alt="">
-    </div>
-      <div class="search-div">
-        <span class="p-input-icon-right">
-            <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
-            <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
-
-        </span>
-        <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
-
+    <Splitter style="height: 100vh; background:var(--surface-200);">
+      <SplitterPanel class="container" :size="40" :minSize="20" style="padding-top: 50px">
+        <div v-if="firstSearch" class="logo-div">
+          <img  src="../assets/search_logo.png" height="300" alt="">
         </div>
-    <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+        <div class="search-div">
+          <span class="p-input-icon-right">
+              <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
+              <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
 
-
-    <div>
-        <div
-                v-for="(r,i) in searchResults"
-                :key="i"
-        >
-          <result-card-file v-if="r.type === 'file'" :result="r"/>
-          <result-card-folder v-if="r.type === 'folder'" :result="r"/>
-          <result-card-webpage v-if="r.type === 'webpage'" :result="r"/>
+          </span>
+          <em v-if="unconnectedBackendBool" id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="unconnectedBackendNo"></em>
         </div>
-      </div>
+        <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+        <div>
+          <search-result-card
+              v-for="(r,i) in searchResults"
+              :key="i"
+              :id="r.id"
+              :datasource_icon="r.datasource_icon"
+              :datasource_name="r.datasource_name"
+              :type="r.type"
+              :match_snippets="r.match_snippets"
+              :source="r.source"
+              @resultClicked="loadFullFile"
+          />
+        </div>
+      </SplitterPanel>
+      <SplitterPanel class="container" :size="60" :minSize="20">
+        <p id="divider_usage_message" v-if="fullFileID === -1">to adjust size of panel drag divider left or right</p>
+        <div id="full_file" v-html="fullFileData">
+        </div>
+      </SplitterPanel>
+    </Splitter>
   </div>
 </template>
 
   <script>
     import axios from "axios";
-    import ResultCardFile from "../components/results/ResultCardFile";
-    import ResultCardFolder from "../components/results/ResultCardFolder";
-    import ResultCardWebpage from "../components/results/ResultCardWebpage";
     import SignIn from "@/components/popups/SignIn";
+    import {mapGetters} from 'vuex';
+    import SearchResultCard from "@/components/results/SearchResultCard";
     export default {
       name: "SearchBar",
       data() {
         return {
+          fullFileID: -1,
+          fullFileData: "",
           displaySignIn: false,
           notDeleted: true,
           query: "",
@@ -50,38 +57,62 @@
           firstSearch: true,
         }
       },
+      computed: {
+        ...mapGetters([
+                'unconnectedBackendNo',
+                'unconnectedBackendBool'
+        ])
+      },
+      mounted() {
+
+      },
       methods: {
         escapeSpecialCharacters(query) {
-          return query.replace(/[{}/\[\]+-^.:()]/gm, function (match) {
+          return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
             return '\\' + match
           })
         },
         queryServer() {
-          this.firstSearch = false
-          this.searchResults = []
+          this.firstSearch = false;
+          this.searchResults = [];
           axios
-                  .get("http://localhost:3001/general/" + encodeURI(this.escapeSpecialCharacters(this.query)))
+                  .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
-                    console.log(resp.data)
                     this.searchResults = resp.data.searchResults
+                    if (this.searchResults.length === 0) {
+                      this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+                    }
                   }).catch(() => {
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           })
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn
+        },
+        getIdOfCurrentFullFile() {
+          return this.fullFileID;
+        },
+        loadFullFile(fileData, id, lineNumber) {
+          this.fullFileData = fileData;
+          this.fullFileID = id;
+          this.$nextTick().then(() => {
+            this.goToFullFileLine(lineNumber);
+          })
+        },
+        goToFullFileLine(lineNumber) {
+          let targetLine = this.$el.querySelector(`#line_number_${lineNumber}`)
+          targetLine.scrollIntoView({behavior: "smooth"})
         }
       },
       components: {
-        SignIn,
-        ResultCardWebpage,
-        ResultCardFolder,
-        ResultCardFile
+        SearchResultCard,
+        SignIn
       }
     }
   </script>
 
 <style scoped>
+@import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
 
 .header{
   padding: 30px;
@@ -90,9 +121,25 @@
   text-align: center;
 }
 
+.container {
+  height: available;
+  overflow-y: scroll;
+  font-size: 0.9em;
+}
+
+input {
+  width: 100%;
+  min-width: 0
+}
+
+.container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 .grid-content {
   display: grid;
-  grid-template-rows: 1fr ;
+  grid-template-rows: 1fr;
 }
 
 .search-div {
@@ -101,10 +148,6 @@
   align-items:center;
   padding: 30px;
   max-height: 100px;
-}
-
-input {
-  width: 600px;
 }
 
 ::placeholder {
@@ -134,5 +177,14 @@ input {
   margin-left: 0.4rem;
   margin-top : auto;
   margin-bottom : 0.3rem;
+}
+
+#full_file {
+  padding: 10px;
+}
+
+#divider_usage_message {
+  color: #4d4d4d;
+  padding-left: 10px;
 }
 </style>

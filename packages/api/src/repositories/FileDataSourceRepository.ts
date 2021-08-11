@@ -13,7 +13,7 @@ class FileDataSourceRepository {
         this.fileDataSourceArray = [];
     }
 
-    async addDataSource(dataSource: FileDataSource): Promise<[{code: number, message: string}, {code: number, message: string}]> {
+    async addDataSource(dataSource: FileDataSource): Promise<[{ code: number, message: string }, { code: number, message: string }]> {
         this.readFile();
         let index: number = this.fileDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
         if (index !== -1) {
@@ -33,25 +33,32 @@ class FileDataSourceRepository {
             return [null, err];
         }
         this.fileDataSourceArray.push(storedDatasource);
-        fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+        fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
         return [{
             "code": 200,
             "message": "Successfully added file datasource"
         }, null];
     }
 
+    makeDefaultExtension(fileName: string) {
+        let lastIndex: number = fileName.lastIndexOf(".");
+        fileName = fileName.substring(0, lastIndex);
+        return fileName;
+    }
+
     async postToSolr(file: Buffer, id: string, fileName: string) {
         let formData = new FormData();
+        fileName = this.makeDefaultExtension(fileName);
         formData.append("file", file, fileName);
         try {
             await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
                 + '&commit=true&literal.datasource_type=file',
                 formData,
                 {
-                headers: {
-                    ...formData.getHeaders()
-                }
-            });
+                    headers: {
+                        ...formData.getHeaders()
+                    }
+                });
         } catch (e) {
             return [null, {
                 "code": 500,
@@ -72,7 +79,7 @@ class FileDataSourceRepository {
                 let index: number = this.fileDataSourceArray.indexOf(storedDatasrouce);
                 storedDatasrouce.lastModified = lastModified;
                 this.fileDataSourceArray[index] = storedDatasrouce;
-                fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+                fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
                 try {
                     await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
                 } catch (e) {
@@ -115,12 +122,19 @@ class FileDataSourceRepository {
         }]
     }
 
-    deleteDataSource(uuid: string) {
+    async deleteDataSource(uuid: string) {
         this.readFile();
         let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {
             this.fileDataSourceArray.splice(index, 1);
-            fs.writeFileSync('./src/repositories/store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+            fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+            const [,err] = await this.deleteFromSolr(uuid);
+            if (err) {
+                return [null, {
+                    "code": 500,
+                    "message": "Could not delete document from solr"
+                }]
+            }
             return [{
                 "code": 204,
                 "message": "Successfully deleted File datasource"
@@ -132,9 +146,30 @@ class FileDataSourceRepository {
         }]
     }
 
+    async deleteFromSolr(uuid: string) {
+        try {
+            await axios.post('http://localhost:8983/solr/files/update?commit=true',
+                {
+                    "delete": {
+                        "query": "id:" + uuid
+                    }
+                }
+            );
+            return [{
+                "code": 204,
+                "message": "Successfully removed document from Solr"
+            }, null];
+        } catch (e) {
+            return [null, {
+                "code": 500,
+                "message": "Could not delete document from solr"
+            }]
+        }
+    }
+
     readFile() {
         try {
-            this.fileDataSourceArray = JSON.parse(fs.readFileSync('./src/repositories/store/fileDataStore.json', 'utf-8'));
+            this.fileDataSourceArray = JSON.parse(fs.readFileSync('./store/fileDataStore.json', 'utf-8'));
         } catch (err) {
             this.fileDataSourceArray = [];
         }

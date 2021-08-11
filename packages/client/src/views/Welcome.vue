@@ -6,8 +6,11 @@
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
     <div class="user-select" >
-      <UserCard v-for="(user, i) in users" :key="i" :userDetails="user" ></UserCard>
-
+      <UserCard
+              v-for="(user, i) in getArrUserInfo"
+              :key="i"
+              :userDetails="user"
+      ></UserCard>
       <AddUserCard></AddUserCard>
     </div>
 
@@ -26,6 +29,8 @@
 import UserCard from "@/components/users/UserCard";
 import AddUserCard from "@/components/users/AddUserCard";
 const electron = require('@electron/remote');
+import {mapGetters} from "vuex";
+
 export default {
   name: "Welcome",
   components: {AddUserCard, UserCard},
@@ -196,6 +201,11 @@ export default {
   },
   mounted(){
     this.isSignedIn = this.$store.getters.getSignedIn;
+  },
+  computed: {
+    ...mapGetters([
+            'getArrUserInfo'
+    ])
   }
 }
 </script>
