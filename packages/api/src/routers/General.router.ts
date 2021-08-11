@@ -30,3 +30,8 @@ generalRouter.get("/fullfile", async (req: Request, res: Response) => {
     const result = await generalService.getFullFile(type, id);
     res.status(result.code).send(result.body);
 });
+
+generalRouter.get("/datasources", async (req: Request, res: Response) => {
+    const result = await generalService.getAllDataSources();
+    res.status(result.code).send(result.body);
+});

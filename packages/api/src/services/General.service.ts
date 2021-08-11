@@ -2,6 +2,7 @@ import axios from "axios";
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import fileDataSourceService from "./FileDataSource.service";
 import hljs from "highlight.js";
+import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 
 class GeneralService {
 
@@ -143,6 +144,39 @@ class GeneralService {
         }
         result += content;
         return result;
+    }
+
+    async getAllDataSources() {
+        let array: any[] = [];
+        let [fileResult, fileErr] = fileDataSourceRepository.getAllDataSources();
+        if (!fileErr) {
+            for (let fileDataSource of fileResult) {
+                array.push({
+                    "location": fileDataSource.path + fileDataSource.filename,
+                    "type": "file",
+                    "tag1": "Temporary tag",
+                    "tag2": "Other temp tag"
+                });
+            }
+        }
+        let [folderResult, folderErr] = folderDataSourceRepository.getAllDataSources();
+        if (!folderErr) {
+            for (let folderDataSource of folderResult) {
+                array.push({
+                    "location": folderDataSource.path,
+                    "type": "file",
+                    "tag1": "Temporary tag",
+                    "tag2": "Other temp tag"
+                });
+            }
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success",
+                "data": array
+            }
+        }
     }
 }
 
