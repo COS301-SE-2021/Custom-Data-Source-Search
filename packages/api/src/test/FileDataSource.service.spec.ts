@@ -35,7 +35,7 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[1]).toBe(undefined);
     });
 
@@ -48,10 +48,10 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[2]).toBe(undefined);
     });
 
@@ -74,11 +74,11 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
     });
@@ -92,11 +92,11 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
     });
@@ -110,36 +110,13 @@ describe('FileDataSourceService : Individual File Searching', () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
         expect(response[0].lineNumber).toEqual(1);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[1].lineNumber).toEqual(2);
         expect(response[2]).toBe(undefined);
-    });
-});
-
-
-describe('FileDataSourceService : Searching Across All Files', () => {
-    beforeAll(() => {
-        jest.spyOn(fileDataSourceRepository, 'getAllDataSources').mockImplementation(() => {
-            return [
-                [
-                    {uuid: 'notsorandomuuid', filename: 'hello.txt', path: '../test/', lastModified: new Date()},
-                    {uuid: 'notsorandomuuid2', filename: 'beans.txt', path: '../test/', lastModified: new Date()}
-                ], null];
-        });
-    })
-    it('Should return empty object when no occurrences of the search string are in any files ', async () => {
-        //given
-        const searchString = "awordthatshouldntbethere";
-        //when
-        const [response, error] = await service.searchAllFileDataSources(searchString);
-        //then
-        expect(error).toBe(null);
-        expect(response).not.toBe(null);
-        expect(response).toEqual([]);
     });
 });
 
@@ -260,32 +237,32 @@ describe('FileDataSourceService : addFileDataSource function', () => {
     });
 });
 describe('FileDataSourceService : removeFileDataSource function', () => {
-    it("Should return results returned by repository upon successful deletion of datasource", () => {
+    it("Should return results returned by repository upon successful deletion of datasource", async () => {
         //given
         const message: string = "Successfully deleted File datasource";
-        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockReturnValue([{
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementation(async () => {return[{
             "code": 204,
             "message": message
-        }, null]);
+        }, null]});
         const id: string = "testUUID";
         //when
-        const result = fileDataSourceService.removeFileDataSource(id);
+        const result = await fileDataSourceService.removeFileDataSource(id);
         //then
         expect(fileDataSourceRepository.deleteDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(204);
         expect(result.body.message).toEqual(message);
     });
-    it("Should return appropriate error if error occurred inside repository while deleting", () => {
+    it("Should return appropriate error if error occurred inside repository while deleting", async () => {
         //given
         const errorCode: number = 42;
         const errorMessage: string = "some error";
-        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockReturnValue([null, {
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementation(async () => {return[null, {
             "code": errorCode,
             "message": errorMessage
-        }]);
+        }]});
         const id: string = "testUUID";
         //when
-        const result = fileDataSourceService.removeFileDataSource(id);
+        const result = await fileDataSourceService.removeFileDataSource(id);
         //then
         expect(fileDataSourceRepository.deleteDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(errorCode);
