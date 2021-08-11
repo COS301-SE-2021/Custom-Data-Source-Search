@@ -3,7 +3,7 @@ import {createStore} from 'vuex'
 const store = createStore({
     state:{
         signedInUserId: 2,
-        signedIn : false,
+        signedIn : true,
         users: [
             {
                 id: 0,
