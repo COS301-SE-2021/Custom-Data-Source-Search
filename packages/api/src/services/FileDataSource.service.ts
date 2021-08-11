@@ -106,6 +106,9 @@ class FileDataSourceService {
     }
 
     correctPath(filePath: string) {
+        if (filePath === undefined) {
+            return filePath;
+        }
         return filePath.replace(/\\/g, "/");
     }
 
