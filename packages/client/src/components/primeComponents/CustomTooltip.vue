@@ -17,7 +17,7 @@
         name: 'CustomTooltip',
         props: {
             text: {
-                type: [],
+                type: Array,
                 required: true
             }
         },

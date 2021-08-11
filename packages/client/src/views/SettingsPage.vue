@@ -23,11 +23,13 @@
                         :user-index="getSignedInUserId"
                 />
                 <backend-card
-                        v-for="(backend, i) in getUserBackend(getSignedInUserId)"
+                        v-for="(backend) in getUserBackend(getSignedInUserId)"
                         :user-index="getSignedInUserId"
-                        :backend-index="i"
-                        :fed-in-backend="backend"
-                        :key="i"
+                        :backend-index="backend.local.id"
+                        :local = backend.local
+                        :connect = backend.connect
+                        :receive = backend.receive
+                        :key="backend.local.id"
                 />
             </div>
         </div>
@@ -48,12 +50,18 @@
             return {
                 newBackendBool: false,
                 newBackendObject: {
-                    name: 'New Backend',
-                    active: false,
-                    link: '',
-                    passKey: '',
-                    admin: false,
-                    connected: false
+                    local: {
+                        name: 'New Backend',
+                        active: false
+                    },
+                    connected: {
+                        link: '',
+                        passKey: ''
+                    },
+                    receive: {
+                        admin: false,
+                        connected: false
+                    }
                 },
             }
         },
