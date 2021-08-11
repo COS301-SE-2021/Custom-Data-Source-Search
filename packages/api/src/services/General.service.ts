@@ -152,10 +152,11 @@ class GeneralService {
         if (!fileErr) {
             for (let fileDataSource of fileResult) {
                 array.push({
+                    "id": fileDataSource.uuid,
                     "location": fileDataSource.path + fileDataSource.filename,
                     "type": "file",
-                    "tag1": "Temporary tag",
-                    "tag2": "Other temp tag"
+                    "tag1": fileDataSource.tag1,
+                    "tag2": fileDataSource.tag2
                 });
             }
         }
@@ -163,6 +164,7 @@ class GeneralService {
         if (!folderErr) {
             for (let folderDataSource of folderResult) {
                 array.push({
+                    "id": folderDataSource.uuid,
                     "location": folderDataSource.path,
                     "type": "folder",
                     "tag1": "Temporary tag",
