@@ -1,5 +1,5 @@
 <template>
-    <div :class="containerClass" :style="style" id="password">
+    <div :class="containerClass" :style="style">
         <PInputText ref="input" :class="inputFieldClass" :style="inputStyle" :type="inputType" :value="modelValue" @input="onInput" @focus="onFocus" @blur="onBlur" @keyup="onKeyUp" v-bind="$attrs" />
         <em v-if="toggleMask" :class="toggleIconClass" @click="onMaskToggle" />
         <Teleport :to="appendTarget" :disabled="appendDisabled">
@@ -23,8 +23,9 @@
     import {ConnectedOverlayScrollHandler,DomHandler,ZIndexUtils} from 'primevue/utils';
     import OverlayEventBus from 'primevue/overlayeventbus';
     import InputText from 'primevue/inputtext';
+
     export default {
-        name: 'PasswordInputField',
+        name: 'Password',
         emits: ['update:modelValue'],
         inheritAttrs: false,
         props: {
@@ -104,6 +105,7 @@
                 this.scrollHandler.destroy();
                 this.scrollHandler = null;
             }
+
             if (this.overlay) {
                 ZIndexUtils.clear(this.overlay);
                 this.overlay = null;
@@ -135,12 +137,14 @@
             },
             testStrength(str) {
                 let level = 0;
+
                 if (this.strongCheckRegExp.test(str))
                     level = 3;
                 else if (this.mediumCheckRegExp.test(str))
                     level = 2;
                 else if (str.length)
                     level = 1;
+
                 return level;
             },
             onInput(event)  {
@@ -163,6 +167,7 @@
                     let value = event.target.value;
                     let label = null;
                     let meter = null;
+
                     switch (this.testStrength(value)) {
                         case 1:
                             label = this.weakText;
@@ -171,6 +176,7 @@
                                 width: '33.33%'
                             };
                             break;
+
                         case 2:
                             label = this.mediumText;
                             meter = {
@@ -178,6 +184,7 @@
                                 width: '66.66%'
                             };
                             break;
+
                         case 3:
                             label = this.strongText;
                             meter = {
@@ -185,12 +192,16 @@
                                 width: '100%'
                             };
                             break;
+
                         default:
                             label = this.promptText;
+                            meter = null;
                             break;
                     }
+
                     this.meter = meter;
                     this.infoText = label;
+
                     if (!this.overlayVisible) {
                         this.overlayVisible = true;
                     }
@@ -204,6 +215,7 @@
                         }
                     });
                 }
+
                 this.scrollHandler.bindScrollListener();
             },
             unbindScrollListener() {
@@ -216,13 +228,9 @@
                     this.resizeListener = () => {
                         if (this.overlayVisible) {
                             this.overlayVisible = false;
-                            console.log(this.meter)
                         }
                     };
                     window.addEventListener('resize', this.resizeListener);
-                    console.log(
-                        this.meter
-                    )
                 }
             },
             unbindResizeListener() {
@@ -300,43 +308,40 @@
     }
 </script>
 
-<style>
+<style scoped>
     .p-password {
-        border-radius: 10px;
+        position: relative;
+        display: inline-flex;
+    }
+
+    .p-password-panel {
+        position: absolute;
     }
 
     input {
-        min-width: 100%;
+        width: 100%;
     }
 
-    input::placeholder {
+    input::placeholder{
         color: #575757;
         font-weight: bold;
     }
-    
-    .p-password-panel {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
+
     .p-password .p-password-panel {
         min-width: 100%;
     }
+
     .p-password-meter {
         height: 10px;
     }
+
     .p-password-strength {
         height: 100%;
-        width: 0%;
+        width: 0;
         transition: width 1s ease-in-out;
     }
+
     .p-fluid .p-password {
         display: flex;
     }
-
-    #password {
-        min-width: 100%;
-        flex: none;
-    }
-
 </style>

@@ -3,10 +3,8 @@
 </template>
 
 <script>
-    import Vuex from 'vuex';
-
     export default {
-        name: "registerStore"
+        name: "BackendUserPermissions"
     }
 </script>
 
