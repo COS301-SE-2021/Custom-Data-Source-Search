@@ -1,16 +1,23 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "datasleuth",
+  "repository": "https://github.com/COS301-SE-2021/Custom-Data-Source-Search",
+  "author": {
+    "name": "Team Abstraction",
+    "email": "abstraction.tuks@gmail.com"
+  },
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build:win": "vue-cli-service electron:build --win",
+    "electron:build:linux": "vue-cli-service electron:build --linux",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "build-installer": "vue-cli-service electron:build --win && electron-builder "
   },
   "main": "background.js",
   "dependencies": {
@@ -34,8 +41,10 @@
     "@vue/test-utils": "^2.0.0-0",
     "babel-eslint": "^10.1.0",
     "electron": "^13.1.4",
+    "electron-builder": "^22.11.7",
     "electron-devtools-installer": "^3.1.0",
     "highlightjs": "^9.16.2",
+    "kill-port": "^1.6.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "spectron": "14.0.0",
