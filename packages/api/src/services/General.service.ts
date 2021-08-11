@@ -104,15 +104,15 @@ class GeneralService {
             let content: string = response["data"]["response"]["docs"][0]["content"];
             let [dataSource, err] = fileDataSourceRepository.getDataSource(id);
             if (err) {
-                result = '<div>' + this.newLinesToBreaks(content.toString()) + '</div>';
+                result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
             } else {
                 let temp: string[] = dataSource.filename.split('.');
                 let extension: string = temp[temp.length - 1];
                 if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
                     let snippet: string = hljs.highlight(content, {language: extension}).value;
-                    result = '<pre>' + this.newLinesToBreaks(snippet) + '</pre>';
+                    result = '<pre>' + GeneralService.newLinesToBreaks(snippet) + '</pre>';
                 } else {
-                    result = '<div>' + this.newLinesToBreaks(content.toString()) + '</div>';
+                    result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
                 }
             }
             return {
@@ -131,8 +131,7 @@ class GeneralService {
             }
         }
     }
-
-    private newLinesToBreaks(content: string) {
+    private static newLinesToBreaks(content: string) {
         let result: string = "";
         let index: number = content.indexOf('\n');
         let count: number = 1;

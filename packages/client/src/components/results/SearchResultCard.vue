@@ -132,7 +132,7 @@ export default {
     },
     goToLineFetchFileIfRequired(lineNumber) {
       axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
-        this.$emit("resultClicked", resp.data.data, this.id, lineNumber)
+        this.$emit("resultClicked", resp.data.data, this.id, lineNumber, this.extractLineNumbers(this.match_snippets))
       })
     },
     toggleNumSnippetsToShow() {
@@ -156,6 +156,13 @@ export default {
       for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
         this.snippetsOnDisplay.push(this.match_snippets[i])
       }
+    },
+    extractLineNumbers(match_snippets) {
+      let lineNumbers = [];
+      for (let i = 0; i < match_snippets.length; i++) {
+        lineNumbers.push(match_snippets[i].line_number);
+      }
+      return lineNumbers;
     }
   },
   watch: {

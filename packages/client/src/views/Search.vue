@@ -9,7 +9,7 @@
           </div>
           <div class="search-div">
             <span class="p-input-icon-right">
-                <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
+                <i @click="queryServer" class="pi pi-search" aria-hidden="true"/>
                 <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
             </span>
             <CustomTooltip :text="unconnectedBackendNames">
@@ -17,7 +17,7 @@
                   v-if="unconnectedBackendBool"
                   id="expiration-indicator"
                   class="pi pi-info-circle p-text-secondary"
-                  v-on:click="showPopup"
+                  @click="showPopup"
                   v-badge.custom-warning="unconnectedBackendNo"
               ></em>
             </CustomTooltip>
@@ -40,6 +40,10 @@
       </SplitterPanel>
       <SplitterPanel class="container" :size="60" :minSize="20">
         <p id="divider_usage_message" v-if="fullFileID === -1">to adjust size of panel drag divider left or right</p>
+        <div v-else class="next-prev">
+          <icon-simple-expand-less @click="goToPrev" class="clickable"/>
+          <icon-simple-expand-more @click="goToNext" class="clickable"/>
+        </div>
         <div id="full_file" v-html="fullFileData">
         </div>
       </SplitterPanel>
@@ -53,11 +57,15 @@
     import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
     import CustomTooltip from "../components/primeComponents/CustomTooltip";
+    import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+    import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
     export default {
       name: "SearchBar",
       data() {
         return {
+          fullFileLineNumbers: [],
           fullFileID: -1,
+          currentLineNumber: -1,
           fullFileData: "",
           displaySignIn: false,
           notDeleted: true,
@@ -100,18 +108,36 @@
         getIdOfCurrentFullFile() {
           return this.fullFileID;
         },
-        loadFullFile(fileData, id, lineNumber) {
+        loadFullFile(fileData, id, lineNumber, lineNumbers) {
           this.fullFileData = fileData;
           this.fullFileID = id;
+          this.fullFileLineNumbers = lineNumbers;
           this.$nextTick().then(() => {
             this.goToFullFileLine(lineNumber);
           })
         },
         goToFullFileLine(lineNumber) {
-          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView({behavior: "smooth"})
+          this.currentLineNumber = lineNumber;
+          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView({behavior: "smooth"});
+        },
+        goToPrev() {
+          let index = Math.max(
+              0,
+              this.fullFileLineNumbers.findIndex((item) => {return this.currentLineNumber === item}) - 1
+          );
+          this.goToFullFileLine(this.fullFileLineNumbers[index]);
+        },
+        goToNext() {
+          let index = Math.min(
+              this.fullFileLineNumbers.length - 1,
+              this.fullFileLineNumbers.findIndex((item) => {return this.currentLineNumber === item}) + 1
+          );
+          this.goToFullFileLine(this.fullFileLineNumbers[index]);
         }
       },
       components: {
+        IconSimpleExpandLess,
+        IconSimpleExpandMore,
         CustomTooltip,
         SearchResultCard,
         SignIn
@@ -189,6 +215,24 @@ input {
   padding-top: 20px;
   margin-bottom: 10px;
 }
+
+.next-prev {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background-color: #1c1c1c;
+  border-radius: 4px;
+}
+
+.clickable {
+  padding: 4px;
+}
+
+.clickable:hover {
+  background-color: #4d4d4d;
+  border-radius: 4px;
+}
+
 
 #expiration-indicator {
   font-size: 2rem;
