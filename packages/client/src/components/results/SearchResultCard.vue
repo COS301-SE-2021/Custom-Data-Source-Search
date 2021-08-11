@@ -73,11 +73,9 @@ export default {
   },
   methods: {
     openFile(source) {
-      const {shell} = require('electron')
       shell.openPath(source)
     },
     openFileUsing(source) {
-      const {shell} = require('electron')
       shell.showItemInFolder(source)
     },
     whitelistEscape(content) {
