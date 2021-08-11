@@ -32,14 +32,14 @@
     <div class="expand_icon_div" v-if="match_snippets.length > 1">
       <icon-simple-expand-more
           @click="showMore"
-          width="35"
-          height="35"
+          width="25"
+          height="25"
           v-if="thereAreMore()"
       />
       <icon-simple-expand-less
           @click="showOne"
-          width="35"
-          height="35"
+          width="25"
+          height="25"
           v-else
       />
     </div>
@@ -73,11 +73,9 @@ export default {
   },
   methods: {
     openFile(source) {
-      const {shell} = require('electron')
       shell.openPath(source)
     },
     openFileUsing(source) {
-      const {shell} = require('electron')
       shell.showItemInFolder(source)
     },
     whitelistEscape(content) {
@@ -134,7 +132,7 @@ export default {
     },
     goToLineFetchFileIfRequired(lineNumber) {
       axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
-        this.$emit("resultClicked", resp.data.data, this.id, lineNumber)
+        this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
       })
     },
     toggleNumSnippetsToShow() {
@@ -158,6 +156,13 @@ export default {
       for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
         this.snippetsOnDisplay.push(this.match_snippets[i])
       }
+    },
+    extractLineNumbers(match_snippets) {
+      let lineNumbers = [];
+      for (let i = 0; i < match_snippets.length; i++) {
+        lineNumbers.push(match_snippets[i].line_number);
+      }
+      return lineNumbers;
     }
   },
   watch: {
@@ -201,11 +206,6 @@ h2 {
   width: max-content;
   margin: auto;
   cursor: pointer;
-}
-
-.expand_icon_div:hover {
-  background-color: #4d4d4d;
-  border-radius: 10px;
 }
 
 .datasource_name {
