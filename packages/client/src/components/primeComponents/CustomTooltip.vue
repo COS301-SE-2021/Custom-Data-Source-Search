@@ -56,7 +56,7 @@
         position: absolute;
         z-index: 1;
 
-        background: rgba(121, 179, 177, 0.47);
+        background: rgb(121, 179, 177);
     }
 
     span {

@@ -104,7 +104,7 @@ button {
   bottom: 0;
 }
 
-.pi-search:hover,.pi-list:hover, .pi-cog:hover {
+.pi-search:hover,.pi-list:hover, .pi-cog:hover, .pi-user:hover {
   color: #41B3B2;
 }
 
