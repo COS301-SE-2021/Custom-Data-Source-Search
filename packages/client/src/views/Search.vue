@@ -12,13 +12,15 @@
                 <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
                 <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
             </span>
-            <em
-                v-if="unconnectedBackendBool"
-                id="expiration-indicator"
-                class="pi pi-info-circle p-text-secondary"
-                v-on:click="showPopup"
-                v-badge.custom-warning="unconnectedBackendNo"
-            ></em>
+            <CustomTooltip :text="unconnectedBackendNames">
+              <em
+                  v-if="unconnectedBackendBool"
+                  id="expiration-indicator"
+                  class="pi pi-info-circle p-text-secondary"
+                  v-on:click="showPopup"
+                  v-badge.custom-warning="unconnectedBackendNo"
+              ></em>
+            </CustomTooltip>
           </div>
           <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
         </div>
@@ -50,6 +52,7 @@
     import SignIn from "@/components/popups/SignIn";
     import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
+    import CustomTooltip from "../components/primeComponents/CustomTooltip";
     export default {
       name: "SearchBar",
       data() {
@@ -67,11 +70,9 @@
       computed: {
         ...mapGetters([
                 'unconnectedBackendNo',
-                'unconnectedBackendBool'
+                'unconnectedBackendBool',
+                'unconnectedBackendNames'
         ])
-      },
-      mounted() {
-
       },
       methods: {
         escapeSpecialCharacters(query) {
@@ -111,6 +112,7 @@
         }
       },
       components: {
+        CustomTooltip,
         SearchResultCard,
         SignIn
       }
