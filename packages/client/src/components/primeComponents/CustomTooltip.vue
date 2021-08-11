@@ -51,7 +51,7 @@
         margin-left: -60px;
 
         opacity: 0;
-        transition: opacity 1s;
+        transition: opacity 0.2s;
 
         position: absolute;
         z-index: 1;
