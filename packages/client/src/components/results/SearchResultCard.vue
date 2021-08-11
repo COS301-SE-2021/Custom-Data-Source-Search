@@ -21,11 +21,26 @@
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
-        v-for="(match_snippet, i) in [match_snippets[0]]"
+        v-for="(match_snippet, i) in snippetsOnDisplay"
         :key="i"
         :line_number="match_snippet.line_number"
         :snippet="whitelistEscape(match_snippet.snippet)"
         @click="goToLineFetchFileIfRequired(match_snippet.line_number)"
+        @mousedown.right="toggleNumSnippetsToShow"
+      />
+    </div>
+    <div class="expand_icon_div" v-if="match_snippets.length > 1">
+      <icon-simple-expand-more
+          @click="showMore"
+          width="35"
+          height="35"
+          v-if="thereAreMore()"
+      />
+      <icon-simple-expand-less
+          @click="showOne"
+          width="35"
+          height="35"
+          v-else
       />
     </div>
   </div>
@@ -35,11 +50,19 @@
 import {shell} from "electron";
 import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
 import axios from "axios";
-import IconExpandMore from "@/components/icons/IconExpandMore";
+import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
 export default {
   name: "SearchResultCard",
-  components: {IconExpandMore, SearchResultCardMatchSnippet},
+  components: {IconSimpleExpandLess, IconSimpleExpandMore, SearchResultCardMatchSnippet},
+  data() {
+    return {
+      unexpanded : true,
+      snippetsOnDisplay: [],
+      numberOfResultsToDisplay: 1
+    }
+  },
   props: {
     id: String,
     type: String,
@@ -113,7 +136,37 @@ export default {
       axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
         this.$emit("resultClicked", resp.data.data, this.id, lineNumber)
       })
+    },
+    toggleNumSnippetsToShow() {
+      if (this.numberOfResultsToDisplay === 1) {
+        this.showMore()
+      } else {
+        this.showOne()
+      }
+    },
+    thereAreMore() {
+      return this.numberOfResultsToDisplay < this.match_snippets.length;
+    },
+    showMore() {
+      this.numberOfResultsToDisplay += 3;
+    },
+    showOne() {
+      this.numberOfResultsToDisplay = 1;
+    },
+    updateDisplaySnippets(newNumber) {
+      this.snippetsOnDisplay = []
+      for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
+        this.snippetsOnDisplay.push(this.match_snippets[i])
+      }
     }
+  },
+  watch: {
+    numberOfResultsToDisplay(newNumber, oldNumber) {
+      this.updateDisplaySnippets(newNumber, oldNumber)
+    }
+  },
+  mounted() {
+    this.snippetsOnDisplay.push(this.match_snippets[0])
   }
 }
 </script>
@@ -142,6 +195,17 @@ h2 {
   float: right;
   padding-top: 10px;
   width: 100px;
+}
+
+.expand_icon_div {
+  width: max-content;
+  margin: auto;
+  cursor: pointer;
+}
+
+.expand_icon_div:hover {
+  background-color: #4d4d4d;
+  border-radius: 10px;
 }
 
 .datasource_name {

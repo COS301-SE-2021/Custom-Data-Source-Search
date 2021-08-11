@@ -17,6 +17,8 @@ dist_electron/
 .env.local
 .env.*.local
 
+store/*.json
+
 # Log files
 npm-debug.log*
 yarn-debug.log*
