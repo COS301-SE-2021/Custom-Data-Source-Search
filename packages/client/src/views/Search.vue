@@ -4,14 +4,20 @@
     <Splitter style="height: 100vh; background:var(--surface-200);">
       <SplitterPanel class="container" :size="40" :minSize="20" style="padding-top: 50px">
         <div v-if="firstSearch" class="logo-div">
-          <img  src="../assets/search_logo.png" height="300" alt="">
+          <img  src="../assets/search_logo.png" height="150" alt="">
         </div>
         <div class="search-div">
           <span class="p-input-icon-right">
               <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
               <InputText size="90" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
           </span>
-          <em v-if="unconnectedBackendBool" id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="unconnectedBackendNo"></em>
+          <em
+              v-if="unconnectedBackendBool"
+              id="expiration-indicator"
+              class="pi pi-info-circle p-text-secondary"
+              v-on:click="showPopup"
+              v-badge.custom-warning="unconnectedBackendNo"
+          ></em>
         </div>
         <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
         <div>
@@ -99,8 +105,7 @@
           })
         },
         goToFullFileLine(lineNumber) {
-          let targetLine = this.$el.querySelector(`#line_number_${lineNumber}`)
-          targetLine.scrollIntoView({behavior: "smooth"})
+          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView(true)
         }
       },
       components: {
@@ -113,7 +118,7 @@
 <style scoped>
 @import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
 
-.header{
+.header {
   padding: 30px;
   border: solid;
   border: rgba(37, 37, 37, 0.91);
