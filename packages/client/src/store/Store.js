@@ -121,7 +121,7 @@ const store = createStore({
                         link: 'www.justAnotherExample/LEGO/BACKEND',
                         passKey: 'new84lLKJREpassKD9e7edfjKey',
                         admin: true,
-                        connected: true,
+                        connected: false,
                         color: '#1616b3'
                     },
                     {
@@ -132,7 +132,7 @@ const store = createStore({
                         link: 'www.fulffy&Bubbles/backend/link',
                         passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
                         admin: true,
-                        connected: true,
+                        connected: false,
                         color: '#b3100c'
                     }
                 ]
@@ -165,8 +165,16 @@ const store = createStore({
         unconnectedBackendNo: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false).length;
         },
-        unconnectedBackendNames: (state) => {
+        unconnectedBackendObjects: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false);
+        },
+        unconnectedBackendNames: (state, getters) => {
+            let unconnectedBackends = getters.unconnectedBackendObjects;
+            let unconnectedBackendNamesArr = [];
+            for (let backend of unconnectedBackends) {
+                unconnectedBackendNamesArr.push(backend.name);
+            }
+            return unconnectedBackendNamesArr;
         },
         unconnectedBackendBool: (state, getters) => {
             return getters.unconnectedBackendNo !== 0;
