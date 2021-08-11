@@ -9,7 +9,7 @@
         <div class="search-div">
           <span class="p-input-icon-right">
               <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
-              <InputText size="90" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+              <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
           </span>
           <em
               v-if="unconnectedBackendBool"
