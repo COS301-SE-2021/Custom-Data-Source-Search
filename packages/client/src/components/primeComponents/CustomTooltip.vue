@@ -46,8 +46,8 @@
 
         width: fit-content;
         padding: 1.5vh;
-        top: -50%;
-        left: 320%;
+        top: 100%;
+        left: 110%;
         margin-left: -60px;
 
         opacity: 0;
