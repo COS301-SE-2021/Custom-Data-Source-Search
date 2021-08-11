@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-if="add">
-      <add-folder-datasource/>
+      <add-folder-datasource @add-folder="$emit('addFolder')"/>
     </div>
     <div v-if="expanded" id="folder-datasources">
       <data-source-card

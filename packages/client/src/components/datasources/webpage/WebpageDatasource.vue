@@ -2,7 +2,7 @@
   <div id="container">
     <div class="grid">
       <div v-on:click="$emit('expandWebpage')">
-        <icon-web/>
+        <icon-web />
       </div>
       <div v-on:click="$emit('expandWebpage')" id="header">Webpages</div>
       <div>
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-if="add">
-      <add-webpage-datasource/>
+      <add-webpage-datasource @add-webpage="$emit('addWebpage')"/>
     </div>
     <div v-if="expanded" id="web-datasources">
       <data-source-card

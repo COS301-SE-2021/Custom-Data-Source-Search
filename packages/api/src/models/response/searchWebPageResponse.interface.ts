@@ -1,17 +1,9 @@
 export interface WebStringOccurrence {
-    occurrenceString: string;
-}
-
-export interface WebStringOccurrences {
-    [key: number]: WebStringOccurrence;
+    snippet: string;
 }
 
 export interface WebPageOccurrence {
     type: string;
     url: string;
-    occurrences: WebStringOccurrences;
-}
-
-export interface WebOccurrencesResponse {
-    [key: number]: WebPageOccurrence;
+    match_snippets: WebStringOccurrence[];
 }

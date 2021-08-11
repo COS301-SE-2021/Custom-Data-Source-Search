@@ -5,7 +5,7 @@ import express from "express"
 import * as dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import { textDataSourceRouter } from  "./routers/TextDataSource.router";
+import { fileDataSourceRouter } from "./routers/FileDataSource.router";
 import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
@@ -32,7 +32,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use("/textdatasources", textDataSourceRouter);
+app.use("/filedatasources", fileDataSourceRouter);
 app.use("/general", generalRouter);
 app.use("/webpagedatasources", webPageDataSourceRouter);
 app.use("/folderdatasources", folderDataSourceRouter);
@@ -40,3 +40,13 @@ app.use("/folderdatasources", folderDataSourceRouter);
 app.listen(PORT , () => {
     console.log(`Listening on port ${PORT}`);
 });
+
+// setTimeout(() => {
+//     setInterval(async () => {
+//         try {
+//             await fileDataSourceRepository.updateDatasources();
+//         } catch (e) {
+//             console.log("Error encountered.");
+//         }
+//     }, 3000);
+// }, 5000);

@@ -1,9 +1,9 @@
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import fs from "fs";
 import {FolderDataSource} from "../models/FolderDataSource.interface";
-import textDataSourceRepository from "../repositories/TextDataSourceRepository";
-import {StringOccurrences, StringOccurrencesResponse} from "../models/response/searchFileResponse.interface";
-import textDataSourceService from "./TextDataSource.service";
+import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
+import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
+import fileDataSourceService from "./FileDataSource.service";
 
 class FolderDataSourceService {
 
@@ -82,7 +82,7 @@ class FolderDataSourceService {
         }
     }
 
-    async searchAllFolderDataSources(searchString: string) {
+    async searchAllFolderDataSources(searchString: string): Promise<[FileOccurrence[], Error]> {
         // TODO make this right
         let [data] = folderDataSourceRepository.getAllDataSources();
         // Above this is placeholder implementation
@@ -95,11 +95,10 @@ class FolderDataSourceService {
                 paths.push(storedFile.path);
             }
         });
-        let result: StringOccurrencesResponse = {};
         let filePromises: Promise<string>[] = [];
         for (let i = 0; i < files.length; i++) {
             let location = paths[i] + files[i];
-            filePromises.push(textDataSourceService.readFile(location));
+            filePromises.push(fileDataSourceService.readFile(location));
         }
         let file: string[];
         file = await Promise.all(filePromises.map((promise) =>
@@ -107,14 +106,15 @@ class FolderDataSourceService {
                 return "";
             })));
         let i = 0;
+        let result: FileOccurrence[] = [];
         for (const content of file) {
-            let searchResults: StringOccurrences = textDataSourceService.searchFile(content, searchString);
-            if (searchResults.hasOwnProperty('0')) {
-                result[i] = {
+            let searchResults: StringOccurrence[] = fileDataSourceService.searchFile(content, searchString);
+            if (searchResults.length > 0) {
+                result.push({
                     type: "folder",
                     source: paths[i] + files[i],
-                    occurrences: searchResults
-                };
+                    match_snippets: searchResults
+                });
                 i++;
             }
         }
@@ -124,9 +124,9 @@ class FolderDataSourceService {
     getFilesInFolder(path: string) {
         let fileNames: string[] = fs.readdirSync(path);
         let results: string[] = [];
-        let [separateFiles,] = textDataSourceRepository.getAllDataSources();
+        let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
         fileNames.forEach((file) => {
-            if (file.indexOf(".") !== -1 && !separateFiles.some(x => x.filename === file)) {
+            if (file.indexOf(".") !== -1 && file.indexOf(".ini") == -1 && !separateFiles.some(x => x.filename === file)) {
                 results.push(file);
             }
         });

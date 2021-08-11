@@ -1,136 +1,219 @@
 <template>
-  <div class="grid-content">
-    <div class="header">
-      {{ name }}
-    </div>
-    <div>
-      <ConfirmDialog/>
-      <Toast position="bottom-right"/>
-      <Splitter style="height: 90vh; background:var(--surface-200)">
-        <SplitterPanel :size=40 style="padding-top: 50px">
-          <div class="all-sources">
-            <TextDatasource @expand-text="expandText()"></TextDatasource>
-            <FolderDatasource @expand-folder="expandFolder()"></FolderDatasource>
-            <WebpageDatasource @expand-webpage="expandWebpage()"></WebpageDatasource>
-          </div>
-        </SplitterPanel>
-        <SplitterPanel>
-          <TabView class="tabview-custom" v-if="tabs.length">
-            <TabPanel v-for="(tab, index) in tabs" :key="tab.title">
-              <template #header>
-                <span>{{tab.title}}</span>
-                <em class="pi pi-times" style="color: gray" @click="deleteTab(index)"></em>
-              </template>
-              <!--          For the below code, we might need to find a better way to check the type of the data source, seeing as custom data sources can be created-->
-              <div v-if="tab.title==='Text'" id="text-datasources">
-                <DataSourceCard
-                        v-for="(item, index) in textDataSources"
-                        :key=index :title="item.path + item.filename"
-                        :id="item.uuid"
-                        endpoint="http://localhost:3001/textdatasources"
-                >
-                </DataSourceCard>
+  <Toast position="bottom-right"/>
+  <h2>
+    Data Sources
+  </h2>
+  <div class="card" >
+    <DataTable :value="endpoint" :paginator="true" :rows="10"
+               paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+               :rowsPerPageOptions="[10,20,50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+               dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
+               :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
+      <template #header>
+        <div class="p-d-flex p-jc-end">
+          <span class="p-input-icon-left ">
+            <i class="pi pi-search" aria-hidden="true"/>
+            <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
+          </span>
+          <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle" style="float: right;"/>
+          <router-link title="Add" to="/addDatasources"><Button label="TEMPORARY!!!" icon="pi pi-plus" class="p-button-text" style="float: right;"/></router-link>
+          <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
+            <div v-if="!clicked && backend===null">
+              <div class="overlay-header">
+                <span>Which backend would you like to add to?</span>
               </div>
-              <div v-else-if="tab.title==='Folder'" id="folder-datasources">
-                <DataSourceCard
-                        v-for="(item, index) in folderDataSources"
-                        :key=index :title="item.path"
-                        :id="item.uuid"
-                        endpoint="http://localhost:3001/folderdatasources"
-                ></DataSourceCard>
+              <div class="overlay-buttons">
+                <Button v-for="i in backends" :key="i.id" label="Backend" class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{i}}</Button>
               </div>
-              <div v-else-if="tab.title==='Webpage'" id="webpage-datasources">
-                <DataSourceCard
-                        v-for="(item, index) in webDataSources"
-                        :key=index
-                        :title="item.url"
-                        :id="item.uuid"
-                        endpoint="http://localhost:3001/webpagedatasources"
-                >
-                </DataSourceCard>
+            </div>
+            <div v-else-if="!clicked && backend!=null">
+              <div class="overlay-header">
+                <span>What type of source would you like to add?</span>
               </div>
-            </TabPanel>
-          </TabView>
-          <div v-else>
-            <p style="padding-top:30px; text-align: center;">Please click on a type to view stored data sources</p>
-          </div>
-        </SplitterPanel>
-      </Splitter>
-    </div>
+              <div class="overlay-buttons">
+                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>
+                <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>
+                <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>
+              </div>
+            </div>
+<!--            Different contents for the overlay are shown for different types-->
+            <div v-else-if="type==='File'">
+              <add-file-datasource :backend="backend"/>
+            </div>
+            <div v-else-if="type==='Folder'">
+              <add-folder-datasource :backend="backend"/>
+            </div>
+            <div v-else-if="type==='Webpage'">
+              <add-webpage-datasource :backend="backend"/>
+            </div>
+          </OverlayPanel>
+        </div>
+      </template>
+      <template #empty>
+        No sources found.
+      </template>
+      <template #loading>
+        Loading data. Please wait.
+      </template>
+      <Column header="Source Location" filterField="location" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.location}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by source location"/>
+        </template>
+      </Column>
+      <Column header="Backend" filterField="backend" :showFilterMenu="false" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.backend}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="backends" placeholder="Any" class="p-column-filter">
+            <template #option="slotProps">
+              <div class="p-multiselect-backends-option">
+                <span class="image-text">{{slotProps.option}}</span>
+              </div>
+            </template>
+          </MultiSelect>
+        </template>
+      </Column>
+      <Column header="Type" filterField="type" :showFilterMenu="false" style="min-width:12rem">
+        <template #body="{data}">
+          <span class="image-text">{{data.type}}</span>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="types" placeholder="Any" class="p-column-filter">
+            <template #option="slotProps">
+              <div class="p-multiselect-types-option">
+                <span class="image-text">{{slotProps.option}}</span>
+              </div>
+            </template>
+          </MultiSelect>
+        </template>
+      </Column>
+      <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem;">
+        <template #body="{data}">
+          <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{data.tag1}}</Tag>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
+            <template #option="slotProps">
+              <div class="p-multiselect-tag1-option">
+                <span class="image-text">{{slotProps.option}}</span>
+              </div>
+            </template>
+          </MultiSelect>
+        </template>
+      </Column>
+      <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
+        <template #body="{data}">
+          <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{data.tag2}}</Tag>
+        </template>
+        <template #filter="{filterModel,filterCallback}">
+          <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
+            <template #option="slotProps">
+              <div class="p-multiselect-tag2-option">
+                <span class="image-text">{{slotProps.option}}</span>
+              </div>
+            </template>
+          </MultiSelect>
+        </template>
+      </Column>
+    </DataTable>
   </div>
+
 </template>
 
 <script>
-import WebpageDatasource from "../components/datasources/webpage/WebpageDatasource";
-import TextDatasource from "../components/datasources/text/TextDatasource";
-import FolderDatasource from "../components/datasources/folder/FolderDatasource";
-import DataSourceCard from "@/components/datasources/DataSourceCard";
+
 import axios from "axios";
+import {FilterMatchMode} from 'primevue/api';
+import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
+import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
+import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
 export default {
-  components: {
-    WebpageDatasource,
-    TextDatasource,
-    FolderDatasource,
-    DataSourceCard
-  },
   data() {
     return {
-      msg: "No data source chosen",
-      expand: false,
-      textDataSources: [],
-      webDataSources: [],
-      folderDataSources: [],
-      tabs: [],
-      name: "Data Sources"
+      type: null,
+      clicked: false,
+      sources: null,
+      loading: false,
+      backend: null,
+      //Template for the endpoint
+      endpoint:[
+        {
+          location: "desktop",
+          backend: "Sonic Co",
+          type: "Folder",
+          tag1: "Business",
+          tag2: "Fun"
+        },
+        {
+          location: "elsewhere",
+          backend: "Backend 1",
+          type: "File",
+          tag1: "Home",
+          tag2: "Fun"
+        },
+        {
+          location: "D:\\Users\\Laurens-PC\\Desktop\\332",
+          backend: "This one",
+          type: "Folder",
+          tag1: "University",
+          tag2: null
+        },
+        {
+          location: "https://www.itsafishthing.com/pure-goldfish-is-now-its-a-fish-thing/",
+          backend: "This one",
+          type: "Webpage",
+          tag1: "Fun",
+          tag2: null
+        }
+      ],
+      filters2: {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'backend': {value: null, matchMode: FilterMatchMode.IN},
+        'type': {value: null, matchMode: FilterMatchMode.IN},
+        'tag1': {value: null, matchMode: FilterMatchMode.IN},
+        'tag2': {value: null, matchMode: FilterMatchMode.IN},
+      },
+      tags: [
+        'Fun', 'Business', 'Home', 'University'
+      ],
+      types: [
+        'File', 'Folder', 'Webpage'
+      ],
+      backends: [
+          'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
+      ],
+      colours:[
+          'success','secondary','info','warning','help','danger'
+      ]
     }
   },
-  methods: {
-    deleteTab(input){
-      this.tabs.splice(input,1)
-    },
-    expandText(){
-      axios.get("http://localhost:3001/textdatasources").then(
-          resp => {
-            console.log(resp.data)
-            this.textDataSources = resp.data
-          }
-      )
-      this.expand = !this.expand
-      if (!this.isExist('Text')) {
-        this.tabs.push({title: 'Text'})
-      }
-    },
-    expandFolder(){
-      axios.get("http://localhost:3001/folderdatasources").then(
-          resp => {
-            console.log(resp.data)
-            this.folderDataSources = resp.data
-          }
-      )
-      this.expand = !this.expand
-      if (!this.isExist('Folder')) {
-        this.tabs.push({title: 'Folder'})
-      }
-    },
-    expandWebpage(){
-      axios.get("http://localhost:3001/webpagedatasources").then(
-          resp => {
-            console.log(resp.data)
-            this.webDataSources = resp.data
-          }
-      )
-      this.expand = !this.expand
-      if (!this.isExist('Webpage')) {
-        this.tabs.push({title: 'Webpage'})
-      }
-    },
-    isExist(title) {
-      for (var i = 0; i < this.tabs.length; i++) {
-        if (this.tabs[i].title === title) {
-          return true
+  components: {
+    AddFileDatasource,
+    AddFolderDatasource,
+    AddWebpageDatasource
+  },
+  productService: null,
+  mounted() {
+    this.loading = true;
+
+    axios.get("http://localhost:3001/folderdatasources").then(
+        resp => {
+          console.log(resp.data)
+          this.sources = resp.data
+          this.loading = false
         }
-      }
-      return false
+    )
+  },
+  methods: {
+    toggle(event) {
+      this.$refs.op.toggle(event);
+      this.clicked = false;
+      this.backend = null;
     }
   }
 }
@@ -138,33 +221,44 @@ export default {
 
 <style scoped lang="scss">
 
-.grid-content {
-  display: grid;
-  grid-template-rows: 1fr 9fr;
+td{
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
 }
 
-.all-sources {
-  max-width: 800px;
-  margin: auto;
+h2{
+  margin: 30px 20px 30px 55px;
 }
 
-.tabview-custom {
-  i, span {
-    vertical-align: middle;
-  }
-
-  span {
-    margin: 0 .5rem;
-  }
+a {
+  text-decoration: none;
 }
 
-.p-splitter{
-  border-left: none;
-  border-right:none;
-  border-bottom: none;
+.pi-search{
+  padding: 0;
 }
 
-.header{
-  text-align:center;
+.p-inputtext{
+  background-color: #242424;
 }
+
+.button{
+  margin-left: 8px;
+  margin-bottom: 5px;
+}
+
+.p-multiselect{
+  background-color: #242424;
+  height: 34px;
+}
+
+.overlay-header{
+  margin-bottom: 30px;
+}
+
+.card{
+  width: 95%;
+  margin-left: 2.5%;
+}
+
 </style>
