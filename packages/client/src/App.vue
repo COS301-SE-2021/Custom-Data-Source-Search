@@ -1,12 +1,11 @@
 <template>
     <div class="grid-app" v-if="this.$store.getters.getSignedIn">
-<!--  <div class="grid-app">-->
-      <div class="nav-bar-top">
-        <button class="profile-button" @click="toggle">Hi, {{ getUserInfo(getSignedInUserId).name }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>
-        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
-          <ProfileDropdown/>
-        </OverlayPanel>
-      </div>
+<!--      <div class="nav-bar-top">-->
+<!--        <button class="profile-button" @click="toggle">Hi, {{ getUserInfo(getSignedInUserId).name }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>-->
+<!--        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">-->
+<!--          <ProfileDropdown/>-->
+<!--        </OverlayPanel>-->
+<!--      </div>-->
       <div id="grid-div-1" >
         <div id="sidebar">
           <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
@@ -27,6 +26,7 @@
 html,
 body,
 #app {
+  height: 100%;
   overflow:hidden;
   margin: 0;
   padding: 0;
@@ -59,15 +59,15 @@ input {
 
 .grid-app {
   display: grid;
-  grid-template-rows: 1fr 30fr;
   grid-template-columns: 1fr 30fr;
-  height: 100%;
+  height: 100vh;
 }
 
 #grid-div-1 {
   padding-top: 20px;
   background-color: #1e1e1e;
   grid-row-start: 2;
+    min-height: 100%;
 }
 
 #grid-div-2 {
@@ -78,11 +78,11 @@ input {
   grid-row-start: 2;
 }
 
-.nav-bar-top{
-  grid-column-start: 1;
-  grid-column-end: end;
-  background-color: #1e1e1e;
-}
+/*.nav-bar-top{*/
+/*  grid-column-start: 1;*/
+/*  grid-column-end: end;*/
+/*  background-color: #1e1e1e;*/
+/*}*/
 
 .icon {
   padding: 10px;
@@ -168,9 +168,6 @@ export default {
         ])
     },
   methods: {
-    hideNavBar() {
-      this.navBar = false;
-    },
     toggle(event) {
       this.$refs.op.toggle(event);
     },

@@ -91,6 +91,7 @@
 
     .settings-box {
         padding-left: 1%;
+        height: 100vh;
     }
 
     .info-div {
