@@ -4,7 +4,7 @@
     Data Sources
   </h2>
   <div class="card" >
-    <DataTable :value="endpoint" :paginator="true" :rows="10"
+    <DataTable :value="sources" :paginator="true" :rows="10"
                paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                :rowsPerPageOptions="[10,20,50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
@@ -139,37 +139,6 @@ export default {
       sources: null,
       loading: false,
       backend: null,
-      //Template for the endpoint
-      endpoint:[
-        {
-          location: "desktop",
-          backend: "Sonic Co",
-          type: "Folder",
-          tag1: "Business",
-          tag2: "Fun"
-        },
-        {
-          location: "elsewhere",
-          backend: "Backend 1",
-          type: "File",
-          tag1: "Home",
-          tag2: "Fun"
-        },
-        {
-          location: "D:\\Users\\Laurens-PC\\Desktop\\332",
-          backend: "This one",
-          type: "Folder",
-          tag1: "University",
-          tag2: null
-        },
-        {
-          location: "https://www.itsafishthing.com/pure-goldfish-is-now-its-a-fish-thing/",
-          backend: "This one",
-          type: "Webpage",
-          tag1: "Fun",
-          tag2: null
-        }
-      ],
       filters2: {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -201,10 +170,14 @@ export default {
   mounted() {
     this.loading = true;
 
-    axios.get("http://localhost:3001/folderdatasources").then(
+    axios.get("http://localhost:3001/general/datasources").then(
         resp => {
           console.log(resp.data)
-          this.sources = resp.data
+          this.sources = resp.data.data
+          let i;
+          for(i=0; i<this.sources.length; i++){
+            this.sources[i]["backend"] = "Local"
+          }
           this.loading = false
         }
     )
