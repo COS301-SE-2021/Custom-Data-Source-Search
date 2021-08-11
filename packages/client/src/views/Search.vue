@@ -2,7 +2,7 @@
   <div class="grid-content">
     <Toast position="bottom-right"/>
     <Splitter style="height: 100vh; background:var(--surface-200);">
-      <SplitterPanel :size="40" :minSize="20" style="padding-top: 50px">
+      <SplitterPanel :size="40" :minSize="20">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
             <img  src="../assets/search_logo.png" height="150" alt="">
@@ -134,6 +134,7 @@
   border-bottom: solid;
   border-color: #4d4d4d;
   border-width: 1px;
+  padding-top: 10px;
 }
 
 .search-results {
@@ -185,6 +186,7 @@ input {
 
 .logo-div {
   text-align: center;
+  padding-top: 20px;
   margin-bottom: 10px;
 }
 
