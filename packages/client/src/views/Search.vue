@@ -2,25 +2,27 @@
   <div class="grid-content">
     <Toast position="bottom-right"/>
     <Splitter style="height: 100vh; background:var(--surface-200);">
-      <SplitterPanel class="container" :size="40" :minSize="20" style="padding-top: 50px">
-        <div v-if="firstSearch" class="logo-div">
-          <img  src="../assets/search_logo.png" height="150" alt="">
+      <SplitterPanel :size="40" :minSize="20" style="padding-top: 50px">
+        <div class="search-bar">
+          <div v-if="firstSearch" class="logo-div">
+            <img  src="../assets/search_logo.png" height="150" alt="">
+          </div>
+          <div class="search-div">
+            <span class="p-input-icon-right">
+                <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
+                <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+            </span>
+            <em
+                v-if="unconnectedBackendBool"
+                id="expiration-indicator"
+                class="pi pi-info-circle p-text-secondary"
+                v-on:click="showPopup"
+                v-badge.custom-warning="unconnectedBackendNo"
+            ></em>
+          </div>
+          <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
         </div>
-        <div class="search-div">
-          <span class="p-input-icon-right">
-              <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
-              <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
-          </span>
-          <em
-              v-if="unconnectedBackendBool"
-              id="expiration-indicator"
-              class="pi pi-info-circle p-text-secondary"
-              v-on:click="showPopup"
-              v-badge.custom-warning="unconnectedBackendNo"
-          ></em>
-        </div>
-        <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
-        <div>
+        <div class="search-results container">
           <search-result-card
               v-for="(r,i) in searchResults"
               :key="i"
@@ -125,8 +127,19 @@
   text-align: center;
 }
 
+.search-bar {
+  min-height: 100px;
+  border-bottom: solid;
+  border-color: #4d4d4d;
+  border-width: 1px;
+}
+
+.search-results {
+  height: 90vh;
+  padding-bottom: 100px;
+}
+
 .container {
-  height: available;
   overflow-y: scroll;
   font-size: 0.9em;
 }
