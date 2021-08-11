@@ -20,8 +20,6 @@
   </div>
 
 
-
-
 </template>
 
 <script>
@@ -63,7 +61,8 @@ export default {
         this.execProcess.stdout.on("data", (data) => {
           console.log(data.toString());
 
-          if(data.toString() === "Server Started"){
+          //On confirmation of server running
+          if(data.toString().includes("Listening on port 3001")){
             this.$toast.add({
               severity: 'success',
               summary: 'Success',
@@ -71,8 +70,6 @@ export default {
               life: 3000});
 
           }
-
-
         });
 
         this.execProcess.stderr.on("data", (data) => {
@@ -89,7 +86,6 @@ export default {
             life: 3000});
 
         });
-        });
 
         //Linux and macOS implementation
       }else {
@@ -103,25 +99,28 @@ export default {
           if (error) {
             console.log(`error: ${error.message}`);
 
-            this.$toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: "You can now search files on your Computer.",
-              life: 3000});
-
             return;
           }
           if (stderr) {
             console.log(`stderr: ${stderr}`);
 
-            this.$toast.add({
-              severity: 'danger',
-              summary: 'Error',
-              detail: "Something went wrong.",
-              life: 3000});
             return;
           }
-          console.log(`stdout: ${stdout}`);
+
+          if (stdout) {
+            console.log(`stdout: ${stdout}`);
+
+            if(stdout.includes("Listening on port 3001")){
+
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "You can now search files on your Computer.",
+                life: 3000});
+
+            }
+          }
+
         })
 
       }
@@ -129,7 +128,6 @@ export default {
     stopLocalBackend(){
 
       const kill = require('kill-port');
-      const http = require('http');
 
       console.log("Stopping Local Backend");
 
@@ -147,35 +145,19 @@ export default {
 
         this.stopProcess.stdout.on("data", (data) => {
           console.log(data.toString());
-
-          this.$toast.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: "You can now search files on your Computer.",
-            life: 3000});
-
         });
 
         this.stopProcess.stderr.on("data", (data) => {
           console.log(data.toString());
-          this.$toast.add({
-            severity: 'danger',
-            summary: 'Error',
-            detail: "Something went wrong.",
-            life: 3000});
         });
 
         this.stopProcess.on("exit", (code) => {
 
           console.log("Shutdown Script Finishes")
 
-          kill(3001).then( (d) => {
+          kill(3001).then( () => {
 
             console.log("Port has been killed")
-
-            //this.stopProcess.kill()
-
-
             console.log("Exit child exits with : " + code);
           })
 
@@ -190,34 +172,24 @@ export default {
 
               if (error) {
                 console.log(`error: ${error.message}`);
-
-                this.$toast.add({
-                  severity: 'success',
-                  summary: 'Success',
-                  detail: "You can now search files on your Computer.",
-                  life: 3000});
-
                 return;
               }
               if (stderr) {
                 console.log(`stderr: ${stderr}`);
-
-                this.$toast.add({
-                  severity: 'danger',
-                  summary: 'Error',
-                  detail: "Something went wrong.",
-                  life: 3000});
                 return;
               }
               console.log(`stdout: ${stdout}`);
+
+              console.log("Shutdown Script Finishes")
+
+              kill(3001).then( () => {
+
+                console.log("Port has been killed")
+                console.log("Exit child exits with : " + code);
+              })
             })
 
       }
-
-      //Kill both processes
-      //When childProcess dies, the node server does to
-     // this.execProcess.kill('SIGKILL');
-    //  this.stopProcess.kill('SIGKILL');
 
     }
 
