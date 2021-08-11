@@ -27,7 +27,7 @@
 html,
 body,
 #app {
-  height: 100%;
+  overflow:hidden;
   margin: 0;
   padding: 0;
   background-color: #242424;

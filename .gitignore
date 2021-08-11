@@ -3,8 +3,8 @@ dist/
 node_modules/
 build/
 coverage/
-/packages/api/src/repositories/store/*
-!/packages/api/src/repositories/store/gitkeep
+/packages/api/store/*
+!/packages/api/store/gitkeep
 dist_electron/
 
 /packages/api/.coveralls.yml
@@ -16,6 +16,8 @@ dist_electron/
 # local env files
 .env.local
 .env.*.local
+
+store/*.json
 
 # Log files
 npm-debug.log*

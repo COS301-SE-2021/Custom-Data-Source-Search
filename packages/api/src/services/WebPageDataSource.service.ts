@@ -56,12 +56,12 @@ class WebPageDataSourceService {
         }
         let i = 0;
         for await (const content of pages) {
-            let searchResults: WebStringOccurrence[] = this.searchWebPage(await content, searchString);
+            let searchResults: WebStringOccurrence[] = this.searchWebPage(content, searchString);
             if (searchResults.length > 0) {
                 result.push({
                     type: "webpage",
                     url: this.webPageDataSourceArray[i].url,
-                    occurrences: searchResults
+                    match_snippets: searchResults
                 });
                 i++;
             }
@@ -91,7 +91,7 @@ class WebPageDataSourceService {
         for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
             //let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
             matches.push({
-                occurrenceString: '...' + pageContents.substring(index - 12, index + searchString.length + 13) + '...'
+                snippet: '...' + pageContents.substring(index - 12, index + searchString.length + 13) + '...'
             });
             numOccurrence++;
         }

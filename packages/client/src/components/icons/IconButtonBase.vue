@@ -1,8 +1,6 @@
 <template>
   <button class="icon-button">
     <svg
-        :xmlns="xmlns"
-        :title="iconTitle"
         :height="height"
         :width="width"
         :fill="iconColor"
