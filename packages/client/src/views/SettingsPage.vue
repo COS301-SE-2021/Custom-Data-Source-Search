@@ -1,36 +1,39 @@
 <template>
     <div class="settings-box">
-        <div class="info-div">
-            <span><h1>Settings</h1></span>
-        </div>
-        <div class="info-div">
-            <span><strong>Personal Information</strong></span>
-            <div>
-                <user-info-card :user-index="getSignedInUserId"/>
-            </div>
-        </div>
-        <div class="info-div">
-            <div class="settings-subheading">
-                <span><strong>Backends</strong></span>
-                <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
-            </div>
-            <div>
-                <backend-card
-                        v-if="newBackendBool"
-                        :new-backend="newBackendBool"
-                        :fed-in-backend="newBackendObject"
-                        @save-new-backend="saveNewBackend()"
-                        :user-index="getSignedInUserId"
-                />
-                <backend-card
-                        v-for="(backend, i) in getUserBackend(getSignedInUserId)"
-                        :user-index="getSignedInUserId"
-                        :backend-index="i"
-                        :fed-in-backend="backend"
-                        :key="i"
-                />
-            </div>
-        </div>
+       <div>
+           <div class="info-div">
+               <span><h1>Settings</h1></span>
+           </div>
+           <div class="info-div">
+               <span><strong>Personal Information</strong></span>
+               <div>
+                   <user-info-card :user-index="getSignedInUserId"/>
+               </div>
+           </div>
+           <div class="info-div">
+               <div class="settings-subheading">
+                   <span><strong>Backends</strong></span>
+                   <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
+               </div>
+               <div>
+                   <backend-card
+                           v-if="newBackendBool"
+                           :new-backend="newBackendBool"
+                           :fed-in-backend="newBackendObject"
+                           @save-new-backend="saveNewBackend()"
+                           :user-index="getSignedInUserId"
+                   />
+                   <backend-card
+                           v-for="(backend, i) in getUserBackend(getSignedInUserId)"
+                           :user-index="getSignedInUserId"
+                           :backend-index="i"
+                           :fed-in-backend="backend"
+                           :key="i"
+                   />
+               </div>
+           </div>
+       </div>
+        <div></div>
     </div>
 </template>
 
@@ -81,6 +84,8 @@
 
     .settings-box {
         padding-left: 1%;
+        height: 100vh;
+
     }
 
     .info-div {
