@@ -39,7 +39,7 @@
         </div>
       </SplitterPanel>
       <SplitterPanel class="container" :size="60" :minSize="20">
-        <p id="divider_usage_message" v-if="fullFileID === -1">to adjust size of panel drag divider left or right</p>
+        <p id="divider_usage_message" v-if='fullFileData === ""'>to adjust size of panel drag divider left or right</p>
         <div v-else class="next-prev">
           <icon-simple-expand-less @click="goToPrev" class="clickable"/>
           <icon-simple-expand-more @click="goToNext" class="clickable"/>
@@ -64,7 +64,6 @@
       data() {
         return {
           fullFileLineNumbers: [],
-          fullFileID: -1,
           currentLineNumber: -1,
           fullFileData: "",
           displaySignIn: false,
@@ -108,9 +107,8 @@
         getIdOfCurrentFullFile() {
           return this.fullFileID;
         },
-        loadFullFile(fileData, id, lineNumber, lineNumbers) {
+        loadFullFile(fileData, lineNumber, lineNumbers) {
           this.fullFileData = fileData;
-          this.fullFileID = id;
           this.fullFileLineNumbers = lineNumbers;
           this.$nextTick().then(() => {
             this.goToFullFileLine(lineNumber);

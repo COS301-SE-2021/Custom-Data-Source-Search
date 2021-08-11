@@ -32,14 +32,14 @@
     <div class="expand_icon_div" v-if="match_snippets.length > 1">
       <icon-simple-expand-more
           @click="showMore"
-          width="35"
-          height="35"
+          width="25"
+          height="25"
           v-if="thereAreMore()"
       />
       <icon-simple-expand-less
           @click="showOne"
-          width="35"
-          height="35"
+          width="25"
+          height="25"
           v-else
       />
     </div>
@@ -132,7 +132,7 @@ export default {
     },
     goToLineFetchFileIfRequired(lineNumber) {
       axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
-        this.$emit("resultClicked", resp.data.data, this.id, lineNumber, this.extractLineNumbers(this.match_snippets))
+        this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
       })
     },
     toggleNumSnippetsToShow() {
@@ -206,11 +206,6 @@ h2 {
   width: max-content;
   margin: auto;
   cursor: pointer;
-}
-
-.expand_icon_div:hover {
-  background-color: #4d4d4d;
-  border-radius: 10px;
 }
 
 .datasource_name {
