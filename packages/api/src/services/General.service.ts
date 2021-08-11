@@ -164,7 +164,7 @@ class GeneralService {
             for (let folderDataSource of folderResult) {
                 array.push({
                     "location": folderDataSource.path,
-                    "type": "file",
+                    "type": "folder",
                     "tag1": "Temporary tag",
                     "tag2": "Other temp tag"
                 });
