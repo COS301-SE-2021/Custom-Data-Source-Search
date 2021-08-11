@@ -31,7 +31,7 @@
                 <span>What type of source would you like to add?</span>
               </div>
               <div class="overlay-buttons">
-                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>
+                <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='File'"/>
                 <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>
                 <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>
               </div>
@@ -124,7 +124,7 @@
       </Column>
       <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
         <template #body="{data}">
-          <i v-if="deleteSourceStatus(data.backend)" aria-hidden="true" class="pi pi-trash delete-enabled" @click="deleteSource"></i>
+          <i v-if="deleteSourceStatus(data.backend)" aria-hidden="true" class="pi pi-trash delete-enabled" @click="deleteSource()"></i>
           <i v-else aria-hidden="true" class="pi pi-trash delete-disabled"></i>
         </template>
       </Column>
@@ -228,8 +228,9 @@ export default {
     deleteSourceStatus(source){
       return this.$store.getters.getBackendAdminStatus(source)
     },
-    deleteSource(){
+    deleteSource(location){
       this.$toast.add({severity:'info', summary: 'Success', detail:'Button was clicked', life: 3000});
+      this.endpoint.splice(this.endpoint.indexOf(location), 1);
     }
   }
 }
