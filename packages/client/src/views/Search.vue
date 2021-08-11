@@ -108,7 +108,7 @@
           })
         },
         goToFullFileLine(lineNumber) {
-          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView(true)
+          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView({behavior: "smooth"})
         }
       },
       components: {
