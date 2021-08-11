@@ -16,10 +16,13 @@
 
     <AdminBackendCard v-for="(backend, i) in getUserBackend(getSignedInUserId)"
                       :backend="backend"
+                      @click="showAdminPopup"
+
     />
 
     </div>
 
+    <UserViewPopup :show="displayAdminPopup" @display-admin-popup></UserViewPopup>
 
 
   </div>
@@ -31,20 +34,27 @@
 import AdminBackendCard from "@/components/admin/AdminBackendCard";
 import {mapGetters} from "vuex";
 import BackendCard from "@/components/settingsInfo/backendCard";
+import UserViewPopup from "@/components/admin/UserViewPopup";
 export default {
   name: "Admin",
   data(){
     return{
+      displayAdminPopup : false
 
     }
   },
-  components: {BackendCard, AdminBackendCard},
+  components: {UserViewPopup, BackendCard, AdminBackendCard},
   computed: {
     ...mapGetters([
       'getUserInfo',
       'getUserBackend',
       'getSignedInUserId'
     ])
+  },
+  methods: {
+    showPopup(){
+      this.displaySignIn = !this.displaySignIn
+    },
   }
 }
 </script>

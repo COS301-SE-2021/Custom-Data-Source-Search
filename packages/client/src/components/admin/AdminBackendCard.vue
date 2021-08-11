@@ -2,7 +2,7 @@
   <div class="backend-container p-ripple" v-ripple>
     <div class="backend-header">
 
-      <div v-if="backend.connected" class="color-circle" :style="backendColourStyle" ></div>
+      <div class="color-circle" :style="backendColourStyle" ></div>
       <h2 class="name"> {{ backend.name }}</h2>
     </div>
 
