@@ -17,21 +17,29 @@
                     <checkbox id="checkBox" name="checkbox" v-model="backupVault" :binary="true"/>
                     <label for="checkBox">Enable remote access to account?</label>
                 </div>
-                <div style="text-align: left; vertical-align: center">
-                    <span>Already have an account? </span> <u><a v-on:click="showPopup">Sign in</a></u>
-                    <Button @click="loadValues" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
+                <div>
+                    <Button @click="loadValues" style="text-align: center;" class="p-button-md p-button-outlined">Register</Button>
                 </div>
+                <div>
+                    <span>Already have an account?
+                      <u><a v-on:click="showPopup">Sign in</a></u></span>
+                </div>
+
                 <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
 
             </div>
             <div v-else class="set-up-backend-box">
-                Do you want to continue on to configure backends?
-               <div>
-                   <Button @click="loadValues" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
-                   <Button @click="loadValues"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
-               </div>
-
+                <span> Do you want to continue on to configure backends?</span>
+                <div class="continue-back-buttons">
+                    <Button @click="loadValues" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
+                    <Button @click="loadValues"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
+                </div>
             </div>
+            <div class="continue-back-buttons">
+                <Button @click="back" style="float: left" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined" />
+                <Button @click="loadValues" style="float: right" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
+            </div>
+
         </div>
         <div>
             <div class="logo-box">
@@ -39,6 +47,7 @@
                 <div id="imageInRegistrationBox"><img  id="imageInRegistration" src="../assets/search_logo.png" height="300" alt=""></div>
              </div>
         </div>
+
     </div>
 
 </template>
@@ -84,6 +93,12 @@
             },
             continue() {
                 this.notContinue = false;
+            },
+            back() {
+                if (this.notContinue) {
+                    this.$router.push('/');
+                }
+                this.notContinue = true;
             }
         }
     }
@@ -94,7 +109,7 @@
     .registration-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        height: 100%;
+        height: 100vh;
         padding-left: 5%;
         padding-right: 5%;
     }
@@ -105,20 +120,25 @@
         margin: 4%;
         font-size: larger;
         vertical-align: center;
-        text-align: center;
+        text-align: left;
     }
 
     .input-fields {
         display: grid;
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 4fr;
         margin: 4%;
+        vertical-align: central;
     }
 
+    .p-button.p-button-icon-only {
+        width: 5rem;
+    }
 
     .set-up-backend-box {
         display: grid;
         grid-template-rows: 1fr 1fr 1fr 5fr;
         margin: 4%;
+        text-align: center;
     }
 
     .logo-box {
@@ -138,11 +158,6 @@
         padding: 10px;
     }
 
-    input::placeholder {
-        color: #575757;
-        font-weight: bold;
-    }
-
     #checkboxBox {
         text-align: left;
     }
@@ -153,13 +168,20 @@
         padding-left: 2%;
     }
 
-    Button {
-      float: right;
-    }
-
     u {
         color: #41B3B2;
         cursor: pointer;
+    }
+
+    .continue-back-buttons {
+        display: flex;
+        justify-content: center;
+    }
+
+    .p-button-lg {
+        max-width: fit-content;
+        max-height: 6vh;
+        margin: 1vw;
     }
 
 </style>
