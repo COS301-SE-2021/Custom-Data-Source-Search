@@ -1,76 +1,234 @@
 <template>
   <div class="result-card">
     <div class="card-icon">
-      <span v-html="icon"></span>
+      <div v-html="whitelistEscape(datasource_icon)"></div>
+<!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
     </div>
-    <div class="23">
-      <h3>{{name}}</h3>
+    <div >
+      <div
+          @click=openFile(source)
+          @mousedown.right="openFileUsing(source)"
+          class="datasource_name" v-if="datasource_name !== undefined"
+      >
+          {{ datasource_name }}
+      </div>
+      <small
+          @click=openFile(source)
+          @mousedown.right="openFileUsing(source)"
+      >
+        {{source}}
+      </small>
     </div>
-    <div>
-      <span v-html="this.whitelistStrip(content)"></span>
+    <div class="snippets">
+      <search-result-card-match-snippet
+        v-for="(match_snippet, i) in snippetsOnDisplay"
+        :key="i"
+        :line_number="match_snippet.line_number"
+        :snippet="whitelistEscape(match_snippet.snippet)"
+        @click="goToLineFetchFileIfRequired(match_snippet.line_number)"
+        @mousedown.right="toggleNumSnippetsToShow"
+      />
     </div>
-    <div>
-      {{source}}
+    <div class="expand_icon_div" v-if="match_snippets.length > 1">
+      <icon-simple-expand-more
+          @click="showMore"
+          width="35"
+          height="35"
+          v-if="thereAreMore()"
+      />
+      <icon-simple-expand-less
+          @click="showOne"
+          width="35"
+          height="35"
+          v-else
+      />
     </div>
   </div>
 </template>
 
 <script>
+import {shell} from "electron";
+import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
+import axios from "axios";
+import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+
 export default {
   name: "SearchResultCard",
+  components: {IconSimpleExpandLess, IconSimpleExpandMore, SearchResultCardMatchSnippet},
+  data() {
+    return {
+      unexpanded : true,
+      snippetsOnDisplay: [],
+      numberOfResultsToDisplay: 1
+    }
+  },
   props: {
-    icon: String,
-    name: String,
-    content: String,
-    source: String
+    id: String,
+    type: String,
+    source: String,
+    datasource_name: String,
+    datasource_icon: String,
+    match_snippets: Array
   },
   methods: {
-    whitelistStrip(content) {
-      let valid_word = `(?:[A-Za-z_][\\w\\s\\-:;,.()]+)`
-      let valid_attribute_type = `(?:class|style|href|xmlns|height|viewBox|width)`
-      let valid_attribute =`(?:\\s${valid_attribute_type}=(?:"${valid_word}"|'${valid_word}'))*`
-      let regExp = new RegExp(
-          [`(<div${valid_attribute}>)|(<\/div>)|`,
-            `(<h1${valid_attribute}>)|(<\/h1>)|`,
-            `(<h2${valid_attribute}>)|(<\/h2>)|`,
-            `(<svg${valid_attribute}>)|(<\/svg>|)|`,
-            `(<span${valid_attribute}>)|(<\/span>)|`,
-            `(<code${valid_attribute}>)|(<\/code>)|`,
-            `(<pre${valid_attribute}>)|(<\/pre>)|`,
-            `(<p${valid_attribute}>)|(<\/p>)|`,
-            `(<path${valid_attribute}>)|(<\/path>)`].join('')
-      )
-      console.log(regExp)
-      return content.split(regExp)
+    openFile(source) {
+      const {shell} = require('electron')
+      shell.openPath(source)
+    },
+    openFileUsing(source) {
+      const {shell} = require('electron')
+      shell.showItemInFolder(source)
+    },
+    whitelistEscape(content) {
+      if (content === undefined) {
+        return ""
+      }
+      let valid_word = "[\\w\\s\\-:;,#.]+";
+      let valid_attribute_types = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
+      let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
+
+      let valid_attribute = `(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
+      let whitelist_production_line = []
+      for (let i = 0; i < valid_html_tags.length; i++) {
+        whitelist_production_line.push(`<${valid_html_tags[i]}${valid_attribute}>|<\/${valid_html_tags[i]}>`)
+      }
+      let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
+      let matches = content.match(whitelistRegex)
+      if (matches === null) {
+        return this.escapeHtml(content)
+      } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
+        return this.escapeAllExceptMatches(content, matches);
+      } else {
+        return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
+      }
+    },
+    escapeAllExceptMatches(content, matches) {
+      let processedString = "";
+      for (let i = 0; i < matches.length; i++) {
+        let start_index_of_whitelisted_section = content.search(matches[i]);
+        processedString += this.escapeHtml(content.substr(0, start_index_of_whitelisted_section)) + matches[i];
+        content = content.substr(start_index_of_whitelisted_section + matches[i].length);
+      }
+      return processedString;
+    },
+    escapeHtml(string) {
+      return string.replace(/</g, "&lt;")
+    },
+    confirmThatAllOpenedTagsAreClosed(matches) {
+      let stack = []
+      for (let i = 0; i < matches.length; i++) {
+        let tag = matches[i]
+        if (tag.substr(0, 2) === "</") {
+          if (stack.length === 0 || stack.pop() !== this.extractTagName(tag)) {
+            return false;
+          }
+        } else {
+          stack.push(this.extractTagName(tag))
+        }
+      }
+      return stack.length === 0;
+    },
+    extractTagName(tag) {
+      return tag.match(/[A-Za-z0-9]+/)[0];
+    },
+    goToLineFetchFileIfRequired(lineNumber) {
+      axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
+        this.$emit("resultClicked", resp.data.data, this.id, lineNumber)
+      })
+    },
+    toggleNumSnippetsToShow() {
+      if (this.numberOfResultsToDisplay === 1) {
+        this.showMore()
+      } else {
+        this.showOne()
+      }
+    },
+    thereAreMore() {
+      return this.numberOfResultsToDisplay < this.match_snippets.length;
+    },
+    showMore() {
+      this.numberOfResultsToDisplay += 3;
+    },
+    showOne() {
+      this.numberOfResultsToDisplay = 1;
+    },
+    updateDisplaySnippets(newNumber) {
+      this.snippetsOnDisplay = []
+      for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
+        this.snippetsOnDisplay.push(this.match_snippets[i])
+      }
     }
+  },
+  watch: {
+    numberOfResultsToDisplay(newNumber, oldNumber) {
+      this.updateDisplaySnippets(newNumber, oldNumber)
+    }
+  },
+  mounted() {
+    this.snippetsOnDisplay.push(this.match_snippets[0])
   }
 }
 </script>
 
 <style scoped>
-  .result-card {
-    background-color: rgba(0, 0, 0, 0.2);
-    text-align: left;
-    max-width: 1000px;
-    margin: 10px auto auto;
-    border-radius: 10px;
-    padding: 10px 20px;
-  }
-  h1 {
+.result-card {
+  text-align: left;
+  max-width: 1000px;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 10px auto;
+  overflow: hidden;
+  position: relative;
+}
+
+h1 {
   font-size: 2em;
-  }
+}
 
-  h2 {
+h2 {
   font-size: 1.5em;
-  }
+}
 
-  p {
-  font-size: 1em;
-  }
-
-  .card-icon {
+.card-icon {
   text-align: right;
   float: right;
   padding-top: 10px;
-  }
+  width: 100px;
+}
+
+.expand_icon_div {
+  width: max-content;
+  margin: auto;
+  cursor: pointer;
+}
+
+.expand_icon_div:hover {
+  background-color: #4d4d4d;
+  border-radius: 10px;
+}
+
+.datasource_name {
+  word-wrap: break-word;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+small {
+  word-wrap: break-word;
+  cursor: pointer;
+  color: #7e96a1;
+  padding-bottom: 5px;
+}
+
+.datasource_name:hover {
+  text-decoration: underline;
+}
+
+small:hover {
+  text-decoration: underline;
+}
 </style>

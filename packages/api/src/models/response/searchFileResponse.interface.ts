@@ -1,10 +1,10 @@
 export interface StringOccurrence {
     lineNumber: number;
-    occurrenceString: string;
+    snippet: string;
 }
 
 export interface FileOccurrence {
     type: string;
     source: string;
-    occurrences: StringOccurrence[];
+    match_snippets: StringOccurrence[];
 }

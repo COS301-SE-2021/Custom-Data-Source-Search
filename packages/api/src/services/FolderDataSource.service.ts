@@ -113,7 +113,7 @@ class FolderDataSourceService {
                 result.push({
                     type: "folder",
                     source: paths[i] + files[i],
-                    occurrences: searchResults
+                    match_snippets: searchResults
                 });
                 i++;
             }

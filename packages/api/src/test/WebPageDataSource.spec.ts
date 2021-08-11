@@ -33,10 +33,10 @@ describe('webPageDataSourceService : Individual Web Page Searching: ' , () => {
         //then
         expect(response).not.toEqual([]);
         expect(response[0]).not.toBe(undefined);
-        expect(response[0].occurrenceString).toContain(mockSearchString);
+        expect(response[0].snippet).toContain(mockSearchString);
 
         expect(response[1]).not.toBe(undefined);
-        expect(response[1].occurrenceString).toContain(mockSearchString);
+        expect(response[1].snippet).toContain(mockSearchString);
         expect(response[2]).toBe(undefined);
 
 

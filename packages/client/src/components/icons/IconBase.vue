@@ -1,8 +1,6 @@
 <template>
     <div class="icon-base">
         <svg
-                :xmlns="xmlns"
-                :title="iconTitle"
                 :height="height"
                 :width="width"
                 :fill="iconColor"
@@ -53,11 +51,5 @@
 </script>
 
 <style scoped>
-
-.icon-base {
-    padding-top: 20px;
-    padding-right: 20px;
-    border-radius: 10px;
-}
 
 </style>
