@@ -2,17 +2,20 @@
   <div class="main-container">
     <div class="image-container">
       <div class="image-ring">
-        <h3 class="name-initial">{{ username.charAt(0).toUpperCase() }}</h3>
+        <h3 class="name-initial">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
       </div>
     </div>
 
     <div class="user-detail-container">
-      <div id="name"><strong>{{ username }}</strong></div>
-      <div id="email">{{ email }}</div>
+      <div id="name"><strong>{{ getUserInfo(getSignedInUserId).name }}</strong></div>
+      <div id="email">{{ getUserInfo(getSignedInUserId).email }}</div>
     </div>
 
     <div class="backends-container">
-      <div class="backend" v-for="backend in backends" :key="backend.id">
+      <div class="backend"
+           v-for="(backend) in getUserBackend(getSignedInUserId)"
+           :key="backend.id"
+      >
         <span>{{backend.name}}</span>
         <InputSwitch v-model="backend.active"/>
         <Divider/>
@@ -27,22 +30,19 @@
 </template>
 
 <script>
-export default {
+  import {mapGetters} from "vuex";
+  export default {
   name: "ProfileDropdown",
   data(){
     return{
-      username: null,
-      email: null,
-      backends: [
-        {name: 'Backend 1', active: true},
-        {name: 'Backend 2', active: false},
-        {name: 'Backend 3', active: true}
-      ]
     }
   },
-  beforeMount() {
-    this.username = this.$store.getters.getName;
-    this.email = this.$store.getters.getEmail;
+    computed: {
+    ...mapGetters ([
+            'getUserInfo',
+            'getUserBackend',
+            'getSignedInUserId'
+    ])
   },
   methods:{
     signOut(){
@@ -97,10 +97,6 @@ export default {
 
 .backends-container{
   margin-left: 25px;
-}
-
-.backend{
-
 }
 
 .p-inputswitch{

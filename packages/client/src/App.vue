@@ -2,7 +2,7 @@
     <div class="grid-app" v-if="this.$store.getters.getSignedIn">
 <!--  <div class="grid-app">-->
       <div class="nav-bar-top">
-        <button class="profile-button" @click="toggle">Hi, {{ this.$store.getters.getName }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>
+        <button class="profile-button" @click="toggle">Hi, {{ getUserInfo(getSignedInUserId).name }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>
         <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
           <ProfileDropdown/>
         </OverlayPanel>
@@ -11,7 +11,7 @@
         <div id="sidebar">
           <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
           <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <router-link title="Register" class="icon" to="/register"><i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+          <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
           <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
         </div>
       </div>
@@ -148,6 +148,8 @@ button {
 <script>
 import OverlayPanel from 'primevue/overlaypanel';
 import ProfileDropdown from "@/components/landing/ProfileDropdown";
+import {mapGetters} from "vuex";
+
 export default {
   components: {
     OverlayPanel,
@@ -158,6 +160,13 @@ export default {
       name: "Data Sleuth",
     }
   },
+    computed: {
+        ...mapGetters ([
+            'getUserInfo',
+            'getUserBackend',
+            'getSignedInUserId'
+        ])
+    },
   methods: {
     hideNavBar() {
       this.navBar = false;

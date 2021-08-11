@@ -17,7 +17,7 @@
             <div>
                 <backend-card
                         v-if="newBackendBool"
-                        :new-backend="true"
+                        :new-backend="newBackendBool"
                         :fed-in-backend="newBackendObject"
                         @save-new-backend="saveNewBackend()"
                         :user-index="getSignedInUserId"
@@ -48,10 +48,12 @@
             return {
                 newBackendBool: false,
                 newBackendObject: {
-                    name: '',
+                    name: 'New Backend',
                     active: false,
                     link: '',
-                    passKey: ''
+                    passKey: '',
+                    admin: false,
+                    connected: false
                 },
             }
         },
@@ -67,12 +69,8 @@
 
         },
         computed: {
-            getUserBackendSize () {
-                return this.$store.getters.getUserBackendSize();
-            },
             ...mapGetters ([
                 'getUserBackend',
-                'getUserBackendSize',
                 'getSignedInUserId'
              ])
         }

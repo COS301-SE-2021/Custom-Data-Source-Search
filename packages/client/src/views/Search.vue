@@ -9,9 +9,10 @@
         <div class="search-div">
           <span class="p-input-icon-right">
               <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
-              <InputText size="90" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+              <InputText v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+
           </span>
-          <em id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="'5'"></em>
+          <em v-if="unconnectedBackendBool" id="expiration-indicator" class="pi pi-info-circle p-text-secondary" v-on:click="showPopup" v-badge.custom-warning="unconnectedBackendNo"></em>
         </div>
         <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
         <div>
@@ -40,6 +41,7 @@
   <script>
     import axios from "axios";
     import SignIn from "@/components/popups/SignIn";
+    import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
     export default {
       name: "SearchBar",
@@ -55,6 +57,15 @@
           firstSearch: true,
         }
       },
+      computed: {
+        ...mapGetters([
+                'unconnectedBackendNo',
+                'unconnectedBackendBool'
+        ])
+      },
+      mounted() {
+
+      },
       methods: {
         escapeSpecialCharacters(query) {
           return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
@@ -62,8 +73,8 @@
           })
         },
         queryServer() {
-          this.firstSearch = false
-          this.searchResults = []
+          this.firstSearch = false;
+          this.searchResults = [];
           axios
                   .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {

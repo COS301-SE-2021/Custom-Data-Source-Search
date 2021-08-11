@@ -1,71 +1,139 @@
 import {createStore} from 'vuex'
 
 const store = createStore({
-    state: {
+    state:{
+        signedInUserId: 2,
         signedIn : false,
-        name: null,
-        email: null,
-        signedInUserId: 1,
         users: [
             {
                 id: 0,
                 info: {
+                    id: 0,
                     name: 'Marike',
                     email: 'example@funsail.co.za',
-                    admin: true
+                    isActive: true,
                 },
                 backends: [
                     {
                         id: 0,
                         name: 'BIRDS',
+                        associatedEmail: 'marike@funsail.co.za',
                         active: true,
                         link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
+                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
+                        admin: true,
+                        connected: true,
+                        color: '#b34e47'
                     },
                     {
                         id: 1,
                         name: 'LEGO',
+                        associatedEmail: 'marike1@funsail.co.za',
                         active: false,
                         link: 'www.justAnotherExample/LEGO/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey'
+                        passKey: 'new84lLKJREpassKD9e7edfjKey',
+                        admin: true,
+                        connected: true,
+                        color: '#21b312'
                     },
                     {
                         id: 2,
                         name: 'Fluffy',
+                        associatedEmail: 'marike2@funsail.co.za',
                         active: true,
                         link: 'www.fulffy&Bubbles/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
+                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
+                        admin: true,
+                        connected: true,
+                        color: '#41B3B2'
                     }
                 ]
             },
             {
                 id: 1,
                 info: {
+                    id: 1,
                     name: 'Josh',
-                    email: 'newExample@email.co.za',
-                    admin: false
+                    email: 'joshwalkerdev@gmail.com',
+                    isActive: false
                 },
                 backends: [
                     {
                         id: 0,
                         name: 'CARS',
+                        associatedEmail: 'josh1@gmail.com',
                         active: true,
                         link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
-                        passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg'
+                        passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg',
+                        admin: false,
+                        connected: false,
+                        color: '#b30a8c'
                     },
                     {
                         id: 1,
                         name: 'WINDOWS',
+                        associatedEmail: 'josh2@gmail.com',
                         active: false,
                         link: 'www.justAnotherExample/windows/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey'
+                        passKey: 'new84lLKJREpassKD9e7edfjKey',
+                        admin: false,
+                        connected: true,
+                        color: '#fdff23'
                     },
                     {
                         id: 2,
                         name: 'TEST',
+                        associatedEmail: 'josh3@gmail.com',
                         active: true,
                         link: 'www.doesnotmattermuch/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
+                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
+                        admin: false,
+                        connected: true,
+                        color: '#41B3B2'
+                    }
+                ]
+            },
+            {
+                id: 2,
+                info: {
+                    id: 2,
+                    name: 'Lauren',
+                    email: 'lauren@gmail.com',
+                    isActive: true
+                },
+                backends: [
+                    {
+                        id: 0,
+                        name: 'BIRDS',
+                        associatedEmail: 'lauren1@gmail.com',
+                        active: true,
+                        link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
+                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
+                        admin: false,
+                        connected: false,
+                        color: '#25b313'
+                    },
+                    {
+                        id: 1,
+                        name: 'LEGO',
+                        associatedEmail: 'lauren2@gmail.com',
+                        active: false,
+                        link: 'www.justAnotherExample/LEGO/BACKEND',
+                        passKey: 'new84lLKJREpassKD9e7edfjKey',
+                        admin: true,
+                        connected: true,
+                        color: '#1616b3'
+                    },
+                    {
+                        id: 2,
+                        name: 'Fluffy',
+                        associatedEmail: 'lauren2@gmail.com',
+                        active: true,
+                        link: 'www.fulffy&Bubbles/backend/link',
+                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
+                        admin: true,
+                        connected: true,
+                        color: '#b3100c'
                     }
                 ]
             }
@@ -78,36 +146,51 @@ const store = createStore({
         getUserInfo: (state) => (id) => {
             return state.users.find(user => user.id === id).info;
         },
+        getArrUserInfo(state) {
+            let users = [];
+            for (let x = 0; x < state.users.length; x++) {
+                users.push(state.users[x].info);
+            }
+            return users;
+        },
         getUserBackend: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
-        },
-        getUserBackendSize: (state, getters) => {
-            return getters.users[0].backends.length;
         },
         getSignedInUserId(state){
             return state.signedInUserId;
         },
-        getUserAdminStatus(state){
-            return state.users[state.signedInUserId].info.admin
+        getUserAdminStatus: (state) => (backendID) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.id === backendID).admin;
         },
-        getName(state){
-            return state.name;
+        unconnectedBackendNo: (state) => {
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false).length;
         },
-        getEmail(state){
-            return state.email;
+        unconnectedBackendNames: (state) => {
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false);
         },
+        unconnectedBackendBool: (state, getters) => {
+            return getters.unconnectedBackendNo !== 0;
+        }
     },
 
     //synchronous changes to the store
     mutations: {
         editBackend(state, payload) {
             console.log ('PAYLOAD NAME: ' + payload.name);
-            console.log ('PAYLOAD ACTIVE: ' + payload.active);
+            console.log ('PAYLOAD email: ' + payload.associatedEmail);
 
             state.users[payload.userIndex].backends[payload.backendIndex].name = payload.name;
+            state.users[payload.userIndex].backends[payload.backendIndex].associatedEmail = payload.associatedEmail;
             state.users[payload.userIndex].backends[payload.backendIndex].link = payload.link;
             state.users[payload.userIndex].backends[payload.backendIndex].passKey = payload.passKey;
             state.users[payload.userIndex].backends[payload.backendIndex].active = payload.active;
+            state.users[payload.userIndex].backends[payload.backendIndex].id = payload.id;
+            state.users[payload.userIndex].backends[payload.backendIndex].admin = payload.admin;
+
+            let l = state.users[state.signedInUserId].backends.length;
+            for(let x = 0; x < l; x++) {
+                state.users[state.signedInUserId].backends[x].id = x;
+            }
         },
         addBackend(state, payload){
 
@@ -116,33 +199,38 @@ const store = createStore({
                 name: '',
                 active: null,
                 link: '',
-                passKey: ''
+                passKey: '',
+                associatedEmail: ''
             };
 
             newBackend.name = payload.name;
             newBackend.link = payload.link;
             newBackend.passKey = payload.passKey;
             newBackend.active = payload.active;
+            newBackend.associatedEmail = payload.associatedEmail;
+            newBackend.admin = payload.admin;
 
             state.users[payload.userIndex].backends.push(newBackend);
-
-            //Console.log results to check
-            for (let i = 0; i < state.users[payload.userIndex].backends.length; i++) {
-                console.log("name: " + state.users[payload.userIndex].backends[i].name);
-                console.log("link: " + state.users[payload.userIndex].backends[i].link);
-                console.log("passKey: " + state.users[payload.userIndex].backends[i].passKey);
-                console.log("active: " + state.users[payload.userIndex].backends[i].active);
+            let l = state.users[state.signedInUserId].backends.length;
+            for(let x = 0; x < l; x++) {
+                state.users[state.signedInUserId].backends[x].id = x;
             }
-        },
-         deleteBackend(state, payload) {
-           state.users[state.signedInUserId].backends.splice(payload,1);
-           let l = state.users[state.signedInUserId].backends.length;
-           for(let x = 0; x < l; x++) {
-               state.users[state.signedInUserId].backends[x].id = x;
-           }
+
         },
         setSignedIn(state, payload){
             state.signedIn = payload;
+        },
+        setSignedInUserID(state, payload) {
+            state.signedInUserId = payload.userID;
+            state.users[payload.userID].info.isActive = payload.signedIn;
+            state.signedIn = true;
+        },
+        deleteBackend(state, payload) {
+            state.users[state.signedInUserId].backends.splice(payload,1);
+            let l = state.users[state.signedInUserId].backends.length;
+            for(let x = 0; x < l; x++) {
+                state.users[state.signedInUserId].backends[x].id = x;
+            }
         },
         setCurrentUserName(state, payload){
             state.name = payload;
