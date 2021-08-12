@@ -9,7 +9,7 @@
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                  :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources"
                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                 dataKey="uuid" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
+                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
                  :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
         <template #header>
           <div class="p-d-flex p-jc-end">
