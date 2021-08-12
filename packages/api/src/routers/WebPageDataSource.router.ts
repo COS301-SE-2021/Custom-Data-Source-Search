@@ -14,13 +14,12 @@ webPageDataSourceRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
-    const error = await webPageDataSourceService.addWebPageDataSource(req.body.url);
-    if (error == null) {
-        res.status(200).send({'message': 'Successfully added webpage datasource'});
+    const [, err] = await webPageDataSourceService.addWebPageDataSource(req.body);
+    if (err) {
+        res.status(err.code).send({'message': err.message});
     } else {
-        res.status(error.status).send(error.message)
+        res.status(200).send({'message':'Successfully added file datasource'});
     }
-
 });
 
 webPageDataSourceRouter.delete("/", (req: Request, res: Response) => {

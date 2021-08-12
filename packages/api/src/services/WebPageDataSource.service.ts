@@ -1,7 +1,5 @@
 import {WebPageDataSource} from "../models/WebPageDataSource.interface";
-import WebPageUnavailableError from "../errors/WebPageError";
 import {WebPageOccurrence, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
-import {randomBytes} from "crypto";
 import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
 
 const fetch = require("node-fetch");
@@ -61,19 +59,30 @@ class WebPageDataSourceService {
         }
     }
 
-    async addWebPageDataSource(webUrl: string): Promise<WebPageUnavailableError> {
-        const temp: WebPageDataSource = {uuid: randomBytes(16).toString("hex"), url: webUrl};
+    async addWebPageDataSource(dataSource: WebPageDataSource) {
         let page;
         try {
             page = await fetch(webUrl);
         } catch (err) {
-            return new WebPageUnavailableError("Web Page not available", 400)
+            return [null, {
+                "code": 500,
+                "message": "Error when trying to access url"
+            }];
         }
         if (page.status == 200) {
-            this.webPageDataSourceArray.push(temp);
-            return null;
+            let [, e] = await webPageDataSourceRepository.addDataSource(dataSource);
+            if (e) {
+                return [null, e]
+            }
+            return [{
+                "code": 200,
+                "message": "Success"
+            }, null];
         } else {
-            return new WebPageUnavailableError("Web Page not available", 400)
+            return [null, {
+                "code": 400,
+                "message": "Web page not available"
+            }]
         }
     }
 
