@@ -7,7 +7,6 @@
             <form v-if="notContinue" class="input-fields"
                 id="register"
                 @submit="loadValues"
-                  action="loadVlues"
             >
                 <div class="input-fields" style="max-height: 20vh">
                     <InputText type="text"  v-model="userDetails.userName" label="Name" placeholder="Name" />
@@ -17,6 +16,10 @@
                     </div>
                     <div>
                         <PasswordInputField  id="masterPassCheck" style="width: 100%" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
+                        <span style="font-size: small; margin-top: 30px">
+                            The master password is the password you use to access your vault. It is very important that you do not forget your master password.
+                            There is no way to recover the password in the event that you forget it.
+                        </span>
                     </div>
                     <div id="checkboxBox">
                         <checkbox id="checkBox" name="checkbox" v-model="userDetails.backupVault" :binary="true"/>

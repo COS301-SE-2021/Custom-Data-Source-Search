@@ -10,7 +10,9 @@
                         <div class="p-password-meter">
                             <div :class="strengthClass" :style="{'width': meter ? meter.width : ''}"></div>
                         </div>
-                        <div class="p-password-info">{{infoText}}</div>
+                        <div v-if="!crackTimeDisplay" >Enter a password</div>
+                        <div v-else style="">Password strength: <a :style="passStrengthColor">{{passwordStrengthLabel}}</a></div>
+                        <div v-if="crackTimeDisplay" class="p-password-info">Estimated time to crack:   <a style="color: rgba(118,118,118,0.99)">{{crackTimeDisplay}}</a> </div>
                     </slot>
                     <slot name="footer"></slot>
                 </div>
@@ -23,7 +25,7 @@
     import {ConnectedOverlayScrollHandler,DomHandler,ZIndexUtils} from 'primevue/utils';
     import OverlayEventBus from 'primevue/overlayeventbus';
     import InputText from 'primevue/inputtext';
-
+    const zxcvbn = require('zxcvbn');
     export default {
         name: 'PasswordInputField',
         emits: ['update:modelValue'],
@@ -34,33 +36,25 @@
                 type: String,
                 default: null
             },
-            weakRegex: {
-              type: String,
-              default: '^(?=.{8,})'
-            },
-            mediumRegex: {
-                type: String,
-                default: '^((?=.*[a-z])(?=.*[A-Z]))(?=.{8,})|((?=.*[a-z])(?=.*[0-9]))(?=.{8,})|((?=.*[A-Z])(?=.*[0-9]))(?=.{8,})' // eslint-disable-line
-            },
-            strongRegex: {
-                type: String,
-                default: '^(?=.{12,})' // eslint-disable-line
-            },
             invalidLabel: {
               type: String,
               default: null
             },
             weakLabel: {
                 type: String,
-                default: null
+                default: "Weak"
+            },
+            betterLabel: {
+                type: String,
+                default: "Better"
             },
             mediumLabel: {
                 type: String,
-                default: null
+                default: "Medium"
             },
             strongLabel: {
                 type: String,
-                default: null
+                default: "Strong"
             },
             feedback: {
                 type: Boolean,
@@ -94,20 +88,16 @@
                 meter: null,
                 infoText: null,
                 focused: false,
-                unmasked: false
+                unmasked: false,
+                crackTimeDisplay: null,
+                passwordStrengthLabel: "Enter password"
             };
         },
-        weakCheckRegExp: null,
-        mediumCheckRegExp: null,
-        strongCheckRegExp: null,
         resizeListener: null,
         scrollHandler: null,
         overlay: null,
         mounted() {
             this.infoText = this.promptText;
-            this.weakCheckRegExp = new RegExp(this.weakRegex);
-            this.mediumCheckRegExp = new RegExp(this.mediumRegex);
-            this.strongCheckRegExp = new RegExp(this.strongRegex);
         },
         beforeUnmount() {
             this.unbindResizeListener();
@@ -145,19 +135,6 @@
                     DomHandler.absolutePosition(this.overlay, this.$refs.input.$el);
                 }
             },
-            testStrength(str) {
-                let level = 0;
-
-                if (this.strongCheckRegExp.test(str))
-                    level = 4;
-                else if (this.mediumCheckRegExp.test(str))
-                    level = 3;
-                else if (this.weakCheckRegExp.test(str))
-                    level = 2;
-                else if (str.length)
-                    level = 1;
-                return level;
-            },
             onInput(event)  {
                 this.$emit('update:modelValue', event.target.value)
             },
@@ -175,36 +152,50 @@
             },
             onKeyUp(event) {
                 if (this.feedback) {
-                    let value = event.target.value;
+                    console.log(this.modelValue);
+                    console.log(this.passwordStrength.score);
+                    let passWordStrengthScore = this.passwordStrength.score;
                     let label = null;
                     let meter = null;
 
-                    switch (this.testStrength(value)) {
-                        case 1:
-                            label = "Invalid";
+                    this.crackTimeDisplay = this.passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second
+                    ;
+                    this.score = passWordStrengthScore;
+
+                    switch (passWordStrengthScore) {
+                        case 0:
+                            this.passwordStrengthLabel = 'Invalid';
                             meter = {
                                 strength: 'invalid',
                                 width: '0%'
                             };
                             break;
-                        case 2:
-                            label = this.weakText;
+                        case 1:
+                            this.passwordStrengthLabel = 'Very weak';
                             meter = {
                                 strength: 'weak',
-                                width: '33.33%'
+                                width: '25%'
+                            };
+                            break;
+
+                        case 2:
+                            this.passwordStrengthLabel = 'Weak';
+                            meter = {
+                                strength: 'medium',
+                                width: '50%'
                             };
                             break;
 
                         case 3:
-                            label = this.mediumText;
+                            this.passwordStrengthLabel = 'Good';
                             meter = {
                                 strength: 'medium',
-                                width: '66.66%'
+                                width: '75%'
                             };
                             break;
 
                         case 4:
-                            label = this.strongText;
+                            this.passwordStrengthLabel = 'Strong';
                             meter = {
                                 strength: 'strong',
                                 width: '100%'
@@ -212,7 +203,7 @@
                             break;
 
                         default:
-                            label = this.promptText;
+                            this.passwordStrengthLabel = "Enter password";
                             meter = null;
                             break;
                     }
@@ -318,6 +309,24 @@
             },
             appendTarget() {
                 return this.appendDisabled ? null : this.appendTo;
+            },
+            passwordStrength() {
+                return zxcvbn(this.modelValue);
+            },
+            passStrengthColor() {
+                if (this.passwordStrengthLabel === 'Invalid' || this.passwordStrengthLabel === 'Very weak') {
+                    return 'color: #B34E47';
+                }
+                else if (this.passwordStrengthLabel === 'Weak') {
+                    return 'color: #A57414'
+                }
+                else if (this.passwordStrengthLabel === 'Good') {
+                    return 'color: #FBFD29';
+                }
+                else if (this.passwordStrengthLabel === 'Strong') {
+                    return 'color: #60B352'
+                }
+
             }
         },
         components: {
@@ -327,6 +336,11 @@
 </script>
 
 <style scoped>
+
+    b {
+        color: rgba(251, 253, 41, 0.58);
+    }
+
     .p-password {
         position: relative;
         display: inline-flex;
