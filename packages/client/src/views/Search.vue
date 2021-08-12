@@ -244,8 +244,10 @@ input {
 }
 
 #full_file {
-  padding-left: 10px;
   height: 100vh;
+  padding-left: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 #divider_usage_message {
