@@ -9,7 +9,7 @@
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                  :rowsPerPageOptions="[10,20,50]"
                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
+                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
                  :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
         <template #header>
           <div class="p-d-flex p-jc-end">
@@ -52,10 +52,10 @@
                 <add-file-datasource :backend="backend" @submitted="toggle"/>
               </div>
               <div v-else-if="type==='Folder'">
-                <add-folder-datasource :backend="backend"/>
+                <add-folder-datasource :backend="backend" @submitted="toggle"/>
               </div>
               <div v-else-if="type==='Webpage'">
-                <add-webpage-datasource :backend="backend"/>
+                <add-webpage-datasource :backend="backend" @submitted="toggle"/>
               </div>
             </OverlayPanel>
           </div>
