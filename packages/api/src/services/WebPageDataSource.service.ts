@@ -25,9 +25,21 @@ class WebPageDataSourceService {
     }
 
     getWebPageDataSource(uuid: string) {
-        let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
-        if (index !== -1) {
-            return this.webPageDataSourceArray[index];
+        let [result, err] = webPageDataSourceRepository.getDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success",
+                "data": result
+            }
         }
     }
 

@@ -1,22 +1,16 @@
 import express, {Request, Response} from "express";
-import {WebPageDataSource} from "../models/WebPageDataSource.interface";
 import webPageDataSourceService from "../services/WebPageDataSource.service";
-import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
 
 export const webPageDataSourceRouter = express.Router();
 
 webPageDataSourceRouter.get("/", (req: Request, res: Response) => {
-    const result = webPageDataSourceRepository.getAllFileDataSources();
+    const result = webPageDataSourceService.getAllWebPageDataSources();
     res.status(result.code).send(result.body);
 });
 
 webPageDataSourceRouter.get("/:id", (req: Request, res: Response) => {
-    try {
-        const webPageDataSource: WebPageDataSource = webPageDataSourceService.getWebPageDataSource(req.params.id);
-        res.status(200).send(webPageDataSource)
-    } catch (e) {
-        res.status(500).send(e.message);
-    }
+    const result = webPageDataSourceService.getWebPageDataSource(req.params.id);
+    res.status(result.code).send(result.body);
 });
 
 webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
