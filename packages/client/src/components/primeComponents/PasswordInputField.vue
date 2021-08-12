@@ -318,7 +318,7 @@
                     return 'color: #B34E47';
                 }
                 else if (this.passwordStrengthLabel === 'Weak') {
-                    return 'color: #A57414'
+                    return 'color: rgba(246, 152, 38, 0.79)'
                 }
                 else if (this.passwordStrengthLabel === 'Good') {
                     return 'color: #FBFD29';
@@ -338,7 +338,7 @@
 <style scoped>
 
     b {
-        color: rgba(251, 253, 41, 0.58);
+        color: rgba(246, 152, 38, 0.79);
     }
 
     .p-password {

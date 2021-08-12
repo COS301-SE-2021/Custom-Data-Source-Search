@@ -213,7 +213,7 @@
 
     .registration-box {
         display: grid;
-        grid-template-rows: 2fr 10fr;
+        grid-template-rows: 1fr 9fr;
         margin: 4%;
         font-size: larger;
         vertical-align: center;
