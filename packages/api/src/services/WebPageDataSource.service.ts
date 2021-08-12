@@ -44,9 +44,20 @@ class WebPageDataSourceService {
     }
 
     removeWebPageDataSource(uuid: string) {
-        let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
-        if (index !== -1) {
-            this.webPageDataSourceArray.splice(index, 1);
+        let [result, err] = await webPageDataSourceRepository.deleteDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
+        }
+        return {
+            "code": 204,
+            "body": {
+                "message": result.message
+            }
         }
     }
 

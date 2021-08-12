@@ -24,14 +24,6 @@ webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
 });
 
 webPageDataSourceRouter.delete("/", (req: Request, res: Response) => {
-    try {
-        webPageDataSourceService.removeWebPageDataSource(req.body.id);
-        res.status(204).send('Successfully removed webpage datasource');
-    } catch (e) {
-        if (e.status) {
-            res.status(e.status).send(e.message);
-        } else {
-            res.status(500).send(e.message);
-        }
-    }
+    const result = await webPageDataSourceService.removeWebPageDataSource(req.body.id);
+    res.status(result.code).send(result.body);
 });
