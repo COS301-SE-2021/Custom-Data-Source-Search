@@ -38,7 +38,7 @@
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel class="container" :size="60" :minSize="20">
+      <SplitterPanel class="container" :size="60" :minSize="30">
         <p id="divider_usage_message" v-if='fullFileData === ""'>to adjust size of panel drag divider left or right</p>
         <div v-else class="next-prev">
           <icon-simple-expand-less @click="goToPrev" class="clickable"/>
@@ -167,6 +167,7 @@
 }
 
 .container {
+  height: available;
   overflow-y: scroll;
   font-size: 0.9em;
 }
@@ -215,7 +216,7 @@ input {
 }
 
 .next-prev {
-  position: absolute;
+  position: fixed;
   top: 10px;
   right: 20px;
   background-color: #1c1c1c;

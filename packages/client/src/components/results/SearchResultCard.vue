@@ -1,23 +1,25 @@
 <template>
   <div class="result-card">
-    <div class="card-icon">
-      <div v-html="whitelistEscape(datasource_icon)"></div>
-<!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
-    </div>
-    <div >
-      <div
-          @click=openFile(source)
-          @mousedown.right="openFileUsing(source)"
-          class="datasource_name" v-if="datasource_name !== undefined"
-      >
-          {{ datasource_name }}
+    <div class="title-card">
+      <div class="card-icon">
+        <div v-html="whitelistEscape(datasource_icon)"></div>
+        <!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
       </div>
-      <small
-          @click=openFile(source)
-          @mousedown.right="openFileUsing(source)"
-      >
-        {{source}}
-      </small>
+      <div>
+        <div
+            @click=openFile(source)
+            @mousedown.right="openFileUsing(source)"
+            class="datasource_name" v-if="datasource_name !== undefined"
+        >
+          {{ datasource_name }}
+        </div>
+        <small
+            @click=openFile(source)
+            @mousedown.right="openFileUsing(source)"
+        >
+          {{source}}
+        </small>
+      </div>
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
@@ -60,7 +62,7 @@ export default {
     return {
       unexpanded : true,
       snippetsOnDisplay: [],
-      numberOfResultsToDisplay: 1
+      numberOfResultsToDisplay: 2
     }
   },
   props: {
@@ -181,10 +183,15 @@ export default {
   text-align: left;
   max-width: 1000px;
   border-radius: 10px;
-  padding: 10px 20px;
-  margin: 10px auto;
+  padding: 5px 20px;
+  margin: 5px auto;
   overflow: hidden;
   position: relative;
+}
+
+.title-card {
+  background-color: #1f1f1f;
+  padding: 10px;
 }
 
 h1 {
