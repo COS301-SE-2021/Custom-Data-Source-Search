@@ -1,7 +1,7 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter style="height: 100vh; background:var(--surface-200);">
+    <Splitter>
       <SplitterPanel :size="40" :minSize="20">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
@@ -244,7 +244,8 @@ input {
 }
 
 #full_file {
-  padding: 10px;
+  padding-left: 10px;
+  height: 100vh;
 }
 
 #divider_usage_message {
