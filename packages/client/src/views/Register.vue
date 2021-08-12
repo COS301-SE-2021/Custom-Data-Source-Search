@@ -15,7 +15,7 @@
                         <PasswordInputField id="masterPassword" style="width: 100%" v-model="masterPassword" placeholder="Master Password" :feedback="true" :toggle-mask="true"/>
                     </div>
                     <div>
-                        <PasswordInputField  id="masterPassCheck" style="width: 100%" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
+                        <PasswordInputField  id="masterPassCheck" style="width: 100%; margin-bottom: 15px" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
                         <span style="font-size: small; margin-top: 30px">
                             The master password is the password you use to access your vault. It is very important that you do not forget your master password.
                             There is no way to recover the password in the event that you forget it.
@@ -33,6 +33,9 @@
                     <div>
                         <span>Already have an account?
                       <u><a v-on:click="showPopup">Sign in</a></u></span>
+                    </div>
+                    <div>
+                        <Button v-if="notContinue" @click="back" style="float: right" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined">Back</Button>
                     </div>
                     <br>
                     <br>
@@ -53,9 +56,6 @@
                     <Button @click="goToSettings" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
                     <Button @click="goToSearch"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
                 </div>
-            </div>
-            <div>
-                <Button v-if="notContinue" @click="back" style="float: left" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined">Back</Button>
             </div>
 
         </div>
@@ -204,6 +204,7 @@
 <style scoped>
 
     .registration-grid {
+        overflow-y: scroll;
         display: grid;
         grid-template-columns: 1fr 1fr;
         height: 100vh;
@@ -213,7 +214,7 @@
 
     .registration-box {
         display: grid;
-        grid-template-rows: 1fr 9fr;
+        grid-template-rows: 1fr 7fr;
         margin: 4%;
         font-size: larger;
         vertical-align: center;
@@ -286,7 +287,11 @@
     .p-button-lg {
         max-width: fit-content;
         max-height: 6vh;
-        margin: 1vw;
+        position: revert;
+        bottom: 3vh;
+        right: 55vw;
+
+        /*margin: 1vw;*/
     }
 
 </style>
