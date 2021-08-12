@@ -1,4 +1,4 @@
-import {WebPageDataSource, WebPageDataSourceList} from "../models/WebPageDataSource.interface";
+import {WebPageDataSource} from "../models/WebPageDataSource.interface";
 import WebPageUnavailableError from "../errors/WebPageError";
 import {WebPageOccurrence, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import {randomBytes} from "crypto";
@@ -13,7 +13,7 @@ class WebPageDataSourceService {
         this.webPageDataSourceArray = [];
     }
 
-    getAllWebPageDataSources(): WebPageDataSourceList {
+    getAllWebPageDataSources(): WebPageDataSource[] {
         return this.webPageDataSourceArray;
     }
 

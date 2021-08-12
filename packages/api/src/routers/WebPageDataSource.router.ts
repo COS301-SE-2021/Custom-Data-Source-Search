@@ -1,12 +1,12 @@
 import express, {Request, Response} from "express";
-import {WebPageDataSource, WebPageDataSourceList} from "../models/WebPageDataSource.interface";
+import {WebPageDataSource} from "../models/WebPageDataSource.interface";
 import webPageDataSourceService from "../services/WebPageDataSource.service";
 
 export const webPageDataSourceRouter = express.Router();
 
 webPageDataSourceRouter.get("/", (req: Request, res: Response) => {
     try {
-        const webPageDataSources: WebPageDataSourceList = webPageDataSourceService.getAllWebPageDataSources();
+        const webPageDataSources: WebPageDataSource[] = webPageDataSourceService.getAllWebPageDataSources();
         res.status(200).send(webPageDataSources)
     } catch (e) {
         res.status(500).send(e.message);
