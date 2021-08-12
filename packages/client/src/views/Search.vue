@@ -1,7 +1,7 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter>
+    <Splitter style="background:var(--surface-200);">
       <SplitterPanel :size="40" :minSize="20">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
