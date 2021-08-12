@@ -67,7 +67,7 @@ input {
   padding-top: 20px;
   background-color: #1e1e1e;
   grid-row-start: 2;
-    min-height: 100%;
+  height: 100vh;
 }
 
 #grid-div-2 {
@@ -104,7 +104,7 @@ button {
   bottom: 0;
 }
 
-.pi-search:hover,.pi-list:hover, .pi-cog:hover {
+.pi-search:hover,.pi-list:hover, .pi-cog:hover, .pi-user:hover {
   color: #41B3B2;
 }
 

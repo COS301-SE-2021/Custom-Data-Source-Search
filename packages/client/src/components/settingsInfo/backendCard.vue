@@ -225,11 +225,6 @@
                this.tempBackendInfo.admin = this.receive.admin;
                this.newBackendT = this.newBackend;
             }
-        },
-        watch: {
-            fedInBackend() {
-                this.setTempVars();
-            }
         }
     }
 </script>
