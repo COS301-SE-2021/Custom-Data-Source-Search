@@ -23,6 +23,6 @@ webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
 });
 
 webPageDataSourceRouter.delete("/", (req: Request, res: Response) => {
-    const result = await webPageDataSourceService.removeWebPageDataSource(req.body.id);
+    const result = webPageDataSourceService.removeWebPageDataSource(req.body.id);
     res.status(result.code).send(result.body);
 });

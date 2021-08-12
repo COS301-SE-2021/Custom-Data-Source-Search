@@ -1,11 +1,11 @@
-import {StoredWebPageDataSource, WebPageDataSource} from "../models/WebPageDataSource.interface.ts";
+import {StoredWebPageDataSource, WebPageDataSource} from "../models/WebPageDataSource.interface";
 import {randomBytes} from "crypto";
 import fs from "fs";
 
 
 class WebPageDataSourceRepository {
 
-    webPageDataSourceArray: WebPageDataSource[];
+    webPageDataSourceArray: StoredWebPageDataSource[];
 
     constructor() {
         this.webPageDataSourceArray = [];
@@ -115,7 +115,7 @@ class WebPageDataSourceRepository {
         }]
     }
 
-    async deleteDataSource(uuid: string) {
+    deleteDataSource(uuid: string) {
         this.readFile();
         let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
         if (index !== -1) {

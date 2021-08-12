@@ -1,12 +1,12 @@
 import {WebPageDataSource} from "../models/WebPageDataSource.interface";
-import {WebPageOccurrence, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
+import {WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
 
 const fetch = require("node-fetch");
 
 class WebPageDataSourceService {
 
-    getAllWebPageDataSources(): WebPageDataSource[] {
+    getAllWebPageDataSources() {
         let [result, err] = webPageDataSourceRepository.getAllDataSources();
         if (err) {
             return {
@@ -42,7 +42,7 @@ class WebPageDataSourceService {
     }
 
     removeWebPageDataSource(uuid: string) {
-        let [result, err] = await webPageDataSourceRepository.deleteDataSource(uuid);
+        let [result, err] = webPageDataSourceRepository.deleteDataSource(uuid);
         if (err) {
             return {
                 "code": err.code,
@@ -62,7 +62,7 @@ class WebPageDataSourceService {
     async addWebPageDataSource(dataSource: WebPageDataSource) {
         let page;
         try {
-            page = await fetch(webUrl);
+            page = await fetch(dataSource.url);
         } catch (err) {
             return [null, {
                 "code": 500,
@@ -84,28 +84,6 @@ class WebPageDataSourceService {
                 "message": "Web page not available"
             }]
         }
-    }
-
-    async searchAllWebPageDataSources(searchString: string) {
-        let result: WebPageOccurrence[] = [];
-        let pages: Promise<string>[] = [];
-        for (let i = 0; i < this.webPageDataSourceArray.length; i++) {
-            let url = this.webPageDataSourceArray[i].url;
-            pages.push(this.readWebPage(url));
-        }
-        let i = 0;
-        for await (const content of pages) {
-            let searchResults: WebStringOccurrence[] = this.searchWebPage(content, searchString);
-            if (searchResults.length > 0) {
-                result.push({
-                    type: "webpage",
-                    url: this.webPageDataSourceArray[i].url,
-                    match_snippets: searchResults
-                });
-                i++;
-            }
-        }
-        return [result, null];
     }
 
     async readWebPage(url: string): Promise<string> {
