@@ -58,16 +58,17 @@ input {
 }
 
 .grid-app {
+  position: fixed;
   display: grid;
   grid-template-columns: 1fr 30fr;
-  height: 100vh;
+  height: 100%;
 }
 
 #grid-div-1 {
   padding-top: 20px;
   background-color: #1e1e1e;
   grid-row-start: 2;
-  height: 100vh;
+  height: 100%;
 }
 
 #grid-div-2 {
