@@ -44,7 +44,9 @@
           <icon-simple-expand-less @click="goToPrev" class="clickable"/>
           <icon-simple-expand-more @click="goToNext" class="clickable"/>
         </div>
-        <div id="full_file" v-html="fullFileData">
+        <div class="file-container">
+          <div id="full_file" v-html="fullFileData">
+          </div>
         </div>
       </SplitterPanel>
     </Splitter>
@@ -243,8 +245,11 @@ input {
   margin-bottom : 0.3rem;
 }
 
-#full_file {
+.file-container {
   height: 100vh;
+}
+
+#full_file {
   padding-left: 10px;
   padding-top: 20px;
   padding-bottom: 20px;
