@@ -1,17 +1,19 @@
 <template>
   <div class="management-page">
 
-    <h1 class="backend-name">{{backend.name}}</h1>
+    <h1 class="backend-name">{{backend.local.name}}</h1>
 
 
     <Toolbar class="backend-toolbar">
-      <Button label="New" icon="pi pi-plus" class="p-mr-2" />
-      <Button label="Upload" icon="pi pi-upload" class="p-button-success" />
-      <i class="pi pi-bars p-toolbar-separator p-mr-2" />
-      <SplitButton label="Save" icon="pi pi-check" :model="items" class="p-button-warning"></SplitButton>
-    </Toolbar>
+      <template #left>
+        <Button label="New" icon="pi pi-plus" class="p-mr-2" />
+        <Button label="Upload" icon="pi pi-upload" class="p-button-success" />
+        <i class="pi pi-bars p-toolbar-separator p-mr-2" />
+        <SplitButton label="Save" icon="pi pi-check" :model="items" class="p-button-warning"></SplitButton>
+      </template>
+      </Toolbar>
 
-  </div>
+    </div>
 
 
 
@@ -37,9 +39,9 @@ export default {
     ])
   },
   beforeMount() {
-    console.log(this.backendID)
+    //console.log(this.backendID)
     this.backend = this.getUserBackend(this.getSignedInUserId)[this.backendID]
-    console.log(this.backend.name)
+  //  console.log(this.backend.name)
   }
 }
 </script>
@@ -51,7 +53,7 @@ export default {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 2fr 8fr 1fr;
+  grid-template-rows: 3fr 14fr 1fr;
   grid-template-columns: 1fr 9fr;
 
 }

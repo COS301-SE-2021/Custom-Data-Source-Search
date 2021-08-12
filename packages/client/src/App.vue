@@ -62,6 +62,7 @@ input {
   position: fixed;
   display: grid;
   grid-template-columns: 1fr 30fr;
+  grid-template-rows: 0fr;
   height: 100%;
 }
 

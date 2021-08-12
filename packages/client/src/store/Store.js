@@ -89,7 +89,7 @@ const store = createStore({
                             passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg'
                         },
                        receive: {
-                            admin: false,
+                            admin: true,
                             connected: false
                        }
                     },
@@ -106,7 +106,7 @@ const store = createStore({
                             passKey: 'new84lLKJREpassKD9e7edfjKey'
                         },
                         receive: {
-                            admin: false,
+                            admin: true,
                             connected: true
                         }
                     },
@@ -151,7 +151,7 @@ const store = createStore({
                             passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
                         },
                         receive: {
-                            admin: false,
+                            admin: true,
                             connected: false
                         }
                     },

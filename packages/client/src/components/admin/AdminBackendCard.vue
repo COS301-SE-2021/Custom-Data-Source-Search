@@ -1,16 +1,16 @@
 <template>
-  <div class="backend-container p-ripple" v-if="backend.admin" v-ripple @click="showBackendManager">
+  <div class="backend-container p-ripple" v-if="backend.receive.admin" v-ripple @click="showBackendManager">
     <div class="backend-header">
 
       <div class="color-circle" :style="backendColourStyle" ></div>
-      <h2 class="name"> {{ backend.name }}</h2>
+      <h2 class="name"> {{ backend.local.name }}</h2>
     </div>
 
     <Divider class="header-divider" align="left">
 
     </Divider>
 
-    <h4 class="url"> {{ backend.link }} </h4>
+    <h4 class="url"> {{ backend.connect.link }} </h4>
 
 
   </div>
@@ -23,23 +23,32 @@ export default {
   name: "AdminBackendCard",
   props: {
     backend: {
-      name: String,
-      active: Boolean,
-      link: String,
-      passKey: String,
-      color: String,
-      id: Number
+      local: {
+        id: Number,
+        name: String,
+        color: String,
+        active: Boolean
+      },
+      connect: {
+        associatedEmail: String,
+        link: String,
+        passKey: String
+      },
+      receive: {
+        admin: Boolean,
+        connected: Boolean
+      }
 
     }
   },
   computed: {
     backendColourStyle() {
-      return "background-color: " +  this.backend.color
+      return "background-color: " +  this.backend.local.color
           }
   },
   methods: {
     showBackendManager(){
-      this.$router.push({name: 'BackendManager', params: { backendID : this.backend.id} });
+      this.$router.push({name: 'BackendManager', params: { backendID : this.backend.local.id} });
     }
   }
 }
