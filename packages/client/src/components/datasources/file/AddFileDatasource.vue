@@ -81,6 +81,7 @@ export default {
               life: 3000
             })
             this.$emit('addFile')
+            this.$emit("submitted")
           })
           .catch((error) => {
             this.$toast.add({
@@ -90,7 +91,7 @@ export default {
               life: 3000
             })
           })
-      this.$emit("submitted")
+
     }
   }
 }

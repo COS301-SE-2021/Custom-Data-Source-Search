@@ -4,12 +4,12 @@
     <h2>
       Data Sources
     </h2>
-    <div class="card">
+    <ScrollPanel style="width: 100%; height: 90%">
       <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                  :rowsPerPageOptions="[10,20,50]"
                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
+                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
                  :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
         <template #header>
           <div class="p-d-flex p-jc-end">
@@ -49,13 +49,13 @@
               </div>
               <!--            Different contents for the overlay are shown for different types-->
               <div v-else-if="type==='File'">
-                <add-file-datasource :backend="backend" @submitted="toggle"/>
+                <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
               </div>
               <div v-else-if="type==='Folder'">
-                <add-folder-datasource :backend="backend" @submitted="toggle"/>
+                <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
               </div>
               <div v-else-if="type==='Webpage'">
-                <add-webpage-datasource :backend="backend" @submitted="toggle"/>
+                <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
               </div>
             </OverlayPanel>
           </div>
@@ -66,7 +66,8 @@
         <template #loading>
           Loading data. Please wait.
         </template>
-        <Column header="Source Location" filterField="location" style="min-width:12rem">
+        <div style="position: fixed;">
+        <Column header="Source Location" filterField="location" style="min-width:25rem">
           <template #body="{data}">
             <span class="image-text">{{ data.location }}</span>
           </template>
@@ -135,8 +136,9 @@
             </MultiSelect>
           </template>
         </Column>
+        </div>
       </DataTable>
-    </div>
+    </ScrollPanel>
   </div>
 
 </template>
@@ -205,6 +207,22 @@ export default {
       this.$refs.op.toggle(event);
       this.clicked = false;
       this.backend = null;
+    },
+    updateSources(){
+      //Update list of sources upon addition of new source.
+      this.loading = true;
+
+      axios.get("http://localhost:3001/general/datasources").then(
+          resp => {
+            console.log(resp.data)
+            this.sources = resp.data.data
+            let i;
+            for (i = 0; i < this.sources.length; i++) {
+              this.sources[i]["backend"] = "Local"
+            }
+            this.loading = false
+          }
+      )
     }
   }
 }

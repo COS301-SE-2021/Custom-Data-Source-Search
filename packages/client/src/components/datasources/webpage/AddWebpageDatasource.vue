@@ -42,11 +42,11 @@
                     .then(resp => {
                         this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                         this.$emit('addWebpage')
+                        this.$emit("submitted")
                     })
                     .catch(() => {
                         this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Webpage.', life: 3000})
                     })
-              this.$emit("submitted")
             }
         }
     }
