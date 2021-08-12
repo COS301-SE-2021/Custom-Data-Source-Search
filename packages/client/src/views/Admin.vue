@@ -7,22 +7,18 @@
       <h1 class="admin-heading"> User Administration</h1>
       <p class="admin-description"> Select a backend to manage users for.</p>
 
-
-
-
     </div>
 
     <div class="admin-select">
 
     <AdminBackendCard v-for="(backend, i) in getUserBackend(getSignedInUserId)"
                       :backend="backend"
-                      @click="showAdminPopup"
 
     />
 
     </div>
 
-    <UserViewPopup :show="displayAdminPopup" @display-admin-popup></UserViewPopup>
+    <UserViewPopup :show="displayAdminPopup" @display-admin-popup="showAdminPopup"></UserViewPopup>
 
 
   </div>
@@ -48,13 +44,17 @@ export default {
     ...mapGetters([
       'getUserInfo',
       'getUserBackend',
-      'getSignedInUserId'
+      'getSignedInUserId',
+      'getUserAdminStatus'
     ])
   },
   methods: {
-    showPopup(){
-      this.displaySignIn = !this.displaySignIn
+    showAdminPopup(){
+      this.displayAdminPopup = !this.displayAdminPopup
     },
+    showBackendManager(){
+      this.$router.push({name: 'BackendManager', params: {} });
+    }
   }
 }
 </script>

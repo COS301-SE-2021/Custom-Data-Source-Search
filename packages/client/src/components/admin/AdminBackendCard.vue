@@ -1,5 +1,5 @@
 <template>
-  <div class="backend-container p-ripple" v-ripple>
+  <div class="backend-container p-ripple" v-if="backend.admin" v-ripple @click="showBackendManager">
     <div class="backend-header">
 
       <div class="color-circle" :style="backendColourStyle" ></div>
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "AdminBackendCard",
   props: {
@@ -25,13 +27,20 @@ export default {
       active: Boolean,
       link: String,
       passKey: String,
-      color: String
+      color: String,
+      id: Number
+
     }
   },
   computed: {
     backendColourStyle() {
       return "background-color: " +  this.backend.color
           }
+  },
+  methods: {
+    showBackendManager(){
+      this.$router.push({name: 'BackendManager', params: { backendID : this.backend.id} });
+    }
   }
 }
 </script>

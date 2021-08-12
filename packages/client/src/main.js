@@ -35,6 +35,7 @@ import Ripple from 'primevue/ripple';
 import BadgeDirective from "primevue/badgedirective";
 import Divider from 'primevue/divider';
 import InputSwitch from 'primevue/inputswitch';
+import Toolbar from "primevue/toolbar";
 
 const app = createApp(App);
 app.use(router);
@@ -70,3 +71,4 @@ app.directive('badge', BadgeDirective);
 app.directive('ripple', Ripple);
 app.component('Divider', Divider);
 app.component('InputSwitch', InputSwitch);
+app.component('Toolbar', Toolbar);
