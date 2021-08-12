@@ -21,7 +21,6 @@ generalRouter.get("/", async (req: Request, res: Response) => {
     const q: string = req.query.q.toString();
     const result = await generalService.getResults(q);
     res.status(result.code).send(result.body);
-
 });
 
 generalRouter.get("/fullfile", async (req: Request, res: Response) => {
@@ -33,5 +32,10 @@ generalRouter.get("/fullfile", async (req: Request, res: Response) => {
 
 generalRouter.get("/datasources", async (req: Request, res: Response) => {
     const result = await generalService.getAllDataSources();
+    res.status(result.code).send(result.body);
+});
+
+generalRouter.delete("/datasource", async (req: Request, res: Response) => {
+    const result = await generalService.deleteDatasource(req.body.type, req.body.id);
     res.status(result.code).send(result.body);
 });

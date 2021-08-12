@@ -4,6 +4,8 @@ import fileDataSourceService from "./FileDataSource.service";
 import hljs from "highlight.js";
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
+import folderDataSourceService from "./FolderDataSource.service";
+import webPageDataSourceService from "./WebPageDataSource.service";
 
 class GeneralService {
 
@@ -190,6 +192,24 @@ class GeneralService {
                 "message": "Success",
                 "data": array
             }
+        }
+    }
+
+    async deleteDatasource(type: string, id: string) {
+        switch (type) {
+            case "file":
+                return await fileDataSourceService.removeFileDataSource(id);
+            case "folder":
+                return folderDataSourceService.removeFolderDataSource(id);
+            case "webpage":
+                return webPageDataSourceService.removeWebPageDataSource(id);
+            default:
+                return {
+                    "code": 400,
+                    "body": {
+                        "message": "Incorrect type specified for delete"
+                    }
+                }
         }
     }
 }
