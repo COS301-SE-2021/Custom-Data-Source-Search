@@ -1,7 +1,7 @@
 <template>
     <div :class="containerClass" :style="style">
         <PInputText ref="input" :class="inputFieldClass" :style="inputStyle" :type="inputType" :value="modelValue" @input="onInput" @focus="onFocus" @blur="onBlur" @keyup="onKeyUp" v-bind="$attrs" />
-        <em v-if="toggleMask" :class="toggleIconClass" @click="onMaskToggle" />
+        <i v-if="toggleMask" :class="toggleIconClass" @click="onMaskToggle" />
         <Teleport :to="appendTarget" :disabled="appendDisabled">
             <transition name="p-connected-overlay" @enter="onOverlayEnter" @leave="onOverlayLeave" @after-leave="onOverlayAfterLeave">
                 <div :ref="overlayRef" :class="panelStyleClass" v-if="overlayVisible" @click="onOverlayClick">
@@ -309,12 +309,34 @@
 </script>
 
 <style scoped>
+    .p-password {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .p-password-panel {
+        position: absolute;
+    }
+
+    .p-password .p-password-panel {
+        min-width: 100%;
+    }
 
     .p-password-meter {
         height: 10px;
     }
 
     input {
-        width: 100%
+        width: 100%;
+    }
+
+    .p-password-strength {
+        height: 100%;
+        width: 0;
+        transition: width 1s ease-in-out;
+    }
+
+    .p-fluid .p-password {
+        display: flex;
     }
 </style>
