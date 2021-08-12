@@ -13,7 +13,7 @@
                     <InputText type="text"  v-model="userDetails.userName" label="Name" placeholder="Name" />
                     <InputText type="email" v-model="userDetails.masterEmail" label="Email" placeholder="Email" />
                     <div>
-                        <PasswordInputField id="masterPassword" style="width: 100%" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
+                        <PasswordInputField id="masterPassword" style="width: 100%" v-model="masterPassword" placeholder="Master Password" :feedback="true" :toggle-mask="true"/>
                     </div>
                     <div>
                         <PasswordInputField  id="masterPassCheck" style="width: 100%" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
@@ -143,8 +143,7 @@
                 //#3: Some kind of hash of password and email must happen to unlock file [[[[[[ => TO DO <= ]]]]]]
                 console.log("Username: " + this.userDetails.userName);
                 console.log("Master Email: " + this.userDetails.masterEmail);
-                console.log("Master Password: " + this.masterPassword);
-                console.log("Master Pass Check: " + this.masterPassCheck);
+                console.log("Hash: " + this.userDetails.hashToStore);
                 console.log("Backup to Vault: " + this.userDetails.backupVault);
 
                 if (this.errors.length) {

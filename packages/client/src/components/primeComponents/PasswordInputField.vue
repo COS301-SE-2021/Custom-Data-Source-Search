@@ -10,7 +10,7 @@
                         <div class="p-password-meter">
                             <div :class="strengthClass" :style="{'width': meter ? meter.width : ''}"></div>
                         </div>
-                        <div className="p-password-info">{{infoText}}</div>
+                        <div class="p-password-info">{{infoText}}</div>
                     </slot>
                     <slot name="footer"></slot>
                 </div>
@@ -34,13 +34,21 @@
                 type: String,
                 default: null
             },
+            weakRegex: {
+              type: String,
+              default: '^(?=.{8,})'
+            },
             mediumRegex: {
                 type: String,
-                default: '^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})' // eslint-disable-line
+                default: '^((?=.*[a-z])(?=.*[A-Z]))(?=.{8,})|((?=.*[a-z])(?=.*[0-9]))(?=.{8,})|((?=.*[A-Z])(?=.*[0-9]))(?=.{8,})' // eslint-disable-line
             },
             strongRegex: {
                 type: String,
-                default: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})' // eslint-disable-line
+                default: '^(?=.{12,})' // eslint-disable-line
+            },
+            invalidLabel: {
+              type: String,
+              default: null
             },
             weakLabel: {
                 type: String,
@@ -89,6 +97,7 @@
                 unmasked: false
             };
         },
+        weakCheckRegExp: null,
         mediumCheckRegExp: null,
         strongCheckRegExp: null,
         resizeListener: null,
@@ -96,6 +105,7 @@
         overlay: null,
         mounted() {
             this.infoText = this.promptText;
+            this.weakCheckRegExp = new RegExp(this.weakRegex);
             this.mediumCheckRegExp = new RegExp(this.mediumRegex);
             this.strongCheckRegExp = new RegExp(this.strongRegex);
         },
@@ -139,12 +149,13 @@
                 let level = 0;
 
                 if (this.strongCheckRegExp.test(str))
-                    level = 3;
+                    level = 4;
                 else if (this.mediumCheckRegExp.test(str))
+                    level = 3;
+                else if (this.weakCheckRegExp.test(str))
                     level = 2;
                 else if (str.length)
                     level = 1;
-
                 return level;
             },
             onInput(event)  {
@@ -170,6 +181,13 @@
 
                     switch (this.testStrength(value)) {
                         case 1:
+                            label = "Invalid";
+                            meter = {
+                                strength: 'invalid',
+                                width: '0%'
+                            };
+                            break;
+                        case 2:
                             label = this.weakText;
                             meter = {
                                 strength: 'weak',
@@ -177,7 +195,7 @@
                             };
                             break;
 
-                        case 2:
+                        case 3:
                             label = this.mediumText;
                             meter = {
                                 strength: 'medium',
@@ -185,7 +203,7 @@
                             };
                             break;
 
-                        case 3:
+                        case 4:
                             label = this.strongText;
                             meter = {
                                 strength: 'strong',
