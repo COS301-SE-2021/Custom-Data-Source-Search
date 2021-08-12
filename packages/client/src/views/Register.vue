@@ -7,7 +7,7 @@
             <form v-if="notContinue" class="input-fields"
                 id="register"
                 @submit="loadValues"
-                  action=""
+                  action="loadVlues"
             >
                 <div class="input-fields" style="max-height: 20vh">
                     <InputText type="text"  v-model="userDetails.userName" label="Name" placeholder="Name" />

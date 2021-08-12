@@ -246,6 +246,9 @@ const store = createStore({
         //Unconnected backend related getters
 
         unconnectedBackendNo: (state) => {
+            console.log ("Enter unconnectedBackendNo");
+            console.log(state.users[state.signedInUserId].backends.length);
+            console.log(state.users[state.signedInUserId].backends[0].receive.connected);
             return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false).length;
         },
         unconnectedBackendObjects: (state) => {
@@ -260,6 +263,7 @@ const store = createStore({
             return unconnectedBackendNamesArr;
         },
         unconnectedBackendBool: (state, getters) => {
+            console.log ("Enter unconnectedBackendBool");
             return getters.unconnectedBackendNo !== 0;
         }
     },
@@ -289,7 +293,6 @@ const store = createStore({
             }
         },
         addBackend(state, payload){
-            console.log ("Do we even get to the store?");
             let newBackend = {
                 local: {
                     id: null,
@@ -303,7 +306,7 @@ const store = createStore({
                 },
                 receive: {
                     admin: null,
-                    connect: null
+                    connected: false
                 }
             };
 

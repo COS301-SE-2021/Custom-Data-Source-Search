@@ -26,7 +26,7 @@
                     <Button @click="deleteBackend" style="float: right" class="p-button p-button-outlined">Delete </Button>
                 </div>
             </div>
-            <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
+            <form @submit="saveChanges" class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><em>Name: </em></div>
                 <input-text v-model="tempBackendInfo.name"/>
                 <div><em>Email: </em></div>
@@ -39,10 +39,10 @@
                 <div>
                     <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect </Button>
                     <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions </Button>
-                    <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Save </Button>
+                    <Button type="submit" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Save </Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </template>
