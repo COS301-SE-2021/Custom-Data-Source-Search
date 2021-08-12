@@ -196,6 +196,7 @@ const store = createStore({
     getters:{
 
         //User information related getters
+
         getSignedIn(state){
             return state.signedIn;
         },
@@ -212,8 +213,28 @@ const store = createStore({
         getSignedInUserId(state){
             return state.signedInUserId;
         },
+        getUserMasterEmailsArr(state) {
+            let userNamesArr = [];
+            for (let x = 0; x < state.users.length; x++) {
+                console.log(state.users[x].info.email);
+                userNamesArr.push(state.users[x].info.email);
+            }
+            return userNamesArr;
+        },
+        getUserHashCorrect: (state) => (payload) => {
+            let pw = state.users[payload.id].info.hash;
+            let h = 0, l = pw.length, i = 0;
+            if ( l > 0 )
+                while (i < l)
+                    h = (h << 5) - h + pw.charCodeAt(i++) | 0;
+
+            return h === payload.hash;
+
+        },
+
 
         //Signed in User's backends related getters
+
         getUserBackend: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
@@ -221,7 +242,9 @@ const store = createStore({
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },
 
+
         //Unconnected backend related getters
+
         unconnectedBackendNo: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false).length;
         },
@@ -243,6 +266,9 @@ const store = createStore({
 
     //synchronous changes to the store
     mutations: {
+
+        //Signed-in user backend related mutations
+
         editBackend(state, payload) {
             console.log ('PAYLOAD NAME: ' + payload.name);
             console.log ('PAYLOAD email: ' + payload.associatedEmail);
@@ -305,7 +331,7 @@ const store = createStore({
             }
         },
 
-        //Sign in mutations
+        //User management
         setSignedIn(state, payload){
             state.signedIn = payload;
         },
@@ -313,6 +339,39 @@ const store = createStore({
             state.signedInUserId = payload.userID;
             state.users[payload.userID].info.isActive = payload.signedIn;
             state.signedIn = true;
+        },
+        addUserToLocalList(state, payload) {
+            let newUser = {
+                id: null,
+                info: {
+                    id: null,
+                    name: null,
+                    email: null,
+                    isActive: null,
+                    hash: null,
+                    browserAccess: null
+                },
+                backends: Array
+            };
+
+            newUser.info.name = payload.name;
+            newUser.info.email = payload.email;
+            newUser.info.isActive = true;
+            newUser.info.hash = payload.hash;
+            newUser.info.browserAccess = payload.browserAccess;
+
+            state.users.push(newUser);
+
+            let x = 0;
+            for (let user of state.users) {
+                user.id = x;
+                user.info.id = x;
+                console.log ("ID: " + state.users[x].id + ", " + state.users[x].info.id);
+                x++;
+            }
+
+            state.signedInUserId = state.users.length-1;
+
         }
     },
 
