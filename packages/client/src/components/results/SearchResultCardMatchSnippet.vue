@@ -17,8 +17,7 @@ export default {
 .match_snippet {
   cursor: pointer;
   padding: 10px;
-  border-radius: 10px;
-  margin-top: 10px;
+  margin-bottom: 10px;
   background-color: #1f1f1f;
 }
 

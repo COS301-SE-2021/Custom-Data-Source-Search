@@ -27,6 +27,7 @@
 html,
 body,
 #app {
+  height: 100%;
   overflow:hidden;
   margin: 0;
   padding: 0;
@@ -58,8 +59,8 @@ input {
 }
 
 .grid-app {
+  position: fixed;
   display: grid;
-  grid-template-rows: 30fr;
   grid-template-columns: 1fr 30fr;
   height: 100%;
 }
@@ -68,6 +69,7 @@ input {
   padding-top: 20px;
   background-color: #1e1e1e;
   grid-row-start: 2;
+  height: 100%;
 }
 
 #grid-div-2 {
@@ -78,11 +80,11 @@ input {
   grid-row-start: 2;
 }
 
-.nav-bar-top{
-  grid-column-start: 1;
-  grid-column-end: end;
-  background-color: #1e1e1e;
-}
+/*.nav-bar-top{*/
+/*  grid-column-start: 1;*/
+/*  grid-column-end: end;*/
+/*  background-color: #1e1e1e;*/
+/*}*/
 
 .icon {
   padding: 10px;
@@ -104,7 +106,7 @@ button {
   bottom: 0;
 }
 
-.pi-search:hover,.pi-list:hover, .pi-cog:hover {
+.pi-search:hover,.pi-list:hover, .pi-cog:hover, .pi-user:hover {
   color: #41B3B2;
 }
 
@@ -168,9 +170,6 @@ export default {
         ])
     },
   methods: {
-    hideNavBar() {
-      this.navBar = false;
-    },
     toggle(event) {
       this.$refs.op.toggle(event);
     },

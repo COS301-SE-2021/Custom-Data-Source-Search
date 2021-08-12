@@ -1,26 +1,30 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter style="height: 100vh; background:var(--surface-200);">
-      <SplitterPanel class="container" :size="40" :minSize="20" style="padding-top: 50px">
-        <div v-if="firstSearch" class="logo-div">
-          <img  src="../assets/search_logo.png" height="150" alt="">
+    <Splitter style="background:var(--surface-200);">
+      <SplitterPanel :size="40" :minSize="20">
+        <div class="search-bar">
+          <div v-if="firstSearch" class="logo-div">
+            <img  src="../assets/search_logo.png" height="150" alt="">
+          </div>
+          <div class="search-div">
+            <span class="p-input-icon-right">
+                <i @click="queryServer" class="pi pi-search" aria-hidden="true"/>
+                <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+            </span>
+            <CustomTooltip :text="unconnectedBackendNames">
+              <em
+                  v-if="unconnectedBackendBool"
+                  id="expiration-indicator"
+                  class="pi pi-info-circle p-text-secondary"
+                  @click="showPopup"
+                  v-badge.custom-warning="unconnectedBackendNo"
+              ></em>
+            </CustomTooltip>
+          </div>
+          <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
         </div>
-        <div class="search-div">
-          <span class="p-input-icon-right">
-              <i v-on:click="queryServer" class="pi pi-search" aria-hidden="true"/>
-              <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
-          </span>
-          <em
-              v-if="unconnectedBackendBool"
-              id="expiration-indicator"
-              class="pi pi-info-circle p-text-secondary"
-              v-on:click="showPopup"
-              v-badge.custom-warning="unconnectedBackendNo"
-          ></em>
-        </div>
-        <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
-        <div>
+        <div class="search-results container">
           <search-result-card
               v-for="(r,i) in searchResults"
               :key="i"
@@ -34,9 +38,15 @@
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel class="container" :size="60" :minSize="20">
-        <p id="divider_usage_message" v-if="fullFileID === -1">to adjust size of panel drag divider left or right</p>
-        <div id="full_file" v-html="fullFileData">
+      <SplitterPanel class="container" :size="60" :minSize="30">
+        <p id="divider_usage_message" v-if='fullFileData === ""'>to adjust size of panel drag divider left or right</p>
+        <div v-else class="next-prev">
+          <icon-simple-expand-more @click="goToNext" class="clickable"/>
+          <icon-simple-expand-less @click="goToPrev" class="clickable"/>
+        </div>
+        <div class="file-container">
+          <div id="full_file" v-html="fullFileData">
+          </div>
         </div>
       </SplitterPanel>
     </Splitter>
@@ -48,11 +58,15 @@
     import SignIn from "@/components/popups/SignIn";
     import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
+    import CustomTooltip from "../components/primeComponents/CustomTooltip";
+    import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+    import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
     export default {
       name: "SearchBar",
       data() {
         return {
-          fullFileID: -1,
+          fullFileLineNumbers: [],
+          currentLineNumber: -1,
           fullFileData: "",
           displaySignIn: false,
           notDeleted: true,
@@ -65,11 +79,9 @@
       computed: {
         ...mapGetters([
                 'unconnectedBackendNo',
-                'unconnectedBackendBool'
+                'unconnectedBackendBool',
+                'unconnectedBackendNames'
         ])
-      },
-      mounted() {
-
       },
       methods: {
         escapeSpecialCharacters(query) {
@@ -97,18 +109,36 @@
         getIdOfCurrentFullFile() {
           return this.fullFileID;
         },
-        loadFullFile(fileData, id, lineNumber) {
+        loadFullFile(fileData, lineNumber, lineNumbers) {
           this.fullFileData = fileData;
-          this.fullFileID = id;
+          this.fullFileLineNumbers = lineNumbers;
           this.$nextTick().then(() => {
             this.goToFullFileLine(lineNumber);
           })
         },
         goToFullFileLine(lineNumber) {
-          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView(true)
+          this.currentLineNumber = lineNumber;
+          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView({behavior: "smooth"});
+        },
+        goToPrev() {
+          let index = Math.max(
+              0,
+              this.fullFileLineNumbers.findIndex((item) => {return this.currentLineNumber === item}) - 1
+          );
+          this.goToFullFileLine(this.fullFileLineNumbers[index]);
+        },
+        goToNext() {
+          let index = Math.min(
+              this.fullFileLineNumbers.length - 1,
+              this.fullFileLineNumbers.findIndex((item) => {return this.currentLineNumber === item}) + 1
+          );
+          this.goToFullFileLine(this.fullFileLineNumbers[index]);
         }
       },
       components: {
+        IconSimpleExpandLess,
+        IconSimpleExpandMore,
+        CustomTooltip,
         SearchResultCard,
         SignIn
       }
@@ -123,6 +153,20 @@
   border: solid;
   border: rgba(37, 37, 37, 0.91);
   text-align: center;
+}
+
+.search-bar {
+  min-height: 100px;
+  border-bottom: solid;
+  border-color: #4d4d4d;
+  border-width: 1px;
+  padding-top: 10px;
+}
+
+.search-results {
+  height: 90vh;
+  padding-top: 10px;
+  padding-bottom: 100px;
 }
 
 .container {
@@ -170,7 +214,27 @@ input {
 
 .logo-div {
   text-align: center;
+  padding-top: 20px;
   margin-bottom: 10px;
+}
+
+.next-prev {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: #1c1c1c;
+  border-radius: 4px;
+}
+
+.clickable {
+  padding: 4px;
+}
+
+.clickable:hover {
+  background-color: #4d4d4d;
+  border-radius: 4px;
 }
 
 #expiration-indicator {
@@ -183,8 +247,14 @@ input {
   margin-bottom : 0.3rem;
 }
 
+.file-container {
+  height: 100vh;
+}
+
 #full_file {
-  padding: 10px;
+  padding-left: 10px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 #divider_usage_message {
