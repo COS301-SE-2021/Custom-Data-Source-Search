@@ -3,6 +3,7 @@ import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import fileDataSourceService from "./FileDataSource.service";
 import hljs from "highlight.js";
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
+import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
 
 class GeneralService {
 
@@ -168,6 +169,18 @@ class GeneralService {
                     "type": "folder",
                     "tag1": folderDataSource.tag1,
                     "tag2": folderDataSource.tag2
+                });
+            }
+        }
+        let [webPageResult, webPageError] = webPageDataSourceRepository.getAllDataSources();
+        if (!webPageError) {
+            for (let webPageDataSource of webPageResult) {
+                array.push({
+                    "id": webPageDataSource.uuid,
+                    "location": webPageDataSource.url,
+                    "type": "webpage",
+                    "tag1": webPageDataSource.tag1,
+                    "tag2": webPageDataSource.tag2
                 });
             }
         }
