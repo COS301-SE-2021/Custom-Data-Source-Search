@@ -66,7 +66,12 @@
         <template #loading>
           Loading data. Please wait.
         </template>
-        <Column selectionMode="multiple" headerStyle="width: 3em"></Column>
+        <Column selectionMode="multiple" headerStyle="width: 3em">
+          <template #body="{data}">
+<!--            <Checkbox v-if="data.type === 'file'" id="id" name="source" :value="data" v-model="selectedSources" :disabled="true"/>-->
+            <Checkbox id="data.id" name="source" :value="data.id" v-model="selectedSources" :disabled="false"/>
+          </template>
+        </Column>
         <Column header="Source Location" filterField="location" style="min-width:25rem">
           <template #body="{data}">
             <span class="image-text">{{ data.location }}</span>
@@ -207,6 +212,7 @@ export default {
       this.$refs.op.toggle(event);
       this.clicked = false;
       this.backend = null;
+      console.log(this.selectedSources)
     },
     updateSources(){
       //Update list of sources upon addition of new source.
@@ -223,6 +229,13 @@ export default {
             this.loading = false
           }
       )
+    },
+    deleteSourceStatus(source){
+      return this.$store.getters.getBackendAdminStatus(source)
+    },
+    deleteSource(location){
+      this.$toast.add({severity:'info', summary: 'Success', detail:'Button was clicked', life: 3000});
+      this.endpoint.splice(this.endpoint.indexOf(location), 1);
     }
   }
 }
