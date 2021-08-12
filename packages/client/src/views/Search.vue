@@ -165,6 +165,7 @@
 
 .search-results {
   height: 90vh;
+  padding-top: 10px;
   padding-bottom: 100px;
 }
 
