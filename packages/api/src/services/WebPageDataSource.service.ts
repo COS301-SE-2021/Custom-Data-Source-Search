@@ -2,19 +2,26 @@ import {WebPageDataSource} from "../models/WebPageDataSource.interface";
 import WebPageUnavailableError from "../errors/WebPageError";
 import {WebPageOccurrence, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import {randomBytes} from "crypto";
+import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
 
 const fetch = require("node-fetch");
 
 class WebPageDataSourceService {
 
-    webPageDataSourceArray: WebPageDataSource[];
-
-    constructor() {
-        this.webPageDataSourceArray = [];
-    }
-
     getAllWebPageDataSources(): WebPageDataSource[] {
-        return this.webPageDataSourceArray;
+        let [result, err] = webPageDataSourceRepository.getAllDataSources();
+        if (err) {
+            return {
+                "code": 500,
+                "body": {
+                    "message": "Internal error"
+                }
+            }
+        }
+        return {
+            "code": 200,
+            "body": result
+        };
     }
 
     getWebPageDataSource(uuid: string) {
