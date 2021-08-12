@@ -35,7 +35,7 @@ generalRouter.get("/datasources", async (req: Request, res: Response) => {
     res.status(result.code).send(result.body);
 });
 
-generalRouter.delete("/datasource", async (req: Request, res: Response) => {
+generalRouter.delete("/datasources", async (req: Request, res: Response) => {
     const result = await generalService.deleteDatasource(req.body.type, req.body.id);
     res.status(result.code).send(result.body);
 });
