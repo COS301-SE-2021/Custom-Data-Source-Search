@@ -149,13 +149,22 @@
                 //Operations changing store
                 if(this.newBackend) {
                     console.log("New backend Bool: " + this.newBackendT);
+
+                    // console.log (this.userIndex);
+                    // console.log (this.tempBackendInfo.name);
+                    // console.log (this.tempBackendInfo.associatedEmail);
+                    // console.log (this.tempBackendInfo.link);
+                    // console.log (this.tempBackendInfo.link);
+                    // console.log (this.tempBackendInfo.passKey);
+                    // console.log (this.tempBackendInfo.link);
+
                     this.$store.commit("addBackend", {
                         userIndex: this.userIndex,
                         name: this.tempBackendInfo.name,
                         link: this.tempBackendInfo.link,
                         passKey: this.tempBackendInfo.passKey,
                         associatedEmail: this.tempBackendInfo.associatedEmail,
-                        admin: this.tempBackendInfo,
+                        admin: this.tempBackendInfo.admin,
                         active: this.tempBackendInfo.active,
                     });
 
@@ -214,8 +223,10 @@
             },
             //Initialize component state
             setTempVars() {
+                if (!this.newBackend) {
+                    this.tempBackendInfo.name = this.local.name;
+                }
                 this.tempBackendInfo.id = this.local.id;
-                this.tempBackendInfo.name = this.local.name;
                 this.tempBackendInfo.active = this.local.active;
 
                 this.tempBackendInfo.associatedEmail = this.connect.associatedEmail;

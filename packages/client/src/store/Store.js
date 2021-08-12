@@ -289,7 +289,7 @@ const store = createStore({
             }
         },
         addBackend(state, payload){
-
+            console.log ("Do we even get to the store?");
             let newBackend = {
                 local: {
                     id: null,
@@ -308,11 +308,11 @@ const store = createStore({
             };
 
             newBackend.local.name = payload.name;
-            newBackend.local.link = payload.link;
+            newBackend.local.active = payload.active;
 
             newBackend.connect.associatedEmail = payload.associatedEmail;
+            newBackend.connect.link = payload.link;
             newBackend.connect.passKey = payload.passKey;
-            newBackend.connect.active = payload.active;
 
             newBackend.receive.admin = payload.admin;
 
@@ -351,7 +351,7 @@ const store = createStore({
                     hash: null,
                     browserAccess: null
                 },
-                backends: Array
+                backends: []
             };
 
             newUser.info.name = payload.name;

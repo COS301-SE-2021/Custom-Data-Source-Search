@@ -97,7 +97,7 @@
             }
         },
         mounted() {
-            this.regexTester = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})');
+            this.regexTester = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})|(?=.{12,})');
         },
         methods: {
             loadValues() {
@@ -134,17 +134,13 @@
                     this.masterPassCheck = null;
                 }
                 else if (!this.regexTester.test(this.masterPassword)) {
-                    this.errors.push('Password must have at least 8 characters and include numbers and capitals.');
+                    this.errors.push('Password must have at least 8 characters.');
                     this.masterPassword = null;
                     this.masterPassCheck = null;
                 }
 
 
                 //#3: Some kind of hash of password and email must happen to unlock file [[[[[[ => TO DO <= ]]]]]]
-                console.log("Username: " + this.userDetails.userName);
-                console.log("Master Email: " + this.userDetails.masterEmail);
-                console.log("Hash: " + this.userDetails.hashToStore);
-                console.log("Backup to Vault: " + this.userDetails.backupVault);
 
                 if (this.errors.length) {
                     passFormValidation = false;
@@ -160,6 +156,12 @@
                         hash: this.userDetails.hashToStore,
                         browserAccess: this.userDetails.backupVault
                     });
+
+                    console.log("Username: " + this.userDetails.userName);
+                    console.log("Master Email: " + this.userDetails.masterEmail);
+                    console.log("Hash: " + this.userDetails.hashToStore);
+                    console.log("Backup to Vault: " + this.userDetails.backupVault);
+
 
                     this.continue();
                 }
