@@ -7,9 +7,9 @@
     <ScrollPanel style="width: 100%; height: 90%">
       <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                 :rowsPerPageOptions="[10,20,50]"
+                 :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources"
                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
+                 dataKey="uuid" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
                  :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
         <template #header>
           <div class="p-d-flex p-jc-end">
@@ -66,7 +66,7 @@
         <template #loading>
           Loading data. Please wait.
         </template>
-        <div style="position: fixed;">
+        <Column selectionMode="multiple" headerStyle="width: 3em"></Column>
         <Column header="Source Location" filterField="location" style="min-width:25rem">
           <template #body="{data}">
             <span class="image-text">{{ data.location }}</span>
@@ -136,7 +136,6 @@
             </MultiSelect>
           </template>
         </Column>
-        </div>
       </DataTable>
     </ScrollPanel>
   </div>
@@ -159,6 +158,7 @@ export default {
       sources: null,
       loading: false,
       backend: null,
+      selectedSources: null,
       filters2: {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
