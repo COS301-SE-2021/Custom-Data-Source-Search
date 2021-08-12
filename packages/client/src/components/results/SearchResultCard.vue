@@ -1,23 +1,25 @@
 <template>
   <div class="result-card">
-    <div class="card-icon">
-      <div v-html="whitelistEscape(datasource_icon)"></div>
-<!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
-    </div>
-    <div >
-      <div
-          @click=openFile(source)
-          @mousedown.right="openFileUsing(source)"
-          class="datasource_name" v-if="datasource_name !== undefined"
-      >
-          {{ datasource_name }}
+    <div class="title-card">
+      <div class="card-icon">
+        <div v-html="whitelistEscape(datasource_icon)"></div>
+        <!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
       </div>
-      <small
-          @click=openFile(source)
-          @mousedown.right="openFileUsing(source)"
-      >
-        {{source}}
-      </small>
+      <div>
+        <div
+            @click=openFile(source)
+            @mousedown.right="openFileUsing(source)"
+            class="datasource_name" v-if="datasource_name !== undefined"
+        >
+          {{ datasource_name }}
+        </div>
+        <small
+            @click=openFile(source)
+            @mousedown.right="openFileUsing(source)"
+        >
+          {{source}}
+        </small>
+      </div>
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
@@ -32,14 +34,14 @@
     <div class="expand_icon_div" v-if="match_snippets.length > 1">
       <icon-simple-expand-more
           @click="showMore"
-          width="35"
-          height="35"
+          width="25"
+          height="25"
           v-if="thereAreMore()"
       />
       <icon-simple-expand-less
           @click="showOne"
-          width="35"
-          height="35"
+          width="25"
+          height="25"
           v-else
       />
     </div>
@@ -60,7 +62,7 @@ export default {
     return {
       unexpanded : true,
       snippetsOnDisplay: [],
-      numberOfResultsToDisplay: 1
+      numberOfResultsToDisplay: 2
     }
   },
   props: {
@@ -132,7 +134,7 @@ export default {
     },
     goToLineFetchFileIfRequired(lineNumber) {
       axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
-        this.$emit("resultClicked", resp.data.data, this.id, lineNumber)
+        this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
       })
     },
     toggleNumSnippetsToShow() {
@@ -156,6 +158,13 @@ export default {
       for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
         this.snippetsOnDisplay.push(this.match_snippets[i])
       }
+    },
+    extractLineNumbers(match_snippets) {
+      let lineNumbers = [];
+      for (let i = 0; i < match_snippets.length; i++) {
+        lineNumbers.push(match_snippets[i].line_number);
+      }
+      return lineNumbers;
     }
   },
   watch: {
@@ -174,10 +183,15 @@ export default {
   text-align: left;
   max-width: 1000px;
   border-radius: 10px;
-  padding: 10px 20px;
-  margin: 10px auto;
+  padding: 5px 20px;
+  margin: 5px auto;
   overflow: hidden;
   position: relative;
+}
+
+.title-card {
+  background-color: #1f1f1f;
+  padding: 10px;
 }
 
 h1 {
@@ -199,11 +213,6 @@ h2 {
   width: max-content;
   margin: auto;
   cursor: pointer;
-}
-
-.expand_icon_div:hover {
-  background-color: #4d4d4d;
-  border-radius: 10px;
 }
 
 .datasource_name {

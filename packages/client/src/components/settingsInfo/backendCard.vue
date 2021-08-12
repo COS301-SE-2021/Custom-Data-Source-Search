@@ -4,22 +4,22 @@
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
-                    <em v-if="fedInBackend.connected"  :style="connectedStyle" class="pi pi-circle-on" />
-                    <em v-if="!fedInBackend.connected" class="pi pi-circle-off" />
-                    <span> {{fedInBackend.name}} </span>
-                    <span v-if="fedInBackend.admin" style="float: right; padding-top: 3px">ADMIN</span>
+                    <em v-if="receive.connected"  :style="connectedStyle" class="pi pi-circle-on" />
+                    <em v-if="!receive.connected" class="pi pi-circle-off" />
+                    <span> {{local.name}} </span>
+                    <span v-if="receive.admin" style="float: right; padding-top: 3px">ADMIN</span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="fedInBackend.active"/>
+                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="local.active"/>
                 </div>
             </div>
                 <div class="expanded-backend-info" v-if="expand">
                 <div><em>Email: </em></div>
-                <div> {{ fedInBackend.associatedEmail }} </div>
+                <div> {{ connect.associatedEmail }} </div>
                 <div><em>Link: </em></div>
-                <div> {{fedInBackend.link}} </div>
+                <div> {{connect.link}} </div>
                 <div><em>Pass Key: </em></div>
-                <div> {{fedInBackend.passKey}} </div>
+                <div> {{connect.passKey}} </div>
                 <div></div>
                 <div>
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
@@ -38,7 +38,7 @@
                 <div></div>
                 <div>
                     <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect </Button>
-                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(fedInBackend.id)">Permissions </Button>
+                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions </Button>
                     <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Save </Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
                 </div>
@@ -66,21 +66,22 @@
                     id: null,
                     name: '',
                     active: false,
+
                     link: '',
                     passKey: '',
                     associatedEmail: '',
+
                     admin: null
                 }
             }
         },
         computed: {
             ...mapGetters([
-                'getUserBackend',
                 'getSignedInUserId',
                 'getUserAdminStatus'
             ]),
             connectedStyle () {
-                return 'color: ' + this.fedInBackend.color;
+                return 'color: ' + this.local.color;
             }
         },
         props: {
@@ -96,11 +97,21 @@
               type: Boolean,
               default: false
           },
-          fedInBackend: {
+
+          local: {
+              id: Number,
               name: String,
               active: Boolean,
+              color: String
+          },
+          connect: {
+              associatedEmail: String,
               link: String,
               passKey: String
+          },
+          receive: {
+              admin: Boolean,
+              connected: Boolean
           }
         },
         mounted() {
@@ -203,19 +214,16 @@
             },
             //Initialize component state
             setTempVars() {
-               this.tempBackendInfo.name = this.fedInBackend.name;
-               this.tempBackendInfo.link = this.fedInBackend.link;
-               this.tempBackendInfo.active = this.fedInBackend.active;
-               this.tempBackendInfo.passKey = this.fedInBackend.passKey;
-               this.tempBackendInfo.associatedEmail = this.fedInBackend.associatedEmail;
-               this.tempBackendInfo.id = this.fedInBackend.id;
-               this.tempBackendInfo.admin = this.fedInBackend.admin;
+                this.tempBackendInfo.id = this.local.id;
+                this.tempBackendInfo.name = this.local.name;
+                this.tempBackendInfo.active = this.local.active;
+
+                this.tempBackendInfo.associatedEmail = this.connect.associatedEmail;
+                this.tempBackendInfo.link = this.connect.link;
+                this.tempBackendInfo.passKey = this.connect.passKey;
+
+               this.tempBackendInfo.admin = this.receive.admin;
                this.newBackendT = this.newBackend;
-            }
-        },
-        watch: {
-            fedInBackend() {
-                this.setTempVars();
             }
         }
     }

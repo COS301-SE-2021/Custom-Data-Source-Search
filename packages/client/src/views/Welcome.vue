@@ -37,11 +37,6 @@ export default {
   data () {
     return {
       isSignedIn: true,
-      users : [
-        {name : "Josh", email: "joshwalkerdev@gmail.com", isActive: true},
-        {name : "Lauren", email: "lauren@gmail.com", isActive: false},
-        {name : "Marike", email: "marike@gmail.com", isActive: true}
-      ],
       execProcess : null,
       stopProcess : null
     }
@@ -52,7 +47,7 @@ export default {
       console.log("Starting Backend");
 
       //log Current Working Directory
-      console.log(process.cwd())
+      console.log(process.cwd());
 
       //Windows .bat files require a spawned shell to be ran
       //Implementation differs between Windows and Linux
@@ -61,7 +56,7 @@ export default {
         let spawn = require("child_process").spawn;
 
         this.execProcess = spawn("cmd.exe", ["/c", "sleuthstart.bat"],
-            {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin" })
+            {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin" });
 
         this.execProcess.stdout.on("data", (data) => {
           console.log(data.toString());
@@ -100,7 +95,6 @@ export default {
         this.execProcess = exec("bash sleuthstart.sh", {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthLinux\\bin"}
             , (error, stdout, stderr) => {
 
-
           if (error) {
             console.log(`error: ${error.message}`);
 
@@ -137,7 +131,7 @@ export default {
       console.log("Stopping Local Backend");
 
       //log Current Working Directory
-      console.log(process.cwd())
+      console.log(process.cwd());
 
       //Windows .bat files require a spawned shell to be ran
       //Implementation differs between Windows and Linux
@@ -146,7 +140,7 @@ export default {
         let spawn = require("child_process").spawn;
 
         this.stopProcess = spawn("cmd.exe", ["/c", "sleuthstop.bat"],
-            {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin" })
+            {cwd : process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin" });
 
         this.stopProcess.stdout.on("data", (data) => {
           console.log(data.toString());
@@ -158,11 +152,11 @@ export default {
 
         this.stopProcess.on("exit", (code) => {
 
-          console.log("Shutdown Script Finishes")
+          console.log("Shutdown Script Finishes");
 
           kill(3001).then( () => {
 
-            console.log("Port has been killed")
+            console.log("Port has been killed");
             console.log("Exit child exits with : " + code);
           })
 
@@ -185,11 +179,11 @@ export default {
               }
               console.log(`stdout: ${stdout}`);
 
-              console.log("Shutdown Script Finishes")
+              console.log("Shutdown Script Finishes");
 
               kill(3001).then( () => {
 
-                console.log("Port has been killed")
+                console.log("Port has been killed");
                 console.log("Exit child exits with : " + code);
               })
             })
@@ -199,7 +193,7 @@ export default {
     }
 
   },
-  mounted(){
+  mounted () {
     this.isSignedIn = this.$store.getters.getSignedIn;
   },
   computed: {
@@ -214,7 +208,7 @@ export default {
 
 .page {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: 1fr 3fr 1fr;

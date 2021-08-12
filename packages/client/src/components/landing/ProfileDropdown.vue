@@ -14,10 +14,10 @@
     <div class="backends-container">
       <div class="backend"
            v-for="(backend) in getUserBackend(getSignedInUserId)"
-           :key="backend.id"
+           :key="backend.local.id"
       >
-        <span>{{backend.name}}</span>
-        <InputSwitch v-model="backend.active"/>
+        <span>{{backend.local.name}}</span>
+        <InputSwitch v-model="backend.local.active"/>
         <Divider/>
       </div>
     </div>

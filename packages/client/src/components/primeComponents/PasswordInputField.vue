@@ -1,7 +1,7 @@
 <template>
     <div :class="containerClass" :style="style">
         <PInputText ref="input" :class="inputFieldClass" :style="inputStyle" :type="inputType" :value="modelValue" @input="onInput" @focus="onFocus" @blur="onBlur" @keyup="onKeyUp" v-bind="$attrs" />
-        <em v-if="toggleMask" :class="toggleIconClass" @click="onMaskToggle" />
+        <i v-if="toggleMask" :class="toggleIconClass" @click="onMaskToggle" />
         <Teleport :to="appendTarget" :disabled="appendDisabled">
             <transition name="p-connected-overlay" @enter="onOverlayEnter" @leave="onOverlayLeave" @after-leave="onOverlayAfterLeave">
                 <div :ref="overlayRef" :class="panelStyleClass" v-if="overlayVisible" @click="onOverlayClick">
@@ -25,7 +25,7 @@
     import InputText from 'primevue/inputtext';
 
     export default {
-        name: 'Password',
+        name: 'PasswordInputField',
         emits: ['update:modelValue'],
         inheritAttrs: false,
         props: {
@@ -318,21 +318,16 @@
         position: absolute;
     }
 
-    input {
-        width: 100%;
-    }
-
-    input::placeholder{
-        color: #575757;
-        font-weight: bold;
-    }
-
     .p-password .p-password-panel {
         min-width: 100%;
     }
 
     .p-password-meter {
         height: 10px;
+    }
+
+    input {
+        width: 100%;
     }
 
     .p-password-strength {

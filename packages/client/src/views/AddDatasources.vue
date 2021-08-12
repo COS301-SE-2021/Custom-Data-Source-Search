@@ -1,4 +1,4 @@
-    <template>
+<template>
   <div class="grid-content">
     <div class="header">
         <router-link to="/datasources"><Button label="Back to data sources" icon="pi pi-angle-left" class="p-button-text"/></router-link>
@@ -217,8 +217,9 @@ export default {
 <style scoped lang="scss">
 
 .grid-content {
-  display: grid;
-  grid-template-rows: 1fr 9fr;
+  /*display: grid;*/
+  /*grid-template-rows: 1fr 9fr;*/
+  height: 100vh;
 }
 
 .all-sources {
