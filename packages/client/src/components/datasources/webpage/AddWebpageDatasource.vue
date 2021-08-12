@@ -1,8 +1,7 @@
 <template>
     <div>
       <span>Enter the URL of desired webpage</span>
-      <InputText id="input" placeholder="Add WebPage URL..." v-model="dataSourceURI" v-on:keyup.enter="addDataSource"/>
-      <!--  Please be aware that the below code is simply the skeleton for tags, this functionality does not work as of yet.-->
+      <InputText id="input" placeholder="Add WebPage URL..." v-model="dataSourceURI"/>
       <div>
         <span>Add optional tags</span><br/>
         <span class="p-float-label">
@@ -14,7 +13,7 @@
         <label for="tag2">Tag 2</label>
       </span>
       </div>
-      <Button icon="pi pi-check" class="p-button-rounded p-button-text" v-on:click="addDataSource()" />
+      <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource" />
     </div>
 </template>
 
@@ -36,9 +35,10 @@
             }
         },
         methods: {
-            addDataSource() {
+            submitSource() {
+              let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
                 axios
-                    .post("http://localhost:3001/webpagedatasources", {"url": this.dataSourceURI})
+                    .post("http://localhost:3001/webpagedatasources", respObject)
                     .then(resp => {
                         this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                         this.$emit('addWebpage')
@@ -46,6 +46,7 @@
                     .catch(() => {
                         this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Webpage.', life: 3000})
                     })
+              this.$emit("submitted")
             }
         }
     }
