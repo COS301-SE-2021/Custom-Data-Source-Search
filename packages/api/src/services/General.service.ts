@@ -196,7 +196,7 @@ class GeneralService {
     }
 
     async deleteDatasource(type: string, id: string) {
-        switch (type) {
+        switch (type.toLocaleLowerCase()) {
             case "file":
                 return await fileDataSourceService.removeFileDataSource(id);
             case "folder":
