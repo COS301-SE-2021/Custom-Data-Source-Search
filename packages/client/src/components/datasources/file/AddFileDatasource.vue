@@ -92,6 +92,7 @@ export default {
               life: 3000
             })
           })
+      this.$emit("submitted")
     }
   }
 }

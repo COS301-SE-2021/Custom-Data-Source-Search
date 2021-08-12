@@ -49,7 +49,7 @@
               </div>
               <!--            Different contents for the overlay are shown for different types-->
               <div v-else-if="type==='File'">
-                <add-file-datasource :backend="backend"/>
+                <add-file-datasource :backend="backend" @submitted="toggle"/>
               </div>
               <div v-else-if="type==='Folder'">
                 <add-folder-datasource :backend="backend"/>
