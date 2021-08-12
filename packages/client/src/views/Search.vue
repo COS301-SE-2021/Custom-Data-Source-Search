@@ -223,7 +223,7 @@ input {
   grid-template-columns: 1fr 1fr;
   position: fixed;
   top: 10px;
-  right: 20px;
+  right: 10px;
   background-color: #1c1c1c;
   border-radius: 4px;
 }
