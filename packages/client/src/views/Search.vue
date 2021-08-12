@@ -1,7 +1,7 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter style="height: 100vh; background:var(--surface-200);">
+    <Splitter style="background:var(--surface-200);">
       <SplitterPanel :size="40" :minSize="20">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
@@ -41,10 +41,12 @@
       <SplitterPanel class="container" :size="60" :minSize="30">
         <p id="divider_usage_message" v-if='fullFileData === ""'>to adjust size of panel drag divider left or right</p>
         <div v-else class="next-prev">
-          <icon-simple-expand-less @click="goToPrev" class="clickable"/>
           <icon-simple-expand-more @click="goToNext" class="clickable"/>
+          <icon-simple-expand-less @click="goToPrev" class="clickable"/>
         </div>
-        <div id="full_file" v-html="fullFileData">
+        <div class="file-container">
+          <div id="full_file" v-html="fullFileData">
+          </div>
         </div>
       </SplitterPanel>
     </Splitter>
@@ -163,6 +165,7 @@
 
 .search-results {
   height: 90vh;
+  padding-top: 10px;
   padding-bottom: 100px;
 }
 
@@ -216,9 +219,11 @@ input {
 }
 
 .next-prev {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   position: fixed;
   top: 10px;
-  right: 20px;
+  right: 10px;
   background-color: #1c1c1c;
   border-radius: 4px;
 }
@@ -232,7 +237,6 @@ input {
   border-radius: 4px;
 }
 
-
 #expiration-indicator {
   font-size: 2rem;
   color: #d69b2c;
@@ -243,8 +247,14 @@ input {
   margin-bottom : 0.3rem;
 }
 
+.file-container {
+  height: 100vh;
+}
+
 #full_file {
-  padding: 10px;
+  padding-left: 10px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 #divider_usage_message {
