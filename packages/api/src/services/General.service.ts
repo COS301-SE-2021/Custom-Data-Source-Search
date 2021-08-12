@@ -166,8 +166,8 @@ class GeneralService {
                     "id": folderDataSource.uuid,
                     "location": folderDataSource.path,
                     "type": "folder",
-                    "tag1": "Temporary tag",
-                    "tag2": "Other temp tag"
+                    "tag1": folderDataSource.tag1,
+                    "tag2": folderDataSource.tag2
                 });
             }
         }
