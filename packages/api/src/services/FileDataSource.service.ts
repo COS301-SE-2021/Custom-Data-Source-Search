@@ -13,16 +13,6 @@ import hljs from "highlight.js";
 class FileDataSourceService {
 
     /**
-     * In-Memory Store
-     */
-
-    fileDataSourceArray: FileDataSource[];
-
-    constructor() {
-        this.fileDataSourceArray = [];
-    }
-
-    /**
      * Service Methods
      */
     getAllFileDataSources() {
