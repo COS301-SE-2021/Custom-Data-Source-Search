@@ -22,10 +22,8 @@
       <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
 
     </div>
-
+    <DeleteUserAreYouSure :show="displayDeleteCheck" @display-popup="showPopup" :user="selectedUser"/>
   </div>
-
-
 </template>
 
 <script>
@@ -33,12 +31,14 @@ import UserCard from "@/components/users/UserCard";
 import AddUserCard from "@/components/users/AddUserCard";
 const electron = require('@electron/remote');
 import {mapGetters} from "vuex";
+import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
 
 export default {
   name: "Welcome",
-  components: {AddUserCard, UserCard},
+  components: {DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
     return {
+      displayDeleteCheck: false,
       isSignedIn: true,
       execProcess : null,
       stopProcess : null,
@@ -49,12 +49,16 @@ export default {
             // event.originalEvent: Browser event
             // event.item: Menuitem instance
             console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
+            this.displayDeleteCheck = !this.displayDeleteCheck;
           }},
       ]
     }
 
   },
   methods: {
+    showPopup(){
+    this.displayDeleteCheck = !this.displayDeleteCheck
+    },
     updateSelectedUser(user) {
       this.selectedUser = user;
     },
