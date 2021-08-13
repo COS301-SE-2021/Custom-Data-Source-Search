@@ -8,16 +8,37 @@
             :modal="true"
             @hide="$emit('display-popup')"
     >
-    <div class="p-dialog-content">
-        <span>Are you sure you want to delete {{user.name}}?</span>
-        <br><br>
-        <span>This user may not have a browser backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
+    <div class="process-request-body" v-if="firstQuestion">
+        <div class="p-dialog-content">
+            <span>Are you sure you want to delete {{user.name}}?</span>
+            <br><br>
+            <span>This user may not have a browser backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
+        </div>
+        <div class="button-holders">
+            <Button @click="hasVualt">Delete</Button>
+            <Button @click="cancelDeletion">Cancel</Button>
+        </div>
     </div>
-      <div class="button-holders">
-          <Button>Delete</Button>
-          <Button @click="cancelDeletion">Cancel</Button>
-      </div>
+    <div class="process-request-body" v-else>
+        <div class="p-dialog-content">
+            <span>{{user.name}} has remote access to their account.</span>
+            <br><br>
+            <span>Do you want to remove only the local instance of their account or all records?</span>
+            <br>
+            <b>(You will require and internet connection for this to be processed)</b>
+        </div>
+        <div class="button-holders">
 
+            <div>
+                <RadioButton id="deleteLocal" value="false" v-model="deleteVualt" />
+                <label for="deleteLocal">Delete local account only</label>
+                <RadioButton id="deleteVualt" value="false" v-model="deleteVualt" />
+                <label for="deleteVualt">Delete all instances of account</label>
+            </div>
+            <br>
+            <Button @click="cancelDeletion">Delete</Button>
+        </div>
+    </div>
     </Dialog>
 </template>
 
@@ -28,19 +49,33 @@
             show: Boolean,
             user: {
                 id: Number,
-                name: String
+                name: String,
+                hasVualt: Boolean
             }
         },
         data() {
             return {
-                masterPass: null,
                 display: this.show,
-                email: ''
+                firstQuestion: true,
+                deleteVualt: false,
             }
         },
         methods: {
             cancelDeletion () {
                 this.display = false;
+            },
+            hasVualt () {
+                if (this.user.hasVualt) {
+                    this.firstQuestion = false;
+                }
+                else {
+                    this.deleteUser();
+                }
+            },
+            deleteUser () {
+
+                this.$
+
             }
         },
         watch:{

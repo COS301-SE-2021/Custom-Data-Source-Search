@@ -37,6 +37,7 @@ import Divider from 'primevue/divider';
 import InputSwitch from 'primevue/inputswitch';
 import Checkbox from 'primevue/checkbox';
 import ContextMenu from "primevue/contextmenu";
+import RadioButton from "primevue/radiobutton";
 
 const app = createApp(App);
 app.use(router);
@@ -74,3 +75,4 @@ app.component('Divider', Divider);
 app.component('InputSwitch', InputSwitch);
 app.component("Checkbox", Checkbox);
 app.component('ContextMenu', ContextMenu);
+app.component('RadioButton', RadioButton);
