@@ -9,7 +9,7 @@ class UserRepository {
         return [db.prepare('SELECT * FROM user;').all(), null];
     }
 
-    addUser(users: { name: string; surname: string; email: string; permission: string }[]) {
+    addUser(users: { name: string; surname: string; email: string; permission: string; }[]) {
         let failedUsers: any[] = [];
         for (let user of users) {
             if (UserRepository.permissionInvalid(user.permission)) {
@@ -50,7 +50,7 @@ class UserRepository {
         return allowed.indexOf(permission) == -1;
     }
 
-    removeUser(users: { uuid: string }[]) {
+    removeUser(users: { uuid: string; }[]) {
         let failedUsers: any[] = [];
         for (let user of users) {
             try {
@@ -69,6 +69,36 @@ class UserRepository {
         return [{
             "code": 204,
             "message": "Successfully deleted specified users"
+        }, null];
+    }
+
+    setRole(body: { role: string; users: { uuid: string }[]; }) {
+        if (UserRepository.permissionInvalid(body.role)) {
+            return [null, {
+                "code": 400,
+                "message": "Invalid role",
+                "users": body.users
+            }]
+        }
+        let failedUsers: any[] = [];
+        for (let user of body.users) {
+            try {
+                db.prepare("UPDATE user SET role = ? WHERE id = ?").run(body.role, parseInt(user.uuid));
+            } catch (e) {
+                console.log(e);
+                failedUsers.push(user);
+            }
+        }
+        if (failedUsers.length !== 0) {
+            return [null, {
+                "code": 400,
+                "message": "Could not set role for all of specified users",
+                "users": failedUsers
+            }];
+        }
+        return [{
+            "code": 204,
+            "message": "Successfully set roles for specified users"
         }, null];
     }
 }

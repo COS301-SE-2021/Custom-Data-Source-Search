@@ -59,6 +59,24 @@ class UserService {
             "message": "Successfully deleted specified users"
         }
     }
+
+    setRole(body: {role: string; users: {uuid: string}[]}) {
+        const [, err] = userRepository.setRole(body);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message,
+                    // @ts-ignore
+                    "users": err.users
+                }
+            }
+        }
+        return {
+            "code": 204,
+            "message": "Successfully set roles of specified users"
+        }
+    }
 }
 
 const userService = new UserService();
