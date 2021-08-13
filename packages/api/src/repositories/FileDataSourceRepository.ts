@@ -125,10 +125,7 @@ class FileDataSourceRepository {
     async deleteDataSource(uuid: string) {
         const [,err] = await this.deleteFromSolr(uuid);
         if (err) {
-            return [null, {
-                "code": 500,
-                "message": "Could not delete document from solr"
-            }];
+            return [null, err];
         }
         try {
             db.prepare("DELETE FROM file_data WHERE uuid = ?").run(uuid);
