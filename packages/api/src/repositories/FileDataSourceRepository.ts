@@ -95,10 +95,9 @@ class FileDataSourceRepository {
     }
 
     getDataSource(uuid: string): [StoredFileDataSource, { "code": number, "message": string }] {
-        this.readFile();
-        let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
-        if (index !== -1) {
-            return [this.fileDataSourceArray[index], null];
+        const dataSource = db.prepare("SELECT * FROM file_data WHERE uuid = ?").get(uuid)
+        if (dataSource !== undefined) {
+            return [dataSource, null];
         }
         return [null, {
             "code": 404,
