@@ -122,22 +122,6 @@ class FileDataSourceRepository {
         return [fileDataList.map(FileDataSourceRepository.castToStoredDataSource), null];
     }
 
-    updateDataSource(uuid: string, dataSource: FileDataSource) {
-        let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
-        if (index !== -1) {
-            this.fileDataSourceArray[index].path = dataSource.path;
-            this.fileDataSourceArray[index].filename = dataSource.filename;
-            return [{
-                "code": 200,
-                "message": "Successfully updated datasource"
-            }, null]
-        }
-        return [null, {
-            "code": 404,
-            "message": "Datasource not found"
-        }]
-    }
-
     async deleteDataSource(uuid: string) {
         this.readFile();
         let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);

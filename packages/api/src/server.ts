@@ -50,5 +50,5 @@ setTimeout(() => {
         } catch (e) {
             console.log("Error encountered.");
         }
-    }, 3000);
+    }, 10000);
 }, 500);
