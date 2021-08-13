@@ -217,6 +217,14 @@ const store = createStore({
         getUserBackend: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
+        getUserBackendNames: (state, getters) => {
+          let backends = getters.getUserBackend(getters.getSignedInUserId);
+          let backendsArr = [];
+          for( let backend of backends){
+              backendsArr.push(backend.local.name);
+          }
+          return backendsArr;
+        },
         getUserAdminStatus: (state) => (backendID) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },
@@ -243,7 +251,7 @@ const store = createStore({
         //should return true or false
         //this would allow us to determine whether or not a data source can be edited/deleted by a user
         getBackendAdminStatus: (state, getters) => (backendName) => {
-            return getters.getUserBackend(state.signedInUserId).find(backend => backend.name === backendName).isAdmin
+            return getters.getUserBackend(state.signedInUserId).find(backend => backend.local.name === backendName).receive.admin
         }
     },
 

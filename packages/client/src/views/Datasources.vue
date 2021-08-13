@@ -7,7 +7,7 @@
     <ScrollPanel style="width: 100%; height: 90%">
       <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                 :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources"
+                 :rowsPerPageOptions="[10,20,50]"
                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                  dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
                  :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
@@ -68,8 +68,8 @@
         </template>
         <Column selectionMode="multiple" headerStyle="width: 3em">
           <template #body="{data}">
-<!--            <Checkbox v-if="data.type === 'file'" id="id" name="source" :value="data" v-model="selectedSources" :disabled="true"/>-->
-            <Checkbox id="data.id" name="source" :value="data.id" v-model="selectedSources" :disabled="false"/>
+            <Checkbox v-if="deleteSourceStatus(data.backend)" id="id" name="source" :value="data.id" v-model="selectedSources" :disabled="false"/>
+            <Checkbox id="id2" name="source" :value="data.id" v-model="selectedSources" :disabled="true"/>
           </template>
         </Column>
         <Column header="Source Location" filterField="location" style="min-width:25rem">
@@ -178,9 +178,7 @@ export default {
       types: [
         'File', 'Folder', 'Webpage'
       ],
-      backends: [
-        'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
-      ],
+      backends: [],
       colours: [
         'success', 'secondary', 'info', 'warning', 'help', 'danger'
       ]
@@ -193,7 +191,7 @@ export default {
   },
   productService: null,
   mounted() {
-    this.loading = true;
+    this.backends = this.$store.getters.getUserBackendNames;
 
     axios.get("http://localhost:3001/general/datasources").then(
         resp => {
@@ -206,8 +204,10 @@ export default {
           this.loading = false
         }
     )
+    console.log(this.backends)
   },
   methods: {
+
     toggle(event) {
       this.$refs.op.toggle(event);
       this.clicked = false;
