@@ -216,7 +216,6 @@ const store = createStore({
         getUserMasterEmailsArr(state) {
             let userNamesArr = [];
             for (let x = 0; x < state.users.length; x++) {
-                console.log(state.users[x].info.email);
                 userNamesArr.push(state.users[x].info.email);
             }
             return userNamesArr;
@@ -246,9 +245,6 @@ const store = createStore({
         //Unconnected backend related getters
 
         unconnectedBackendNo: (state) => {
-            console.log ("Enter unconnectedBackendNo");
-            console.log(state.users[state.signedInUserId].backends.length);
-            console.log(state.users[state.signedInUserId].backends[0].receive.connected);
             return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false).length;
         },
         unconnectedBackendObjects: (state) => {
@@ -369,7 +365,6 @@ const store = createStore({
             for (let user of state.users) {
                 user.id = x;
                 user.info.id = x;
-                console.log ("ID: " + state.users[x].id + ", " + state.users[x].info.id);
                 x++;
             }
 

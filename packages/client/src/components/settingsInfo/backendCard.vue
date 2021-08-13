@@ -39,7 +39,7 @@
                 <div>
                     <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect </Button>
                     <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions </Button>
-                    <Button type="submit" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Save </Button>
+                    <Button type="submit" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Connect </Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
                 </div>
             </form>

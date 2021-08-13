@@ -152,14 +152,11 @@
             },
             onKeyUp(event) {
                 if (this.feedback) {
-                    console.log(this.modelValue);
-                    console.log(this.passwordStrength.score);
                     let passWordStrengthScore = this.passwordStrength.score;
                     let label = null;
                     let meter = null;
 
-                    this.crackTimeDisplay = this.passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second
-                    ;
+                    this.crackTimeDisplay = this.passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second;
                     this.score = passWordStrengthScore;
 
                     switch (passWordStrengthScore) {

@@ -13,13 +13,14 @@
                     <InputText type="email" v-model="userDetails.masterEmail" label="Email" placeholder="Email" />
                     <div>
                         <PasswordInputField id="masterPassword" style="width: 100%" v-model="masterPassword" placeholder="Master Password" :feedback="true" :toggle-mask="true"/>
-                    </div>
-                    <div>
-                        <PasswordInputField  id="masterPassCheck" style="width: 100%; margin-bottom: 15px" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
                         <span style="font-size: small; margin-top: 30px">
                             The master password is the password you use to access your vault. It is very important that you do not forget your master password.
                             There is no way to recover the password in the event that you forget it.
                         </span>
+                    </div>
+                    <div>
+                        <PasswordInputField  id="masterPassCheck" style="width: 100%; margin-bottom: 15px" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
+
                     </div>
                     <div id="checkboxBox">
                         <checkbox id="checkBox" name="checkbox" v-model="userDetails.backupVault" :binary="true"/>
@@ -37,8 +38,6 @@
                     <div>
                         <Button v-if="notContinue" @click="back" style="float: right" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined">Back</Button>
                     </div>
-                    <br>
-                    <br>
                     <div v-if="errors.length" style="max-height: 0.05vh">
                         <span> <b>Please correct the following error(s):</b></span>
                         <ul>
@@ -285,13 +284,13 @@
     }
 
     .p-button-lg {
-        max-width: fit-content;
+        min-width: fit-content;
+        max-width: 1vw;
         max-height: 6vh;
         position: revert;
         bottom: 3vh;
         right: 55vw;
-
-        /*margin: 1vw;*/
+        margin: 1vw;
     }
 
 </style>
