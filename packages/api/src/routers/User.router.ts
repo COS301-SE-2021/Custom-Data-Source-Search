@@ -2,6 +2,7 @@
  * Required External Modules and Interfaces
  */
 import express, {Request, Response} from "express";
+import userService from "../services/User.service";
 
 /**
  * Router Definition
@@ -13,6 +14,6 @@ export const userRouter = express.Router();
  */
 
 userRouter.get("/", (req: Request, res: Response) => {
-    //const result = fileDataSourceService.getFileDataSource(req.params.id);
-    //res.status(result.code).send(result.body);
+    const result = userService.getAllUsers();
+    res.status(result.code).send(result.body);
 });
