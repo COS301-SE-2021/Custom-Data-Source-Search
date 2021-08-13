@@ -10,6 +10,7 @@ import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 import fileDataSourceRepository from "./repositories/FileDataSourceRepository";
+import {userRouter} from "./routers/User.router";
 
 dotenv.config({path: __dirname + `/../../../.env`});
 console.log(__dirname);
@@ -37,6 +38,7 @@ app.use("/filedatasources", fileDataSourceRouter);
 app.use("/general", generalRouter);
 app.use("/webpagedatasources", webPageDataSourceRouter);
 app.use("/folderdatasources", folderDataSourceRouter);
+app.use("/users", userRouter);
 
 app.listen(PORT , () => {
     console.log("Server Started");
