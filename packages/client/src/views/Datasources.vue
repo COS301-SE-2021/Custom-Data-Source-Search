@@ -164,6 +164,7 @@ import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDat
 export default {
   data() {
     return {
+      message: "No sources have been selected.",
       type: null,
       clicked: false,
       sources: null,
@@ -246,8 +247,18 @@ export default {
     },
     deleteSource(){
       console.log(this.selectedSources)
+      if(this.selectedSources===null){
+        this.$toast.add({severity:'info', summary: 'No Sources Selected', detail:'Please select sources to delete', life: 3000});
+        return;
+      }
+      else if(this.selectedSources.length===1){
+        this.message="Are you sure you want to delete this data source?"
+      }
+      else if(this.selectedSources.length>1){
+        this.message="Are you sure you want to delete these data sources?"
+      }
       this.$confirm.require({
-        message: 'Are you sure you want to delete the following data source(s)?',
+        message: this.message,
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         acceptClass: "p-button-danger",
