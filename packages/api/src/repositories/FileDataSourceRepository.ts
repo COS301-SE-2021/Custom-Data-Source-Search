@@ -3,13 +3,22 @@ import {randomBytes} from "crypto";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
+const sqlite3 = require("sqlite3");
+
 
 
 class FileDataSourceRepository {
-
+    db: any;
     fileDataSourceArray: StoredFileDataSource[];
 
     constructor() {
+        this.db = new sqlite3.Database("../../data/datasleuth.db", (err: any) => {
+            if(err) {
+                console.error(err.message)
+            } else {
+                console.log("Connected to the SQLite database.")
+            }
+        })
         this.fileDataSourceArray = [];
     }
 
