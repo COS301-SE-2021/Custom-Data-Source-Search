@@ -1,7 +1,6 @@
 <template>
       <span>Select one or more Folders to add as Data Sources</span><br/>
       <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
-<!--  Please be aware that the below code is simply the skeleton for tags, this functionality does not work as of yet.-->
     <div>
       <span>Add optional tags</span><br/>
       <span class="p-float-label">
@@ -13,8 +12,7 @@
         <label for="tag2">Tag 2</label>
       </span>
     </div>
-<!--  Below button does not function yet-->
-  <Button icon="pi pi-check" class="p-button-rounded p-button-text"/>
+  <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource"/>
 </template>
 
 <script>
@@ -31,7 +29,8 @@
               dataSourceURI: "",
               tag1: null,
               tag2: null,
-              type: 'folder'
+              type: 'folder',
+              path: null
             }
         },
         methods: {
@@ -47,7 +46,7 @@
                     //Check that files were successfully selected
                     if(dirs.filePaths && dirs.filePaths[0]) {
 
-                      let path, str;
+                      let str;
 
                       //for every folder selected
                       for (let i = 0; i < dirs.filePaths.length; i++) {
@@ -55,21 +54,34 @@
                         str = dirs.filePaths[i]
 
                         //Force use of / in URI's across all platforms
-                        path = str.replaceAll("\\", "/")
-
-                         axios
-                             .post("http://localhost:3001/folderdatasources", {"path": path})
-                             .then(resp => {
-                                this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
-                                this.$emit('addFolder')
-                             })
-                              .catch(() => {
-                                  this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Folder.', life: 3000})
-                              })
+                        this.path = str.replaceAll("\\", "/")
                       }
                     }
                   })
-            }
+            },
+          submitSource(){
+            let respObject = {"path": this.path, "tag1": this.tag1, "tag2": this.tag2}
+            axios
+                .post("http://localhost:3001/folderdatasources", respObject)
+                .then((resp) => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: resp.data.message,
+                    life: 3000
+                  })
+                  this.$emit('addFolder')
+                  this.$emit("submitted")
+                })
+                .catch((error) => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data.message,
+                    life: 3000
+                  })
+                })
+          }
         }
     }
 </script>

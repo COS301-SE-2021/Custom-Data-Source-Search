@@ -1,72 +1,89 @@
-import {WebPageDataSource, WebPageDataSourceList} from "../models/WebPageDataSource.interface";
-import WebPageUnavailableError from "../errors/WebPageError";
-import {WebPageOccurrence, WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
-import {randomBytes} from "crypto";
+import {WebPageDataSource} from "../models/WebPageDataSource.interface";
+import {WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
+import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
 
 const fetch = require("node-fetch");
 
 class WebPageDataSourceService {
 
-    webPageDataSourceArray: WebPageDataSource[];
-
-    constructor() {
-        this.webPageDataSourceArray = [];
-    }
-
-    getAllWebPageDataSources(): WebPageDataSourceList {
-        return this.webPageDataSourceArray;
+    getAllWebPageDataSources() {
+        let [result, err] = webPageDataSourceRepository.getAllDataSources();
+        if (err) {
+            return {
+                "code": 500,
+                "body": {
+                    "message": "Internal error"
+                }
+            }
+        }
+        return {
+            "code": 200,
+            "body": result
+        };
     }
 
     getWebPageDataSource(uuid: string) {
-        let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
-        if (index !== -1) {
-            return this.webPageDataSourceArray[index];
+        let [result, err] = webPageDataSourceRepository.getDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success",
+                "data": result
+            }
         }
     }
 
     removeWebPageDataSource(uuid: string) {
-        let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
-        if (index !== -1) {
-            this.webPageDataSourceArray.splice(index, 1);
-        }
-    }
-
-    async addWebPageDataSource(webUrl: string): Promise<WebPageUnavailableError> {
-        const temp: WebPageDataSource = {uuid: randomBytes(16).toString("hex"), url: webUrl};
-        let page;
-        try {
-            page = await fetch(webUrl);
-        } catch (err) {
-            return new WebPageUnavailableError("Web Page not available", 400)
-        }
-        if (page.status == 200) {
-            this.webPageDataSourceArray.push(temp);
-            return null;
-        } else {
-            return new WebPageUnavailableError("Web Page not available", 400)
-        }
-    }
-
-    async searchAllWebPageDataSources(searchString: string) {
-        let result: WebPageOccurrence[] = [];
-        let pages: Promise<string>[] = [];
-        for (let i = 0; i < this.webPageDataSourceArray.length; i++) {
-            let url = this.webPageDataSourceArray[i].url;
-            pages.push(this.readWebPage(url));
-        }
-        let i = 0;
-        for await (const content of pages) {
-            let searchResults: WebStringOccurrence[] = this.searchWebPage(content, searchString);
-            if (searchResults.length > 0) {
-                result.push({
-                    type: "webpage",
-                    url: this.webPageDataSourceArray[i].url,
-                    match_snippets: searchResults
-                });
-                i++;
+        let [result, err] = webPageDataSourceRepository.deleteDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
             }
         }
-        return [result, null];
+        return {
+            "code": 204,
+            "body": {
+                "message": result.message
+            }
+        }
+    }
+
+    async addWebPageDataSource(dataSource: WebPageDataSource) {
+        let page;
+        try {
+            page = await fetch(dataSource.url);
+        } catch (err) {
+            return [null, {
+                "code": 500,
+                "message": "Error when trying to access url"
+            }];
+        }
+        if (page.status == 200) {
+            let [, e] = await webPageDataSourceRepository.addDataSource(dataSource);
+            if (e) {
+                return [null, e]
+            }
+            return [{
+                "code": 200,
+                "message": "Success"
+            }, null];
+        } else {
+            return [null, {
+                "code": 400,
+                "message": "Web page not available"
+            }]
+        }
     }
 
     async readWebPage(url: string): Promise<string> {

@@ -26,7 +26,9 @@ class FileDataSourceRepository {
             uuid: randomBytes(16).toString("hex"),
             filename: dataSource.filename,
             path: dataSource.path,
-            lastModified: fs.statSync(dataSource.path + dataSource.filename).mtime
+            lastModified: fs.statSync(dataSource.path + dataSource.filename).mtime,
+            tag1: dataSource.tag1,
+            tag2: dataSource.tag2
         };
         const [, err] = await this.postToSolr(fs.readFileSync(dataSource.path + dataSource.filename), storedDatasource.uuid, storedDatasource.filename);
         if (err) {
