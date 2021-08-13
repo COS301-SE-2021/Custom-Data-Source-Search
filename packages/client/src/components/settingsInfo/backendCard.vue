@@ -37,10 +37,10 @@
                 <input-text v-model="tempBackendInfo.passKey"/>
                 <div></div>
                 <div>
-                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect </Button>
-                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions </Button>
-                    <Button type="submit" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Connect </Button>
-                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
+                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect</Button>
+                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions</Button>
+                    <Button type="submit" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Connect</Button>
+                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
                 </div>
             </form>
         </div>
@@ -137,8 +137,6 @@
             },
             editBackend() {
                 this.setTempVars();
-                console.log ("I AM BEING UPDATED");
-                console.log("This backend email: " + this.tempBackendInfo.associatedEmail);
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
             },
@@ -148,8 +146,6 @@
 
                 //Operations changing store
                 if(this.newBackend) {
-                    console.log("New backend Bool: " + this.newBackendT);
-
                     // console.log (this.userIndex);
                     // console.log (this.tempBackendInfo.name);
                     // console.log (this.tempBackendInfo.associatedEmail);

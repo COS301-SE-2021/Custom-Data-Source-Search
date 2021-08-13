@@ -259,7 +259,6 @@ const store = createStore({
             return unconnectedBackendNamesArr;
         },
         unconnectedBackendBool: (state, getters) => {
-            console.log ("Enter unconnectedBackendBool");
             return getters.unconnectedBackendNo !== 0;
         },
         //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
@@ -276,9 +275,6 @@ const store = createStore({
         //Signed-in user backend related mutations
 
         editBackend(state, payload) {
-            console.log ('PAYLOAD NAME: ' + payload.name);
-            console.log ('PAYLOAD email: ' + payload.associatedEmail);
-
             state.users[payload.userIndex].backends[payload.backendIndex].local.id = payload.id;
             state.users[payload.userIndex].backends[payload.backendIndex].local.name = payload.name;
             state.users[payload.userIndex].backends[payload.backendIndex].local.active = payload.active;

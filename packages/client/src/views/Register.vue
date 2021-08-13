@@ -119,7 +119,6 @@
                 }
                 let emailArr = this.$store.getters.getUserMasterEmailsArr;
                 for ( let email of emailArr) {
-                    console.log(email);
                     if (email === this.userDetails.masterEmail) {
                         this.errors.push('Email already registered. Please select another.');
                         this.userDetails.masterEmail = null;
@@ -158,13 +157,6 @@
                         hash: this.userDetails.hashToStore,
                         browserAccess: this.userDetails.backupVault
                     });
-
-                    console.log("Username: " + this.userDetails.userName);
-                    console.log("Master Email: " + this.userDetails.masterEmail);
-                    console.log("Hash: " + this.userDetails.hashToStore);
-                    console.log("Backup to Vault: " + this.userDetails.backupVault);
-
-
                     this.continue();
                 }
             },
@@ -284,8 +276,7 @@
     }
 
     .p-button-lg {
-        min-width: fit-content;
-        max-width: 1vw;
+        max-width: 4vw;
         max-height: 6vh;
         position: revert;
         bottom: 3vh;

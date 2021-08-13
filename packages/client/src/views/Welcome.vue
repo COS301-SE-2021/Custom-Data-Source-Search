@@ -10,7 +10,10 @@
               v-for="(user, i) in getArrUserInfo"
               :key="i"
               :userDetails="user"
+              @contextmenu="onUserCardRightClick"
+              @mousedown.right="updateSelectedUser(user)"
       ></UserCard>
+      <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
     </div>
 
@@ -38,11 +41,26 @@ export default {
     return {
       isSignedIn: true,
       execProcess : null,
-      stopProcess : null
+      stopProcess : null,
+      removeBoolean: false,
+      selectedUser: null,
+      items: [
+        {label: 'Remove', icon: 'pi pi-trash', command: (event) => {
+            // event.originalEvent: Browser event
+            // event.item: Menuitem instance
+            console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
+          }},
+      ]
     }
 
   },
   methods: {
+    updateSelectedUser(user) {
+      this.selectedUser = user;
+    },
+    onUserCardRightClick(event) {
+      this.$refs.deleteOption.show(event);
+    },
     startLocalBackend(){
       console.log("Starting Backend");
 
@@ -256,5 +274,7 @@ export default {
 
   margin: 5vh auto auto;
 }
+
+
 
 </style>
