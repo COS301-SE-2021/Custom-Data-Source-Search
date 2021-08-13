@@ -28,7 +28,9 @@ class UserService {
             return {
                 "code": err.code,
                 "body": {
-                    "message": err.message
+                    "message": err.message,
+                    // @ts-ignore
+                    "users": err.users
                 }
             }
         }
@@ -46,7 +48,9 @@ class UserService {
             return {
                 "code": err.code,
                 "body": {
-                    "message": err.message
+                    "message": err.message,
+                    // @ts-ignore
+                    "users": err.users
                 }
             }
         }

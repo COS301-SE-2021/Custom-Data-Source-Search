@@ -10,12 +10,13 @@ class UserRepository {
     }
 
     addUser(users: { name: string; surname: string; email: string; permission: string }[]) {
+        let failedUsers: any[] = [];
         for (let user of users) {
             if (UserRepository.permissionInvalid(user.permission)) {
                 return [null,{
                     "code": 400,
                     "message": "User permission is not of valid type"
-                }]
+                }];
             }
             try {
                 db.prepare(
@@ -26,13 +27,17 @@ class UserRepository {
                     user.email,
                     "",
                     user.permission,
-                    randomBytes(16).toString("hex"));
+                    randomBytes(16).toString("hex"))
             } catch (e) {
-                return [null, {
-                    "code": 400,
-                    "message": "User with same email already exists"
-                }]
+                failedUsers.push(user);
             }
+        }
+        if (failedUsers.length !== 0) {
+            return [null, {
+                "code": 400,
+                "message": "Some users could not be deleted",
+                "users": users
+            }];
         }
         return [{
             "code": 200,
@@ -46,16 +51,20 @@ class UserRepository {
     }
 
     removeUser(users: { uuid: string }[]) {
+        let failedUsers: any[] = [];
         for (let user of users) {
             try {
                 db.prepare("DELETE FROM user WHERE id = ?").run(parseInt(user.uuid));
             } catch (e) {
-                console.error(e)
-                return [null, {
-                    "code": 404,
-                    "message": "user not found"
-                }];
+                failedUsers.push(user);
             }
+        }
+        if (failedUsers.length !== 0) {
+            return [null, {
+                "code": 400,
+                "message": "Could not delete all of specified users",
+                "users": failedUsers
+            }];
         }
         return [{
             "code": 204,
