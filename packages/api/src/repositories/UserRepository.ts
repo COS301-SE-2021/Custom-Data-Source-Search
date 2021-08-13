@@ -101,6 +101,31 @@ class UserRepository {
             "message": "Successfully set roles for specified users"
         }, null];
     }
+
+    revokeUser(users: { uuid: string }[]) {
+        let failedUsers: any[] = [];
+        for (let user of users) {
+            try {
+                db.prepare(
+                    "DELETE active_user FROM active_user INNER JOIN user ON email=email WHERE id = ?"
+                ).run(parseInt(user.uuid));
+            } catch (e) {
+                console.log(e);
+                failedUsers.push(user);
+            }
+        }
+        if (failedUsers.length !== 0) {
+            return [null, {
+                "code": 400,
+                "message": "Could not revoke specified users",
+                "users": failedUsers
+            }];
+        }
+        return [{
+            "code": 204,
+            "message": "Successfully revoked specified users"
+        }, null];
+    }
 }
 
 const userRepository = new UserRepository();

@@ -32,3 +32,8 @@ userRouter.post("/role", (req: Request, res: Response) => {
     const result = userService.setRole(req.body);
     res.status(result.code).send(result.body);
 });
+
+userRouter.post("/revoke", (req: Request, res: Response) => {
+    const result = userService.revokeUser(req.body.users);
+    res.status(result.code).send(result.body);
+});
