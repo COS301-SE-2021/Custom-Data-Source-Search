@@ -68,8 +68,8 @@
         </template>
         <Column selectionMode="multiple" headerStyle="width: 3em">
           <template #body="{data}">
-            <Checkbox v-if="deleteSourceStatus(data.backend)" id="id" name="source" :value="data.id" v-model="selectedSources" :disabled="false"/>
-            <Checkbox v-else id="id2" name="source" :value="data.id" v-model="selectedSources" :disabled="true"/>
+            <Checkbox v-if="deleteSourceStatus(data.backend)" id="id" name="source" :value="data" v-model="selectedSources" :disabled="false"/>
+            <Checkbox v-else id="id2" name="source" :value="data" v-model="selectedSources" :disabled="true"/>
           </template>
         </Column>
         <Column header="Source Location" filterField="location" style="min-width:25rem">
@@ -141,6 +141,11 @@
             </MultiSelect>
           </template>
         </Column>
+        <template #paginatorLeft>
+          <span><Button label="Delete Selected" type="button" icon="pi pi-trash" class="p-button-text p-button-warning" @click="deleteSource"/></span>
+        </template>
+        <template #paginatorRight>
+        </template>
       </DataTable>
     </ScrollPanel>
   </div>
@@ -213,7 +218,6 @@ export default {
       this.$refs.op.toggle(event);
       this.clicked = false;
       this.backend = null;
-      console.log(this.selectedSources)
     },
     updateSources(){
       //Update list of sources upon addition of new source.
@@ -239,9 +243,8 @@ export default {
         return this.$store.getters.getBackendAdminStatus(source);
       }
     },
-    deleteSource(location){
-      this.$toast.add({severity:'info', summary: 'Success', detail:'Button was clicked', life: 3000});
-      this.endpoint.splice(this.endpoint.indexOf(location), 1);
+    deleteSource(){
+      
     }
   }
 }
