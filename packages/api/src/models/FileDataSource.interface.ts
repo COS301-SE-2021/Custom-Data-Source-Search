@@ -1,6 +1,8 @@
 export interface FileDataSource {
     filename: string;
     path: string;
+    tag1: string;
+    tag2: string;
 }
 
 export interface StoredFileDataSource {
@@ -8,6 +10,8 @@ export interface StoredFileDataSource {
     filename: string;
     path: string;
     lastModified: Date;
+    tag1: string;
+    tag2: string;
 }
 
 export interface FileDataSourceList {

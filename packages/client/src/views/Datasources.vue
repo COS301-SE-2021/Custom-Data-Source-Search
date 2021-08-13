@@ -4,27 +4,34 @@
     <h2>
       Data Sources
     </h2>
-    <div class="card" >
-      <DataTable :value="endpoint" :paginator="true" :rows="10"
+    <ScrollPanel style="width: 100%; height: 90%">
+      <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                 :rowsPerPageOptions="[10,20,50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading=false responsiveLayout="scroll"
+                 :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources"
+                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+                 dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
                  :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
         <template #header>
           <div class="p-d-flex p-jc-end">
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
-            <InputText v-model="filters2['global'].value" placeholder="Keyword Search" />
+            <InputText v-model="filters2['global'].value" placeholder="Keyword Search"/>
           </span>
-            <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle" style="float: right;"/>
-            <router-link title="Add" to="/addDatasources"><Button label="TEMPORARY!!!" icon="pi pi-plus" class="p-button-text" style="float: right;"/></router-link>
-            <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true" :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
+            <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
+                    style="float: right;"/>
+            <router-link title="Add" to="/addDatasources">
+              <Button label="TEMPORARY!!!" icon="pi pi-plus" class="p-button-text" style="float: right;"/>
+            </router-link>
+            <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true"
+                          :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
               <div v-if="!clicked && backend===null">
                 <div class="overlay-header">
                   <span>Which backend would you like to add to?</span>
                 </div>
                 <div class="overlay-buttons">
-                  <Button v-for="i in backends" :key="i.id" label="Backend" class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{i}}</Button>
+                  <Button v-for="i in backends" :key="i.id" label="Backend"
+                          class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{ i }}
+                  </Button>
                 </div>
               </div>
               <div v-else-if="!clicked && backend!=null">
@@ -32,20 +39,23 @@
                   <span>What type of source would you like to add?</span>
                 </div>
                 <div class="overlay-buttons">
-                  <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain" id="text-button" @click="clicked=!clicked; type='Text'"/>
-                  <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain" id="folder-button" @click="clicked=!clicked; type='Folder'"/>
-                  <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain" id="web-button" @click="clicked=!clicked; type='Webpage'"/>
+                  <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain"
+                          id="text-button" @click="clicked=!clicked; type='File'"/>
+                  <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain"
+                          id="folder-button" @click="clicked=!clicked; type='Folder'"/>
+                  <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain"
+                          id="web-button" @click="clicked=!clicked; type='Webpage'"/>
                 </div>
               </div>
               <!--            Different contents for the overlay are shown for different types-->
               <div v-else-if="type==='File'">
-                <add-file-datasource :backend="backend"/>
+                <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
               </div>
               <div v-else-if="type==='Folder'">
-                <add-folder-datasource :backend="backend"/>
+                <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
               </div>
               <div v-else-if="type==='Webpage'">
-                <add-webpage-datasource :backend="backend"/>
+                <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
               </div>
             </OverlayPanel>
           </div>
@@ -56,23 +66,31 @@
         <template #loading>
           Loading data. Please wait.
         </template>
-        <Column header="Source Location" filterField="location" style="min-width:12rem">
+        <Column selectionMode="multiple" headerStyle="width: 3em">
           <template #body="{data}">
-            <span class="image-text">{{data.location}}</span>
+<!--            <Checkbox v-if="data.type === 'file'" id="id" name="source" :value="data" v-model="selectedSources" :disabled="true"/>-->
+            <Checkbox id="data.id" name="source" :value="data.id" v-model="selectedSources" :disabled="false"/>
+          </template>
+        </Column>
+        <Column header="Source Location" filterField="location" style="min-width:25rem">
+          <template #body="{data}">
+            <span class="image-text">{{ data.location }}</span>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter" placeholder="Search by source location"/>
+            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter"
+                       placeholder="Search by source location"/>
           </template>
         </Column>
         <Column header="Backend" filterField="backend" :showFilterMenu="false" style="min-width:12rem">
           <template #body="{data}">
-            <span class="image-text">{{data.backend}}</span>
+            <span class="image-text">{{ data.backend }}</span>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="backends" placeholder="Any" class="p-column-filter">
+            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="backends" placeholder="Any"
+                         class="p-column-filter">
               <template #option="slotProps">
                 <div class="p-multiselect-backends-option">
-                  <span class="image-text">{{slotProps.option}}</span>
+                  <span class="image-text">{{ slotProps.option }}</span>
                 </div>
               </template>
             </MultiSelect>
@@ -80,13 +98,14 @@
         </Column>
         <Column header="Type" filterField="type" :showFilterMenu="false" style="min-width:12rem">
           <template #body="{data}">
-            <span class="image-text">{{data.type}}</span>
+            <span class="image-text">{{ data.type }}</span>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="types" placeholder="Any" class="p-column-filter">
+            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="types" placeholder="Any"
+                         class="p-column-filter">
               <template #option="slotProps">
                 <div class="p-multiselect-types-option">
-                  <span class="image-text">{{slotProps.option}}</span>
+                  <span class="image-text">{{ slotProps.option }}</span>
                 </div>
               </template>
             </MultiSelect>
@@ -94,13 +113,14 @@
         </Column>
         <Column header="Tag 1" filterField="tag1" :showFilterMenu="false" style="min-width:12rem;">
           <template #body="{data}">
-            <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{data.tag1}}</Tag>
+            <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{ data.tag1 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
+            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
+                         class="p-column-filter">
               <template #option="slotProps">
                 <div class="p-multiselect-tag1-option">
-                  <span class="image-text">{{slotProps.option}}</span>
+                  <span class="image-text">{{ slotProps.option }}</span>
                 </div>
               </template>
             </MultiSelect>
@@ -108,20 +128,21 @@
         </Column>
         <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
           <template #body="{data}">
-            <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{data.tag2}}</Tag>
+            <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{ data.tag2 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any" class="p-column-filter">
+            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
+                         class="p-column-filter">
               <template #option="slotProps">
                 <div class="p-multiselect-tag2-option">
-                  <span class="image-text">{{slotProps.option}}</span>
+                  <span class="image-text">{{ slotProps.option }}</span>
                 </div>
               </template>
             </MultiSelect>
           </template>
         </Column>
       </DataTable>
-    </div>
+    </ScrollPanel>
   </div>
 
 </template>
@@ -133,6 +154,7 @@ import {FilterMatchMode} from 'primevue/api';
 import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
 import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
 import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
+
 export default {
   data() {
     return {
@@ -141,37 +163,7 @@ export default {
       sources: null,
       loading: false,
       backend: null,
-      //Template for the endpoint
-      endpoint:[
-        {
-          location: "desktop",
-          backend: "Sonic Co",
-          type: "Folder",
-          tag1: "Business",
-          tag2: "Fun"
-        },
-        {
-          location: "elsewhere",
-          backend: "Backend 1",
-          type: "File",
-          tag1: "Home",
-          tag2: "Fun"
-        },
-        {
-          location: "D:\\Users\\Laurens-PC\\Desktop\\332",
-          backend: "This one",
-          type: "Folder",
-          tag1: "University",
-          tag2: null
-        },
-        {
-          location: "https://www.itsafishthing.com/pure-goldfish-is-now-its-a-fish-thing/",
-          backend: "This one",
-          type: "Webpage",
-          tag1: "Fun",
-          tag2: null
-        }
-      ],
+      selectedSources: null,
       filters2: {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -187,10 +179,10 @@ export default {
         'File', 'Folder', 'Webpage'
       ],
       backends: [
-          'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
+        'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
       ],
-      colours:[
-          'success','secondary','info','warning','help','danger'
+      colours: [
+        'success', 'secondary', 'info', 'warning', 'help', 'danger'
       ]
     }
   },
@@ -203,10 +195,14 @@ export default {
   mounted() {
     this.loading = true;
 
-    axios.get("http://localhost:3001/folderdatasources").then(
+    axios.get("http://localhost:3001/general/datasources").then(
         resp => {
           console.log(resp.data)
-          this.sources = resp.data
+          this.sources = resp.data.data
+          let i;
+          for (i = 0; i < this.sources.length; i++) {
+            this.sources[i]["backend"] = "Local"
+          }
           this.loading = false
         }
     )
@@ -216,22 +212,47 @@ export default {
       this.$refs.op.toggle(event);
       this.clicked = false;
       this.backend = null;
+      console.log(this.selectedSources)
+    },
+    updateSources(){
+      //Update list of sources upon addition of new source.
+      this.loading = true;
+
+      axios.get("http://localhost:3001/general/datasources").then(
+          resp => {
+            console.log(resp.data)
+            this.sources = resp.data.data
+            let i;
+            for (i = 0; i < this.sources.length; i++) {
+              this.sources[i]["backend"] = "Local"
+            }
+            this.loading = false
+          }
+      )
+    },
+    deleteSourceStatus(source){
+      return this.$store.getters.getBackendAdminStatus(source)
+    },
+    deleteSource(location){
+      this.$toast.add({severity:'info', summary: 'Success', detail:'Button was clicked', life: 3000});
+      this.endpoint.splice(this.endpoint.indexOf(location), 1);
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.page {
+
+.page{
   height: 100vh;
 }
 
-td{
+td {
   border-top: 1px solid white;
   border-bottom: 1px solid white;
 }
 
-h2{
+h2 {
   margin: 30px 20px 30px 55px;
 }
 
@@ -239,29 +260,29 @@ a {
   text-decoration: none;
 }
 
-.pi-search{
+.pi-search {
   padding: 0;
 }
 
-.p-inputtext{
+.p-inputtext {
   background-color: #242424;
 }
 
-.button{
+.button {
   margin-left: 8px;
   margin-bottom: 5px;
 }
 
-.p-multiselect{
+.p-multiselect {
   background-color: #242424;
   height: 34px;
 }
 
-.overlay-header{
+.overlay-header {
   margin-bottom: 30px;
 }
 
-.card{
+.card {
   width: 95%;
   margin-left: 2.5%;
 }

@@ -1,7 +1,6 @@
 <template>
   <span>Select one or more Files to add to data sources</span><br/>
   <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
-  <!--  Please be aware that the below code is simply the skeleton for tags, this functionality does not work as of yet.-->
   <div>
     <span>Add optional tags</span><br/>
     <span class="p-float-label">
@@ -13,8 +12,7 @@
         <label for="tag2">Tag 2</label>
       </span>
   </div>
-  <!--  Below button does not function yet-->
-  <Button icon="pi pi-check" class="p-button-rounded p-button-text"/>
+  <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource()"/>
 </template>
 
 <script>
@@ -31,7 +29,9 @@ export default {
       dataSourceURI: "",
       tag1: null,
       tag2: null,
-      type: 'file'
+      type: 'file',
+      filename: null,
+      path: null
     }
   },
   methods: {
@@ -52,7 +52,7 @@ export default {
             //Check that files were successfully selected
             if (files.filePaths && files.filePaths[0]) {
 
-              let p, filename, path, str;
+              let p, str;
 
               //for every file selected
               for (let i = 0; i < files.filePaths.length; i++) {
@@ -63,32 +63,35 @@ export default {
                 str = str.replaceAll("\\", "/")
 
                 p = str.split("/")
-                filename = p.pop()
-                path = p.join("/")
-
-                let respObject = {"fileName": filename, "filePath": path}
-                axios
-                    .post("http://localhost:3001/filedatasources", respObject)
-                    .then((resp) => {
-                      this.$toast.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: resp.data.message,
-                        life: 3000
-                      })
-                      this.$emit('addFile')
-                    })
-                    .catch((error) => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: error.response.data.message,
-                        life: 3000
-                      })
-                    })
+                this.filename = p.pop()
+                this.path = p.join("/")
               }
             }
           })
+    },
+    submitSource(){
+      let respObject = {"filename": this.filename, "path": this.path, "tag1": this.tag1, "tag2": this.tag2}
+      axios
+          .post("http://localhost:3001/filedatasources", respObject)
+          .then((resp) => {
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: resp.data.message,
+              life: 3000
+            })
+            this.$emit('addFile')
+            this.$emit("submitted")
+          })
+          .catch((error) => {
+            this.$toast.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.response.data.message,
+              life: 3000
+            })
+          })
+
     }
   }
 }

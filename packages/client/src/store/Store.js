@@ -261,6 +261,12 @@ const store = createStore({
         unconnectedBackendBool: (state, getters) => {
             console.log ("Enter unconnectedBackendBool");
             return getters.unconnectedBackendNo !== 0;
+        },
+        //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
+        //should return true or false
+        //this would allow us to determine whether or not a data source can be edited/deleted by a user
+        getBackendAdminStatus: (state, getters) => (backendName) => {
+            return getters.getUserBackend(state.signedInUserId).find(backend => backend.name === backendName).isAdmin
         }
     },
 

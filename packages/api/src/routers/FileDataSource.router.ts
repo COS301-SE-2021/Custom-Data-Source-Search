@@ -35,7 +35,7 @@ fileDataSourceRouter.get("/:id", (req: Request, res: Response) => {
  * Add a data source by it's path and file name
  */
 fileDataSourceRouter.post("/", async (req: Request, res: Response) => {
-    const [, err] = await fileDataSourceService.addFileDataSource(req.body.fileName, req.body.filePath);
+    const [, err] = await fileDataSourceService.addFileDataSource(req.body);
     if (err) {
         res.status(err.code).send({'message': err.message});
     } else {
