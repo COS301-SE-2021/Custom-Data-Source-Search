@@ -9,6 +9,7 @@ import { fileDataSourceRouter } from "./routers/FileDataSource.router";
 import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
+import fileDataSourceRepository from "./repositories/FileDataSourceRepository";
 
 dotenv.config({path: __dirname + `/../../../.env`});
 console.log(__dirname);
@@ -42,12 +43,12 @@ app.listen(PORT , () => {
     console.log(`Listening on port ${PORT}`);
 });
 
-// setTimeout(() => {
-//     setInterval(async () => {
-//         try {
-//             await fileDataSourceRepository.updateDatasources();
-//         } catch (e) {
-//             console.log("Error encountered.");
-//         }
-//     }, 3000);
-// }, 5000);
+setTimeout(() => {
+    setInterval(async () => {
+        try {
+            await fileDataSourceRepository.updateDatasources();
+        } catch (e) {
+            console.log("Error encountered.");
+        }
+    }, 3000);
+}, 500);

@@ -18,7 +18,7 @@ class FileDataSourceRepository {
         const uuid: string = randomBytes(16).toString("hex")
         try {
             db.prepare(
-                'INSERT INTO file_data VALUES (?, ?, ?, ?, ?)'
+                'INSERT INTO file_data VALUES (?, ?, ?, ?, ?);'
             ).run(
                 uuid,
                 dataSource.path + dataSource.filename,
@@ -76,16 +76,18 @@ class FileDataSourceRepository {
     }
 
     async updateDatasources() {
-        this.readFile();
-        for (let storedDatasrouce of this.fileDataSourceArray) {
-            let lastModified: Date = fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime;
-            if (new Date(storedDatasrouce.lastModified).getTime() !== lastModified.getTime()) {
-                let index: number = this.fileDataSourceArray.indexOf(storedDatasrouce);
-                storedDatasrouce.lastModified = lastModified;
-                this.fileDataSourceArray[index] = storedDatasrouce;
-                fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
+        const fileDataList = db.prepare("SELECT * FROM file_data;").all()
+        for (let fileData of fileDataList) {
+            let lastModified: number = fs.statSync(fileData.file_path).mtime.getTime();
+            if (fileData.last_modified !== lastModified) {
+                db.prepare("UPDATE file_data SET last_modified = ? WHERE uuid = ?").run(lastModified, fileData.uuid)
                 try {
-                    await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
+                    console.log(fs.readFileSync(fileData.file_path).toString())
+                    await this.postToSolr(
+                        fs.readFileSync(fileData.file_path),
+                        fileData.uuid,
+                        fileData.file_path.split("/").pop()
+                    );
                 } catch (e) {
                     console.log("Error posting file to solr");
                 }
