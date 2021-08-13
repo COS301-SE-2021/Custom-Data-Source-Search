@@ -8,7 +8,7 @@
     <ScrollPanel style="width: 100%; height: 90%">
       <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                 :rowsPerPageOptions="[10,20,50]"
+                 :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources"
                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
                  dataKey="id" v-model:filters="filters2" filterDisplay="row" :loading="loading" responsiveLayout="scroll"
                  :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
