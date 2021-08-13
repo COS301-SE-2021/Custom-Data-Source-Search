@@ -97,7 +97,7 @@ class FileDataSourceRepository {
     getDataSource(uuid: string): [StoredFileDataSource, { "code": number, "message": string }] {
         const dataSource = db.prepare("SELECT * FROM file_data WHERE uuid = ?").get(uuid)
         if (dataSource !== undefined) {
-            return [dataSource, null];
+            return [FileDataSourceRepository.castToStoredDataSource(dataSource), null];
         }
         return [null, {
             "code": 404,
@@ -105,9 +105,21 @@ class FileDataSourceRepository {
         }]
     }
 
+    private static castToStoredDataSource(dataSource: any): StoredFileDataSource {
+        const filename = dataSource.file_path.split("/").pop();
+        return {
+            uuid: dataSource.uuid,
+            filename: filename,
+            path: dataSource.file_path.substr(0, dataSource.file_path.length - filename.length),
+            lastModified: new Date(dataSource.last_modified),
+            tag1: dataSource.tag1,
+            tag2: dataSource.tag2
+        };
+    }
+
     getAllDataSources(): [StoredFileDataSource[], { "code": number, "message": string }] {
-        this.readFile();
-        return [this.fileDataSourceArray, null];
+        const fileDataList = db.prepare("SELECT * FROM file_data;").all()
+        return [fileDataList.map(FileDataSourceRepository.castToStoredDataSource), null];
     }
 
     updateDataSource(uuid: string, dataSource: FileDataSource) {
