@@ -162,14 +162,6 @@ class FileDataSourceRepository {
             }]
         }
     }
-
-    readFile() {
-        try {
-            this.fileDataSourceArray = JSON.parse(fs.readFileSync('./store/fileDataStore.json', 'utf-8'));
-        } catch (err) {
-            this.fileDataSourceArray = [];
-        }
-    }
 }
 
 const fileDataSourceRepository = new FileDataSourceRepository();
