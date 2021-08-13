@@ -3,48 +3,41 @@ import {randomBytes} from "crypto";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
-const sqlite3 = require("sqlite3");
+const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 
 
 class FileDataSourceRepository {
-    db: any;
     fileDataSourceArray: StoredFileDataSource[];
 
     constructor() {
-        this.db = new sqlite3.Database("../../data/datasleuth.db", (err: any) => {
-            if(err) {
-                console.error(err.message)
-            } else {
-                console.log("Connected to the SQLite database.")
-            }
-        })
         this.fileDataSourceArray = [];
     }
 
     async addDataSource(dataSource: FileDataSource): Promise<[{ code: number, message: string }, { code: number, message: string }]> {
-        this.readFile();
-        let index: number = this.fileDataSourceArray.findIndex(x => x.path === dataSource.path && x.filename === dataSource.filename);
-        if (index !== -1) {
+        const uuid: string = randomBytes(16).toString("hex")
+        try {
+            db.prepare(
+                'INSERT INTO file_data VALUES (?, ?, ?, ?, ?)'
+            ).run(
+                uuid,
+                dataSource.path + dataSource.filename,
+                fs.statSync(dataSource.path + dataSource.filename).mtime.getTime(),
+                dataSource.tag1,
+                dataSource.tag2
+            )
+        } catch (e) {
             return [null, {
                 "code": 400,
                 "message": "File datasource already exists"
             }];
         }
-        const storedDatasource: StoredFileDataSource = {
-            uuid: randomBytes(16).toString("hex"),
-            filename: dataSource.filename,
-            path: dataSource.path,
-            lastModified: fs.statSync(dataSource.path + dataSource.filename).mtime,
-            tag1: dataSource.tag1,
-            tag2: dataSource.tag2
-        };
-        const [, err] = await this.postToSolr(fs.readFileSync(dataSource.path + dataSource.filename), storedDatasource.uuid, storedDatasource.filename);
+        const [, err] = await this.postToSolr(
+            fs.readFileSync(dataSource.path + dataSource.filename), uuid, dataSource.filename
+        );
         if (err) {
             return [null, err];
         }
-        this.fileDataSourceArray.push(storedDatasource);
-        fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
         return [{
             "code": 200,
             "message": "Successfully added file datasource"
