@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "folder_data" (
 CREATE TABLE IF NOT EXISTS "folder_file_data" (
 	"filename"	TEXT NOT NULL,
 	"path"	TEXT NOT NULL,
-	"last_modified"	TEXT NOT NULL,
+	"last_modified"	NUMERIC NOT NULL,
 	"folder_uuid"	TEXT NOT NULL UNIQUE,
 	"uuid"	TEXT NOT NULL UNIQUE,
 	PRIMARY KEY("uuid"),
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 CREATE TABLE IF NOT EXISTS "file_data" (
 	"uuid"	TEXT NOT NULL UNIQUE,
 	"file_path"	TEXT NOT NULL UNIQUE,
-	"last_modified"	TEXT NOT NULL,
+	"last_modified"	NUMERIC NOT NULL,
 	"tag1"	TEXT,
 	"tag2"	TEXT,
 	PRIMARY KEY("uuid")
