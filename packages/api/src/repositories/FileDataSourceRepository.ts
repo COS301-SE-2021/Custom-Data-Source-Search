@@ -123,27 +123,26 @@ class FileDataSourceRepository {
     }
 
     async deleteDataSource(uuid: string) {
-        this.readFile();
-        let index: number = this.fileDataSourceArray.findIndex(x => x.uuid === uuid);
-        if (index !== -1) {
-            this.fileDataSourceArray.splice(index, 1);
-            fs.writeFileSync('./store/fileDataStore.json', JSON.stringify(this.fileDataSourceArray));
-            const [,err] = await this.deleteFromSolr(uuid);
-            if (err) {
-                return [null, {
-                    "code": 500,
-                    "message": "Could not delete document from solr"
-                }]
-            }
-            return [{
-                "code": 204,
-                "message": "Successfully deleted File datasource"
-            }, null]
+        const [,err] = await this.deleteFromSolr(uuid);
+        if (err) {
+            return [null, {
+                "code": 500,
+                "message": "Could not delete document from solr"
+            }];
         }
-        return [null, {
-            "code": 404,
-            "message": "File datasource not found"
-        }]
+        try {
+            db.prepare("DELETE FROM file_data WHERE uuid = ?").run(uuid);
+        } catch (e) {
+            console.error(e)
+            return [null, {
+                "code": 404,
+                "message": "File datasource not found"
+            }];
+        }
+        return [{
+            "code": 204,
+            "message": "Successfully deleted File datasource"
+        }, null];
     }
 
     async deleteFromSolr(uuid: string) {
