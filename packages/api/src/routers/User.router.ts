@@ -17,3 +17,8 @@ userRouter.get("/", (req: Request, res: Response) => {
     const result = userService.getAllUsers();
     res.status(result.code).send(result.body);
 });
+
+userRouter.post("/", (req: Request, res: Response) => {
+    const result = userService.addUser(req.body);
+    res.status(result.code).send(result.body);
+});
