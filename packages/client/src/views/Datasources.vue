@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <ConfirmDialog></ConfirmDialog>
     <Toast position="bottom-right"/>
     <h2>
       Data Sources
@@ -244,7 +245,42 @@ export default {
       }
     },
     deleteSource(){
-      
+      console.log(this.selectedSources)
+      this.$confirm.require({
+        message: 'Are you sure you want to delete the following data source(s)?',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        acceptClass: "p-button-danger",
+        rejectClass: "p-button-text p-button-plain",
+        accept: () => {
+          //Loop through all items to delete
+          let source;
+          for(source in this.selectedSources){
+            axios
+                .delete("http://localhost:3001/general/datasources", {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
+                .then(() => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Deleted',
+                    detail: "Source deleted",
+                    life: 3000});
+                  this.updateSources()
+                })
+                .catch(() => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: "Could not delete source",
+                    life: 3000
+                  })
+                })
+          }
+          console.log(this.sources)
+        },
+        reject: () => {
+          //callback to execute when user rejects the action
+        }
+      })
     }
   }
 }
