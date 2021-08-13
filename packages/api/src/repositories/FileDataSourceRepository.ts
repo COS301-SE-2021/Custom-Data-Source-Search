@@ -80,14 +80,13 @@ class FileDataSourceRepository {
         for (let fileData of fileDataList) {
             let lastModified: number = fs.statSync(fileData.file_path).mtime.getTime();
             if (fileData.last_modified !== lastModified) {
-                db.prepare("UPDATE file_data SET last_modified = ? WHERE uuid = ?").run(lastModified, fileData.uuid)
                 try {
-                    console.log(fs.readFileSync(fileData.file_path).toString())
                     await this.postToSolr(
                         fs.readFileSync(fileData.file_path),
                         fileData.uuid,
                         fileData.file_path.split("/").pop()
                     );
+                    db.prepare("UPDATE file_data SET last_modified = ? WHERE uuid = ?").run(lastModified, fileData.uuid)
                 } catch (e) {
                     console.log("Error posting file to solr");
                 }
