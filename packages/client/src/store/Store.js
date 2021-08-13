@@ -250,8 +250,8 @@ const store = createStore({
         //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
         //should return true or false
         //this would allow us to determine whether or not a data source can be edited/deleted by a user
-        getBackendAdminStatus: (state, getters) => (backendName) => {
-            return getters.getUserBackend(state.signedInUserId).find(backend => backend.local.name === backendName).receive.admin
+        getBackendAdminStatus: (state) => (backendName) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         }
     },
 

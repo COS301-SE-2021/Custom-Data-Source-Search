@@ -69,7 +69,7 @@
         <Column selectionMode="multiple" headerStyle="width: 3em">
           <template #body="{data}">
             <Checkbox v-if="deleteSourceStatus(data.backend)" id="id" name="source" :value="data.id" v-model="selectedSources" :disabled="false"/>
-            <Checkbox id="id2" name="source" :value="data.id" v-model="selectedSources" :disabled="true"/>
+            <Checkbox v-else id="id2" name="source" :value="data.id" v-model="selectedSources" :disabled="true"/>
           </template>
         </Column>
         <Column header="Source Location" filterField="location" style="min-width:25rem">
@@ -192,6 +192,7 @@ export default {
   productService: null,
   mounted() {
     this.backends = this.$store.getters.getUserBackendNames;
+    this.backends.push("Local");
 
     axios.get("http://localhost:3001/general/datasources").then(
         resp => {
@@ -231,7 +232,12 @@ export default {
       )
     },
     deleteSourceStatus(source){
-      return this.$store.getters.getBackendAdminStatus(source)
+      if(source === "Local"){
+        return true;
+      }
+      else{
+        return this.$store.getters.getBackendAdminStatus(source);
+      }
     },
     deleteSource(location){
       this.$toast.add({severity:'info', summary: 'Success', detail:'Button was clicked', life: 3000});
