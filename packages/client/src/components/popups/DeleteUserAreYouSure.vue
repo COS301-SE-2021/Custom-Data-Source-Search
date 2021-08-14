@@ -1,6 +1,6 @@
 <template>
     <Dialog
-            header="Delete User?"
+            header="Remove User?"
             v-model:visible="display"
             :draggable="false"
             :closable="true"
@@ -24,19 +24,22 @@
             <span>{{user.name}} has remote access to their account.</span>
             <br><br>
             <span>Do you want to remove only the local instance of their account or all records?</span>
-            <br>
-            <strong>(You will require and internet connection for this to be processed)</strong>
+            <br><br>
+            <strong>(You will require internet connection in order for this to be processed)</strong>
         </div>
-        <div class="button-holders">
+        <div class="radio-button-holders">
 
             <div>
                 <RadioButton id="deleteLocal" value="false" v-model="deleteVualt" />
-                <label for="deleteLocal">Delete local account only</label>
-                <RadioButton id="deleteVualt" value="false" v-model="deleteVualt" />
-                <label for="deleteVualt">Delete all instances of account</label>
+                <label for="deleteLocal">  Delete local account only</label>
             </div>
-            <br>
-            <Button @click="cancelDeletion">Delete</Button>
+            <div>
+                <RadioButton id="deleteVualt" value="false" v-model="deleteVualt" />
+                <label for="deleteVualt">  Delete all instances of account</label>
+            </div>
+            <div style="text-align: center">
+                <Button  @click="cancelDeletion">Delete</Button>
+            </div>
         </div>
     </div>
     </Dialog>
@@ -102,9 +105,15 @@
     }
 
     Button {
+        max-width: fit-content;
         margin-left: 1em;
         margin-right: 1em;
     }
 
+    .radio-button-holders {
+        display: grid;
+        grid-row-gap: 0.5em;
+        padding: 0 24px 24px;
+    }
 
 </style>
