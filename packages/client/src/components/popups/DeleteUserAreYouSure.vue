@@ -23,19 +23,23 @@
         <div class="p-dialog-content">
             <span>{{user.name}} has remote access to their account.</span>
             <br><br>
-            <span>Do you want to remove only the local instance of their account or all records?</span>
-            <br><br>
-            <strong>(You will require internet connection in order for this to be processed)</strong>
+            <span>Do you want to remove only the LOCAL INSTANCE of their account, or ALL INSTANCES?</span>
+
+            <br>
         </div>
         <div class="radio-button-holders">
 
             <div>
                 <RadioButton id="deleteLocal" value="false" v-model="deleteVualt" />
-                <label for="deleteLocal">  Delete local account only</label>
+                <label for="deleteLocal">  LOCAL account only</label>
             </div>
             <div>
                 <RadioButton id="deleteVualt" value="false" v-model="deleteVualt" />
-                <label for="deleteVualt">  Delete all instances of account</label>
+                <label for="deleteVualt">  ALL instances of account</label>
+            </div>
+            <br>
+            <div style="text-align: center">
+                <strong>(You will require internet connection in order for this to be processed)</strong>
             </div>
             <div style="text-align: center">
                 <Button  @click="cancelDeletion">Delete</Button>
