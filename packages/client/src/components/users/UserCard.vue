@@ -15,8 +15,10 @@
 </template>
 
 <script>
+import CustomTooltip from "../primeComponents/CustomTooltip";
 export default {
   name: "UserCard",
+  components: {CustomTooltip},
   props: {
     userDetails: {
       name: String,
