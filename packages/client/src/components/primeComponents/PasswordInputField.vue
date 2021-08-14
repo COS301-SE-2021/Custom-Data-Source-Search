@@ -11,7 +11,7 @@
                             <div :class="strengthClass" :style="{'width': meter ? meter.width : ''}"></div>
                         </div>
                         <div v-if="!crackTimeDisplay" >Enter a password</div>
-                        <div v-else style="">Password strength: <a :style="passStrengthColor">{{pwStrengthIndicator}}</a></div>
+                        <div v-else>Password strength: <a :style="passStrengthColor">{{pwStrengthIndicator}}</a></div>
                         <div v-if="crackTimeDisplay" class="p-password-info">Estimated time to crack:   <a style="color: rgba(118,118,118,0.99)">{{crackTimeDisplay}}</a> </div>
                     </slot>
                     <slot name="footer"></slot>

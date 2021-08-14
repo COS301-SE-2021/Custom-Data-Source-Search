@@ -218,8 +218,8 @@ const store = createStore({
         },
         getUserMasterEmailsArr(state) {
             let userNamesArr = [];
-            for (let x = 0; x < state.users.length; x++) {
-                userNamesArr.push(state.users[x].info.email);
+            for (let user of state.users) {
+                userNamesArr.push(user.info.email);
             }
             return userNamesArr;
         },

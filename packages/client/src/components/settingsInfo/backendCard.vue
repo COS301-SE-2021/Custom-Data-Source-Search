@@ -146,13 +146,6 @@
 
                 //Operations changing store
                 if(this.newBackend) {
-                    // console.log (this.userIndex);
-                    // console.log (this.tempBackendInfo.name);
-                    // console.log (this.tempBackendInfo.associatedEmail);
-                    // console.log (this.tempBackendInfo.link);
-                    // console.log (this.tempBackendInfo.link);
-                    // console.log (this.tempBackendInfo.passKey);
-                    // console.log (this.tempBackendInfo.link);
 
                     this.$store.commit("addBackend", {
                         userIndex: this.userIndex,
