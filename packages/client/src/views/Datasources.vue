@@ -20,9 +20,6 @@
           </span>
             <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
                     style="float: right;"/>
-            <router-link title="Add" to="/addDatasources">
-              <Button label="TEMPORARY!!!" icon="pi pi-plus" class="p-button-text" style="float: right;"/>
-            </router-link>
             <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true"
                           :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
               <div v-if="!clicked && backend===null">
