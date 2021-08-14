@@ -12,7 +12,7 @@ const store = createStore({
                     name: 'Marike',
                     email: 'example@funsail.co.za',
                     isActive: true,
-                    hasVualt: true
+                    hasVault: true
                 },
                 backends: [
                     {
@@ -75,7 +75,7 @@ const store = createStore({
                     name: 'Josh',
                     email: 'joshwalkerdev@gmail.com',
                     isActive: false,
-                    hasVualt: true
+                    hasVault: true
                 },
                 backends: [
                     {
@@ -138,7 +138,7 @@ const store = createStore({
                     name: 'Lauren',
                     email: 'lauren@gmail.com',
                     isActive: true,
-                    hasVualt: false
+                    hasVault: false
                 },
                 backends: [
                     {

@@ -15,7 +15,7 @@
             <span>This user may not have a browser backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
         </div>
         <div class="button-holders">
-            <Button @click="hasVualt">Delete</Button>
+            <Button @click="hasVault">Delete</Button>
             <Button @click="cancelDeletion">Cancel</Button>
         </div>
     </div>
@@ -30,19 +30,19 @@
         <div class="radio-button-holders">
 
             <div>
-                <RadioButton id="deleteLocal" value="false" v-model="deleteVualt" />
+                <RadioButton name="deleteVault" id="deleteLocal" value="deleteLocal" v-model="deleteVault" />
                 <label for="deleteLocal">  LOCAL account only</label>
             </div>
             <div>
-                <RadioButton id="deleteVualt" value="false" v-model="deleteVualt" />
-                <label for="deleteVualt">  ALL instances of account</label>
+                <RadioButton name="deleteVault" id="deleteVault" value="deleteVault" v-model="deleteVault" />
+                <label for="deleteVault">  ALL instances of account</label>
             </div>
             <br>
             <div style="text-align: center">
                 <strong>(You will require internet connection in order for this to be processed)</strong>
             </div>
             <div style="text-align: center">
-                <Button  @click="cancelDeletion">Delete</Button>
+                <Button :disabled="!deleteVault" @click="cancelDeletion">Delete</Button>
             </div>
         </div>
     </div>
@@ -57,30 +57,31 @@
             user: {
                 id: Number,
                 name: String,
-                hasVualt: Boolean
+                hasVault: Boolean
             }
         },
         data() {
             return {
                 display: this.show,
                 firstQuestion: true,
-                deleteVualt: false,
+                deleteVault: null
             }
         },
         methods: {
             cancelDeletion () {
                 this.display = false;
             },
-            hasVualt () {
-                if (this.user.hasVualt) {
+            hasVault () {
+                if (this.user.hasVault) {
                     this.firstQuestion = false;
+                    console.log ( this.user.name + " has a vault");
                 }
                 else {
                     this.deleteUser();
                 }
             },
             deleteUser () {
-                console.log("Delete User Still in progress");
+                console.log("Deleting User" + this.user.name + " Still in progress");
             }
         },
         watch:{
