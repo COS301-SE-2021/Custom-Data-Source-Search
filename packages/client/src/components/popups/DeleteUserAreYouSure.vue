@@ -25,7 +25,7 @@
             <br><br>
             <span>Do you want to remove only the local instance of their account or all records?</span>
             <br>
-            <b>(You will require and internet connection for this to be processed)</b>
+            <strong>(You will require and internet connection for this to be processed)</strong>
         </div>
         <div class="button-holders">
 
@@ -73,9 +73,7 @@
                 }
             },
             deleteUser () {
-
-                this.$
-
+                console.log("Delete User Still in progress");
             }
         },
         watch:{

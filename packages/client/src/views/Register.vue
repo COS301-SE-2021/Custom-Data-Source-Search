@@ -39,7 +39,7 @@
                         <Button v-if="notContinue" @click="back" style="float: right" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined">Back</Button>
                     </div>
                     <div v-if="errors.length" style="max-height: 0.05vh">
-                        <span> <b>Please correct the following error(s):</b></span>
+                        <span> <strong>Please correct the following error(s):</strong></span>
                         <ul>
                             <li v-for="error in errors">{{ error }}</li>
                         </ul>

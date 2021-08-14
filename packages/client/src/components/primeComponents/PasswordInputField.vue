@@ -11,7 +11,7 @@
                             <div :class="strengthClass" :style="{'width': meter ? meter.width : ''}"></div>
                         </div>
                         <div v-if="!crackTimeDisplay" >Enter a password</div>
-                        <div v-else style="">Password strength: <a :style="passStrengthColor">{{passwordStrengthLabel}}</a></div>
+                        <div v-else style="">Password strength: <a :style="passStrengthColor">{{pwStrengthIndicator}}</a></div>
                         <div v-if="crackTimeDisplay" class="p-password-info">Estimated time to crack:   <a style="color: rgba(118,118,118,0.99)">{{crackTimeDisplay}}</a> </div>
                     </slot>
                     <slot name="footer"></slot>
@@ -90,7 +90,7 @@
                 focused: false,
                 unmasked: false,
                 crackTimeDisplay: null,
-                passwordStrengthLabel: "Enter password"
+                pwStrengthIndicator: "Enter password"
             };
         },
         resizeListener: null,
@@ -161,14 +161,14 @@
 
                     switch (passWordStrengthScore) {
                         case 0:
-                            this.passwordStrengthLabel = 'Invalid';
+                            this.pwStrengthIndicator = 'Invalid';
                             meter = {
                                 strength: 'invalid',
                                 width: '0%'
                             };
                             break;
                         case 1:
-                            this.passwordStrengthLabel = 'Very weak';
+                            this.pwStrengthIndicator = 'Very weak';
                             meter = {
                                 strength: 'weak',
                                 width: '25%'
@@ -176,7 +176,7 @@
                             break;
 
                         case 2:
-                            this.passwordStrengthLabel = 'Weak';
+                            this.pwStrengthIndicator = 'Weak';
                             meter = {
                                 strength: 'medium',
                                 width: '50%'
@@ -184,7 +184,7 @@
                             break;
 
                         case 3:
-                            this.passwordStrengthLabel = 'Good';
+                            this.pwStrengthIndicator = 'Good';
                             meter = {
                                 strength: 'medium',
                                 width: '75%'
@@ -192,7 +192,7 @@
                             break;
 
                         case 4:
-                            this.passwordStrengthLabel = 'Strong';
+                            this.pwStrengthIndicator = 'Strong';
                             meter = {
                                 strength: 'strong',
                                 width: '100%'
@@ -200,7 +200,7 @@
                             break;
 
                         default:
-                            this.passwordStrengthLabel = "Enter password";
+                            this.pwStrengthIndicator = "Enter password";
                             meter = null;
                             break;
                     }
@@ -311,16 +311,16 @@
                 return zxcvbn(this.modelValue);
             },
             passStrengthColor() {
-                if (this.passwordStrengthLabel === 'Invalid' || this.passwordStrengthLabel === 'Very weak') {
+                if (this.pwStrengthIndicator === 'Invalid' || this.pwStrengthIndicator === 'Very weak') {
                     return 'color: #B34E47';
                 }
-                else if (this.passwordStrengthLabel === 'Weak') {
+                else if (this.pwStrengthIndicator === 'Weak') {
                     return 'color: rgba(246, 152, 38, 0.79)'
                 }
-                else if (this.passwordStrengthLabel === 'Good') {
+                else if (this.pwStrengthIndicator === 'Good') {
                     return 'color: #FBFD29';
                 }
-                else if (this.passwordStrengthLabel === 'Strong') {
+                else if (this.pwStrengthIndicator === 'Strong') {
                     return 'color: #60B352'
                 }
 
