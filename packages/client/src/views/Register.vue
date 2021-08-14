@@ -74,6 +74,7 @@
     import SignIn from "../components/popups/SignIn";
     import Checkbox from 'primevue/checkbox';
     import PasswordInputField from "../components/primeComponents/PasswordInputField";
+    const zxcvbn = require('zxcvbn');
     export default {
         name: "Register",
         components: {
@@ -98,8 +99,10 @@
                 }
             }
         },
-        mounted() {
-            this.regexTester = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})|(?=.{12,})');
+        computed: {
+            passwordStrength() {
+                return zxcvbn(this.masterPassCheck);
+            }
         },
         methods: {
             loadValues() {
@@ -134,8 +137,8 @@
                     this.masterPassword = null;
                     this.masterPassCheck = null;
                 }
-                else if (!this.regexTester.test(this.masterPassword)) {
-                    this.errors.push('Password must have at least 8 characters.');
+                else if (this.passwordStrength.score <= 1) {
+                    this.errors.push('Please select a stronger password');
                     this.masterPassword = null;
                     this.masterPassCheck = null;
                 }
