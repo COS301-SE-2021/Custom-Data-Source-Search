@@ -37,6 +37,7 @@ import Divider from 'primevue/divider';
 import InputSwitch from 'primevue/inputswitch';
 import Toolbar from "primevue/toolbar";
 import SplitButton from "primevue/splitbutton";
+import SelectButton from "primevue/selectbutton";
 
 const app = createApp(App);
 app.use(router);
@@ -73,4 +74,5 @@ app.directive('ripple', Ripple);
 app.component('Divider', Divider);
 app.component('InputSwitch', InputSwitch);
 app.component('Toolbar', Toolbar);
-app.component('SplitButton', SplitButton)
+app.component('SplitButton', SplitButton);
+app.component('SelectButton', SelectButton);

@@ -5,9 +5,10 @@
 
     <div class="admin-table-container">
 
-      <DataTable :value="tableData" responsiveLayout="scroll" v-model:selection="selectedUsers">
+      <DataTable class="table" :value="tableData"  v-model:selection="selectedUsers" :scrollable="true" scrollHeight="70vh">
 
         <template #header>
+
           <div class="p-datatable-header"> Users</div>
 
         </template>
@@ -28,19 +29,21 @@
     <div class="backend-toolbar-container">
     <Toolbar class="backend-toolbar">
       <template #left>
-        <Button label="Add User" icon="pi pi-user-plus" class="p-button-info p-mr-2 operation-button"  />
-        <Button label="Remove User" icon="pi pi-user-minus" class="p-button-danger p-mr-2 operation-button"  />
-        <i class="pi pi-pause p-toolbar-separator p-mr-2" />
-        <Button label="Promote to Admin" icon="pi pi-chevron-up" class="p-button-success operation-button" />
-        <Button label="Demote to Regular" icon="pi pi-chevron-down" class="p-button-danger operation-button" />
-        <i class="pi pi-pause p-toolbar-separator p-mr-2" />
-        <Button label="Revoke Keys" icon="pi pi-lock" class="p-button-danger operation-button" />
-        <i class="pi pi-pause p-toolbar-separator p-mr-2" />
-        <Button label="Copy" icon="pi pi-copy" class="p-button-warning operation-button" />
-        <div class="p-inputgroup">
-          <Button label="Promote to Admin" icon="pi pi-sort" class="p-button-success operation-button" />
+        <span class="p-buttonset">
+        <Button label="Add User" icon="pi pi-user-plus" class="p-button p-button-success p-mr-2 p-button-custom-med"  />
+          <Button label="Remove User" icon="pi pi-user-minus" class="p-button-danger p-mr-2  p-button-custom-med"  />
+        </span>
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" />
+        <Button label="Change Permissions" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
+        <Dropdown v-model="selectedPermissionLevel" :options="permissionOptions" placeholder="Select a Role" />
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" />
+        <span class="p-buttonset">
+        <Button label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
+          <Button label="Revoke Keys" icon="pi pi-lock" class="p-button-danger p-button-custom-med" />
+        </span>
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" />
+        <Button label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
 
-        </div>
       </template>
       </Toolbar>
 
@@ -62,9 +65,31 @@ export default {
       backend: null,
       isUserSelected: false,
       selectedUsers: null,
+      selectedPermissionLevel : null,
+      permissionOptions: ['Super', 'Admin', 'Moderator', 'Regular'],
       tableData: [{name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
-                  {name: "Dave", lastName: "Something", email: "dave1823@gmail.com", permissionLevel: "Regular", regStatus: "Unregistered", loggedIn: false, regKey: "Zw2rTuGgds234h"}]
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Josh", lastName: "Walker", email: "joshwalker99.za@gmail.com", permissionLevel: "Admin", regStatus: "Registered", loggedIn: true, regKey: "45fdfgfghdnHszSQ"},
+        {name: "Dave", lastName: "Something", email: "dave1823@gmail.com", permissionLevel: "Regular", regStatus: "Unregistered", loggedIn: false, regKey: "Zw2rTuGgds234h"}]
     }
+
   },
   props: {
     backendID : Number,
@@ -90,7 +115,7 @@ export default {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 3fr 14fr 2fr;
+  grid-template-rows: 1fr 10fr;
   grid-template-columns: 1fr;
 
 
@@ -105,20 +130,17 @@ export default {
 
 .backend-toolbar {
 
-  padding: 0.5em
-
-
-
+  padding: 0.3em
 
 }
 
 .backend-toolbar-container {
-  grid-row-start : 3;
-   height: 2em;
-   width: 80em;
   justify-self: center;
+  position: sticky;
+  bottom: 3vh;
   align-self: center;
   margin: 0 0 2.5em;
+
 
 
 }
@@ -127,5 +149,56 @@ export default {
   margin-right: 0.16em;
   margin-left: 0.16em
 }
+
+.permissions-button {
+  margin-right: 0;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+
+
+}
+
+
+.p-button-custom-med {
+  padding: 0.54rem 0.74rem;
+  font-size: 1rem;
+}
+
+.p-button {
+  padding: 0.54rem 0.74rem;
+  font-size: 1rem;
+}
+
+.table {
+  grid-row-start: 2;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.p-datatable-header {
+
+  padding: 0.4rem 0.4rem;
+
+}
+
+
+::v-deep(.p-inputtext) {
+
+  padding: 0.54rem 0.74rem;
+  font-size: 1rem;
+
+
+}
+
+::v-deep(.p-dropdown) {
+
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  width: 8em;
+
+
+}
+
+
 
 </style>
