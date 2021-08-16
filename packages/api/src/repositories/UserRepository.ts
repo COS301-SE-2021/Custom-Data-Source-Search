@@ -85,7 +85,7 @@ class UserRepository {
             try {
                 db.prepare("UPDATE user SET role = ? WHERE id = ?").run(body.role, parseInt(user.uuid));
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 failedUsers.push(user);
             }
         }
@@ -110,10 +110,11 @@ class UserRepository {
                     "DELETE active_user FROM active_user INNER JOIN user ON email=email WHERE id = ?"
                 ).run(parseInt(user.uuid));
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 failedUsers.push(user);
             }
         }
+        // TODO refresh secret for jwt token
         if (failedUsers.length !== 0) {
             return [null, {
                 "code": 400,
@@ -124,6 +125,36 @@ class UserRepository {
         return [{
             "code": 204,
             "message": "Successfully logged out specified users"
+        }, null];
+    }
+
+    revokeUser(users: { uuid: string }[]) {
+        let failedUsers: any[] = [];
+        for (let user of users) {
+            try {
+                db.prepare("UPDATE user SET password_hash = '' WHERE id = ?").run(parseInt(user.uuid));
+            } catch (e) {
+                console.error(e);
+                failedUsers.push(user);
+            }
+            try {
+                db.prepare(
+                    "DELETE active_user FROM active_user INNER JOIN user ON email=email WHERE id = ?"
+                ).run(parseInt(user.uuid));
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        if (failedUsers.length !== 0) {
+            return [null, {
+                "code": 400,
+                "message": "Could not revoke access for specified users",
+                "users": failedUsers
+            }];
+        }
+        return [{
+            "code": 204,
+            "message": "Successfully revoked access for specified users"
         }, null];
     }
 }

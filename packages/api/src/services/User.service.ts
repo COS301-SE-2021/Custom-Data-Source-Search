@@ -95,6 +95,24 @@ class UserService {
             "message": "Successfully logged out specified users"
         }
     }
+
+    revokeUser(users: { uuid: string; }[]) {
+        const [, err] = userRepository.revokeUser(users);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message,
+                    // @ts-ignore
+                    "users": err.users
+                }
+            }
+        }
+        return {
+            "code": 204,
+            "message": "Successfully revoked access for specified users"
+        }
+    }
 }
 
 const userService = new UserService();
