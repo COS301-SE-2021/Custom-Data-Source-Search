@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="file-ignore">
-    <span>Specify which files/sub-folders to ignore</span><br/>
+    <span>Specify which files/sub-folders to ignore</span>
     <Textarea v-model="ignore" rows="5" cols="40"></Textarea>
   </div>
     <div>
@@ -157,5 +157,9 @@ input {
 
 .file-ignore{
   margin-bottom: 15px;
+}
+
+.p-inputtextarea{
+  margin-top: 15px;
 }
 </style>
