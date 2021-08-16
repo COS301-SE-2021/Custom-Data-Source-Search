@@ -8,6 +8,9 @@
             <div>
                 <user-info-card :user-index="getSignedInUserId"/>
             </div>
+            <div>
+
+            </div>
         </div>
         <div class="info-div">
             <div class="settings-subheading">
@@ -69,6 +72,11 @@
             }
         },
         name: "SettingsPage",
+        beforeMount() {
+            if (this.$store.getters.getNewAppStatus) {
+                this.$router.push('/');
+            }
+        },
         methods: {
             newBackend() {
                 this.newBackendBool = !this.newBackendBool;
@@ -82,7 +90,7 @@
         computed: {
             ...mapGetters ([
                 'getUserBackend',
-                'getSignedInUserId'
+                'getSignedInUserId',
              ])
         }
     }

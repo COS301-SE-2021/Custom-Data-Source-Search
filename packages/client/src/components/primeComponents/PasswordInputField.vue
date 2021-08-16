@@ -89,7 +89,7 @@
                 infoText: null,
                 focused: false,
                 unmasked: false,
-                crackTimeDisplay: null,
+                crackTimeDisplay: false ,
                 pwStrengthIndicator: "Enter password"
             };
         },
@@ -365,7 +365,7 @@
         transition: width 1s ease-in-out;
     }
 
-    .p-fluid .p-password {
+    .p-fluid ~.p-password {
         display: flex;
     }
 </style>

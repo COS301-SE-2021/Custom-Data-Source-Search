@@ -25,13 +25,18 @@ export default {
       email: String,
       id: Number,
       admin: Boolean,
-
+      isActive: Boolean
     }
   },
   methods: {
     signIn() {
-      this.$router.push('Search');
-      this.$store.commit("setSignedInUserID", { userID: this.userDetails.id, signedIn: true})
+      if(this.userDetails.isActive) {
+        this.$store.commit("setSignedInUserID", { userID: this.userDetails.id, signedIn: true});
+        this.$router.push('Search');
+      }
+      else {
+        this.$emit('show-sign-in');
+      }
     }
   }
 }

@@ -5,13 +5,15 @@
       <h1 class="header">Who's Sleuthing ?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
-    <div class="user-select" >
+    <div class="user-select">
       <UserCard
+              v-if="!getNewAppStatus"
               v-for="(user, i) in getArrUserInfo"
               :key="i"
               :userDetails="user"
               @contextmenu="onUserCardRightClick"
               @mousedown.right="updateSelectedUser(user)"
+              @show-sign-in="showSignIn"
       ></UserCard>
       <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
@@ -22,7 +24,24 @@
       <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
 
     </div>
-    <DeleteUserAreYouSure :show="displayDeleteCheck" @display-popup="showPopup" :user="selectedUser"/>
+    <DeleteUserAreYouSure
+            :show="displayDeleteCheck"
+            @display-popup="showPopup"
+            :user="selectedUser"
+            :delete-vault-fed-in="null"
+            :first-question-fed-in="true"
+            @close="cleanPopUp"
+            @clear-current-user="clearCurrentUser"
+    />
+    <SignOutCheck
+            :show="displaySignOutCheck"
+            @display-popup="showSignOutCheck"
+            :user="selectedUser"
+    />
+    <SignIn
+            :show="displaySignIn"
+            @show-sign-in="showSignIn"
+    />
   </div>
 </template>
 
@@ -32,30 +51,56 @@ import AddUserCard from "@/components/users/AddUserCard";
 const electron = require('@electron/remote');
 import {mapGetters} from "vuex";
 import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+import SignOutCheck from "../components/popups/SignOutCheck";
+import SignIn from "../components/popups/SignIn";
 
 export default {
   name: "Welcome",
-  components: {DeleteUserAreYouSure, AddUserCard, UserCard},
+  components: {SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
     return {
+      displaySignIn: false,
       displayDeleteCheck: false,
+      displaySignOutCheck: false,
       isSignedIn: true,
       execProcess : null,
       stopProcess : null,
       removeBoolean: false,
       selectedUser: null,
+      deleteVaultFedIn: null,
+      firstQuestionFedIn: true,
       items: [
-        {label: 'Remove', icon: 'pi pi-trash', command: (event) => {
+        {label: 'Remove', icon: 'pi pi-trash', command: () => {
             // event.originalEvent: Browser event
             // event.item: Menuitem instance
             console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
             this.displayDeleteCheck = !this.displayDeleteCheck;
           }},
+        {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
+            console.log ("Sign out user: " + this.selectedUser.name);
+            this.displaySignOutCheck = !this.displaySignOutCheck;
+          }}
       ]
     }
 
   },
   methods: {
+    showSignIn(){
+      this.displaySignIn = !this.displaySignIn
+    },
+    clearCurrentUser() {
+         this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
+         console.log("Current User cleared");
+    },
+    cleanPopUp() {
+      if (this.displayDeleteCheck) {
+        this.firstQuestionFedIn = true;
+        this.deleteVaultFedIn = true;
+      }
+    },
+    showSignOutCheck() {
+      this.displaySignOutCheck = !this.displaySignOutCheck;
+    },
     showPopup(){
     this.displayDeleteCheck = !this.displayDeleteCheck
     },
@@ -220,7 +265,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-            'getArrUserInfo'
+            'getArrUserInfo',
+            'getNewAppStatus'
     ])
   }
 }
@@ -262,8 +308,6 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   padding-top: 3vw;
-
-
 }
 
 .lower {

@@ -2,204 +2,18 @@ import {createStore} from 'vuex'
 
 const store = createStore({
     state:{
-        signedInUserId: 2,
-        signedIn : true,
+        signedInUserId: null,
+        signedIn : null,
         users: [
-            {
-                id: 0,
-                info: {
-                    id: 0,
-                    name: 'Marike',
-                    email: 'example@funsail.co.za',
-                    isActive: true,
-                    hasVualt: true
-                },
-                backends: [
-                    {
-                       local: {
-                           id: 0,
-                           name: 'BIRDS',
-                           color: '#b34e47',
-                           active: true
-                       },
-                        connect: {
-                            associatedEmail: 'marike@funsail.co.za',
-                            link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                            passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: true
-                        }
-                    },
-                    {
-                        local: {
-                            id: 1,
-                            name: 'LEGO',
-                            color: '#21b312',
-                            active: false
-                        },
-                        connect: {
-                            associatedEmail: 'marike1@funsail.co.za',
-                            link: 'www.justAnotherExample/LEGO/BACKEND',
-                            passKey: 'new84lLKJREpassKD9e7edfjKey'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: true
-                        }
-                    },
-                    {
-                        local: {
-                            id: 2,
-                            name: 'Fluffy',
-                            color: '#41B3B2',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'marike2@funsail.co.za',
-                            link: 'www.fulffy&Bubbles/backend/link',
-                            passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: true
-                        }
-                    }
-                ]
-            },
-            {
-                id: 1,
-                info: {
-                    id: 1,
-                    name: 'Josh',
-                    email: 'joshwalkerdev@gmail.com',
-                    isActive: false,
-                    hasVualt: true
-                },
-                backends: [
-                    {
-                        local: {
-                            id: 0,
-                            name: 'CARS',
-                            color: '#b30a8c',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'josh1@gmail.com',
-                            link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
-                            passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg'
-                        },
-                       receive: {
-                            admin: false,
-                            connected: false
-                       }
-                    },
-                    {
-                        local: {
-                            id: 1,
-                            name: 'WINDOWS',
-                            color: '#fdff23',
-                            active: false
-                        },
-                        connect: {
-                            associatedEmail: 'josh2@gmail.com',
-                            link: 'www.justAnotherExample/windows/BACKEND',
-                            passKey: 'new84lLKJREpassKD9e7edfjKey'
-                        },
-                        receive: {
-                            admin: false,
-                            connected: true
-                        }
-                    },
-                    {
-                        local: {
-                            id: 2,
-                            name: 'TEST',
-                            color: '#41B3B2',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'josh3@gmail.com',
-                            link: 'www.doesnotmattermuch/backend/link',
-                            passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
-                        },
-                        receive: {
-                            admin: false,
-                            connected: true
-                        }
-                    }
-                ]
-            },
-            {
-                id: 2,
-                info: {
-                    id: 2,
-                    name: 'Lauren',
-                    email: 'lauren@gmail.com',
-                    isActive: true,
-                    hasVualt: false
-                },
-                backends: [
-                    {
-                        local: {
-                            id: 0,
-                            name: 'BIRDS',
-                            color: '#25b313',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'lauren1@gmail.com',
-                            link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                            passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
-                        },
-                        receive: {
-                            admin: false,
-                            connected: false
-                        }
-                    },
-                    {
-                        local: {
-                            id: 1,
-                            name: 'LEGO',
-                            color: '#1616b3',
-                            active: false
-                        },
-                        connect: {
-                            associatedEmail: 'lauren2@gmail.com',
-                            link: 'www.justAnotherExample/LEGO/BACKEND',
-                            passKey: 'new84lLKJREpassKD9e7edfjKey'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: false
-                        }
-                    },
-                    {
-                        local: {
-                            id: 2,
-                            name: 'Fluffy',
-                            color: '#b3100c',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'lauren2@gmail.com',
-                            link: 'www.fulffy&Bubbles/backend/link',
-                            passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: false
-                        }
-                    }
-                ]
-            }
-        ]
+            ]
     },
     getters:{
 
         //User information related getters
 
+        getNewAppStatus (state) {
+            return state.users.length === 0;
+        },
         getSignedIn(state){
             return state.signedIn;
         },
@@ -282,19 +96,40 @@ const store = createStore({
 
     //synchronous changes to the store
     mutations: {
+        //Initialise Store from local storage
+
+        initialiseStore(state) {
+            // Check if the ID exists
+            if(localStorage.getItem('store')) {
+                // Replace the state object with the stored item
+                this.replaceState(
+                    Object.assign(state, JSON.parse(localStorage.getItem('store')))
+                );
+            }
+        },
 
         //Signed-in user backend related mutations
 
+        signInUser (state, payload) {
+              let thisUser =  state.users.find( user => user.info.email === payload.email);
+              thisUser.info.isActive = true;
+        },
+
+        signOutUser (state, payload) {
+             state.users[payload.user.id].info.isActive = false;
+        },
+
         editBackend(state, payload) {
-            state.users[payload.userIndex].backends[payload.backendIndex].local.id = payload.id;
-            state.users[payload.userIndex].backends[payload.backendIndex].local.name = payload.name;
-            state.users[payload.userIndex].backends[payload.backendIndex].local.active = payload.active;
+            let backend = state.users[payload.userIndex].backends[payload.backendIndex]
+            backend.local.id = payload.id;
+            backend.local.name = payload.name;
+            backend.local.active = payload.active;
 
-            state.users[payload.userIndex].backends[payload.backendIndex].connect.associatedEmail = payload.associatedEmail;
-            state.users[payload.userIndex].backends[payload.backendIndex].connect.link = payload.link;
-            state.users[payload.userIndex].backends[payload.backendIndex].connect.passKey = payload.passKey;
+            backend.connect.associatedEmail = payload.associatedEmail;
+            backend.connect.link = payload.link;
+            backend.connect.passKey = payload.passKey;
 
-            state.users[payload.userIndex].backends[payload.backendIndex].receive.admin = payload.admin;
+            backend.receive.admin = payload.admin;
 
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
@@ -329,6 +164,7 @@ const store = createStore({
             newBackend.receive.admin = payload.admin;
 
             state.users[payload.userIndex].backends.push(newBackend);
+            state.signedIn = true;
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
                 state.users[state.signedInUserId].backends[x].local.id = x;
@@ -359,9 +195,9 @@ const store = createStore({
                     id: null,
                     name: null,
                     email: null,
-                    isActive: null,
+                    isActive: true,
                     hash: null,
-                    browserAccess: null
+                    hasVault: null
                 },
                 backends: []
             };
@@ -370,7 +206,7 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hash = payload.hash;
-            newUser.info.browserAccess = payload.browserAccess;
+            newUser.info.hasVault = payload.hasVault;
 
             state.users.push(newUser);
 
@@ -382,8 +218,25 @@ const store = createStore({
             }
 
             state.signedInUserId = state.users.length-1;
+            state.signedIn = true;
+
+        },
+        deleteUserFromLocalList (state, payload) {
+            if (payload.deleteVault) {
+                //Do some server side call to delete file on web
+            }
+
+
+            //Delete local
+            state.users.splice(payload.user.id, 1);
+            let x = 0;
+            for (let user of state.users) {
+                   user.info.id = x;
+                   user.id = x++;
+            }
 
         }
+
     },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
@@ -392,6 +245,12 @@ const store = createStore({
 
 
     }
+});
+
+// Subscribe to store updates
+store.subscribe((mutation, state) => {
+    // Store the state object as a JSON string
+    localStorage.setItem('store', JSON.stringify(state));
 });
 
 export default store;

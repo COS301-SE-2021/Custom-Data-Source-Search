@@ -175,6 +175,11 @@ export default {
     AddFolderDatasource,
     AddWebpageDatasource
   },
+  beforeMount() {
+    if (this.$store.getters.getNewAppStatus) {
+      this.$router.push('/');
+    }
+  },
   productService: null,
   mounted() {
     this.backends = this.$store.getters.getUserBackendNames;
@@ -182,8 +187,8 @@ export default {
 
     axios.get("http://localhost:3001/general/datasources").then(
         resp => {
-          console.log(resp.data)
-          this.sources = resp.data.data
+          console.log(resp.data);
+          this.sources = resp.data.data;
           let i;
           for (i = 0; i < this.sources.length; i++) {
             this.sources[i]["backend"] = "Local"
@@ -206,8 +211,8 @@ export default {
 
       axios.get("http://localhost:3001/general/datasources").then(
           resp => {
-            console.log(resp.data)
-            this.sources = resp.data.data
+            console.log(resp.data);
+            this.sources = resp.data.data;
             let i;
             for (i = 0; i < this.sources.length; i++) {
               this.sources[i]["backend"] = "Local"
