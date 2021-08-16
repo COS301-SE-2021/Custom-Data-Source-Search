@@ -4,7 +4,7 @@
             <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
                 REGISTER
             </div>
-            <form v-if="notContinue" class="input-fields"
+            <form class="input-fields"
                 id="register"
                 @submit="loadValues"
             >
@@ -33,7 +33,7 @@
                     </div>
                     <div>
                         <span>Already have an account?
-                      <u><a v-on:click="showPopup">Sign in</a></u></span>
+                      <u><a v-on:click="showSignIn">Sign in</a></u></span>
                     </div>
                     <div>
                         <Button v-if="notContinue" @click="back" style="float: right" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined">Back</Button>
@@ -45,18 +45,8 @@
                         </ul>
                     </div>
                 </div>
-
-                <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
-
+                <SignIn :show="displaySignIn" @display-popup="showSignIn"></SignIn>
             </form>
-            <div v-else class="set-up-backend-box">
-                <span> Do you want to continue on to configure backends?</span>
-                <div class="continue-back-buttons">
-                    <Button @click="goToSettings" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
-                    <Button @click="goToSearch"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
-                </div>
-            </div>
-
         </div>
         <div>
             <div class="logo-box">
@@ -106,6 +96,7 @@
         },
         methods: {
             loadValues() {
+
                 //TO DO: Save Username and Master email, check passwords are exactly the same. Store other information for now.
                 //Do we need a way to remove a user? Probably.
                 let passFormValidation = true;
@@ -160,7 +151,7 @@
                         hash: this.userDetails.hashToStore,
                         hasVault: this.userDetails.backupVault
                     });
-                    this.continue();
+                    this.$router.push('ContinueView');
                 }
             },
             checkUsers() {
@@ -173,10 +164,11 @@
                         h = (h << 5) - h + s.charCodeAt(i++) | 0;
                 return h;
             },
-            showPopup(){
+            showSignIn(){
                 this.displaySignIn = !this.displaySignIn
             },
             continue() {
+                console.log ("The idea is that here another little box appears");
                 this.notContinue = false;
             },
             back() {
@@ -230,13 +222,6 @@
         width: 5rem;
     }
 
-    .set-up-backend-box {
-        display: grid;
-        grid-template-rows: 1fr 1fr 1fr 5fr;
-        margin: 4%;
-        text-align: center;
-    }
-
     .logo-box {
         height: 100%;
         display: grid;
@@ -273,13 +258,8 @@
         margin-top: 3vh;
     }
 
-    .continue-back-buttons {
-        display: flex;
-        justify-content: center;
-    }
-
     .p-button-lg {
-        max-width: 4vw;
+        max-width: 6vw;
         max-height: 6vh;
         position: revert;
         bottom: 3vh;
