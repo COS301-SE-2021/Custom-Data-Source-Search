@@ -36,6 +36,8 @@ import BadgeDirective from "primevue/badgedirective";
 import Divider from 'primevue/divider';
 import InputSwitch from 'primevue/inputswitch';
 import Checkbox from 'primevue/checkbox';
+import InputNumber from 'primevue/inputnumber';
+import Textarea from 'primevue/textarea';
 import ContextMenu from "primevue/contextmenu";
 import RadioButton from "primevue/radiobutton";
 
@@ -74,5 +76,7 @@ app.directive('ripple', Ripple);
 app.component('Divider', Divider);
 app.component('InputSwitch', InputSwitch);
 app.component("Checkbox", Checkbox);
+app.component('InputNumber', InputNumber);
+app.component('Textarea', Textarea);
 app.component('ContextMenu', ContextMenu);
 app.component('RadioButton', RadioButton);

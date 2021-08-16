@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <ConfirmDialog></ConfirmDialog>
     <Toast position="bottom-right"/>
     <h2>
       Data Sources
@@ -19,9 +20,6 @@
           </span>
             <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
                     style="float: right;"/>
-            <router-link title="Add" to="/addDatasources">
-              <Button label="TEMPORARY!!!" icon="pi pi-plus" class="p-button-text" style="float: right;"/>
-            </router-link>
             <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true"
                           :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
               <div v-if="!clicked && backend===null">
@@ -68,8 +66,8 @@
         </template>
         <Column selectionMode="multiple" headerStyle="width: 3em">
           <template #body="{data}">
-<!--            <Checkbox v-if="data.type === 'file'" id="id" name="source" :value="data" v-model="selectedSources" :disabled="true"/>-->
-            <Checkbox id="data.id" name="source" :value="data.id" v-model="selectedSources" :disabled="false"/>
+            <Checkbox v-if="deleteSourceStatus(data.backend)" id="id" name="source" :value="data" v-model="selectedSources" :disabled="false"/>
+            <Checkbox v-else id="id2" name="source" :value="data" v-model="selectedSources" :disabled="true"/>
           </template>
         </Column>
         <Column header="Source Location" filterField="location" style="min-width:25rem">
@@ -116,14 +114,8 @@
             <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{ data.tag1 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
-                         class="p-column-filter">
-              <template #option="slotProps">
-                <div class="p-multiselect-tag1-option">
-                  <span class="image-text">{{ slotProps.option }}</span>
-                </div>
-              </template>
-            </MultiSelect>
+            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter"
+                       placeholder="Search tags"/>
           </template>
         </Column>
         <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
@@ -131,16 +123,15 @@
             <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{ data.tag2 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
-                         class="p-column-filter">
-              <template #option="slotProps">
-                <div class="p-multiselect-tag2-option">
-                  <span class="image-text">{{ slotProps.option }}</span>
-                </div>
-              </template>
-            </MultiSelect>
+            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter"
+                       placeholder="Search tags"/>
           </template>
         </Column>
+        <template #paginatorLeft>
+          <span><Button label="Delete Selected" type="button" icon="pi pi-trash" class="p-button-text p-button-warning" @click="deleteSource"/></span>
+        </template>
+        <template #paginatorRight>
+        </template>
       </DataTable>
     </ScrollPanel>
   </div>
@@ -158,6 +149,7 @@ import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDat
 export default {
   data() {
     return {
+      message: "No sources have been selected.",
       type: null,
       clicked: false,
       sources: null,
@@ -169,21 +161,13 @@ export default {
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'backend': {value: null, matchMode: FilterMatchMode.IN},
         'type': {value: null, matchMode: FilterMatchMode.IN},
-        'tag1': {value: null, matchMode: FilterMatchMode.IN},
-        'tag2': {value: null, matchMode: FilterMatchMode.IN},
+        'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
-      tags: [
-        'Fun', 'Business', 'Home', 'University'
-      ],
       types: [
         'File', 'Folder', 'Webpage'
       ],
-      backends: [
-        'Backend 1', 'Sonic Co', 'This one', 'Another', 'And another', 'Oh wow another'
-      ],
-      colours: [
-        'success', 'secondary', 'info', 'warning', 'help', 'danger'
-      ]
+      backends: [],
     }
   },
   components: {
@@ -193,7 +177,8 @@ export default {
   },
   productService: null,
   mounted() {
-    this.loading = true;
+    this.backends = this.$store.getters.getUserBackendNames;
+    this.backends.push("Local");
 
     axios.get("http://localhost:3001/general/datasources").then(
         resp => {
@@ -206,13 +191,14 @@ export default {
           this.loading = false
         }
     )
+    console.log(this.backends)
   },
   methods: {
+
     toggle(event) {
       this.$refs.op.toggle(event);
       this.clicked = false;
       this.backend = null;
-      console.log(this.selectedSources)
     },
     updateSources(){
       //Update list of sources upon addition of new source.
@@ -231,11 +217,60 @@ export default {
       )
     },
     deleteSourceStatus(source){
-      return this.$store.getters.getBackendAdminStatus(source)
+      if(source === "Local"){
+        return true;
+      }
+      else{
+        return this.$store.getters.getBackendAdminStatus(source);
+      }
     },
-    deleteSource(location){
-      this.$toast.add({severity:'info', summary: 'Success', detail:'Button was clicked', life: 3000});
-      this.endpoint.splice(this.endpoint.indexOf(location), 1);
+    deleteSource(){
+      console.log(this.selectedSources)
+      if(this.selectedSources===null){
+        this.$toast.add({severity:'info', summary: 'No Sources Selected', detail:'Please select sources to delete', life: 3000});
+        return;
+      }
+      else if(this.selectedSources.length===1){
+        this.message="Are you sure you want to delete this data source?"
+      }
+      else if(this.selectedSources.length>1){
+        this.message="Are you sure you want to delete these data sources?"
+      }
+      this.$confirm.require({
+        message: this.message,
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        acceptClass: "p-button-danger",
+        rejectClass: "p-button-text p-button-plain",
+        accept: () => {
+          //Loop through all items to delete
+          let source;
+          for(source in this.selectedSources){
+            axios
+                .delete("http://localhost:3001/general/datasources", {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
+                .then(() => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Deleted',
+                    detail: "Source deleted",
+                    life: 3000});
+                  this.updateSources()
+                })
+                .catch(() => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: "Could not delete source",
+                    life: 3000
+                  })
+                })
+          }
+          console.log(this.sources)
+        },
+        reject: () => {
+          //callback to execute when user rejects the action
+        }
+      })
     }
   }
 }
@@ -253,7 +288,7 @@ td {
 }
 
 h2 {
-  margin: 30px 20px 30px 55px;
+  margin: 30px 20px 30px 70px;
 }
 
 a {
@@ -287,4 +322,7 @@ a {
   margin-left: 2.5%;
 }
 
+.p-input-icon-left {
+ margin-left: 50px;
+}
 </style>
