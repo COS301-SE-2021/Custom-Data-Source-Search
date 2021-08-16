@@ -41,7 +41,7 @@
               tag1: null,
               tag2: null,
               type: 'folder',
-              path: null,
+              path: [],
               depth: 0
             }
         },
@@ -59,40 +59,45 @@
                     if(dirs.filePaths && dirs.filePaths[0]) {
 
                       let str;
-
+                      let temp;
                       //for every folder selected
                       for (let i = 0; i < dirs.filePaths.length; i++) {
 
-                        str = dirs.filePaths[i]
+                        str = (dirs.filePaths[i])
 
                         //Force use of / in URI's across all platforms
-                        this.path = str.replaceAll("\\", "/")
+                        temp = str.replaceAll("\\", "/")
+                        this.path.push(temp)
+
                       }
                     }
+                    console.log(this.path)
                   })
             },
-          submitSource(){
-            let respObject = {"path": this.path, "tag1": this.tag1, "tag2": this.tag2}
-            axios
-                .post("http://localhost:3001/folderdatasources", respObject)
-                .then((resp) => {
-                  this.$toast.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: resp.data.message,
-                    life: 3000
+          submitSource() {
+            for (let i = 0; i < this.path.length; i++) {
+              let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+              axios
+                  .post("http://localhost:3001/folderdatasources", respObject)
+                  .then((resp) => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: resp.data.message,
+                      life: 3000
+                    })
+                    this.$emit('addFolder')
+                    this.$emit("submitted")
                   })
-                  this.$emit('addFolder')
-                  this.$emit("submitted")
-                })
-                .catch((error) => {
-                  this.$toast.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: error.response.data.message,
-                    life: 3000
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    })
                   })
-                })
+            }
           }
         }
     }
