@@ -89,9 +89,14 @@ export default {
       this.displaySignIn = !this.displaySignIn
     },
     clearCurrentUser() {
-         this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
+        if (!this.$store.getters.getNewAppStatus) {
+          this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
+        }
+        else {
+          this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
+        }
          console.log("Current User cleared");
-    },
+      },
     cleanPopUp() {
       if (this.displayDeleteCheck) {
         this.firstQuestionFedIn = true;

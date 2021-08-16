@@ -117,6 +117,8 @@ const store = createStore({
 
         signOutUser (state, payload) {
              state.users[payload.user.id].info.isActive = false;
+             state.signedInUserId = null;
+             state.signedIn = false;
         },
 
         editBackend(state, payload) {
@@ -234,6 +236,9 @@ const store = createStore({
                    user.id = x++;
             }
 
+            if (!state.users.length) {
+                state.signedIn = false;
+            }
         }
 
     },

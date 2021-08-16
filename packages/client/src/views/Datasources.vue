@@ -177,6 +177,7 @@ export default {
   },
   beforeMount() {
     if (this.$store.getters.getNewAppStatus) {
+      this.$store.commit(' setSignedIn', false);
       this.$router.push('/');
     }
   },
@@ -195,7 +196,7 @@ export default {
           }
           this.loading = false
         }
-    )
+    );
     console.log(this.backends)
   },
   methods: {
@@ -230,7 +231,7 @@ export default {
       }
     },
     deleteSource(){
-      console.log(this.selectedSources)
+      console.log(this.selectedSources);
       if(this.selectedSources===null){
         this.$toast.add({severity:'info', summary: 'No Sources Selected', detail:'Please select sources to delete', life: 3000});
         return;
