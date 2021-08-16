@@ -54,11 +54,12 @@
                 newBackendObject: {
                     local: {
                         name: 'New Backend',
-                        active: false
+                        active: false,
                     },
                     connect: {
                         link: '',
-                        passKey: ''
+                        passKey: '',
+                        associatedEmail: ''
                     },
                     receive: {
                         admin: false,
