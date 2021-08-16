@@ -23,6 +23,12 @@ const routes = [
     component: () => import('../views/Register.vue')
   },
   {
+    path: '/continueView',
+    name: 'ContinueView',
+
+    component: () => import('../views/ContinueView.vue')
+  },
+  {
     path: '/datasources',
     name: 'Datasources',
     // route level code-splitting

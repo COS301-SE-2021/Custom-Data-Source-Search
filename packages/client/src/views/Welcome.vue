@@ -5,8 +5,9 @@
       <h1 class="header">Who's Sleuthing ?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
-    <div class="user-select" >
+    <div class="user-select">
       <UserCard
+              v-if="!getNewAppStatus"
               v-for="(user, i) in getArrUserInfo"
               :key="i"
               :userDetails="user"
@@ -22,7 +23,15 @@
       <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
 
     </div>
-    <DeleteUserAreYouSure :show="displayDeleteCheck" @display-popup="showPopup" :user="selectedUser"/>
+    <DeleteUserAreYouSure
+            :show="displayDeleteCheck"
+            @display-popup="showPopup"
+            :user="selectedUser"
+            :delete-vault-fed-in="null"
+            :first-question-fed-in="true"
+            @close="cleanPopUp"
+            @clear-current-user="clearCurrentUser()"
+    />
   </div>
 </template>
 
@@ -44,6 +53,8 @@ export default {
       stopProcess : null,
       removeBoolean: false,
       selectedUser: null,
+      deleteVaultFedIn: null,
+      firstQuestionFedIn: true,
       items: [
         {label: 'Remove', icon: 'pi pi-trash', command: (event) => {
             // event.originalEvent: Browser event
@@ -56,6 +67,14 @@ export default {
 
   },
   methods: {
+    clearCurrentUser() {
+         this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
+         console.log("Current User cleared");
+    },
+    cleanPopUp() {
+      this.firstQuestionFedIn = true;
+      this.deleteVaultFedIn = true;
+    },
     showPopup(){
     this.displayDeleteCheck = !this.displayDeleteCheck
     },
@@ -220,7 +239,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-            'getArrUserInfo'
+            'getArrUserInfo',
+            'getNewAppStatus'
     ])
   }
 }
@@ -262,8 +282,6 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   padding-top: 3vw;
-
-
 }
 
 .lower {

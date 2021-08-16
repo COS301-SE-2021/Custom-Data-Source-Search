@@ -89,7 +89,7 @@
                 infoText: null,
                 focused: false,
                 unmasked: false,
-                crackTimeDisplay: null,
+                crackTimeDisplay: false ,
                 pwStrengthIndicator: "Enter password"
             };
         },
