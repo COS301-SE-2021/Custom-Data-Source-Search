@@ -9,8 +9,8 @@
     </div>
   </div>
   <div class="file-ignore">
-    <span></span>
-    <Textarea v-model="value" rows="5" cols="40"></Textarea>
+    <span>Specify which files/sub-folders to ignore</span><br/>
+    <Textarea v-model="ignore" rows="5" cols="40"></Textarea>
   </div>
     <div>
       <span>Add optional tags</span><br/>
@@ -42,7 +42,11 @@
               tag2: null,
               type: 'folder',
               path: [],
-              depth: 0
+              depth: 0,
+              ignore: '# Files/folders to be ignored are accepted in a .gitignore format # \n \n'  +
+                  'node_modules/ \n' +
+                  '*.log \n' +
+                  'build/ \n'
             }
         },
         methods: {
@@ -75,6 +79,7 @@
                   })
             },
           submitSource() {
+              console.log(this.ignore)
             for (let i = 0; i < this.path.length; i++) {
               let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
               axios
