@@ -1,5 +1,5 @@
 <template>
-  <Dialog header="Sign In" v-model:visible="display" :draggable="false" :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup')">
+  <Dialog header="Sign In" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup')">
 
     <div class="p-field p-grid">
       <label for="firstname" class="p-col-fixed" style="width:100px;">Email Address</label>
@@ -15,7 +15,7 @@
     </div>
 <br>
     <div class="p-field p-grid" style="text-align: center">
-    <Button type="button" class="p-button-sm" label="Submit" onclick="assignData"/>
+    <Button type="button" class="p-button-sm" label="Submit" @click="assignData()"/>
     </div>
 
 
@@ -25,19 +25,22 @@
 <script>
 export default {
   name: "SignIn",
-  props: {
-    show: Boolean,
-  },
   data() {
     return {
       masterPass: null,
-      display: this.show,
-      email: ''
+      email: '',
+      display: this.show
     }
+  },
+  props: {
+    show: Boolean,
   },
   methods: {
     assignData () {
-
+      //Call function to check if information can decrypt a backend (?)
+      //For now:
+      this.$store.commit('signInUser', { email: this.email, passWord: this.masterPass});
+      this.display = false;
     }
   },
   watch:{
