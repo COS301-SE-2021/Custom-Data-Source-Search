@@ -365,7 +365,7 @@
         transition: width 1s ease-in-out;
     }
 
-    .p-fluid .p-password {
+    .p-fluid ~.p-password {
         display: flex;
     }
 </style>
