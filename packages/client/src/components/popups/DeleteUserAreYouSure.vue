@@ -16,7 +16,7 @@
         </div>
         <div class="button-holders">
             <Button @click="hasVault">Delete</Button>
-            <Button @click="cancelDeletion">Cancel</Button>
+            <Button @click="closePopUp">Cancel</Button>
         </div>
     </div>
     <div class="process-request-body" v-else>
@@ -42,7 +42,8 @@
                 <strong>(You will require internet connection in order for this to be processed)</strong>
             </div>
             <div style="text-align: center">
-                <Button :disabled="!deleteVault" @click="cancelDeletion">Delete</Button>
+                <Button :disabled="!deleteVault" @click="deleteUser">Delete</Button>
+                <Button @click="closePopUp">Cancel</Button>
             </div>
         </div>
     </div>
@@ -54,6 +55,11 @@
         name: "DeleteUserAreYouSure",
         props: {
             show: Boolean,
+            firstQuestionFedIn: Boolean,
+            deleteVaultFedIn: {
+              type: String,
+              default: null
+            },
             user: {
                 id: Number,
                 name: String,
@@ -67,14 +73,18 @@
                 deleteVault: null
             }
         },
+        mounted() {
+            this.firstQuestion = this.firstQuestionFedIn;
+            this.deleteVault = this.deleteVaultFedIn;
+        },
         methods: {
-            cancelDeletion () {
+            closePopUp () {
                 this.display = false;
+                this.firstQuestion = true;
             },
             hasVault () {
                 if (this.user.hasVault) {
                     this.firstQuestion = false;
-                    console.log ( this.user.name + " has a vault");
                 }
                 else {
                     this.deleteUser();
@@ -82,6 +92,15 @@
             },
             deleteUser () {
                 console.log("Deleting User" + this.user.name + " Still in progress");
+                console.log("Delete vault? ");
+                if (this.deleteVault === 'deleteVault') {
+                    console.log("Yes");
+                }
+                else {
+                    console.log ("No");
+                }
+                this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
+                this.closePopUp();
             }
         },
         watch:{
@@ -118,7 +137,7 @@
     .radio-button-holders {
         display: grid;
         grid-row-gap: 0.5em;
-        padding: 0 24px 24px;
+        padding: 0 24px 0 24px;
     }
 
 </style>

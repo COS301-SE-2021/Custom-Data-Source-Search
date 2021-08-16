@@ -375,7 +375,19 @@ const store = createStore({
 
             state.signedInUserId = state.users.length-1;
 
+        },
+        deleteUserFromLocalList (state, payload) {
+            console.log ( "Deleting: " + state.users[payload.user.id].info.name);
+            state.users.splice(payload.user.id, 1);
+            let x = 0;
+            for (let user of state.users) {
+                   user.info.id = x;
+                   user.id = x++;
+                   console.log (user.info.name + " has id number: " + user.id);
+            }
+
         }
+
     },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store

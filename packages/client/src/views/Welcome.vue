@@ -22,7 +22,14 @@
       <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
 
     </div>
-    <DeleteUserAreYouSure :show="displayDeleteCheck" @display-popup="showPopup" :user="selectedUser"/>
+    <DeleteUserAreYouSure
+            :show="displayDeleteCheck"
+            @display-popup="showPopup"
+            :user="selectedUser"
+            :delete-vault-fed-in="null"
+            :first-question-fed-in="true"
+            @close="cleanPopUp"
+    />
   </div>
 </template>
 
@@ -44,6 +51,8 @@ export default {
       stopProcess : null,
       removeBoolean: false,
       selectedUser: null,
+      deleteVaultFedIn: null,
+      firstQuestionFedIn: true,
       items: [
         {label: 'Remove', icon: 'pi pi-trash', command: (event) => {
             // event.originalEvent: Browser event
@@ -56,6 +65,10 @@ export default {
 
   },
   methods: {
+    cleanPopUp() {
+      this.firstQuestionFedIn = true;
+      this.deleteVaultFedIn = true;
+    },
     showPopup(){
     this.displayDeleteCheck = !this.displayDeleteCheck
     },
