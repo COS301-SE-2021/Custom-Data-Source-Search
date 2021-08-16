@@ -93,6 +93,8 @@
 
     </div>
 
+    <Toast position="bottom-right"/>
+
     </div>
 
 
@@ -705,6 +707,12 @@ export default {
       }
 
       navigator.clipboard.writeText(usersString);
+
+      this.$toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: this.selectedUsers.length + " Users Copied to Clipboard",
+        life: 3000});
 
     },
 
