@@ -30,8 +30,8 @@ export default {
       tag1: null,
       tag2: null,
       type: 'file',
-      filename: null,
-      path: null
+      filename: [],
+      path: []
     }
   },
   methods: {
@@ -63,35 +63,36 @@ export default {
                 str = str.replaceAll("\\", "/")
 
                 p = str.split("/")
-                this.filename = p.pop()
-                this.path = p.join("/")
+                this.filename.push(p.pop())
+                this.path.push(p.join("/"))
               }
             }
           })
     },
     submitSource(){
-      let respObject = {"filename": this.filename, "path": this.path, "tag1": this.tag1, "tag2": this.tag2}
-      axios
-          .post("http://localhost:3001/filedatasources", respObject)
-          .then((resp) => {
-            this.$toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: resp.data.message,
-              life: 3000
+      for (let i = 0; i < this.filename.length; i++) {
+        let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+        axios
+            .post("http://localhost:3001/filedatasources", respObject)
+            .then((resp) => {
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: resp.data.message,
+                life: 3000
+              })
+              this.$emit('addFile')
+              this.$emit("submitted")
             })
-            this.$emit('addFile')
-            this.$emit("submitted")
-          })
-          .catch((error) => {
-            this.$toast.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: error.response.data.message,
-              life: 3000
+            .catch((error) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data.message,
+                life: 3000
+              })
             })
-          })
-
+      }
     }
   }
 }
