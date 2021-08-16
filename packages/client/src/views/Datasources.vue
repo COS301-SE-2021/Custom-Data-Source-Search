@@ -288,7 +288,7 @@ td {
 }
 
 h2 {
-  margin: 30px 20px 30px 55px;
+  margin: 30px 20px 30px 70px;
 }
 
 a {
@@ -322,4 +322,7 @@ a {
   margin-left: 2.5%;
 }
 
+.p-input-icon-left {
+ margin-left: 50px;
+}
 </style>

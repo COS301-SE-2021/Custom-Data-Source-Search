@@ -1,6 +1,13 @@
 <template>
   <span>Select one or more Folders to add as Data Sources</span><br/>
-      <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
+      <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
+  <span>Selected Folders</span>
+  <div class="selected-folders">
+    <ScrollPanel style="width: 100%; height: 50px">
+      <span class="selection-list" v-if="path.length!==0" v-for="i in path" :key="i.id">{{i}}</span>
+      <span v-else class="selection-list">No folders selected.</span>
+    </ScrollPanel>
+  </div>
   <br/>
   <div class="depth-selector">
     <label for="stacked">Specify depth of folders to search</label>
@@ -162,4 +169,18 @@ input {
 .p-inputtextarea{
   margin-top: 15px;
 }
+
+.selected-folders{
+  color: #9e9d9e;
+  font-style: italic;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+.selection-list{
+  display: block;
+  margin-bottom: 2px;
+}
+
+
 </style>
