@@ -101,7 +101,7 @@ export default {
 }
 
 .active {
-\
+
   background:
       linear-gradient(#2d2d2d, #2d2d2d) padding-box,
       linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
