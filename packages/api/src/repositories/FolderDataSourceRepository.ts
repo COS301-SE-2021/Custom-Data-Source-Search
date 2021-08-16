@@ -26,7 +26,9 @@ class FolderDataSourceRepository {
         }
         this.folderDataSourceArray.push({
             uuid: randomBytes(16).toString("hex"),
-            path: dataSource.path
+            path: dataSource.path,
+            tag1: dataSource.tag1,
+            tag2: dataSource.tag2
         });
         fs.writeFileSync('./store/folderDataStore.json', JSON.stringify(this.folderDataSourceArray));
         return [{

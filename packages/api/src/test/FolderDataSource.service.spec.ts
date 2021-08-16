@@ -99,10 +99,12 @@ describe("Folder data source service: addFolderDataSource function", () => {
         });
         const path: string = "test/path/";
         const dataSource: FolderDataSource = {
-            "path": path
+            path: path,
+            tag1: "random tag",
+            tag2: "radom tag2"
         };
         //when
-        folderDataSourceService.addFolderDataSource(path);
+        folderDataSourceService.addFolderDataSource(dataSource);
         //then
         expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
     });
@@ -113,10 +115,12 @@ describe("Folder data source service: addFolderDataSource function", () => {
         });
         const path: string = "test/path";
         const dataSource: FolderDataSource = {
-            "path": path + "/"
+            path: path + "/",
+            tag1: "random tag",
+            tag2: "radom tag2"
         };
         //when
-        folderDataSourceService.addFolderDataSource(path);
+        folderDataSourceService.addFolderDataSource(dataSource);
         //then
         expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
     });
@@ -128,9 +132,13 @@ describe("Folder data source service: addFolderDataSource function", () => {
                 "message": "Folder datasource already exists"
             }];
         });
-        const path: string = "test/path/";
+        const dataSource: FolderDataSource = {
+            path: "test/path/",
+            tag1: "",
+            tag2: ""
+        }
         //when
-        const result = folderDataSourceService.addFolderDataSource(path);
+        const result = folderDataSourceService.addFolderDataSource(dataSource);
         //then
         expect(result.code).toEqual(400);
         expect(result.body.message).toEqual("Folder datasource already exists");
@@ -143,9 +151,13 @@ describe("Folder data source service: addFolderDataSource function", () => {
                 "message": "Directory does not exist"
             }];
         });
-        const path: string = "test/path/";
+        const dataSource: FolderDataSource = {
+            path: "test/path/",
+            tag1: "",
+            tag2: ""
+        }
         //when
-        const result = folderDataSourceService.addFolderDataSource(path);
+        const result = folderDataSourceService.addFolderDataSource(dataSource);
         //then
         expect(result.code).toEqual(404);
         expect(result.body.message).toEqual("Directory does not exist");
@@ -158,9 +170,13 @@ describe("Folder data source service: addFolderDataSource function", () => {
                 "message": "Successfully added folder datasource"
             }, null];
         });
-        const path: string = "test/path/";
+        const dataSource: FolderDataSource = {
+            path: "test/path/",
+            tag1: "",
+            tag2: ""
+        }
         //when
-        const result = folderDataSourceService.addFolderDataSource(path);
+        const result = folderDataSourceService.addFolderDataSource(dataSource);
         //then
         expect(result.code).toEqual(200);
         expect(result.body.message).toEqual("Successfully added datasource");

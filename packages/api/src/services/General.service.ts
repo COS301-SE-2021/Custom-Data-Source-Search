@@ -2,6 +2,10 @@ import axios from "axios";
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import fileDataSourceService from "./FileDataSource.service";
 import hljs from "highlight.js";
+import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
+import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
+import folderDataSourceService from "./FolderDataSource.service";
+import webPageDataSourceService from "./WebPageDataSource.service";
 
 class GeneralService {
 
@@ -109,7 +113,7 @@ class GeneralService {
                 let temp: string[] = dataSource.filename.split('.');
                 let extension: string = temp[temp.length - 1];
                 if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
-                    let snippet: string = hljs.highlight(content, {language: extension}).value;
+                    let snippet: string = hljs.highlight(content, {language: fileDataSourceService.getCorrectExtension(extension)}).value;
                     result = '<pre>' + GeneralService.newLinesToBreaks(snippet) + '</pre>';
                 } else {
                     result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
@@ -142,6 +146,71 @@ class GeneralService {
         }
         result += content;
         return result;
+    }
+
+    async getAllDataSources() {
+        let array: any[] = [];
+        let [fileResult, fileErr] = fileDataSourceRepository.getAllDataSources();
+        if (!fileErr) {
+            for (let fileDataSource of fileResult) {
+                array.push({
+                    "id": fileDataSource.uuid,
+                    "location": fileDataSource.path + fileDataSource.filename,
+                    "type": "file",
+                    "tag1": fileDataSource.tag1,
+                    "tag2": fileDataSource.tag2
+                });
+            }
+        }
+        let [folderResult, folderErr] = folderDataSourceRepository.getAllDataSources();
+        if (!folderErr) {
+            for (let folderDataSource of folderResult) {
+                array.push({
+                    "id": folderDataSource.uuid,
+                    "location": folderDataSource.path,
+                    "type": "folder",
+                    "tag1": folderDataSource.tag1,
+                    "tag2": folderDataSource.tag2
+                });
+            }
+        }
+        let [webPageResult, webPageError] = webPageDataSourceRepository.getAllDataSources();
+        if (!webPageError) {
+            for (let webPageDataSource of webPageResult) {
+                array.push({
+                    "id": webPageDataSource.uuid,
+                    "location": webPageDataSource.url,
+                    "type": "webpage",
+                    "tag1": webPageDataSource.tag1,
+                    "tag2": webPageDataSource.tag2
+                });
+            }
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success",
+                "data": array
+            }
+        }
+    }
+
+    async deleteDatasource(type: string, id: string) {
+        switch (type.toLocaleLowerCase()) {
+            case "file":
+                return await fileDataSourceService.removeFileDataSource(id);
+            case "folder":
+                return folderDataSourceService.removeFolderDataSource(id);
+            case "webpage":
+                return webPageDataSourceService.removeWebPageDataSource(id);
+            default:
+                return {
+                    "code": 400,
+                    "body": {
+                        "message": "Incorrect type specified for delete"
+                    }
+                }
+        }
     }
 }
 

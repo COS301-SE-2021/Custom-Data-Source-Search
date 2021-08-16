@@ -42,12 +42,11 @@ class FolderDataSourceService {
         }
     }
 
-    addFolderDataSource(path: string) {
-        if (path[path.length - 1] !== '/') {
-            path += '/';
+    addFolderDataSource(dataSource: FolderDataSource) {
+        if (dataSource.path[dataSource.path.length - 1] !== '/') {
+            dataSource.path += '/';
         }
-        const temp: FolderDataSource = {path: path};
-        let [, e] = folderDataSourceRepository.addDataSource(temp);
+        let [, e] = folderDataSourceRepository.addDataSource(dataSource);
         if (e) {
             return {
                 "code": e.code,

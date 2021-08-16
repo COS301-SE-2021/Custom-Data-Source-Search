@@ -1,8 +1,12 @@
 export interface WebPageDataSource {
-    uuid: string;
     url: string;
+    tag1: string;
+    tag2: string;
 }
 
-export interface WebPageDataSourceList {
-    [key: number]: WebPageDataSource;
+export interface StoredWebPageDataSource {
+    uuid: string;
+    url: string;
+    tag1: string;
+    tag2: string;
 }

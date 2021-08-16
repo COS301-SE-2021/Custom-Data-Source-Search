@@ -2,200 +2,18 @@ import {createStore} from 'vuex'
 
 const store = createStore({
     state:{
-        signedInUserId: 2,
-        signedIn : true,
+        signedInUserId: null,
+        signedIn : null,
         users: [
-            {
-                id: 0,
-                info: {
-                    id: 0,
-                    name: 'Marike',
-                    email: 'example@funsail.co.za',
-                    isActive: true,
-                },
-                backends: [
-                    {
-                       local: {
-                           id: 0,
-                           name: 'BIRDS',
-                           color: '#b34e47',
-                           active: true
-                       },
-                        connect: {
-                            associatedEmail: 'marike@funsail.co.za',
-                            link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                            passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: true
-                        }
-                    },
-                    {
-                        local: {
-                            id: 1,
-                            name: 'LEGO',
-                            color: '#21b312',
-                            active: false
-                        },
-                        connect: {
-                            associatedEmail: 'marike1@funsail.co.za',
-                            link: 'www.justAnotherExample/LEGO/BACKEND',
-                            passKey: 'new84lLKJREpassKD9e7edfjKey'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: true
-                        }
-                    },
-                    {
-                        local: {
-                            id: 2,
-                            name: 'Fluffy',
-                            color: '#41B3B2',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'marike2@funsail.co.za',
-                            link: 'www.fulffy&Bubbles/backend/link',
-                            passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: true
-                        }
-                    }
-                ]
-            },
-            {
-                id: 1,
-                info: {
-                    id: 1,
-                    name: 'Josh',
-                    email: 'joshwalkerdev@gmail.com',
-                    isActive: false
-                },
-                backends: [
-                    {
-                        local: {
-                            id: 0,
-                            name: 'CARS',
-                            color: '#b30a8c',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'josh1@gmail.com',
-                            link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
-                            passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg'
-                        },
-                       receive: {
-                            admin: true,
-                            connected: false
-                       }
-                    },
-                    {
-                        local: {
-                            id: 1,
-                            name: 'WINDOWS',
-                            color: '#fdff23',
-                            active: false
-                        },
-                        connect: {
-                            associatedEmail: 'josh2@gmail.com',
-                            link: 'www.justAnotherExample/windows/BACKEND',
-                            passKey: 'new84lLKJREpassKD9e7edfjKey'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: true
-                        }
-                    },
-                    {
-                        local: {
-                            id: 2,
-                            name: 'TEST',
-                            color: '#41B3B2',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'josh3@gmail.com',
-                            link: 'www.doesnotmattermuch/backend/link',
-                            passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
-                        },
-                        receive: {
-                            admin: false,
-                            connected: true
-                        }
-                    }
-                ]
-            },
-            {
-                id: 2,
-                info: {
-                    id: 2,
-                    name: 'Lauren',
-                    email: 'lauren@gmail.com',
-                    isActive: true
-                },
-                backends: [
-                    {
-                        local: {
-                            id: 0,
-                            name: 'BIRDS',
-                            color: '#25b313',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'lauren1@gmail.com',
-                            link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                            passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: false
-                        }
-                    },
-                    {
-                        local: {
-                            id: 1,
-                            name: 'LEGO',
-                            color: '#1616b3',
-                            active: false
-                        },
-                        connect: {
-                            associatedEmail: 'lauren2@gmail.com',
-                            link: 'www.justAnotherExample/LEGO/BACKEND',
-                            passKey: 'new84lLKJREpassKD9e7edfjKey'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: false
-                        }
-                    },
-                    {
-                        local: {
-                            id: 2,
-                            name: 'Fluffy',
-                            color: '#b3100c',
-                            active: true
-                        },
-                        connect: {
-                            associatedEmail: 'lauren2@gmail.com',
-                            link: 'www.fulffy&Bubbles/backend/link',
-                            passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg'
-                        },
-                        receive: {
-                            admin: true,
-                            connected: false
-                        }
-                    }
-                ]
-            }
-        ]
+            ]
     },
     getters:{
 
         //User information related getters
+
+        getNewAppStatus (state) {
+            return state.users.length === 0;
+        },
         getSignedIn(state){
             return state.signedIn;
         },
@@ -212,16 +30,45 @@ const store = createStore({
         getSignedInUserId(state){
             return state.signedInUserId;
         },
+        getUserMasterEmailsArr(state) {
+            let userNamesArr = [];
+            for (let user of state.users) {
+                userNamesArr.push(user.info.email);
+            }
+            return userNamesArr;
+        },
+        getUserHashCorrect: (state) => (payload) => {
+            let pw = state.users[payload.id].info.hash;
+            let h = 0, l = pw.length, i = 0;
+            if ( l > 0 )
+                while (i < l)
+                    h = (h << 5) - h + pw.charCodeAt(i++) | 0;
+
+            return h === payload.hash;
+
+        },
+
 
         //Signed in User's backends related getters
+
         getUserBackend: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
+        },
+        getUserBackendNames: (state, getters) => {
+          let backends = getters.getUserBackend(getters.getSignedInUserId);
+          let backendsArr = [];
+          for( let backend of backends){
+              backendsArr.push(backend.local.name);
+          }
+          return backendsArr;
         },
         getUserAdminStatus: (state) => (backendID) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },
 
+
         //Unconnected backend related getters
+
         unconnectedBackendNo: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false).length;
         },
@@ -238,15 +85,41 @@ const store = createStore({
         },
         unconnectedBackendBool: (state, getters) => {
             return getters.unconnectedBackendNo !== 0;
+        },
+        //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
+        //should return true or false
+        //this would allow us to determine whether or not a data source can be edited/deleted by a user
+        getBackendAdminStatus: (state) => (backendName) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         }
     },
 
     //synchronous changes to the store
     mutations: {
-        editBackend(state, payload) {
-            console.log ('PAYLOAD NAME: ' + payload.name);
-            console.log ('PAYLOAD email: ' + payload.associatedEmail);
+        //Initialise Store from local storage
 
+        initialiseStore(state) {
+            // Check if the ID exists
+            if(localStorage.getItem('store')) {
+                // Replace the state object with the stored item
+                this.replaceState(
+                    Object.assign(state, JSON.parse(localStorage.getItem('store')))
+                );
+            }
+        },
+
+        //Signed-in user backend related mutations
+
+        signInUser (state, payload) {
+              let thisUser =  state.users.find( user => user.info.email === payload.email);
+              thisUser.info.isActive = true;
+        },
+
+        signOutUser (state, payload) {
+             state.users[payload.user.id].info.isActive = false;
+        },
+
+        editBackend(state, payload) {
             state.users[payload.userIndex].backends[payload.backendIndex].local.id = payload.id;
             state.users[payload.userIndex].backends[payload.backendIndex].local.name = payload.name;
             state.users[payload.userIndex].backends[payload.backendIndex].local.active = payload.active;
@@ -263,7 +136,6 @@ const store = createStore({
             }
         },
         addBackend(state, payload){
-
             let newBackend = {
                 local: {
                     id: null,
@@ -277,20 +149,21 @@ const store = createStore({
                 },
                 receive: {
                     admin: null,
-                    connect: null
+                    connected: false
                 }
             };
 
             newBackend.local.name = payload.name;
-            newBackend.local.link = payload.link;
+            newBackend.local.active = payload.active;
 
             newBackend.connect.associatedEmail = payload.associatedEmail;
+            newBackend.connect.link = payload.link;
             newBackend.connect.passKey = payload.passKey;
-            newBackend.connect.active = payload.active;
 
             newBackend.receive.admin = payload.admin;
 
             state.users[payload.userIndex].backends.push(newBackend);
+            state.signedIn = true;
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
                 state.users[state.signedInUserId].backends[x].local.id = x;
@@ -305,7 +178,7 @@ const store = createStore({
             }
         },
 
-        //Sign in mutations
+        //User management
         setSignedIn(state, payload){
             state.signedIn = payload;
         },
@@ -313,7 +186,56 @@ const store = createStore({
             state.signedInUserId = payload.userID;
             state.users[payload.userID].info.isActive = payload.signedIn;
             state.signedIn = true;
+        },
+        addUserToLocalList(state, payload) {
+            let newUser = {
+                id: null,
+                info: {
+                    id: null,
+                    name: null,
+                    email: null,
+                    isActive: true,
+                    hash: null,
+                    hasVault: null
+                },
+                backends: []
+            };
+
+            newUser.info.name = payload.name;
+            newUser.info.email = payload.email;
+            newUser.info.isActive = true;
+            newUser.info.hash = payload.hash;
+            newUser.info.hasVault = payload.hasVault;
+
+            state.users.push(newUser);
+
+            let x = 0;
+            for (let user of state.users) {
+                user.id = x;
+                user.info.id = x;
+                x++;
+            }
+
+            state.signedInUserId = state.users.length-1;
+            state.signedIn = true;
+
+        },
+        deleteUserFromLocalList (state, payload) {
+            if (payload.deleteVault) {
+                //Do some server side call to delete file on web
+            }
+
+
+            //Delete local
+            state.users.splice(payload.user.id, 1);
+            let x = 0;
+            for (let user of state.users) {
+                   user.info.id = x;
+                   user.id = x++;
+            }
+
         }
+
     },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
@@ -322,6 +244,12 @@ const store = createStore({
 
 
     }
+});
+
+// Subscribe to store updates
+store.subscribe((mutation, state) => {
+    // Store the state object as a JSON string
+    localStorage.setItem('store', JSON.stringify(state));
 });
 
 export default store;

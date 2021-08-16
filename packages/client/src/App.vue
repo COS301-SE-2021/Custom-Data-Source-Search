@@ -170,7 +170,10 @@ export default {
             'getSignedInUserId'
         ])
     },
-  methods: {
+    beforeCreate() {
+        this.$store.commit('initialiseStore');
+    },
+    methods: {
     toggle(event) {
       this.$refs.op.toggle(event);
     },
