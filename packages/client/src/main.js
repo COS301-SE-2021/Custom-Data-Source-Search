@@ -37,6 +37,7 @@ import Divider from 'primevue/divider';
 import InputSwitch from 'primevue/inputswitch';
 import Checkbox from 'primevue/checkbox';
 import InputNumber from 'primevue/inputnumber';
+import Textarea from 'primevue/textarea';
 
 const app = createApp(App);
 app.use(router);
@@ -74,3 +75,4 @@ app.component('Divider', Divider);
 app.component('InputSwitch', InputSwitch);
 app.component("Checkbox", Checkbox);
 app.component('InputNumber', InputNumber);
+app.component('Textarea', Textarea);

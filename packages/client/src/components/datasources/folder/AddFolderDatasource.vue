@@ -1,12 +1,16 @@
 <template>
-  <span><strong>Select one or more Folders to add as Data Sources</strong></span><br/>
+  <span>Select one or more Folders to add as Data Sources</span><br/>
       <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
   <br/>
   <div class="depth-selector">
-    <label for="stacked">Depth</label>
+    <label for="stacked">Specify depth of folders to search</label>
     <div class="depth-input">
       <InputNumber inputStyle="width: 9.3rem; background-color: #242424;" id="stacked" v-model="depth" showButtons mode="decimal" :min="0"/>
     </div>
+  </div>
+  <div class="file-ignore">
+    <span></span>
+    <Textarea v-model="value" rows="5" cols="40"></Textarea>
   </div>
     <div>
       <span>Add optional tags</span><br/>
@@ -139,5 +143,9 @@ input {
 
 .depth-input{
   margin-top: 15px;
+}
+
+.file-ignore{
+  margin-bottom: 15px;
 }
 </style>
