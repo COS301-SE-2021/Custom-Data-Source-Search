@@ -83,6 +83,11 @@
                 'unconnectedBackendNames'
         ])
       },
+      beforeMount() {
+        if (this.$store.getters.getNewAppStatus) {
+          this.$router.push('/');
+        }
+      },
       methods: {
         escapeSpecialCharacters(query) {
           return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
@@ -95,7 +100,7 @@
           axios
                   .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
                   .then((resp) => {
-                    this.searchResults = resp.data.searchResults
+                    this.searchResults = resp.data.searchResults;
                     if (this.searchResults.length === 0) {
                       this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
                     }

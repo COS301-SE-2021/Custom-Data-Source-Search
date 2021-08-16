@@ -72,6 +72,11 @@
             }
         },
         name: "SettingsPage",
+        beforeMount() {
+            if (this.$store.getters.getNewAppStatus) {
+                this.$router.push('/');
+            }
+        },
         methods: {
             newBackend() {
                 this.newBackendBool = !this.newBackendBool;
@@ -85,7 +90,7 @@
         computed: {
             ...mapGetters ([
                 'getUserBackend',
-                'getSignedInUserId'
+                'getSignedInUserId',
              ])
         }
     }

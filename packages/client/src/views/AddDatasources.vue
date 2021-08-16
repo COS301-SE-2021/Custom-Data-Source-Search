@@ -89,6 +89,11 @@ export default {
       name: "Data Sources"
     }
   },
+  beforeMount() {
+    if (this.$store.getters.getNewAppStatus) {
+      this.$router.push('/');
+    }
+  },
   methods: {
     /**
      *@param index - The index of the tab we want to delete.

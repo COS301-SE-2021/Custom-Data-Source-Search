@@ -5,8 +5,9 @@
       <h1 class="header">Who's Sleuthing ?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
-    <div class="user-select" >
+    <div class="user-select">
       <UserCard
+              v-if="!getNewAppStatus"
               v-for="(user, i) in getArrUserInfo"
               :key="i"
               :userDetails="user"
@@ -238,7 +239,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-            'getArrUserInfo'
+            'getArrUserInfo',
+            'getNewAppStatus'
     ])
   }
 }
