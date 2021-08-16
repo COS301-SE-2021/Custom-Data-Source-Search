@@ -13,6 +13,7 @@
               :userDetails="user"
               @contextmenu="onUserCardRightClick"
               @mousedown.right="updateSelectedUser(user)"
+              @show-sign-in="showSignIn"
       ></UserCard>
       <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
@@ -30,7 +31,16 @@
             :delete-vault-fed-in="null"
             :first-question-fed-in="true"
             @close="cleanPopUp"
-            @clear-current-user="clearCurrentUser()"
+            @clear-current-user="clearCurrentUser"
+    />
+    <SignOutCheck
+            :show="displaySignOutCheck"
+            @display-popup="showSignOutCheck"
+            :user="selectedUser"
+    />
+    <SignIn
+            :show="displaySignIn"
+            @show-sign-in="showSignIn"
     />
   </div>
 </template>
@@ -41,13 +51,17 @@ import AddUserCard from "@/components/users/AddUserCard";
 const electron = require('@electron/remote');
 import {mapGetters} from "vuex";
 import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+import SignOutCheck from "../components/popups/SignOutCheck";
+import SignIn from "../components/popups/SignIn";
 
 export default {
   name: "Welcome",
-  components: {DeleteUserAreYouSure, AddUserCard, UserCard},
+  components: {SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
     return {
+      displaySignIn: false,
       displayDeleteCheck: false,
+      displaySignOutCheck: false,
       isSignedIn: true,
       execProcess : null,
       stopProcess : null,
@@ -56,24 +70,36 @@ export default {
       deleteVaultFedIn: null,
       firstQuestionFedIn: true,
       items: [
-        {label: 'Remove', icon: 'pi pi-trash', command: (event) => {
+        {label: 'Remove', icon: 'pi pi-trash', command: () => {
             // event.originalEvent: Browser event
             // event.item: Menuitem instance
             console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
             this.displayDeleteCheck = !this.displayDeleteCheck;
           }},
+        {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
+            console.log ("Sign out user: " + this.selectedUser.name);
+            this.displaySignOutCheck = !this.displaySignOutCheck;
+          }}
       ]
     }
 
   },
   methods: {
+    showSignIn(){
+      this.displaySignIn = !this.displaySignIn
+    },
     clearCurrentUser() {
          this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
          console.log("Current User cleared");
     },
     cleanPopUp() {
-      this.firstQuestionFedIn = true;
-      this.deleteVaultFedIn = true;
+      if (this.displayDeleteCheck) {
+        this.firstQuestionFedIn = true;
+        this.deleteVaultFedIn = true;
+      }
+    },
+    showSignOutCheck() {
+      this.displaySignOutCheck = !this.displaySignOutCheck;
     },
     showPopup(){
     this.displayDeleteCheck = !this.displayDeleteCheck
