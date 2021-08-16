@@ -216,7 +216,7 @@ class FileDataSourceService {
             while (snippet.indexOf('\n') == 0) {
                 snippet = snippet.substr(1, snippet.length);
             }
-            snippet = hljs.highlight(snippet, {language: extension}).value;
+            snippet = hljs.highlight(snippet, {language: this.getCorrectExtension(extension)}).value;
             /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
             snippet = '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' + snippet + '</pre>';
@@ -263,6 +263,15 @@ class FileDataSourceService {
                     return '&#039;';
             }
         })
+    }
+
+    getCorrectExtension(extension: string) {
+        switch (extension) {
+            case "vue":
+                return "html";
+            default:
+                return extension;
+        }
     }
 }
 
