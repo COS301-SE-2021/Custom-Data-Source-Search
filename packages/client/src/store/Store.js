@@ -1,4 +1,6 @@
 import {createStore} from 'vuex'
+const pbkdf2 = require('pbkdf2')
+const aes = require('aes-js')
 
 const store = createStore({
     state:{
