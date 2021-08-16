@@ -12,16 +12,7 @@ const store = createStore({
         //User information related getters
 
         getNewAppStatus (state) {
-            console.log ("This is a new app: " + state.users.length);
-            if (state.users.length === 0) {
-                console.log ("Return true");
-                return true;
-            }
-            else {
-                console.log ("Return false");
-                return false;
-            }
-
+            return state.users.length === 0;
         },
         getSignedIn(state){
             // if (getters.getNewAppStatus) {
@@ -101,6 +92,17 @@ const store = createStore({
 
     //synchronous changes to the store
     mutations: {
+        //Initialise Store from local storage
+
+        initialiseStore(state) {
+            // Check if the ID exists
+            if(localStorage.getItem('store')) {
+                // Replace the state object with the stored item
+                this.replaceState(
+                    Object.assign(state, JSON.parse(localStorage.getItem('store')))
+                );
+            }
+        },
 
         //Signed-in user backend related mutations
 

@@ -76,3 +76,4 @@ app.component('InputSwitch', InputSwitch);
 app.component("Checkbox", Checkbox);
 app.component('ContextMenu', ContextMenu);
 app.component('RadioButton', RadioButton);
+
