@@ -5,7 +5,7 @@
 
     <div class="admin-table-container">
 
-      <DataTable class="p-datatable-sm table" :rowHover="true" :value="tableData"  v-model:selection="selectedUsers" :scrollable="true" scrollHeight="70vh">
+      <DataTable class="p-datatable-sm table"  @rowSelect="onRowSelect" @rowUnselect="onRowUnselect" @rowSelectAll="onRowSelectAll" @rowUnselectAll="onRowUnselectAll" :rowHover="true" :value="tableData"  v-model:selection="selectedUsers" :scrollable="true" scrollHeight="70vh">
 
         <template #header>
 
@@ -30,22 +30,29 @@
     <Toolbar class="backend-toolbar">
       <template #left>
         <span class="p-buttonset">
-        <Button @click="addUsers" label="Add User" icon="pi pi-user-plus" class="p-button p-button-success p-mr-2 p-button-custom-med"  />
-          <Button @click="deleteUsers" label="Remove User" icon="pi pi-user-minus" class="p-button-danger p-mr-2  p-button-custom-med"  />
+        <Button @click="showAddUsers" label="Add User" icon="pi pi-user-plus" class="p-button p-button-success p-mr-2 p-button-custom-med"  />
+          <Button :disabled="!isUserSelected" @click="deleteUsers" label="Remove User" icon="pi pi-user-minus" class="p-button-danger p-mr-2  p-button-custom-med"  />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" />
-        <Button @click="changeUserPermissions" label="Change Permissions" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
-        <Dropdown v-model="selectedPermissionLevel" :options="permissionOptions" placeholder="Select a Role" />
+        <Button :disabled="!isUserSelected" @click="changeUserPermissions" label="Change Permissions" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
+        <Dropdown :disabled="!isUserSelected" v-model="selectedPermissionLevel" :options="permissionOptions" placeholder="Select a Role" />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" />
         <span class="p-buttonset">
-        <Button @click="logOutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
-          <Button @click="revokeUserKeys" label="Revoke Keys" icon="pi pi-ban" class="p-button-danger p-button-custom-med" />
+        <Button :disabled="!isUserSelected" @click="logOutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
+          <Button :disabled="!isUserSelected" @click="revokeUserKeys" label="Revoke Keys" icon="pi pi-ban" class="p-button-danger p-button-custom-med" />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" />
-        <Button @click="copyUsers" label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
+        <Button :disabled="!isUserSelected" @click="copyUsers" label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
 
       </template>
       </Toolbar>
+
+      <Dialog header="Add User" v-model:visible="showAddUserDialog" :style="{width: '50vw'}" :position="addUserPos" :modal="true" dismissable-mask="true">
+       <template #footer>
+          <Button label="Cancel" icon="pi pi-times" @click="hideAddUsers" class="p-button-text" />
+          <Button label="Add" icon="pi pi-check" @click="hideAddUsers" autofocus />
+        </template>
+      </Dialog>
 
     </div>
 
@@ -66,6 +73,9 @@ export default {
       isUserSelected: false,
       selectedUsers: null,
       selectedPermissionLevel : null,
+
+      showAddUserDialog : false,
+      addUserPos: "bottomleft",
 
       //Needs to be determined on page load
       permissionOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
@@ -655,8 +665,37 @@ export default {
 
       navigator.clipboard.writeText(usersString);
 
-    }
+    },
 
+    //Selection Events
+    onRowSelect(){
+      console.log("Selected a Row");
+      this.isUserSelected = true;
+    },
+    onRowUnselect(){
+      console.log("Unselected a Row");
+      if(this.selectedUsers.length === 0){
+        this.isUserSelected = false;
+      }
+    },
+    onRowSelectAll(){
+      console.log("Selected all Rows");
+      this.isUserSelected = true;
+    },
+    onRowUnselectAll(){
+      console.log("Unselected all Rows");
+      this.isUserSelected = false;
+    },
+    showAddUsers(){
+
+      this.showAddUserDialog = true;
+
+    },
+    hideAddUsers(){
+
+      this.showAddUserDialog = false;
+
+    }
   },
   beforeMount() {
     //console.log(this.backendID)
