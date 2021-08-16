@@ -8,6 +8,9 @@
             <div>
                 <user-info-card :user-index="getSignedInUserId"/>
             </div>
+            <div>
+
+            </div>
         </div>
         <div class="info-div">
             <div class="settings-subheading">

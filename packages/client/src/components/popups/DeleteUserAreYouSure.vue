@@ -100,6 +100,7 @@
                     console.log ("No");
                 }
                 this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
+                this.$emit("clearCurrentUser");
                 this.closePopUp();
             }
         },

@@ -29,6 +29,7 @@
             :delete-vault-fed-in="null"
             :first-question-fed-in="true"
             @close="cleanPopUp"
+            @clear-current-user="clearCurrentUser()"
     />
   </div>
 </template>
@@ -65,6 +66,10 @@ export default {
 
   },
   methods: {
+    clearCurrentUser() {
+         this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
+         console.log("Current User cleared");
+    },
     cleanPopUp() {
       this.firstQuestionFedIn = true;
       this.deleteVaultFedIn = true;
