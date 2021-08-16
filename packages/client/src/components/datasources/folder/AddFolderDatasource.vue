@@ -1,6 +1,13 @@
 <template>
-      <span>Select one or more Folders to add as Data Sources</span><br/>
+  <span><strong>Select one or more Folders to add as Data Sources</strong></span><br/>
       <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
+  <br/>
+  <div class="depth-selector">
+    <label for="stacked">Depth</label>
+    <div class="depth-input">
+      <InputNumber inputStyle="width: 9.3rem; background-color: #242424;" id="stacked" v-model="depth" showButtons mode="decimal" :min="0"/>
+    </div>
+  </div>
     <div>
       <span>Add optional tags</span><br/>
       <span class="p-float-label">
@@ -30,7 +37,8 @@
               tag1: null,
               tag2: null,
               type: 'folder',
-              path: null
+              path: null,
+              depth: 0
             }
         },
         methods: {
@@ -124,4 +132,12 @@ input {
   margin: 7px;
 }
 
+.depth-selector{
+  margin-bottom: 15px;
+  margin-top: 5px;
+}
+
+.depth-input{
+  margin-top: 15px;
+}
 </style>
