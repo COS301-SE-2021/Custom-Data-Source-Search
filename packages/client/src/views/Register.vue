@@ -93,7 +93,7 @@
                 notContinue: true,
                 userDetails: {
                     userName: null,
-                    backupVault: false,
+                    backupVault: null,
                     masterEmail: null,
                     hashToStore: null
                 }
@@ -158,7 +158,7 @@
                         name: this.userDetails.userName,
                         email: this.userDetails.masterEmail,
                         hash: this.userDetails.hashToStore,
-                        browserAccess: this.userDetails.backupVault
+                        hasVault: this.userDetails.backupVault
                     });
                     this.continue();
                 }

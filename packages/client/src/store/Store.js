@@ -353,7 +353,7 @@ const store = createStore({
                     email: null,
                     isActive: null,
                     hash: null,
-                    browserAccess: null
+                    hasVault: null
                 },
                 backends: []
             };
@@ -362,7 +362,7 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hash = payload.hash;
-            newUser.info.browserAccess = payload.browserAccess;
+            newUser.info.hasVault = payload.hasVault;
 
             state.users.push(newUser);
 
