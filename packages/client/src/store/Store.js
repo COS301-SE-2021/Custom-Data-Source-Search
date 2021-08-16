@@ -110,6 +110,10 @@ const store = createStore({
 
         //Signed-in user backend related mutations
 
+        signOutUser (state, payload) {
+             state.users[payload.user.id].info.isActive = false;
+        },
+
         editBackend(state, payload) {
             state.users[payload.userIndex].backends[payload.backendIndex].local.id = payload.id;
             state.users[payload.userIndex].backends[payload.backendIndex].local.name = payload.name;

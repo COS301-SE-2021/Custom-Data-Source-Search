@@ -32,6 +32,11 @@
             @close="cleanPopUp"
             @clear-current-user="clearCurrentUser()"
     />
+    <SignOutCheck
+            :show="displaySignOutCheck"
+            @display-popup="showSignOutCheck"
+            :user="selectedUser"
+    />
   </div>
 </template>
 
@@ -41,13 +46,15 @@ import AddUserCard from "@/components/users/AddUserCard";
 const electron = require('@electron/remote');
 import {mapGetters} from "vuex";
 import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+import SignOutCheck from "../components/popups/SignOutCheck";
 
 export default {
   name: "Welcome",
-  components: {DeleteUserAreYouSure, AddUserCard, UserCard},
+  components: {SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
     return {
       displayDeleteCheck: false,
+      displaySignOutCheck: false,
       isSignedIn: true,
       execProcess : null,
       stopProcess : null,
@@ -56,12 +63,16 @@ export default {
       deleteVaultFedIn: null,
       firstQuestionFedIn: true,
       items: [
-        {label: 'Remove', icon: 'pi pi-trash', command: (event) => {
+        {label: 'Remove', icon: 'pi pi-trash', command: () => {
             // event.originalEvent: Browser event
             // event.item: Menuitem instance
             console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
             this.displayDeleteCheck = !this.displayDeleteCheck;
           }},
+        {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
+            console.log ("Sign out user: " + this.selectedUser.name);
+            this.displaySignOutCheck = !this.displaySignOutCheck;
+          }}
       ]
     }
 
@@ -72,8 +83,13 @@ export default {
          console.log("Current User cleared");
     },
     cleanPopUp() {
-      this.firstQuestionFedIn = true;
-      this.deleteVaultFedIn = true;
+      if (this.displayDeleteCheck) {
+        this.firstQuestionFedIn = true;
+        this.deleteVaultFedIn = true;
+      }
+    },
+    showSignOutCheck() {
+      this.displaySignOutCheck = !this.displaySignOutCheck;
     },
     showPopup(){
     this.displayDeleteCheck = !this.displayDeleteCheck
