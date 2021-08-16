@@ -114,14 +114,8 @@
             <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{ data.tag1 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
-                         class="p-column-filter">
-              <template #option="slotProps">
-                <div class="p-multiselect-tag1-option">
-                  <span class="image-text">{{ slotProps.option }}</span>
-                </div>
-              </template>
-            </MultiSelect>
+            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter"
+                       placeholder="Search tags"/>
           </template>
         </Column>
         <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
@@ -129,14 +123,8 @@
             <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{ data.tag2 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
-                         class="p-column-filter">
-              <template #option="slotProps">
-                <div class="p-multiselect-tag2-option">
-                  <span class="image-text">{{ slotProps.option }}</span>
-                </div>
-              </template>
-            </MultiSelect>
+            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter"
+                       placeholder="Search tags"/>
           </template>
         </Column>
         <template #paginatorLeft>
@@ -173,19 +161,13 @@ export default {
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'backend': {value: null, matchMode: FilterMatchMode.IN},
         'type': {value: null, matchMode: FilterMatchMode.IN},
-        'tag1': {value: null, matchMode: FilterMatchMode.IN},
-        'tag2': {value: null, matchMode: FilterMatchMode.IN},
+        'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
-      tags: [
-        'Fun', 'Business', 'Home', 'University'
-      ],
       types: [
         'File', 'Folder', 'Webpage'
       ],
       backends: [],
-      colours: [
-        'success', 'secondary', 'info', 'warning', 'help', 'danger'
-      ]
     }
   },
   components: {
