@@ -1,6 +1,13 @@
 <template>
   <span>Select one or more Files to add to data sources</span><br/>
-  <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
+  <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
+  <span>Selected Files</span>
+  <div class="selected-files">
+    <ScrollPanel style="width: 100%; height: 70px">
+      <span class="selection-list" v-if="filename.length!==0" v-for="i in filename" :key="i.id">{{i}}</span>
+      <span v-else class="selection-list">No files selected.</span>
+    </ScrollPanel>
+  </div>
   <div>
     <span>Add optional tags</span><br/>
     <span class="p-float-label">
@@ -126,4 +133,15 @@ input {
   margin: 7px;
 }
 
+.selected-files{
+  color: #9e9d9e;
+  font-style: italic;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+.selection-list{
+  display: block;
+  margin-bottom: 2px;
+}
 </style>
