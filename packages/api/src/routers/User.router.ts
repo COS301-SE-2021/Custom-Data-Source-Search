@@ -33,7 +33,7 @@ userRouter.post("/role", (req: Request, res: Response) => {
     res.status(result.code).send(result.body);
 });
 
-userRouter.post("/revoke", (req: Request, res: Response) => {
-    const result = userService.revokeUser(req.body.users);
+userRouter.post("/logout", (req: Request, res: Response) => {
+    const result = userService.logoutUser(req.body.users);
     res.status(result.code).send(result.body);
 });

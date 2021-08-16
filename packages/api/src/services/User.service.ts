@@ -78,8 +78,8 @@ class UserService {
         }
     }
 
-    revokeUser(users: { uuid: string; }[]) {
-        const [, err] = userRepository.revokeUser(users);
+    logoutUser(users: { uuid: string; }[]) {
+        const [, err] = userRepository.logoutUser(users);
         if (err) {
             return {
                 "code": err.code,
@@ -92,7 +92,7 @@ class UserService {
         }
         return {
             "code": 204,
-            "message": "Successfully revoked specified users"
+            "message": "Successfully logged out specified users"
         }
     }
 }

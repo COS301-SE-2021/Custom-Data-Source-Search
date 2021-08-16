@@ -102,7 +102,7 @@ class UserRepository {
         }, null];
     }
 
-    revokeUser(users: { uuid: string }[]) {
+    logoutUser(users: { uuid: string }[]) {
         let failedUsers: any[] = [];
         for (let user of users) {
             try {
@@ -117,13 +117,13 @@ class UserRepository {
         if (failedUsers.length !== 0) {
             return [null, {
                 "code": 400,
-                "message": "Could not revoke specified users",
+                "message": "Could not logout specified users",
                 "users": failedUsers
             }];
         }
         return [{
             "code": 204,
-            "message": "Successfully revoked specified users"
+            "message": "Successfully logged out specified users"
         }, null];
     }
 }
