@@ -111,8 +111,8 @@ const store = createStore({
         //Signed-in user backend related mutations
 
         signInUser (state, payload) {
-              let user =  state.users.find( user => user.info.email === payload.email);
-              user.info.isActive = true;
+              let thisUser =  state.users.find( user => user.info.email === payload.email);
+              thisUser.info.isActive = true;
         },
 
         signOutUser (state, payload) {
