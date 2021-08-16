@@ -25,13 +25,18 @@ export default {
       email: String,
       id: Number,
       admin: Boolean,
-
+      isActive: Boolean
     }
   },
   methods: {
     signIn() {
-      this.$router.push('Search');
-      this.$store.commit("setSignedInUserID", { userID: this.userDetails.id, signedIn: true})
+      if(this.userDetails.isActive) {
+        this.$store.commit("setSignedInUserID", { userID: this.userDetails.id, signedIn: true});
+        this.$router.push('Search');
+      }
+      else {
+        this.$emit('show-sign-in');
+      }
     }
   }
 }
@@ -96,7 +101,7 @@ export default {
 }
 
 .active {
-
+\
   background:
       linear-gradient(#2d2d2d, #2d2d2d) padding-box,
       linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
