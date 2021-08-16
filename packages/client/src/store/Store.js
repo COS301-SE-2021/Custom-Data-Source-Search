@@ -120,15 +120,16 @@ const store = createStore({
         },
 
         editBackend(state, payload) {
-            state.users[payload.userIndex].backends[payload.backendIndex].local.id = payload.id;
-            state.users[payload.userIndex].backends[payload.backendIndex].local.name = payload.name;
-            state.users[payload.userIndex].backends[payload.backendIndex].local.active = payload.active;
+            let backend = state.users[payload.userIndex].backends[payload.backendIndex]
+            backend.local.id = payload.id;
+            backend.local.name = payload.name;
+            backend.local.active = payload.active;
 
-            state.users[payload.userIndex].backends[payload.backendIndex].connect.associatedEmail = payload.associatedEmail;
-            state.users[payload.userIndex].backends[payload.backendIndex].connect.link = payload.link;
-            state.users[payload.userIndex].backends[payload.backendIndex].connect.passKey = payload.passKey;
+            backend.connect.associatedEmail = payload.associatedEmail;
+            backend.connect.link = payload.link;
+            backend.connect.passKey = payload.passKey;
 
-            state.users[payload.userIndex].backends[payload.backendIndex].receive.admin = payload.admin;
+            backend.receive.admin = payload.admin;
 
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {

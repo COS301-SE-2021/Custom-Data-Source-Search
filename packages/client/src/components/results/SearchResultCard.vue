@@ -2,6 +2,7 @@
   <div class="result-card">
     <div class="title-card">
       <div class="card-icon">
+
         <div v-html="whitelistEscape(datasource_icon)"></div>
         <!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
       </div>
