@@ -18,9 +18,6 @@
 
     </div>
 
-    <UserViewPopup :show="displayAdminPopup" @display-admin-popup="showAdminPopup"></UserViewPopup>
-
-
   </div>
 
 
@@ -30,7 +27,6 @@
 import AdminBackendCard from "@/components/admin/AdminBackendCard";
 import {mapGetters} from "vuex";
 import BackendCard from "@/components/settingsInfo/backendCard";
-import UserViewPopup from "@/components/admin/UserViewPopup";
 export default {
   name: "Admin",
   data(){
@@ -39,7 +35,7 @@ export default {
 
     }
   },
-  components: {UserViewPopup, BackendCard, AdminBackendCard},
+  components: {BackendCard, AdminBackendCard},
   computed: {
     ...mapGetters([
       'getUserInfo',

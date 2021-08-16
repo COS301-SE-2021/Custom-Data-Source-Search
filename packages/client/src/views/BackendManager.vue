@@ -13,7 +13,7 @@
 
         </template>
 
-        <Column selectionMode="multiple" headerStyle="width: 3em"></Column>
+        <Column selectionMode="multiple" headerStyle="width: 1em"></Column>
         <Column field="first_name" header="Name"></Column>
         <Column field="last_name" header="Last Name"></Column>
         <Column field="email" header="Email"></Column>
@@ -47,11 +47,48 @@
       </template>
       </Toolbar>
 
-      <Dialog header="Add User" v-model:visible="showAddUserDialog" :style="{width: '50vw'}" :position="addUserPos" :modal="true" dismissable-mask="true">
-       <template #footer>
+      <Dialog header="Add User" v-model:visible="showAddUserDialog" :style="{width: '50vw'}" :position="addUserPos" :modal="true" dismissable-mask=true>
+
+        <div style="display: flex">
+        <div class="p-field p-grid" style="margin-top: 0.8em; margin-left:0.8em">
+
+          <div class="p-field p-col-12 p-md-4" >
+            <span class="p-float-label">
+                        <InputText id="input-name" type="text" v-model="addUserName"  />
+                        <label for="input-name">Name</label>
+                    </span>
+          </div>
+
+        </div>
+        <div class="p-field p-grid" style="margin-top: 0.8em; margin-left:0.8em">
+
+          <div class="p-field p-col-12 p-md-4" >
+            <span class="p-float-label">
+                        <InputText id="input-email" type="text" v-model="addUserEmail"  />
+                        <label for="input-email">Email</label>
+                    </span>
+          </div>
+
+        </div>
+        <div class="p-field p-grid" style="margin-top: 0.8em; margin-left:0.8em">
+
+          <div class="p-field p-col-12 p-md-4" >
+            <span class="p-float-label">
+                        <InputText id="input-perm" type="text" v-model="addUserPermission"  />
+                        <label for="input-perm">Permission</label>
+                    </span>
+          </div>
+
+        </div>
+
+        </div>
+
+        <template #footer>
           <Button label="Cancel" icon="pi pi-times" @click="hideAddUsers" class="p-button-text" />
           <Button label="Add" icon="pi pi-check" @click="hideAddUsers" autofocus />
         </template>
+
+
       </Dialog>
 
     </div>
@@ -76,6 +113,10 @@ export default {
 
       showAddUserDialog : false,
       addUserPos: "bottomleft",
+
+      addUserName: "",
+      addUserEmail: "",
+      addUserPermission: "",
 
       //Needs to be determined on page load
       permissionOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
@@ -794,6 +835,10 @@ export default {
   width: 8em;
 
 
+}
+
+::v-deep(td){
+  overflow: hidden;
 }
 
 
