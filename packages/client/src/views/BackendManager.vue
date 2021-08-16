@@ -33,15 +33,15 @@
         <Button @click="showAddUsers" label="Add User" icon="pi pi-user-plus" class="p-button p-button-success p-mr-2 p-button-custom-med"  />
           <Button :disabled="!isUserSelected" @click="deleteUsers" label="Remove User" icon="pi pi-user-minus" class="p-button-danger p-mr-2  p-button-custom-med"  />
         </span>
-          <i class="pi pi-pause p-toolbar-separator p-mr-2" />
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <Button :disabled="!isUserSelected" @click="changeUserPermissions" label="Change Permissions" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
         <Dropdown :disabled="!isUserSelected" v-model="selectedPermissionLevel" :options="permissionOptions" placeholder="Select a Role" />
-          <i class="pi pi-pause p-toolbar-separator p-mr-2" />
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <span class="p-buttonset">
         <Button :disabled="!isUserSelected" @click="logOutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
           <Button :disabled="!isUserSelected" @click="revokeUserKeys" label="Revoke Keys" icon="pi pi-ban" class="p-button-danger p-button-custom-med" />
         </span>
-          <i class="pi pi-pause p-toolbar-separator p-mr-2" />
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
         <Button :disabled="!isUserSelected" @click="copyUsers" label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
 
       </template>
