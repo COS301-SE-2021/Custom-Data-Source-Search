@@ -11,8 +11,12 @@
           <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
           <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
           <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
+          <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>
           <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
           <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+          <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
+            <ProfileDropdown/>
+          </OverlayPanel>
         </div>
       </div>
       <div id="grid-div-2">
@@ -115,26 +119,6 @@ button {
   vertical-align: middle;
 }
 
-.profile-button{
-  background-color: #1e1e1e;
-  border: none;
-  color: rgba(255, 255, 255, 0.58);
-  float: right;
-  margin-right: 2%;
-  font-size: 15px;
-  transition-duration: 0.4s;
-  border-radius: 3px;
-}
-
-.profile-button:hover{
-  color: white;
-  cursor: pointer;
-}
-
-.profile-button:focus{
-  color: white;
-}
-
 .p-overlaypanel:after {
   content: "";
   width: 20px;
@@ -143,8 +127,15 @@ button {
   background: #262626;
   position: absolute;
   z-index: -1;
-  top: -10px;
-  right: 10px;
+  top: 350px;
+  left: 20px;
+}
+
+#profile{
+  position: fixed;
+  margin-left: -53px;
+  cursor: pointer;
+  bottom: 5%;
 }
 </style>
 
