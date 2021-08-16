@@ -15,10 +15,6 @@ const store = createStore({
             return state.users.length === 0;
         },
         getSignedIn(state){
-            // if (getters.getNewAppStatus) {
-            //     return false;
-            // }
-            // return state.users[state.signedInUserId].info.isActive;
             return state.signedIn;
         },
         getUserInfo: (state) => (id) => {
