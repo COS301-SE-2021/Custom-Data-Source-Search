@@ -437,7 +437,7 @@ function decryptMasterKey(encryptedMasterKey, fedInPassword, email) {
 
 function  encryptBackendSecretPair(masterKey, secretPair) {
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
-    let encryptedSecretPair = aesCtr.encrypt(aes.utils.hex.toBytes(secretPair));
+    let encryptedSecretPair = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(secretPair)));
     return aes.utils.hex.fromBytes(encryptedSecretPair);
 }
 
