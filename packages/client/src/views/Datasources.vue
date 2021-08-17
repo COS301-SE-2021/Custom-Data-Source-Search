@@ -28,7 +28,10 @@
                 </div>
                 <div class="overlay-buttons">
                   <Button v-for="i in backends" :key="i.id" label="Backend"
-                          class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{ i }}
+                          class="button p-button-raised p-button-text p-button-plain" @click="backend=i">{{ i }}
+                  </Button>
+                  <Button label="Backend"
+                          class="button p-button-raised p-button-text p-button-plain" @click="backend='Tester'">Tester
                   </Button>
                 </div>
               </div>

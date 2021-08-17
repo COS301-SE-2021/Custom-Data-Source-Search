@@ -25,6 +25,7 @@
 <script>
 import axios from 'axios';
 const electron = require('@electron/remote');
+const fs = require('fs');
 export default {
   name: "AddFileDatasource",
   props:{
@@ -38,67 +39,115 @@ export default {
       tag2: null,
       type: 'file',
       filename: [],
-      path: []
+      path: [],
+      filepaths: [] //Paths used for uploading to remote server
     }
   },
   methods: {
     addDataSource() {
-      electron.dialog.showOpenDialog({
-        title: 'Select Files to Add as Data Sources',
-        buttonLabel: "Select",
-        filters: [
-          {
-            name: 'All Files',
-            extensions: ['*'] //Will need to expand in the future.
-          }],
+      console.log(this.backend)
+      if(this.backend==='Local'){
+        electron.dialog.showOpenDialog({
+          title: 'Select Files to Add as Data Sources',
+          buttonLabel: "Select",
+          filters: [
+            {
+              name: 'All Files',
+              extensions: ['*'] //Will need to expand in the future.
+            }],
 
-        properties: ['openFile', 'multiSelections']
-      })
-          .then(files => {
+          properties: ['openFile', 'multiSelections']
+        })
+            .then(files => {
 
-            //Check that files were successfully selected
-            if (files.filePaths && files.filePaths[0]) {
+              //Check that files were successfully selected
+              if (files.filePaths && files.filePaths[0]) {
 
-              let p, str;
+                let p, str;
 
-              //for every file selected
-              for (let i = 0; i < files.filePaths.length; i++) {
+                //for every file selected
+                for (let i = 0; i < files.filePaths.length; i++) {
 
-                str = files.filePaths[i]
+                  str = files.filePaths[i]
 
-                //Force use of / in URI's across all platforms
-                str = str.replaceAll("\\", "/")
+                  //Force use of / in URI's across all platforms
+                  str = str.replaceAll("\\", "/")
 
-                p = str.split("/")
-                this.filename.push(p.pop())
-                this.path.push(p.join("/"))
+                  p = str.split("/")
+                  this.filename.push(p.pop())
+                  this.path.push(p.join("/"))
+                }
               }
-            }
-          })
+            })
+      }
+      else{
+        electron.dialog.showOpenDialog({
+          title: 'Select Files to Add as Data Sources',
+          buttonLabel: "Select",
+          filters: [
+            {
+              name: 'All Files',
+              extensions: ['*'] //Will need to expand in the future.
+            }],
+
+          properties: ['openFile', 'multiSelections']
+        })
+            .then(files => {
+
+              //Check that files were successfully selected
+              if (files.filePaths && files.filePaths[0]) {
+
+                //for every file selected
+                for (let i = 0; i < files.filePaths.length; i++) {
+
+                  this.filepaths.push(files.filePaths[i])
+                  console.log(this.filepaths[i])
+                }
+              }
+            })
+      }
     },
     submitSource(){
-      for (let i = 0; i < this.filename.length; i++) {
-        let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
-        axios
-            .post("http://localhost:3001/filedatasources", respObject)
-            .then((resp) => {
-              this.$toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: resp.data.message,
-                life: 3000
-              })
-              this.$emit('addFile')
-              this.$emit("submitted")
-            })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response.data.message,
-                life: 3000
-              })
-            })
+      if(this.filename.length<1 || this.filepaths.length<1){
+        this.$toast.add({
+          severity: 'info',
+          summary: 'No files selected',
+          detail: 'Please select files to upload',
+          life: 3000
+        })
+      }
+      else if(this.backend==='Local'){
+          for (let i = 0; i < this.filename.length; i++) {
+            let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+            axios
+                .post("http://localhost:3001/filedatasources", respObject)
+                .then((resp) => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: resp.data.message,
+                    life: 3000
+                  })
+                  this.$emit('addFile')
+                  this.$emit("submitted")
+                })
+                .catch((error) => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data.message,
+                    life: 3000
+                  })
+                })
+          }
+        }
+      else if(this.filepaths && this.filepaths[0]){
+        let formData = new FormData();
+        for(let i =0; i<this.filepaths.length; i++){
+          formData.append('file', this.filepaths[i]);
+          //call axios post
+          //specify header: 'Content-Type: 'multipart/form-data'
+        }
       }
     }
   }
