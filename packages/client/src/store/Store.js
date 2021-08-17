@@ -1,11 +1,12 @@
 import {createStore} from 'vuex'
-const pbkdf2 = require('pbkdf2')
-const aes = require('aes-js')
+const pbkdf2 = require('pbkdf2');
+const aes = require('aes-js');
 
 const store = createStore({
     state:{
         signedInUserId: null,
         signedIn : null,
+        passKeyArr: [],
         users: []
     },
     getters:{
@@ -111,17 +112,19 @@ const store = createStore({
 
         //Signed-in user backend related mutations
 
+        //Action will call this specific mutation after password validation checks out
         signInUser (state, payload) {
               let thisUser =  state.users.find( user => user.info.email === payload.email);
               thisUser.info.isActive = true;
         },
 
         signOutUser (state, payload) {
-             state.users[payload.user.id].info.isActive = false;
+            state.masterPass[payload.user.id].masterPass = null;
+            state.users[payload.user.id].info.isActive = false;
         },
 
         editBackend(state, payload) {
-            let backend = state.users[payload.userIndex].backends[payload.backendIndex]
+            let backend = state.users[payload.userIndex].backends[payload.backendIndex];
             backend.local.id = payload.id;
             backend.local.name = payload.name;
             backend.local.active = payload.active;
@@ -190,6 +193,7 @@ const store = createStore({
             state.signedIn = true;
         },
         addUserToLocalList(state, payload) {
+            //Payload: name, email, hasVault, passKey: { masterPassKey, encryptedMasterPassKey}
             let newUser = {
                 id: null,
                 info: {
@@ -197,8 +201,8 @@ const store = createStore({
                     name: null,
                     email: null,
                     isActive: true,
-                    hash: null,
-                    hasVault: null
+                    hasVault: null,
+                    passKey: null
                 },
                 backends: []
             };
@@ -206,15 +210,22 @@ const store = createStore({
             newUser.info.name = payload.name;
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
-            newUser.info.hash = payload.hash;
             newUser.info.hasVault = payload.hasVault;
 
+            let newMasterPass = {
+                id: null,
+                email: payload.email,
+                masterPass: payload.masterPassKey
+            };
+
             state.users.push(newUser);
+            state.passKeyArr.push(newMasterPass);
 
             let x = 0;
             for (let user of state.users) {
                 user.id = x;
                 user.info.id = x;
+                masterPass[x].id = x;
                 x++;
             }
 
@@ -230,34 +241,62 @@ const store = createStore({
 
             //Delete local
             state.users.splice(payload.user.id, 1);
+            state.masterPass.splice(payload.user.id, 1);
+
             let x = 0;
             for (let user of state.users) {
                    user.info.id = x;
                    user.id = x++;
+                   state.masterPass[x].id = x;
             }
 
-        }
+        },
+
+        //Mutating keys
+
+
 
     },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
-        generateMasterKey(commit, payload) {
-            let key = pbkdf2.pbkdf2Sync(
+
+        //User management
+
+        addNewUser ({commit, dispatch}, payload) {
+          //Payload: name, email, masterPassword, hasVault
+
+          //Called by component
+          // => calls "add" mutation once it has sorted out passKeys, and user is really signed in
+
+          let newPassKey = {
+              masterPassKey: store.dispatch('generateMasterKey', {masterPassword: payload.masterPassword, email: payload.email}),
+
+          }
+
+        },
+
+
+
+        // Passkey encryptions and mutations
+
+
+
+        generateMasterKey({commit}, payload) {
+            //Payload: masterPassword, email
+
+            return pbkdf2.pbkdf2Sync(
                 payload.masterPassword,
                 payload.email,
                 1000,
                 256 / 8,
                 'sha512'
-            )
-            commit.saveMasterKey({
-                email: payload.email,
-                key: key
-            })
+            );
+
         },
         encryptAndSaveBackendSecretPair(commit, getters, payload) {
             let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
-            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toString())
+            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toString());
             commit.saveEncryptedBackendSecretPair({
                 id: payload.id,
                 email: payload.email,
