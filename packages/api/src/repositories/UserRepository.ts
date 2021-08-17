@@ -12,10 +12,10 @@ class UserRepository {
         }, null];
     }
 
-    addUser(users: { name: string; surname: string; email: string; permission: string; }[]) {
+    addUser(users: { first_name: string; last_name: string; email: string; role: string }[]) {
         let failedUsers: any[] = [];
         for (let user of users) {
-            if (UserRepository.permissionInvalid(user.permission)) {
+            if (UserRepository.permissionInvalid(user.role)) {
                 return [null,{
                     "code": 400,
                     "message": "User permission is not of valid type"
@@ -25,11 +25,11 @@ class UserRepository {
                 db.prepare(
                     'INSERT INTO user (first_name, last_name, email, password_hash, role, otp_seed) VALUES (?,?,?,?,?,?);'
                 ).run(
-                    user.name,
-                    user.surname,
+                    user.first_name,
+                    user.last_name,
                     user.email,
                     "",
-                    user.permission,
+                    user.role,
                     randomBytes(16).toString("hex"))
             } catch (e) {
                 failedUsers.push(user);

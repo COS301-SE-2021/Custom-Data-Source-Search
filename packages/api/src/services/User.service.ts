@@ -23,7 +23,7 @@ class UserService {
         };
     }
 
-    addUser(users: { name: string; surname: string; email: string; permission: string }[]) {
+    addUser(users: { first_name: string; last_name: string; email: string; role: string }[]) {
         const [result, err] = userRepository.addUser(users);
         if (err) {
             return {

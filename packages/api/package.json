@@ -39,6 +39,7 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^8.5.4",
     "axios": "^0.21.1",
     "better-sqlite3": "^7.4.3",
     "cheerio": "^1.0.0-rc.10",
@@ -48,6 +49,7 @@
     "express-validator": "^6.12.1",
     "global": "^4.4.0",
     "highlight.js": "^11.0.1",
+    "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.1",
     "sqlite3": "^5.0.2"
   }

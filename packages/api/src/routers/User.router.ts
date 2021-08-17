@@ -4,6 +4,7 @@
 import express, {Request, Response} from "express";
 import userService from "../services/User.service";
 import {check} from "express-validator";
+import jwt from "jsonwebtoken";
 
 /**
  * Router Definition
@@ -22,16 +23,16 @@ userRouter.get("/", (req: Request, res: Response) => {
 userRouter.post("/", [check('users').isArray().custom((users: any) => {
     for (let user of users) {
         if (
-            user.hasOwnProperty("name") &&
-            user.hasOwnProperty("surname") &&
+            user.hasOwnProperty("first_name") &&
+            user.hasOwnProperty("last_name") &&
             user.hasOwnProperty("email") &&
-            user.hasOwnProperty("permission")
+            user.hasOwnProperty("role")
         ) {
             if (
-                user["name"].isString() &&
-                user["surname"].isString() &&
+                user["first_name"].isString() &&
+                user["last_name"].isString() &&
                 user["email"].isString() &&
-                user["permission"].isString()
+                user["role"].isString()
             ) {
                 return true;
             }
@@ -70,4 +71,21 @@ userRouter.post("/global/logout", (req: Request, res: Response) => {
 userRouter.post("/global/revoke", (req: Request, res: Response) => {
     const result = userService.revokeAllUsers();
     res.status(result.code).send(result.body);
+});
+
+userRouter.post("/generatetoken", (req: Request, res: Response) => {
+   let secret: string = process.env.JWT_SECRET_KEY;
+   let data = {
+       uuid: 2,
+       role: "viewer"
+   }
+   const token = jwt.sign(data, secret);
+   res.send({
+       "token": token
+   })
+});
+
+userRouter.post("/login", (req: Request, res: Response) => {
+    req.body.uuid
+    req.body.pass_key
 });
