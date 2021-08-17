@@ -41,7 +41,7 @@ const store = createStore({
         },
         getMasterKey(state) {
             for (let key of state.passKeyArr) {
-                console.log("PassKey: " + key.id + ", has passKey: " + key.masterKey);
+                console.log("PassKey: " + JSON.stringify(key.id) + ", has passKey: " + JSON.stringify(key.masterKey));
             }
             console.log("Master Key: " + JSON.stringify(state.passKeyArr[state.signedInUserId].masterKey));
             return state.passKeyArr[state.signedInUserId].masterKey;
@@ -117,6 +117,14 @@ const store = createStore({
             thisUser.info.isActive = true;
         },
 
+        signInThisUser: function (state, payload) {
+            //Payload: masterPassword
+            let thisUser = state.users[state.signedInUserId];
+            let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKey, payload.masterPassword, thisUser.info.email);
+            if (passCheck) {
+                state.passKeyArr[state.signedInUserId].masterKey = passCheck;
+            }
+        },
         signOutUser (state, payload) {
             state.passKeyArr[payload.user.id].masterKey = null;
             state.users[payload.user.id].info.isActive = false;
@@ -202,7 +210,7 @@ const store = createStore({
             state.signedIn = true;
         },
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { masterKey, encryptedMasterKey}
+            //Payload: name, email, hasVault, passKey: { maasterKey, encryptedMasterKey}
             let newUser = {
                 id: null,
                 info: {
@@ -211,7 +219,7 @@ const store = createStore({
                     email: null,
                     isActive: true,
                     hasVault: null,
-                    masterKey: null
+                    encryptedMasterKey: null
                 },
                 backends: []
             };
@@ -220,7 +228,7 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
-            newUser.info.encryptedMasterKey = payload.passKey.masterKey;
+            newUser.info.encryptedMasterKey = payload.passKey.encryptedMasterKey;
 
             state.users.push(newUser);
             state.passKeyArr.push({
@@ -328,9 +336,9 @@ const store = createStore({
             let adminStatus = 'Editor';     //Default empty
             //if successful, continue, else fail here
             //-------------End [3]---------------////
-            let masterKey = getters.getMasterKey();
+            let masterKey = getters.getMasterKey;
 
-            if(!masterKey) {
+            if(masterKey === null) {
                 console.log ("No master Key");
                 return false;
             }

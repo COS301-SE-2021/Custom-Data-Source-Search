@@ -1,7 +1,7 @@
 <template>
     <Dialog header="Enter Master Password" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup')">
         <div class="header-size">
-            Your session key has expired or been removed. Please sign in to continue:
+            Please enter your master password to continue:
         </div>
         <br>
         <div class="p-field p-grid">
@@ -36,7 +36,7 @@
             assignData() {
                 //Call function to check if information can decrypt a backend (?)
                 //For now:
-                this.$store.commit('signInUser', {email: this.email, passWord: this.masterPass});
+                this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
                 this.display = false;
             }
         },
