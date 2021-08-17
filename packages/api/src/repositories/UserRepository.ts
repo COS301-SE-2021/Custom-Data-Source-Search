@@ -6,7 +6,10 @@ const db = require("better-sqlite3")('../../data/datasleuth.db');
 class UserRepository {
 
     getAllUsers() {
-        return [db.prepare('SELECT * FROM user;').all(), null];
+        return [{
+            "code": 200,
+            "results": db.prepare('SELECT * FROM user;').all()
+        }, null];
     }
 
     addUser(users: { name: string; surname: string; email: string; permission: string; }[]) {
@@ -67,7 +70,7 @@ class UserRepository {
             }];
         }
         return [{
-            "code": 204,
+            "code": 200,
             "message": "Successfully deleted specified users"
         }, null];
     }
@@ -97,7 +100,7 @@ class UserRepository {
             }];
         }
         return [{
-            "code": 204,
+            "code": 200,
             "message": "Successfully set roles for specified users"
         }, null];
     }
@@ -123,7 +126,7 @@ class UserRepository {
             }];
         }
         return [{
-            "code": 204,
+            "code": 200,
             "message": "Successfully logged out specified users"
         }, null];
     }
@@ -153,8 +156,24 @@ class UserRepository {
             }];
         }
         return [{
-            "code": 204,
+            "code": 200,
             "message": "Successfully revoked access for specified users"
+        }, null];
+    }
+
+    logoutAllUsers() {
+        try {
+            db.prepare("DELETE FROM active_user").all();
+        } catch (e) {
+            console.error(e);
+            return [null, {
+                "code": 500,
+                "message": "Failed to logout all users",
+            }];
+        }
+        return [{
+            "code": 204,
+            "message": "Successfully logged out all users"
         }, null];
     }
 }

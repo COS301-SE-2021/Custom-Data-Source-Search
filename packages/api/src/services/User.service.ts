@@ -9,21 +9,22 @@ class UserService {
             return {
                 "code": err.code,
                 "body": {
+                    // @ts-ignore
                     "message": err.message
                 }
-            }
+            };
         }
         return {
-            "code": 200,
+            "code": result.code,
             "body": {
                 "message": "Success",
-                "data": result
+                "data": result.results
             }
         };
     }
 
     addUser(users: { name: string; surname: string; email: string; permission: string }[]) {
-        const [, err] = userRepository.addUser(users);
+        const [result, err] = userRepository.addUser(users);
         if (err) {
             return {
                 "code": err.code,
@@ -32,18 +33,18 @@ class UserService {
                     // @ts-ignore
                     "users": err.users
                 }
-            }
+            };
         }
         return {
-            "code": 200,
+            "code": result.code,
             "body": {
-                "message": "Success",
+                "message": result.message
             }
         };
     }
 
     removeUser(users: {uuid: string}[]) {
-        const [, err] = userRepository.removeUser(users);
+        const [result, err] = userRepository.removeUser(users);
         if (err) {
             return {
                 "code": err.code,
@@ -52,16 +53,18 @@ class UserService {
                     // @ts-ignore
                     "users": err.users
                 }
-            }
+            };
         }
         return {
-            "code": 204,
-            "message": "Successfully deleted specified users"
-        }
+            "code": result.code,
+            "body": {
+                "message": result.message
+            }
+        };
     }
 
     setRole(body: {role: string; users: {uuid: string}[]}) {
-        const [, err] = userRepository.setRole(body);
+        const [result, err] = userRepository.setRole(body);
         if (err) {
             return {
                 "code": err.code,
@@ -70,16 +73,18 @@ class UserService {
                     // @ts-ignore
                     "users": err.users
                 }
-            }
+            };
         }
         return {
-            "code": 204,
-            "message": "Successfully set roles of specified users"
-        }
+            "code": result.code,
+            "body": {
+                "message": result.message
+            }
+        };
     }
 
     logoutUser(users: { uuid: string; }[]) {
-        const [, err] = userRepository.logoutUser(users);
+        const [result, err] = userRepository.logoutUser(users);
         if (err) {
             return {
                 "code": err.code,
@@ -88,16 +93,18 @@ class UserService {
                     // @ts-ignore
                     "users": err.users
                 }
-            }
+            };
         }
         return {
-            "code": 204,
-            "message": "Successfully logged out specified users"
-        }
+            "code": result.code,
+            "body": {
+                "message": result.message
+            }
+        };
     }
 
     revokeUser(users: { uuid: string; }[]) {
-        const [, err] = userRepository.revokeUser(users);
+        const [result, err] = userRepository.revokeUser(users);
         if (err) {
             return {
                 "code": err.code,
@@ -106,12 +113,32 @@ class UserService {
                     // @ts-ignore
                     "users": err.users
                 }
-            }
+            };
         }
         return {
-            "code": 204,
-            "message": "Successfully revoked access for specified users"
+            "code": result.code,
+            "body": {
+                "message": result.message
+            }
+        };
+    }
+
+    logoutAllUsers() {
+        const [result, err] = userRepository.logoutAllUsers();
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message,
+                }
+            };
         }
+        return {
+            "code": result.code,
+            "body": {
+                "message": result.message
+            }
+        };
     }
 }
 
