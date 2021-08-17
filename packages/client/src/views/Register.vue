@@ -143,26 +143,14 @@
 
                 if (passFormValidation)  {
 
-                    //NB!!! HASH METHOD NEEDS TO CHANGE! TEMPORARY!!!
-                    this.userDetails.hashToStore = this.hashStrings(this.masterPassword);
-                    this.$store.commit("addUserToLocalList", {
+                    this.$store.dispatch("addNewUser", {
                         name: this.userDetails.userName,
                         email: this.userDetails.masterEmail,
-                        hash: this.userDetails.hashToStore,
+                        masterPassword: this.masterPassword,
                         hasVault: this.userDetails.backupVault
                     });
                     this.$router.push('ContinueView');
                 }
-            },
-            checkUsers() {
-
-            },
-            hashStrings (s) {
-                let h = 0, l = s.length, i = 0;
-                if ( l > 0 )
-                    while (i < l)
-                        h = (h << 5) - h + s.charCodeAt(i++) | 0;
-                return h;
             },
             showSignIn(){
                 this.displaySignIn = !this.displaySignIn

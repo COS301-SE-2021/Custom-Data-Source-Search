@@ -202,7 +202,7 @@ const store = createStore({
                     email: null,
                     isActive: true,
                     hasVault: null,
-                    passKey: null
+                    masterPassKey: null
                 },
                 backends: []
             };
@@ -211,21 +211,20 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
-
-            let newMasterPass = {
-                id: null,
-                email: payload.email,
-                masterPass: payload.masterPassKey
-            };
+            newUser.info.encryptedMasterPassKey = payload.passKey.masterPassKey;
 
             state.users.push(newUser);
-            state.passKeyArr.push(newMasterPass);
+            state.passKeyArr.push({
+                id: null,
+                email: payload.email,
+                masterPassKey: payload.passKey.masterPassKey
+            });
 
             let x = 0;
             for (let user of state.users) {
                 user.id = x;
                 user.info.id = x;
-                masterPass[x].id = x;
+                    state.passKeyArr[x].id = x;
                 x++;
             }
 
@@ -258,50 +257,34 @@ const store = createStore({
     actions : {
         //User management
 
-        addNewUser ({commit, dispatch}, payload) {
+        addNewUser: function ({commit, dispatch}, payload) {
             //Payload: name, email, masterPassword, hasVault
-
+            console.log ("Adding a new user");
             //Called by component
             // => calls "add" mutation once it has sorted out passKeys, and user is really signed in
 
-            let newPassKey = {
-                masterPassKey: store.dispatch('generateMasterKey', {masterPassword: payload.masterPassword, email: payload.email}),
-
-            }
-
-        },
-
-        generateMasterKey(commit, payload) {
-            let encryptionKey = pbkdf2.pbkdf2Sync(
-                payload.masterPassword,
-                payload.email,
-                1000,
-                256 / 8,
-                'sha512'
-            )
-            // Generate random key to be encrypted by master key
-            let masterKey = new Uint8Array(256 / 8);
-            window.crypto.getRandomValues(masterKey);
-            // Encrypt this random key
-            let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey)
-            let encryptedMasterKey = aesCtr.encrypt(masterKey)
-            // Save Encrypted key
-            commit.saveMasterKey({
+            let newPassKey = generateMasterKey({
                 email: payload.email,
-                keyObject: {key: aes.utils.hex.fromBytes(encryptedMasterKey)}
-            })
+                masterPassword: payload.masterPassword
+                });
+
+            console.log("Problems: " + newPassKey.masterPassKey + ' ' + JSON.stringify(newPassKey.encryptedMasterKey));
+
+            commit('addUserToLocalList', {name: payload.name, email: payload.email, hasVault: payload.hasVault, passKey: newPassKey});
+
         },
+
         decryptMasterKey(commit, getters, payload) {
             let decryptionKey = pbkdf2.pbkdf2Sync(
-                payload.masterPassword,
+                JSON.stringify(payload.masterPassword),
                 payload.email,
                 1000,
                 256 / 8,
                 'sha512'
-            )
-            let masterKeyEncrypted = aes.utils.hex.toBytes(getters.getEncryptedMasterKey(payload.email))
-            let easCtr = new aes.ModeOfOperation.ctr(decryptionKey)
-            let masterKeyObject = aes.utils.hex.fromBytes(easCtr.decrypt(masterKeyEncrypted))
+            );
+            let masterKeyEncrypted = aes.utils.hex.toBytes(getters.getEncryptedMasterKey(payload.email));
+            let easCtr = new aes.ModeOfOperation.ctr(decryptionKey);
+            let masterKeyObject = aes.utils.hex.fromBytes(easCtr.decrypt(masterKeyEncrypted));
             if (!masterKeyObject["key"]) {
                 masterKeyObject = null
             }
@@ -309,7 +292,7 @@ const store = createStore({
         },
         encryptAndSaveBackendSecretPair(commit, payload) {
             let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
-            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toBytes())
+            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toBytes());
             commit.saveEncryptedBackendSecretPair({
                 id: payload.id,
                 email: payload.email,
@@ -339,5 +322,35 @@ store.subscribe((mutation, state) => {
     // Store the state object as a JSON string
     localStorage.setItem('store', JSON.stringify(state));
 });
+
+function generateMasterKey(payload) {
+    //Payload: masterPassword, email
+
+    console.log ("Generating masterPassKey");
+
+    let encryptionKey = pbkdf2.pbkdf2Sync(
+        JSON.stringify(payload.masterPassword),
+        payload.email,
+        1000,
+        256 / 8,
+        'sha512'
+    );
+
+    // Generate random key to be encrypted by master key
+    let masterKey = new Uint8Array(256 / 8);
+    window.crypto.getRandomValues(masterKey);
+
+
+    // Encrypt this random key
+    let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey);
+    let newEncryptedMasterKey = aesCtr.encrypt(masterKey);
+
+    // Return Encrypted key
+    return {
+        masterPassKey: masterKey,
+        encryptedMasterKey: aes.utils.hex.fromBytes(newEncryptedMasterKey)
+    };
+}
+
 
 export default store;
