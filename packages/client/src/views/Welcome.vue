@@ -18,12 +18,7 @@
       <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
     </div>
-
-    <div class="lower">
-      <Button class="p-button-text start-backend p-button-plain" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
-      <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
-
-    </div>
+    
     <DeleteUserAreYouSure
             :show="displayDeleteCheck"
             @display-popup="showPopup"
