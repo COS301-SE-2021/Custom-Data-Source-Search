@@ -21,8 +21,6 @@
                 <input-text v-model="tempBackendInfo.oneTimeKey"/>
                 <div><em>Secret: </em></div>
                 <input-text v-model="tempBackendInfo.secret"/>
-                <div><em>Master Password: </em></div>
-                <input-text v-model="tempBackendInfo.masterPassword"/>
                 <div></div>
                 <div>
                     <Button @click="connectToBackendChecks" style="float: right" class="p-button p-button-outlined">Connect</Button>
@@ -57,9 +55,7 @@
                     associatedEmail: '',
                     link: '',
                     oneTimeKey: '',
-                    secret: '',
-
-                    masterPassword: ''
+                    secret: ''
                 }
             }
         },
@@ -100,7 +96,6 @@
             connectToBackendChecks(){
 
                 if (
-                    this.tempBackendInfo.masterPassword === '' ||
                     this.tempBackendInfo.link === '' ||
                     this.tempBackendInfo.associatedEmail === '' ||
                     this.tempBackendInfo.secret === '' ||
@@ -119,8 +114,7 @@
                     associatedEmail: this.tempBackendInfo.associatedEmail,
                     link: this.tempBackendInfo.link,
                     oneTimeKey: this.tempBackendInfo.oneTimeKey,
-                    secret: this.secret,
-                    masterPassword: this.tempBackendInfo.masterPassword
+                    secret: this.secret
                 });
                  console.log (this.addBackendSuccess);
                 if(!this.addBackendSuccess.state){

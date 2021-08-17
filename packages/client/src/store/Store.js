@@ -40,6 +40,10 @@ const store = createStore({
             return userNamesArr;
         },
         getMasterKey(state) {
+            for (let key of state.passKeyArr) {
+                console.log("PassKey: " + key.id + ", has passKey: " + key.masterKey);
+            }
+            console.log("Master Key: " + JSON.stringify(state.passKeyArr[state.signedInUserId].masterKey));
             return state.passKeyArr[state.signedInUserId].masterKey;
         },
 
@@ -198,7 +202,7 @@ const store = createStore({
             state.signedIn = true;
         },
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { masterKey, encryptedmasterKey}
+            //Payload: name, email, hasVault, passKey: { masterKey, encryptedMasterKey}
             let newUser = {
                 id: null,
                 info: {
@@ -216,7 +220,7 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
-            newUser.info.encryptedmasterKey = payload.passKey.masterKey;
+            newUser.info.encryptedMasterKey = payload.passKey.masterKey;
 
             state.users.push(newUser);
             state.passKeyArr.push({
@@ -324,7 +328,14 @@ const store = createStore({
             let adminStatus = 'Editor';     //Default empty
             //if successful, continue, else fail here
             //-------------End [3]---------------////
-            let encryptedPair = encryptBackendSecretPair(getters.getMasterKey(), newSecretPair);
+            let masterKey = getters.getMasterKey();
+
+            if(!masterKey) {
+                console.log ("No master Key");
+                return false;
+            }
+
+            let encryptedPair = encryptBackendSecretPair(masterKey, newSecretPair);
 
             commit('addBackend', {
                 name: payload.name,

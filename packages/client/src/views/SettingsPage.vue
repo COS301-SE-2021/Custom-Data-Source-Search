@@ -39,6 +39,9 @@
             </div>
         </div>
     </div>
+   <ReEnterMasterPassword
+           :show="displayMasterPwInput"
+   />
 </template>
 
 <script>
@@ -46,15 +49,18 @@
     import UserInfoCard from "../components/settingsInfo/userInfoCard";
     import {mapGetters} from "vuex";
     import AddBackendCard from "../components/settingsInfo/AddBackendCard";
+    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
     export default {
         components: {
+            ReEnterMasterPassword,
             AddBackendCard,
             UserInfoCard,
             BackendCard
         },
         data () {
             return {
+                displayMasterPwInput: false,
                 newBackendBool: false,
                 newBackendObject: {
                     local: {
@@ -84,9 +90,17 @@
             }
         },
         methods: {
+            showMasterPwInput(){
+                this.displayMasterPwInput = !this.displayMasterPwInput
+            },
             newBackend() {
-                this.newBackendBool = !this.newBackendBool;
-                console.log ("New backend bool value: " + this.newBackendBool);
+                if (this.$store.getters.getMasterKey) {
+                    this.newBackendBool = !this.newBackendBool;
+                    console.log ("Was there a master key?");
+                }
+                else {
+                    this.showMasterPwInput();
+                }
             },
             saveNewBackend() {
                 this.newBackendBool = false;
@@ -96,7 +110,7 @@
         computed: {
             ...mapGetters ([
                 'getUserBackend',
-                'getSignedInUserId',
+                'getSignedInUserId'
              ])
         }
     }
