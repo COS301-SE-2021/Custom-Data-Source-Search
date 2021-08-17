@@ -45,6 +45,7 @@
     "cors": "^2.8.5",
     "coveralls": "^3.1.0",
     "express": "^4.17.1",
+    "express-validator": "^6.12.1",
     "global": "^4.4.0",
     "highlight.js": "^11.0.1",
     "node-fetch": "^2.6.1",
