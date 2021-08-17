@@ -168,6 +168,9 @@ export default {
         'File', 'Folder', 'Webpage'
       ],
       backends: [],
+      colours: [
+        'success', 'secondary', 'info', 'warning', 'help', 'danger'
+      ]
     }
   },
   components: {

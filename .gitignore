@@ -38,4 +38,6 @@ pnpm-debug.log*
 
 
 /packages/api/src/repositories/store/
-/data/
+/data/*
+!/data/datasleuth_reference.db
+!/data/datasleuth.db.sql
