@@ -1,6 +1,13 @@
 <template>
   <span>Select one or more Files to add to data sources</span><br/>
-  <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/>
+  <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
+  <span>Selected Files</span>
+  <div class="selected-files">
+    <ScrollPanel style="width: 100%; height: 70px">
+      <span class="selection-list" v-if="filename.length!==0" v-for="i in filename" :key="i.id">{{i}}</span>
+      <span v-else class="selection-list">No files selected.</span>
+    </ScrollPanel>
+  </div>
   <div>
     <span>Add optional tags</span><br/>
     <span class="p-float-label">
@@ -30,8 +37,8 @@ export default {
       tag1: null,
       tag2: null,
       type: 'file',
-      filename: null,
-      path: null
+      filename: [],
+      path: []
     }
   },
   methods: {
@@ -63,35 +70,36 @@ export default {
                 str = str.replaceAll("\\", "/")
 
                 p = str.split("/")
-                this.filename = p.pop()
-                this.path = p.join("/")
+                this.filename.push(p.pop())
+                this.path.push(p.join("/"))
               }
             }
           })
     },
     submitSource(){
-      let respObject = {"filename": this.filename, "path": this.path, "tag1": this.tag1, "tag2": this.tag2}
-      axios
-          .post("http://localhost:3001/filedatasources", respObject)
-          .then((resp) => {
-            this.$toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: resp.data.message,
-              life: 3000
+      for (let i = 0; i < this.filename.length; i++) {
+        let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+        axios
+            .post("http://localhost:3001/filedatasources", respObject)
+            .then((resp) => {
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: resp.data.message,
+                life: 3000
+              })
+              this.$emit('addFile')
+              this.$emit("submitted")
             })
-            this.$emit('addFile')
-            this.$emit("submitted")
-          })
-          .catch((error) => {
-            this.$toast.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: error.response.data.message,
-              life: 3000
+            .catch((error) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data.message,
+                life: 3000
+              })
             })
-          })
-
+      }
     }
   }
 }
@@ -125,4 +133,15 @@ input {
   margin: 7px;
 }
 
+.selected-files{
+  color: #9e9d9e;
+  font-style: italic;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+.selection-list{
+  display: block;
+  margin-bottom: 2px;
+}
 </style>

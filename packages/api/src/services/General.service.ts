@@ -113,7 +113,12 @@ class GeneralService {
                 let temp: string[] = dataSource.filename.split('.');
                 let extension: string = temp[temp.length - 1];
                 if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
-                    let snippet: string = hljs.highlight(content, {language: extension}).value;
+                    let snippet: string;
+                    try {
+                        snippet = hljs.highlight(content, {language: extension}).value;
+                    } catch (e) {
+                        snippet = hljs.highlightAuto(content).value;
+                    }
                     result = '<pre>' + GeneralService.newLinesToBreaks(snippet) + '</pre>';
                 } else {
                     result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';

@@ -26,7 +26,7 @@
                     <Button @click="deleteBackend" style="float: right" class="p-button p-button-outlined">Delete </Button>
                 </div>
             </div>
-            <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
+            <form @submit="saveChanges" class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><em>Name: </em></div>
                 <input-text v-model="tempBackendInfo.name"/>
                 <div><em>Email: </em></div>
@@ -37,12 +37,12 @@
                 <input-text v-model="tempBackendInfo.passKey"/>
                 <div></div>
                 <div>
-                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect </Button>
-                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions </Button>
-                    <Button @click="saveChanges" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Save </Button>
-                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel </Button>
+                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect</Button>
+                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions</Button>
+                    <Button type="submit" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Connect</Button>
+                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </template>
@@ -137,8 +137,6 @@
             },
             editBackend() {
                 this.setTempVars();
-                console.log ("I AM BEING UPDATED");
-                console.log("This backend email: " + this.tempBackendInfo.associatedEmail);
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
             },
@@ -148,14 +146,14 @@
 
                 //Operations changing store
                 if(this.newBackend) {
-                    console.log("New backend Bool: " + this.newBackendT);
+
                     this.$store.commit("addBackend", {
                         userIndex: this.userIndex,
                         name: this.tempBackendInfo.name,
                         link: this.tempBackendInfo.link,
                         passKey: this.tempBackendInfo.passKey,
                         associatedEmail: this.tempBackendInfo.associatedEmail,
-                        admin: this.tempBackendInfo,
+                        admin: this.tempBackendInfo.admin,
                         active: this.tempBackendInfo.active,
                     });
 
@@ -214,8 +212,10 @@
             },
             //Initialize component state
             setTempVars() {
+                if (!this.newBackend) {
+                    this.tempBackendInfo.name = this.local.name;
+                }
                 this.tempBackendInfo.id = this.local.id;
-                this.tempBackendInfo.name = this.local.name;
                 this.tempBackendInfo.active = this.local.active;
 
                 this.tempBackendInfo.associatedEmail = this.connect.associatedEmail;

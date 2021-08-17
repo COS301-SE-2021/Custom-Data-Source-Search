@@ -20,9 +20,6 @@
           </span>
             <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
                     style="float: right;"/>
-            <router-link title="Add" to="/addDatasources">
-              <Button label="TEMPORARY!!!" icon="pi pi-plus" class="p-button-text" style="float: right;"/>
-            </router-link>
             <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true"
                           :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
               <div v-if="!clicked && backend===null">
@@ -117,14 +114,8 @@
             <Tag class="p-mr-2" severity="help" style="margin-left: 2px;">{{ data.tag1 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
-                         class="p-column-filter">
-              <template #option="slotProps">
-                <div class="p-multiselect-tag1-option">
-                  <span class="image-text">{{ slotProps.option }}</span>
-                </div>
-              </template>
-            </MultiSelect>
+            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter"
+                       placeholder="Search tags"/>
           </template>
         </Column>
         <Column header="Tag 2" filterField="tag2" :showFilterMenu="false" style="min-width:12rem">
@@ -132,14 +123,8 @@
             <Tag class="p-mr-2" severity="warning" style="margin-left: 2px;">{{ data.tag2 }}</Tag>
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <MultiSelect v-model="filterModel.value" @change="filterCallback()" :options="tags" placeholder="Any"
-                         class="p-column-filter">
-              <template #option="slotProps">
-                <div class="p-multiselect-tag2-option">
-                  <span class="image-text">{{ slotProps.option }}</span>
-                </div>
-              </template>
-            </MultiSelect>
+            <InputText type="text" v-model="filterModel.value" @input="filterCallback()" class="p-column-filter"
+                       placeholder="Search tags"/>
           </template>
         </Column>
         <template #paginatorLeft>
@@ -176,12 +161,9 @@ export default {
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'backend': {value: null, matchMode: FilterMatchMode.IN},
         'type': {value: null, matchMode: FilterMatchMode.IN},
-        'tag1': {value: null, matchMode: FilterMatchMode.IN},
-        'tag2': {value: null, matchMode: FilterMatchMode.IN},
+        'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
-      tags: [
-        'Fun', 'Business', 'Home', 'University'
-      ],
       types: [
         'File', 'Folder', 'Webpage'
       ],
@@ -196,6 +178,11 @@ export default {
     AddFolderDatasource,
     AddWebpageDatasource
   },
+  beforeMount() {
+    if (this.$store.getters.getNewAppStatus) {
+      this.$router.push('/');
+    }
+  },
   productService: null,
   mounted() {
     this.backends = this.$store.getters.getUserBackendNames;
@@ -203,8 +190,8 @@ export default {
 
     axios.get("http://localhost:3001/general/datasources").then(
         resp => {
-          console.log(resp.data)
-          this.sources = resp.data.data
+          console.log(resp.data);
+          this.sources = resp.data.data;
           let i;
           for (i = 0; i < this.sources.length; i++) {
             this.sources[i]["backend"] = "Local"
@@ -227,8 +214,8 @@ export default {
 
       axios.get("http://localhost:3001/general/datasources").then(
           resp => {
-            console.log(resp.data)
-            this.sources = resp.data.data
+            console.log(resp.data);
+            this.sources = resp.data.data;
             let i;
             for (i = 0; i < this.sources.length; i++) {
               this.sources[i]["backend"] = "Local"
@@ -309,7 +296,7 @@ td {
 }
 
 h2 {
-  margin: 30px 20px 30px 55px;
+  margin: 30px 20px 30px 70px;
 }
 
 a {
@@ -343,4 +330,7 @@ a {
   margin-left: 2.5%;
 }
 
+.p-input-icon-left {
+ margin-left: 50px;
+}
 </style>
