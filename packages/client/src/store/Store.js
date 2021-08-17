@@ -346,7 +346,7 @@ const store = createStore({
                 return false;
             }
 
-            let encryptedPair = encryptBackendSecretPair(masterKey, newSecretPair);
+            let encryptedPair = encryptJsonObject(masterKey, newSecretPair);
 
             commit('addBackend', {
                 name: payload.name,
@@ -364,10 +364,7 @@ const store = createStore({
 
         decryptBackendSecretPair(getters, payload) {
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let encryptedSecretPair = aes.utils.hex.toBytes(encrypted.secretPair);
-            let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
-            let stringPair = aesCtr.decrypt(encryptedSecretPair);
-            let pairObject = JSON.parse(aes.utils.utf8.fromBytes(stringPair));
+            let pairObject = decryptJsonObject(payload.masterKey, encrypted)
             if (!pairObject["passkey"] || !pairObject["secret"]) {
                 pairObject = null;
             }
@@ -435,10 +432,17 @@ function decryptMasterKey(encryptedMasterKey, fedInPassword, email) {
     return masterKeyObject;
 }
 
-function  encryptBackendSecretPair(masterKey, secretPair) {
+function  encryptJsonObject(masterKey, jsonObject) {
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
-    let encryptedSecretPair = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(secretPair)));
-    return aes.utils.hex.fromBytes(encryptedSecretPair);
+    let encryptedJsonObject = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(jsonObject)));
+    return aes.utils.hex.fromBytes(encryptedJsonObject);
+}
+
+function decryptJsonObject(masterKey, jsonObject) {
+    let encryptedJsonObject = aes.utils.hex.toBytes(jsonObject);
+    let aesCtr = new aes.ModeOfOperation.ctr(masterKey);
+    let decrypted = aesCtr.decrypt(encryptedJsonObject);
+    return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }
 
 let masterKey = null;
