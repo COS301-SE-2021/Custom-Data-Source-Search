@@ -342,7 +342,7 @@ const store = createStore({
             let adminStatus = 'Editor';     //Default empty
             //if successful, continue, else fail here
             //-------------End [3]---------------////
-            let masterKey = getters.getMasterKey();
+            let masterKey = getters.getMasterKey;
 
             console.log("Problems");
 
@@ -414,7 +414,7 @@ function generateMasterKey(masterPassword, email) {
 
     // Return Encrypted key
     return {
-        masterKey: masterKey,
+        masterKey: aes.utils.hex.fromBytes(masterKey),
         encryptedMasterKey: aes.utils.hex.fromBytes(newEncryptedMasterKey)
     };
 }
@@ -439,8 +439,11 @@ function decryptMasterKey(encryptedmasterKey, fedInPassword, email) {
 }
 
 function  encryptBackendSecretPair(masterKey, secretPair) {
-    let aesCtr = new aes.ModeOfOperation.ctr(masterKey);
-    let encryptedSecretPair = aesCtr.encrypt(secretPair.toBytes());
+    console.log("We encrypt again");
+    let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
+    console.log("Middle of secret pair encryption");
+    let encryptedSecretPair = aesCtr.encrypt(aes.utils.hex.toBytes(secretPair));
+    console.log("ddd");
     return aes.utils.hex.fromBytes(encryptedSecretPair);
 }
 
