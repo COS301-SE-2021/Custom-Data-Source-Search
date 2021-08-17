@@ -242,8 +242,7 @@ const store = createStore({
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
-        //Information to be obtained for backend connected and admin status
-        generateMasterKey(payload) {
+        generateMasterKey(commit, payload) {
             let key = pbkdf2.pbkdf2Sync(
                 payload.masterPassword,
                 payload.email,
@@ -251,32 +250,28 @@ const store = createStore({
                 256 / 8,
                 'sha512'
             )
-           return {
+            commit.saveMasterKey({
                 email: payload.email,
                 key: key
-            }
+            })
         },
-        encryptAndSaveBackendPasswordAndSecret(commit, getters, payload) {
-            let aesCtr = new aes.ModeOfOperation.ctr(payload.key);
-            let encryptedPasskey = aesCtr.encrypt(payload.passkey);
-            let encryptedSeed = aesCtr.encrypt(payload.seed);
-            commit.saveEncryptedBackendPasswordAndSeed({
+        encryptAndSaveBackendSecretPair(commit, getters, payload) {
+            let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
+            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toString())
+            commit.saveEncryptedBackendSecretPair({
                 id: payload.id,
                 email: payload.email,
-                passkey: aes.utils.hex.fromBytes(encryptedPasskey),
-                encryptedSeed: aes.utils.hex.fromBytes(encryptedSeed)
+                secretPair: aes.utils.hex.fromBytes(encryptedSecretPair),
             });
         },
-        decryptBackendPasswordAndSecret(getters, payload) {
+        decryptBackendSecretPair(getters, payload) {
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let encryptedPasskey = aes.utils.hex.toBytes(encrypted.passkey);
-            let encryptedSeed = aes.utils.hex.toBytes(encrypted.seed);
-            let aesCtr = new aes.ModeOfOperation.ctr(payload.key);
+            let encryptedSecretPair = aes.utils.hex.toBytes(encrypted.secretPair);
+            let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
             return  {
                 id: payload.id,
                 email: payload.email,
-                passkey: aesCtr.decrypt(encryptedPasskey),
-                seed: aesCtr.decrypt(encryptedSeed)
+                secretPair: aesCtr.decrypt(encryptedSecretPair),
             }
         }
     }
