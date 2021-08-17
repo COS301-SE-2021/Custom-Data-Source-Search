@@ -31,6 +31,7 @@ class FileDataSourceRepository {
             fs.readFileSync(dataSource.path + dataSource.filename), uuid, dataSource.filename
         );
         if (err) {
+            await this.deleteDataSource(uuid);
             return [null, err];
         }
         return [{
@@ -59,6 +60,7 @@ class FileDataSourceRepository {
                     }
                 });
         } catch (e) {
+            console.error(e)
             return [null, {
                 "code": 500,
                 "message": "Could not post file to solr"

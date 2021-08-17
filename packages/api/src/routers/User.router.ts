@@ -19,7 +19,7 @@ userRouter.get("/", (req: Request, res: Response) => {
     res.status(result.code).send(result.body);
 });
 
-userRouter.post("/", [check('users').isArray().custom(users => {
+userRouter.post("/", [check('users').isArray().custom((users: any) => {
     for (let user of users) {
         if (
             user.hasOwnProperty("name") &&
