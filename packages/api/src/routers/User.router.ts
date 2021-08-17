@@ -49,6 +49,6 @@ userRouter.post("/global/logout", (req: Request, res: Response) => {
 });
 
 userRouter.post("/global/revoke", (req: Request, res: Response) => {
-    const result = userService.revokeAllUsers(req.body.users);
+    const result = userService.revokeAllUsers();
     res.status(result.code).send(result.body);
 });

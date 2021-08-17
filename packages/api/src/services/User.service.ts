@@ -140,6 +140,24 @@ class UserService {
             }
         };
     }
+
+    revokeAllUsers() {
+        const [result, err] = userRepository.revokeAllUsers();
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message,
+                }
+            };
+        }
+        return {
+            "code": result.code,
+            "body": {
+                "message": result.message
+            }
+        };
+    }
 }
 
 const userService = new UserService();

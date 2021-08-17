@@ -172,8 +172,24 @@ class UserRepository {
             }];
         }
         return [{
-            "code": 204,
+            "code": 200,
             "message": "Successfully logged out all users"
+        }, null];
+    }
+
+    revokeAllUsers() {
+        try {
+            db.prepare("UPDATE user SET password_hash = NULL").all();
+        } catch (e) {
+            console.error(e);
+            return [null, {
+                "code": 500,
+                "message": "Failed to revoke access for all users",
+            }];
+        }
+        return [{
+            "code": 200,
+            "message": "Successfully revoked access for all users"
         }, null];
     }
 }
