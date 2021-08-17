@@ -39,10 +39,6 @@ const store = createStore({
             return userNamesArr;
         },
         getMasterKey(state) {
-            // for (let key of state.passKeyArr) {
-            //     console.log("PassKey: " + JSON.stringify(key.id) + ", has passKey: " + JSON.stringify(key.masterKey));
-            // }
-            console.log("Master Key: " + masterKey);
             return masterKey;
         },
 

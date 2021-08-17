@@ -34,9 +34,8 @@
         },
         methods: {
             assignData() {
-                //Call function to check if information can decrypt a backend (?)
-                //For now:
-                if(this.$store.commit('signInThisUser', {masterPassword: this.masterPass})){
+                this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                if(this.$store.getters.getMasterKey != null) {
                     this.$emit("newBackend");
                 }
                 this.display = false;
