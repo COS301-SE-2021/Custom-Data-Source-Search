@@ -49,6 +49,7 @@
               tag2: null,
               type: 'folder',
               path: [],
+              folderpaths: null,
               depth: 0,
               ignore: '# Files/folders to be ignored are accepted in a .gitignore format # \n \n'  +
                   'node_modules/ \n' +
@@ -87,28 +88,38 @@
             },
           submitSource() {
               console.log(this.ignore)
-            for (let i = 0; i < this.path.length; i++) {
-              let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
-              axios
-                  .post("http://localhost:3001/folderdatasources", respObject)
-                  .then((resp) => {
-                    this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: resp.data.message,
-                      life: 3000
+            if(this.path.length>0 || this.folderpaths!==null){
+              for (let i = 0; i < this.path.length; i++) {
+                let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+                axios
+                    .post("http://localhost:3001/folderdatasources", respObject)
+                    .then((resp) => {
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: resp.data.message,
+                        life: 3000
+                      })
+                      this.$emit('addFolder')
+                      this.$emit("submitted")
                     })
-                    this.$emit('addFolder')
-                    this.$emit("submitted")
-                  })
-                  .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
+                    .catch((error) => {
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response.data.message,
+                        life: 3000
+                      })
                     })
-                  })
+              }
+            }
+            else{
+              this.$toast.add({
+                severity: 'info',
+                summary: 'No folders selected',
+                detail: 'Please select folders to upload',
+                life: 3000
+              })
             }
           }
         }
