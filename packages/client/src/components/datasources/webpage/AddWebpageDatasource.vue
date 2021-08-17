@@ -36,9 +36,18 @@
         },
         methods: {
             submitSource() {
-              let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
+              let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
+              let postURL;
+              //Checking whether backend is local or remote and setting the url to use
+              //in the post depending on that
+              if(this.backend === 'Local'){
+                postURL = "http://localhost:3001/webpagedatasources"
+              }
+              else{
+                postURL = this.$store.getters.getUserBackendURL(this.backend)
+              }
                 axios
-                    .post("http://localhost:3001/webpagedatasources", respObject)
+                    .post(postURL, respObject)
                     .then(resp => {
                         this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                         this.$emit('addWebpage')
