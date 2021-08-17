@@ -761,10 +761,66 @@ export default {
 
       let reqBody = this.selectedUsers;
 
+      axios.delete(this.backend.connect.link + "/users", reqBody ).then(
+          resp => {
+
+            if(resp.data === 200){
+
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Deleted Users",
+                life: 3000});
+
+              this.updateTableData();
+
+            } else {
+              this.$toast.add({
+                severity: 'warning',
+                summary: 'Error',
+                detail: "Could not delete Users",
+                life: 3000});
+            }
+            console.log(resp.data);
+
+
+          }
+      )
+
 
 
     },
     changeUserRoles(){
+
+      let reqObj = {role: this.selectedRole,
+                    users: this.selectedUsers}
+
+      let reqBody = JSON.stringify(reqObj);
+
+      axios.post(this.backend.connect.link + "/users/role", reqBody).then(
+          resp => {
+
+            if(resp.data === 200){
+
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Changed Roles",
+                life: 3000});
+
+              this.updateTableData();
+
+            } else {
+              this.$toast.add({
+                severity: 'warning',
+                summary: 'Error',
+                detail: "Could Not Change Roles",
+                life: 3000});
+            }
+            console.log(resp.data);
+            
+          }
+      )
 
     },
     revokeUserKeys(){
