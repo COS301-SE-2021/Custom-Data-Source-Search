@@ -13,19 +13,6 @@
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="local.active"/>
                 </div>
             </div>
-                <div class="expanded-backend-info" v-if="expand">
-                <div><em>Email: </em></div>
-                <div> {{ connect.associatedEmail }} </div>
-                <div><em>Link: </em></div>
-                <div> {{connect.link}} </div>
-                <div><em>Pass Key: </em></div>
-                <div> {{connect.keys.sessionKey}} </div>
-                <div></div>
-                <div>
-                    <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
-                    <Button @click="deleteBackend" style="float: right" class="p-button p-button-outlined">Delete </Button>
-                </div>
-            </div>
             <form @submit="saveChanges" class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><em>Name: </em></div>
                 <input-text v-model="tempBackendInfo.name"/>
@@ -33,12 +20,13 @@
                 <input-text v-model="tempBackendInfo.associatedEmail"/>
                 <div><em>Link: </em></div>
                 <input-text v-model="tempBackendInfo.link"/>
-                <div><em>Session Key: </em></div>
-                <input-text v-model="tempBackendInfo.sessionKey"/>
+                <div><em>One Time Key: </em></div>
+                <input-text v-model="tempBackendInfo.oneTimeKey"/>
+                <div><em>Secret: </em></div>
+                <input-text v-model="tempBackendInfo.secret"/>
                 <div></div>
                 <div>
-                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions</Button>
-                    <Button type="submit" style="float: right" class="p-button p-button-outlined">Connect</Button>
+                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined">Connect</Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
                 </div>
             </form>
@@ -50,9 +38,9 @@
     import InputSwitch from 'primevue/inputswitch';
     import {mapGetters} from 'vuex';
     export default {
-        name: "backendCard",
+        name: "AddBackendCard",
         components: {
-          InputSwitch
+            InputSwitch
         },
         data () {
             return {
@@ -66,9 +54,10 @@
                     name: '',
                     active: false,
 
-                    link: '',
-                    passKey: '',
                     associatedEmail: '',
+                    link: '',
+                    oneTimeKey: '',
+                    secret: '',
 
                     admin: null
                 }
@@ -84,34 +73,34 @@
             }
         },
         props: {
-          userIndex: {
-              type: Number,
-              default: null
-          },
-          backendIndex: {
-              type: Number,
-              default: null
-          },
-          newBackend: {
-              type: Boolean,
-              default: false
-          },
+            userIndex: {
+                type: Number,
+                default: null
+            },
+            backendIndex: {
+                type: Number,
+                default: null
+            },
+            newBackend: {
+                type: Boolean,
+                default: false
+            },
 
-          local: {
-              id: Number,
-              name: String,
-              active: Boolean,
-              color: String
-          },
-          connect: {
-              associatedEmail: String,
-              link: String,
-              passKey: String
-          },
-          receive: {
-              admin: Boolean,
-              connected: Boolean
-          }
+            local: {
+                id: Number,
+                name: String,
+                active: Boolean,
+                color: String
+            },
+            connect: {
+                associatedEmail: String,
+                link: String,
+                passKey: String
+            },
+            receive: {
+                admin: Boolean,
+                connected: Boolean
+            }
         },
         mounted() {
             this.setTempVars();
@@ -126,20 +115,20 @@
 
             //View changes
             change() {
-              if (!this.newBackend) {
-                  this.expand = !this.expand;
-                  if (this.editBackendBool) {
-                      this.editBackendBool = false;
-                      this.expand = false;
-                  }
-              }
+                if (!this.newBackend) {
+                    this.expand = !this.expand;
+                    if (this.editBackendBool) {
+                        this.editBackendBool = false;
+                        this.expand = false;
+                    }
+                }
             },
             editBackend() {
                 this.setTempVars();
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
             },
-            saveChanges() {
+            connectToBackend() {
                 this.expand = true;
                 this.editBackendBool = false;
 
@@ -157,20 +146,7 @@
 
                     this.$emit('saveNewBackend');
                 }
-                else {
-                    console.log("Saving to store - email: " + this.tempBackendInfo.associatedEmail);
-                    this.$store.commit("editBackend", {
-                        userIndex: this.userIndex,
-                        backendIndex: this.backendIndex,
-                        name: this.tempBackendInfo.name,
-                        link: this.tempBackendInfo.link,
-                        passKey: this.tempBackendInfo.passKey,
-                        associatedEmail: this.tempBackendInfo.associatedEmail,
-                        admin: this.tempBackendInfo.admin,
-                        active: this.tempBackendInfo.active
-                    });
-                }
-                this.setTempVars();
+
             },
             cancelChanges() {
                 this.expand = true;
@@ -193,21 +169,6 @@
                 console.log("To be implemented");
             },
 
-            connectToBackend() {
-                //Api call to make sure that connection information is valid, then it will call the connect api.
-                //If valid, a backend is added to the user's array of backends, and it returns the Backend's name and if you are an admin or not. (?)
-
-
-                //For now, we will just create a random new backend name and random edit status. (Should you be able to give your own personal backend name?)
-                // this.newBackend = false;
-                // this.tempBackendInfo.name = "Temp Backend no: " + this.tempNameNo;
-                this.tempBackendInfo.admin = true;
-                this.saveChanges();
-                this.tempNameNo = this.tempNameNo + 1;
-
-
-
-            },
             //Initialize component state
             setTempVars() {
                 if (!this.newBackend) {
@@ -220,8 +181,8 @@
                 this.tempBackendInfo.link = this.connect.link;
                 this.tempBackendInfo.sessionKey = this.connect.keys.sessionKey;
 
-               this.tempBackendInfo.admin = this.receive.admin;
-               this.newBackendT = this.newBackend;
+                this.tempBackendInfo.admin = this.receive.admin;
+                this.newBackendT = this.newBackend;
             }
         }
     }
@@ -286,7 +247,5 @@
         display: grid;
         grid-template-columns: 3fr 1fr;
     }
-
-
 
 </style>

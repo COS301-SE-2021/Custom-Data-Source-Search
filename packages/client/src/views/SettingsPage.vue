@@ -18,7 +18,7 @@
                 <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
             </div>
             <div>
-                <backend-card
+                <AddBackendCard
                         v-if="newBackendBool"
                         :new-backend="newBackendBool"
                         :local="newBackendObject.local"
@@ -45,9 +45,11 @@
     import BackendCard from "../components/settingsInfo/backendCard";
     import UserInfoCard from "../components/settingsInfo/userInfoCard";
     import {mapGetters} from "vuex";
+    import AddBackendCard from "../components/settingsInfo/AddBackendCard";
 
     export default {
         components: {
+            AddBackendCard,
             UserInfoCard,
             BackendCard
         },
@@ -60,8 +62,12 @@
                         active: false,
                     },
                     connect: {
+                        keys: {
+                            secretPair: null,
+                            sessionKey: null,
+                            refreshKey: null
+                        },
                         link: '',
-                        passKey: '',
                         associatedEmail: ''
                     },
                     receive: {

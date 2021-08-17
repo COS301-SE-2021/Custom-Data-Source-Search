@@ -114,15 +114,19 @@ const store = createStore({
 
         //Action will call this specific mutation after password validation checks out
         signInUser: function (state, payload) {
-              let thisUser =  state.users.find( user => user.info.email === payload.email);
-              thisUser.info.isActive = true;
-              let thisUserPassKey = state.passKeyArr.find(thisUser => thisUser.email === payload.email);
-              thisUserPassKey.masterPassKey = generateMasterKey(payload.passWord, payload.email);
+            let thisUserPassKey = state.passKeyArr.find(thisUser => thisUser.email === payload.email);
+            thisUserPassKey.masterPassKey = generateMasterKey(payload.passWord, payload.email);
+            let thisUser =  state.users.find( user => user.info.email === payload.email);
+            thisUser.info.isActive = true;
         },
 
         signOutUser (state, payload) {
             state.passKeyArr[payload.user.id].masterPassKey = null;
             state.users[payload.user.id].info.isActive = false;
+            for (let backend of state.users[payload.user.id].backends) {
+                backend.connect.keys.sessionKey = null;
+                backend.connect.keys.refreshKey = null;
+            }
         },
 
         editBackend(state, payload) {
@@ -152,7 +156,11 @@ const store = createStore({
                 connect: {
                     associatedEmail: '',
                     link: '',
-                    passKey: ''
+                    keys: {
+                        secretPair: null,
+                        sessionKey: null,
+                        refreshKey: null
+                    }
                 },
                 receive: {
                     admin: null,
@@ -167,7 +175,7 @@ const store = createStore({
             newBackend.connect.link = payload.link;
             newBackend.connect.passKey = payload.passKey;
 
-            newBackend.receive.admin = payload.admin;
+            newBackend.receive.admin = payload.admin; //Include, because we will have the result by now
 
             state.users[payload.userIndex].backends.push(newBackend);
             state.signedIn = true;
@@ -259,7 +267,7 @@ const store = createStore({
     actions : {
         //User management
 
-        addNewUser: function ({commit, dispatch}, payload) {
+        addNewUser: function ({commit}, payload) {
             //Payload: name, email, masterPassword, hasVault
             console.log ("Adding a new user");
 
@@ -268,22 +276,14 @@ const store = createStore({
             commit('addUserToLocalList', {name: payload.name, email: payload.email, hasVault: payload.hasVault, passKey: newPassKey});
         },
 
-        decryptMasterKey(commit, getters, payload) {
-            let decryptionKey = pbkdf2.pbkdf2Sync(
-                JSON.stringify(payload.masterPassword),
-                payload.email,
-                1000,
-                256 / 8,
-                'sha512'
-            );
-            let masterKeyEncrypted = aes.utils.hex.toBytes(getters.getEncryptedMasterKey(payload.email));
-            let easCtr = new aes.ModeOfOperation.ctr(decryptionKey);
-            let masterKeyObject = aes.utils.hex.fromBytes(easCtr.decrypt(masterKeyEncrypted));
-            if (!masterKeyObject["key"]) {
-                masterKeyObject = null
-            }
-            commit.saveMasterKeyOpen(masterKeyObject)
+        //Backend management
+
+        addNewBackend: function ({commit}, payload) {
+            //Payload: name, active, associatedEmail, link, oneTimeKey, secret, userIndex, send: admin
+
         },
+
+
         encryptAndSaveBackendSecretPair(commit, payload) {
             let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
             let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toBytes());
@@ -344,6 +344,25 @@ function generateMasterKey(masterPassword, email) {
         masterPassKey: masterKey,
         encryptedMasterKey: aes.utils.hex.fromBytes(newEncryptedMasterKey)
     };
+}
+
+function decryptMasterKey(encryptedMasterPassKey, fedInPassword, email) {
+    //Parameters: encryptedMasterPassKey,
+    let decryptionKey = pbkdf2.pbkdf2Sync(
+        JSON.stringify(fedInPassword),
+        email,
+        1000,
+        256 / 8,
+        'sha512'
+    );
+
+    let masterKeyEncrypted = aes.utils.hex.toBytes(encryptedMasterPassKey);
+    let easCtr = new aes.ModeOfOperation.ctr(decryptionKey);
+    let masterKeyObject = aes.utils.hex.fromBytes(easCtr.decrypt(masterKeyEncrypted));
+    if (!masterKeyObject["key"]) {
+        masterKeyObject = null
+    }
+    return masterKeyObject;
 }
 
 
