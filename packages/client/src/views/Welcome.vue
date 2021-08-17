@@ -18,7 +18,7 @@
       <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
     </div>
-    
+
     <DeleteUserAreYouSure
             :show="displayDeleteCheck"
             @display-popup="showPopup"
