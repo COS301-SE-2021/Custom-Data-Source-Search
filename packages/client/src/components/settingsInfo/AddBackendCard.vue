@@ -116,10 +116,7 @@
                     oneTimeKey: this.tempBackendInfo.oneTimeKey,
                     secret: this.secret
                 });
-                 console.log (this.addBackendSuccess);
-                if(!this.addBackendSuccess.state){
-                    this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'Please review details or request a new One Time Key', life: 3000});
-                }
+                    // this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'Please review details or request a new One Time Key', life: 3000});
                 this.$emit('saveNewBackend');
             },
 

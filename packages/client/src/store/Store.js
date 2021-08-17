@@ -6,7 +6,6 @@ const store = createStore({
     state:{
         signedInUserId: null,
         signedIn : null,
-        passKeyArr: [],
         users: []
     },
     getters:{
@@ -43,8 +42,7 @@ const store = createStore({
             // for (let key of state.passKeyArr) {
             //     console.log("PassKey: " + JSON.stringify(key.id) + ", has passKey: " + JSON.stringify(key.masterKey));
             // }
-            let masterKey = state.passKeyArr[state.signedInUserId].masterKey
-            console.log("Master Key: " + JSON.stringify(masterKey));
+            console.log("Master Key: " + masterKey);
             return masterKey;
         },
 
@@ -112,22 +110,26 @@ const store = createStore({
 
         //Action will call this specific mutation after password validation checks out
         signInUser: function (state, payload) {
-            let thisUserPassKey = state.passKeyArr.find(thisUser => thisUser.email === payload.email);
-            thisUserPassKey.masterKey = generateMasterKey(payload.passWord, payload.email);
-            let thisUser =  state.users.find( user => user.info.email === payload.email);
+            let thisUser = state.users[state.signedInUserId];
             thisUser.info.isActive = true;
         },
 
         signInThisUser: function (state, payload) {
             //Payload: masterPassword
+            console.log("CameToSignInUser");
             let thisUser = state.users[state.signedInUserId];
+            console.log(JSON.stringify(thisUser));
             let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKey, payload.masterPassword, thisUser.info.email);
             if (passCheck) {
-                state.passKeyArr[state.signedInUserId].masterKey = passCheck;
+                masterKey = passCheck;
+                return true;
+            }
+            else {
+                return false;
             }
         },
         signOutUser (state, payload) {
-            state.passKeyArr[payload.user.id].masterKey = null;
+            masterKey = null;
             state.users[payload.user.id].info.isActive = false;
             for (let backend of state.users[payload.user.id].backends) {
                 backend.connect.keys.sessionKey = null;
@@ -143,6 +145,7 @@ const store = createStore({
 
             backend.connect.associatedEmail = payload.associatedEmail;
             backend.connect.link = payload.link;
+
             backend.connect.passKey = payload.passKey;
 
             backend.receive.admin = payload.admin;
@@ -232,17 +235,11 @@ const store = createStore({
             newUser.info.encryptedMasterKey = payload.passKey.encryptedMasterKey;
 
             state.users.push(newUser);
-            state.passKeyArr.push({
-                id: null,
-                email: payload.email,
-                masterKey: payload.passKey.masterKey
-            });
 
             let x = 0;
             for (let user of state.users) {
                 user.id = x;
                 user.info.id = x;
-                    state.passKeyArr[x].id = x;
                 x++;
             }
 
@@ -258,13 +255,12 @@ const store = createStore({
 
             //Delete local
             state.users.splice(payload.user.id, 1);
-            state.passKeyArr.splice(payload.user.id, 1);
+            masterKey = null;
 
             let x = 0;
             for (let user of state.users) {
                    user.info.id = x;
                    user.id = x++;
-                   state.passKeyArr[x].id = x;
             }
 
         }
@@ -344,7 +340,6 @@ const store = createStore({
             //-------------End [3]---------------////
             let masterKey = getters.getMasterKey;
 
-            console.log("Problems");
 
             if(masterKey === null) {
                 console.log ("No master Key");
@@ -361,8 +356,9 @@ const store = createStore({
                 sessionKey: sessionKey,
                 refreshKey: refreshKey,
                 admin: adminStatus
-            })
+            });
 
+            return true;
 
         },
 
@@ -396,7 +392,7 @@ function generateMasterKey(masterPassword, email) {
     console.log ("Generating masterKey");
 
     let encryptionKey = pbkdf2.pbkdf2Sync(
-        JSON.stringify(masterPassword),
+        masterPassword,
         email,
         1000,
         256 / 8,
@@ -410,7 +406,8 @@ function generateMasterKey(masterPassword, email) {
 
     // Encrypt this random key
     let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey);
-    let newEncryptedMasterKey = aesCtr.encrypt(masterKey);
+    let masterKeyObject = aes.utils.utf8.toBytes(JSON.stringify({"key": masterKey}));
+    let newEncryptedMasterKey = aesCtr.encrypt(masterKeyObject);
 
     // Return Encrypted key
     return {
@@ -419,19 +416,19 @@ function generateMasterKey(masterPassword, email) {
     };
 }
 
-function decryptMasterKey(encryptedmasterKey, fedInPassword, email) {
+function decryptMasterKey(encryptedMasterKey, fedInPassword, email) {
     //Parameters: encryptedmasterKey,
     let decryptionKey = pbkdf2.pbkdf2Sync(
-        JSON.stringify(fedInPassword),
+        fedInPassword,
         email,
         1000,
         256 / 8,
         'sha512'
     );
-
-    let masterKeyEncrypted = aes.utils.hex.toBytes(encryptedmasterKey);
+    let masterKeyEncrypted = aes.utils.hex.toBytes(encryptedMasterKey);
     let easCtr = new aes.ModeOfOperation.ctr(decryptionKey);
-    let masterKeyObject = aes.utils.hex.fromBytes(easCtr.decrypt(masterKeyEncrypted));
+    let decrypted = easCtr.decrypt(masterKeyEncrypted);
+    let masterKeyObject = JSON.parse(aes.utils.utf8.fromBytes(decrypted));
     if (!masterKeyObject["key"]) {
         masterKeyObject = null
     }
@@ -439,13 +436,11 @@ function decryptMasterKey(encryptedmasterKey, fedInPassword, email) {
 }
 
 function  encryptBackendSecretPair(masterKey, secretPair) {
-    console.log("We encrypt again");
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
-    console.log("Middle of secret pair encryption");
     let encryptedSecretPair = aesCtr.encrypt(aes.utils.hex.toBytes(secretPair));
-    console.log("ddd");
     return aes.utils.hex.fromBytes(encryptedSecretPair);
 }
 
+let masterKey = null;
 
 export default store;
