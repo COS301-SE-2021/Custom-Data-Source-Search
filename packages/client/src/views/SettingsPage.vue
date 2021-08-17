@@ -38,6 +38,10 @@
                 />
             </div>
         </div>
+      <div class="info-div start-stop">
+          <Button class="p-button-text start-backend p-button-plain" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
+          <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
+      </div>
     </div>
 </template>
 
@@ -121,6 +125,10 @@
         max-height: 30px;
         text-align: center;
         max-width: fit-content;
+    }
+
+    .start-stop{
+      float: left;
     }
 
 </style>
