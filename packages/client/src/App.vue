@@ -1,11 +1,5 @@
 <template>
     <div class="grid-app" v-if="this.$store.getters.getSignedIn">
-<!--      <div class="nav-bar-top">-->
-<!--        <button class="profile-button" @click="toggle">Hi, {{ getUserInfo(getSignedInUserId).name }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>-->
-<!--        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">-->
-<!--          <ProfileDropdown/>-->
-<!--        </OverlayPanel>-->
-<!--      </div>-->
       <div id="grid-div-1" >
         <div id="sidebar">
           <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>

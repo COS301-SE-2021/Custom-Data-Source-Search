@@ -24,7 +24,7 @@
           </span>
             <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
                     style="float: right;"/>
-            <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true"
+            <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="false"
                           :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
               <div v-if="!clicked && backend===null">
                 <div class="overlay-header">
@@ -35,6 +35,7 @@
                           class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{ i }}
                   </Button>
                 </div>
+<!--                <Button class="p-button-text p-button-plain close" label="Cancel" icon="pi pi-times" @click="toggle" />-->
               </div>
               <div v-else-if="!clicked && backend!=null">
                 <div class="overlay-header">
