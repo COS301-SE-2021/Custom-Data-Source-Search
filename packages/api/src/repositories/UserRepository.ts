@@ -5,10 +5,29 @@ const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 class UserRepository {
 
+    private static formatUsers(user: any) {
+        let regStatus: string = "registered";
+        if (user.password_hash === "") {
+            regStatus = "unregistered"
+        }
+        let loggedIn: boolean = false;
+        let regKey: string = "temporary key"
+        return {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "uuid": user.id,
+            "role": user.role,
+            "reg_status": regStatus,
+            "logged_in": loggedIn,
+            "reg_key": regKey
+        }
+    }
+
     getAllUsers() {
         return [{
             "code": 200,
-            "results": db.prepare('SELECT * FROM user;').all()
+            "results": db.prepare('SELECT * FROM user;').all().map(UserRepository.formatUsers)
         }, null];
     }
 
