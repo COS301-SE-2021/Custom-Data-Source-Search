@@ -94,7 +94,7 @@
                 this.displayMasterPwInput = !this.displayMasterPwInput
             },
             newBackend() {
-                if (this.$store.getters.getMasterKey) {
+                if (this.$store.getters.getMasterKey != null) {
                     this.newBackendBool = !this.newBackendBool;
                     console.log ("Was there a master key?");
                 }

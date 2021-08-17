@@ -40,11 +40,12 @@ const store = createStore({
             return userNamesArr;
         },
         getMasterKey(state) {
-            for (let key of state.passKeyArr) {
-                console.log("PassKey: " + JSON.stringify(key.id) + ", has passKey: " + JSON.stringify(key.masterKey));
-            }
-            console.log("Master Key: " + JSON.stringify(state.passKeyArr[state.signedInUserId].masterKey));
-            return state.passKeyArr[state.signedInUserId].masterKey;
+            // for (let key of state.passKeyArr) {
+            //     console.log("PassKey: " + JSON.stringify(key.id) + ", has passKey: " + JSON.stringify(key.masterKey));
+            // }
+            let masterKey = state.passKeyArr[state.signedInUserId].masterKey
+            console.log("Master Key: " + JSON.stringify(masterKey));
+            return masterKey;
         },
 
 
@@ -210,7 +211,7 @@ const store = createStore({
             state.signedIn = true;
         },
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { maasterKey, encryptedMasterKey}
+            //Payload: name, email, hasVault, passKey: { masterKey, encryptedMasterKey}
             let newUser = {
                 id: null,
                 info: {
@@ -280,7 +281,12 @@ const store = createStore({
 
             let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
 
-            commit('addUserToLocalList', {name: payload.name, email: payload.email, hasVault: payload.hasVault, passKey: newPassKey});
+            commit('addUserToLocalList', {
+                name: payload.name,
+                email: payload.email,
+                hasVault: payload.hasVault,
+                passKey: { masterKey: newPassKey.masterKey, encryptedMasterKey: newPassKey.encryptedMasterKey }
+            });
         },
 
         //Backend management
@@ -336,7 +342,9 @@ const store = createStore({
             let adminStatus = 'Editor';     //Default empty
             //if successful, continue, else fail here
             //-------------End [3]---------------////
-            let masterKey = getters.getMasterKey;
+            let masterKey = getters.getMasterKey();
+
+            console.log("Problems");
 
             if(masterKey === null) {
                 console.log ("No master Key");
