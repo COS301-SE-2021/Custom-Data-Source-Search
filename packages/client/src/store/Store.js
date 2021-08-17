@@ -384,8 +384,6 @@ store.subscribe((mutation, state) => {
 });
 
 function generateMasterKey(masterPassword, email) {
-    //Payload: masterPassword, email
-
     console.log ("Generating masterKey");
 
     let encryptionKey = pbkdf2.pbkdf2Sync(
@@ -400,7 +398,6 @@ function generateMasterKey(masterPassword, email) {
     let masterKey = new Uint8Array(256 / 8);
     window.crypto.getRandomValues(masterKey);
 
-
     // Encrypt this random key
     let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey);
     let masterKeyObject = aes.utils.utf8.toBytes(JSON.stringify({"key": masterKey}));
@@ -414,7 +411,6 @@ function generateMasterKey(masterPassword, email) {
 }
 
 function decryptMasterKey(encryptedMasterKey, fedInPassword, email) {
-    //Parameters: encryptedmasterKey,
     let decryptionKey = pbkdf2.pbkdf2Sync(
         fedInPassword,
         email,
@@ -432,7 +428,7 @@ function decryptMasterKey(encryptedMasterKey, fedInPassword, email) {
     return masterKeyObject;
 }
 
-function  encryptJsonObject(masterKey, jsonObject) {
+function encryptJsonObject(masterKey, jsonObject) {
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
     let encryptedJsonObject = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(jsonObject)));
     return aes.utils.hex.fromBytes(encryptedJsonObject);
