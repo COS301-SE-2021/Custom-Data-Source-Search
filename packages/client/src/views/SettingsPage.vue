@@ -39,8 +39,8 @@
             </div>
         </div>
       <div class="info-div start-stop">
-          <Button class="p-button-text start-backend p-button-plain" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
-          <Button class="p-button-text stop-backend p-button-plain" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
+          <Button class="p-button-text start-backend p-button-plain inline" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
+          <Button class="p-button-text stop-backend p-button-plain inline" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
       </div>
     </div>
 </template>
@@ -128,7 +128,11 @@
     }
 
     .start-stop{
-      float: left;
+      max-width: 600px;
     }
 
+    .inline{
+      float: left;
+      margin-left: 10%;
+    }
 </style>
