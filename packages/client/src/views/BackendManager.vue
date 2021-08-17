@@ -17,7 +17,7 @@
         <Column field="first_name" header="Name"></Column>
         <Column field="last_name" header="Last Name"></Column>
         <Column field="email" header="Email"></Column>
-        <Column field="permission" header="Permissions"></Column>
+        <Column field="role" header="Role"></Column>
         <Column field="regStatus" header="Registration Status"></Column>
         <Column field="loggedIn" header="Logged In"></Column>
         <Column field="regKey" header="Registration Key"></Column>
@@ -34,8 +34,8 @@
           <Button :disabled="!isUserSelected" @click="deleteUsers" label="Remove User" icon="pi pi-user-minus" class="p-button-danger p-mr-2  p-button-custom-med"  />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
-        <Button :disabled="!isUserSelected" @click="changeUserPermissions" label="Change Permissions" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
-        <Dropdown class="toolbar-dropdown" :disabled="!isUserSelected" v-model="selectedPermissionLevel" :options="permissionOptions" placeholder="Select a Role" />
+        <Button :disabled="!isUserSelected" @click="changeUserRoles" label="Change Roles" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
+        <Dropdown class="toolbar-dropdown" :disabled="!isUserSelected" v-model="selectedRole" :options="roleOptions" placeholder="Select a Role" />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <span class="p-buttonset">
         <Button :disabled="!isUserSelected" @click="logOutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
@@ -82,8 +82,8 @@
 
           <div class="p-field p-col-12 p-md-4" >
             <span class="p-float-label">
-                <Dropdown id="input-perm" v-model="addUserPermission" :options="permissionOptions" />
-                        <label for="input-perm">Permission</label>
+                <Dropdown id="input-perm" v-model="addUserRole" :options="roleOptions" />
+                        <label for="input-perm">Role</label>
                     </span>
           </div>
 
@@ -95,7 +95,7 @@
 
         <template #footer>
           <Button label="Cancel" icon="pi pi-times" @click="hideAddUsers" class="p-button-text" />
-          <Button label="Add" icon="pi pi-check" @click="hideAddUsers" autofocus />
+          <Button label="Add" icon="pi pi-check" @click="addUsers" autofocus />
         </template>
 
 
@@ -122,7 +122,7 @@ export default {
       backend: null,
       isUserSelected: false,
       selectedUsers: null,
-      selectedPermissionLevel : null,
+      selectedRole : null,
 
       showAddUserDialog : false,
       addUserPos: "bottomleft",
@@ -130,10 +130,10 @@ export default {
       addUserFirstName: "",
       addUserLastName: "",
       addUserEmail: "",
-      addUserPermission: "",
+      addUserRole: "",
 
       //Needs to be determined on page load
-      permissionOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
+      roleOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
 
       //Temporarily Hardcoded for Testing
       tableData: [{
@@ -141,7 +141,7 @@ export default {
         "first_name": "Aldis",
         "last_name": "Birley",
         "email": "abirley0@soup.io",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "cef02571-6afb-453f-9705-41ee70086e65"
@@ -150,7 +150,7 @@ export default {
         "first_name": "Jeanna",
         "last_name": "Folomkin",
         "email": "jfolomkin1@unicef.org",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "69098ece-3413-4ceb-a23d-0f30f22170d1"
@@ -159,7 +159,7 @@ export default {
         "first_name": "Arty",
         "last_name": "Kender",
         "email": "akender2@accuweather.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "ec37455c-73ca-441c-8857-6ed73bf9df04"
@@ -168,7 +168,7 @@ export default {
         "first_name": "Nikolaus",
         "last_name": "Ketton",
         "email": "nketton3@utexas.edu",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "d14411a9-0e46-48f5-a50a-568998dd4e1d"
@@ -177,7 +177,7 @@ export default {
         "first_name": "Clovis",
         "last_name": "Hoyes",
         "email": "choyes4@state.tx.us",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "ab54272c-06bc-4ff1-b7c2-0fbe52d3cb1f"
@@ -186,7 +186,7 @@ export default {
         "first_name": "Kacie",
         "last_name": "Trevena",
         "email": "ktrevena5@arizona.edu",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "9398f8db-dfd6-4cca-85f7-64d395b827ba"
@@ -195,7 +195,7 @@ export default {
         "first_name": "Ase",
         "last_name": "Wegenen",
         "email": "awegenen6@home.pl",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "5ff37d01-88eb-4ccb-8fc4-ad2e14729df5"
@@ -204,7 +204,7 @@ export default {
         "first_name": "Kris",
         "last_name": "Marrow",
         "email": "kmarrow7@dagondesign.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "2a29843d-6539-4e06-b570-56c141c65f3d"
@@ -213,7 +213,7 @@ export default {
         "first_name": "Wilhelm",
         "last_name": "Scouler",
         "email": "wscouler8@pbs.org",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "758c9d6e-4ba3-4f32-8317-f1f8f4cf0857"
@@ -222,7 +222,7 @@ export default {
         "first_name": "Moore",
         "last_name": "Le Blond",
         "email": "mleblond9@scientificamerican.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "0aa83329-7398-4515-9242-f6f51cbd80b8"
@@ -231,7 +231,7 @@ export default {
         "first_name": "Lutero",
         "last_name": "Fishby",
         "email": "lfishbya@mapy.cz",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "e7a3c706-4df9-4ac4-9bdc-b49e23f6f4c4"
@@ -240,7 +240,7 @@ export default {
         "first_name": "Demott",
         "last_name": "Melloi",
         "email": "dmelloib@bloglines.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "776da88d-d3bb-4607-990c-22133f5db81d"
@@ -249,7 +249,7 @@ export default {
         "first_name": "Ediva",
         "last_name": "Hubbart",
         "email": "ehubbartc@plala.or.jp",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "016f47ef-fc22-4738-af3c-6d53554c8ea2"
@@ -258,7 +258,7 @@ export default {
         "first_name": "Grove",
         "last_name": "Bedell",
         "email": "gbedelld@cnn.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "827ecb89-35dc-490a-b32b-f0225ce63fe8"
@@ -267,7 +267,7 @@ export default {
         "first_name": "Adey",
         "last_name": "Boultwood",
         "email": "aboultwoode@bandcamp.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "dbaa4a35-d0d8-4450-aaaf-146b0097d3e3"
@@ -276,7 +276,7 @@ export default {
         "first_name": "Berke",
         "last_name": "Benezeit",
         "email": "bbenezeitf@slideshare.net",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "2efad679-cfeb-4ef4-92b1-37c0b584ab33"
@@ -285,7 +285,7 @@ export default {
         "first_name": "Alejandrina",
         "last_name": "Scripps",
         "email": "ascrippsg@miitbeian.gov.cn",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "06ce339a-3598-41e0-bf61-eb6325ea16c4"
@@ -294,7 +294,7 @@ export default {
         "first_name": "Richy",
         "last_name": "GiacobbiniJacob",
         "email": "rgiacobbinijacobh@squidoo.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "f45d4193-73e0-4357-8f1f-229d30a5411b"
@@ -303,7 +303,7 @@ export default {
         "first_name": "Charmine",
         "last_name": "Persitt",
         "email": "cpersitti@simplemachines.org",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "e1c633b7-2de1-4826-bcfe-9fc8c9a93bd2"
@@ -312,7 +312,7 @@ export default {
         "first_name": "Ferne",
         "last_name": "Cave",
         "email": "fcavej@mail.ru",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "af0a2655-82d4-404f-95dc-0ac77dc79092"
@@ -321,7 +321,7 @@ export default {
         "first_name": "Jacinthe",
         "last_name": "Cranmere",
         "email": "jcranmerek@eventbrite.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "5b64a0f5-56d4-45ae-8fdb-add6f0b27fd9"
@@ -330,7 +330,7 @@ export default {
         "first_name": "Henrik",
         "last_name": "Maplethorp",
         "email": "hmaplethorpl@admin.ch",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "bbc88c09-7903-4d3b-a5ad-25ce8ec06600"
@@ -339,7 +339,7 @@ export default {
         "first_name": "Lawry",
         "last_name": "Freebury",
         "email": "lfreeburym@admin.ch",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "14ca369c-0a49-4efa-b820-1f3974e1d000"
@@ -348,7 +348,7 @@ export default {
         "first_name": "Chaddie",
         "last_name": "Rizziello",
         "email": "crizziellon@un.org",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "3f79eef4-3d5a-41f5-9bf3-f9b1bdfc05a5"
@@ -357,7 +357,7 @@ export default {
         "first_name": "Ede",
         "last_name": "Clerk",
         "email": "eclerko@washington.edu",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "531b0556-aa59-4c41-934a-909924df2ddd"
@@ -366,7 +366,7 @@ export default {
         "first_name": "Sophie",
         "last_name": "Dedrick",
         "email": "sdedrickp@list-manage.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "867c2c2d-b46e-4dd4-8206-f1d06ac00cc2"
@@ -375,7 +375,7 @@ export default {
         "first_name": "Gray",
         "last_name": "Pealing",
         "email": "gpealingq@dyndns.org",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "377eb207-819a-40f3-b0da-e931818ea182"
@@ -384,7 +384,7 @@ export default {
         "first_name": "Prue",
         "last_name": "Phillipps",
         "email": "pphillippsr@hugedomains.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "dd60d864-0013-4158-909d-ab280b1e81ec"
@@ -393,7 +393,7 @@ export default {
         "first_name": "Rodney",
         "last_name": "Rothwell",
         "email": "rrothwells@elegantthemes.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "ec46ba0c-67ed-40aa-94f0-696eaf36e652"
@@ -402,7 +402,7 @@ export default {
         "first_name": "Mabelle",
         "last_name": "Grabban",
         "email": "mgrabbant@cisco.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "c1225811-54fe-4fc4-9a25-9ec72411ce23"
@@ -411,7 +411,7 @@ export default {
         "first_name": "Phillida",
         "last_name": "Gange",
         "email": "pgangeu@t-online.de",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "b83684d8-52e7-481c-864a-d4aae3e6f371"
@@ -420,7 +420,7 @@ export default {
         "first_name": "Rafaela",
         "last_name": "Readett",
         "email": "rreadettv@cyberchimps.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "97063693-1269-4562-8531-145dea541c09"
@@ -429,7 +429,7 @@ export default {
         "first_name": "Opal",
         "last_name": "Camerello",
         "email": "ocamerellow@topsy.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "258cdfbd-2ba3-41ea-b92b-f274d86a5314"
@@ -438,7 +438,7 @@ export default {
         "first_name": "Dorolice",
         "last_name": "Bendin",
         "email": "dbendinx@mashable.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "7063692b-87cb-4d99-90af-049e8be34f92"
@@ -447,7 +447,7 @@ export default {
         "first_name": "Ann",
         "last_name": "Shorthouse",
         "email": "ashorthousey@1und1.de",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "f07e2f9c-a2a3-45f4-bf03-810d1df83efa"
@@ -456,7 +456,7 @@ export default {
         "first_name": "Carlo",
         "last_name": "Seywood",
         "email": "cseywoodz@blogs.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "a306c59c-7757-42c0-a382-16dab7c711aa"
@@ -465,7 +465,7 @@ export default {
         "first_name": "Freddy",
         "last_name": "Partleton",
         "email": "fpartleton10@github.io",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "11ce5630-0b88-4338-afc8-64ac4630cf51"
@@ -474,7 +474,7 @@ export default {
         "first_name": "Nadya",
         "last_name": "McGall",
         "email": "nmcgall11@macromedia.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "baaffdee-832f-4319-8ca6-d452adbc4ebd"
@@ -483,7 +483,7 @@ export default {
         "first_name": "Cleve",
         "last_name": "Petkens",
         "email": "cpetkens12@hatena.ne.jp",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "0951f8dc-d6d1-4b90-bee6-ea81ac023d5e"
@@ -492,7 +492,7 @@ export default {
         "first_name": "Sorcha",
         "last_name": "Scutter",
         "email": "sscutter13@usnews.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "596854d5-9919-42df-ac0e-235de79b7ead"
@@ -501,7 +501,7 @@ export default {
         "first_name": "Bethany",
         "last_name": "Gimson",
         "email": "bgimson14@yolasite.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "c1b3d074-6cc4-4d9c-a3e2-824e9a12131d"
@@ -510,7 +510,7 @@ export default {
         "first_name": "Geno",
         "last_name": "Witts",
         "email": "gwitts15@wisc.edu",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "126e13dc-c6a2-4d85-b3fa-ecca5bc3b458"
@@ -519,7 +519,7 @@ export default {
         "first_name": "Mathe",
         "last_name": "Statersfield",
         "email": "mstatersfield16@godaddy.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "a9968d1e-fc9c-493b-ab75-11581b5ab05a"
@@ -528,7 +528,7 @@ export default {
         "first_name": "Janina",
         "last_name": "Missenden",
         "email": "jmissenden17@fc2.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "26c24849-1eeb-44bc-9d3f-cb270bc518f5"
@@ -537,7 +537,7 @@ export default {
         "first_name": "Alessandro",
         "last_name": "Northcote",
         "email": "anorthcote18@gov.uk",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "e9ac0c80-1fc7-47e7-9084-e5fadeab8f05"
@@ -546,7 +546,7 @@ export default {
         "first_name": "Billye",
         "last_name": "Oldland",
         "email": "boldland19@engadget.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "7c1dbc04-72d8-481f-a46b-290f8b199afa"
@@ -555,7 +555,7 @@ export default {
         "first_name": "Atalanta",
         "last_name": "Mulcahy",
         "email": "amulcahy1a@nasa.gov",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "b8ff9954-16e0-43d7-93e5-f528ccfea680"
@@ -564,7 +564,7 @@ export default {
         "first_name": "Arlan",
         "last_name": "Swatman",
         "email": "aswatman1b@wordpress.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "084f9d2f-c41c-4fd4-b500-2913a5dab294"
@@ -573,7 +573,7 @@ export default {
         "first_name": "Nessie",
         "last_name": "McGuckin",
         "email": "nmcguckin1c@wunderground.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "856ea4fa-e91a-45e3-b400-d13ecbdc7d09"
@@ -582,7 +582,7 @@ export default {
         "first_name": "Rowena",
         "last_name": "Weeds",
         "email": "rweeds1d@weibo.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "1736e3e3-95c2-45ce-84a0-ff5a1309e973"
@@ -591,7 +591,7 @@ export default {
         "first_name": "Camel",
         "last_name": "MacDonogh",
         "email": "cmacdonogh1e@drupal.org",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "632b0e9e-580e-4829-b8f0-5ead68e5bf55"
@@ -600,7 +600,7 @@ export default {
         "first_name": "Lance",
         "last_name": "Chesney",
         "email": "lchesney1f@narod.ru",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "a9dec9bd-f3b5-47f3-94a7-a2b6e69a21a9"
@@ -609,7 +609,7 @@ export default {
         "first_name": "Dave",
         "last_name": "Nassey",
         "email": "dnassey1g@wordpress.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "da58a858-db01-42cc-a7a7-c93de60a2c05"
@@ -618,7 +618,7 @@ export default {
         "first_name": "Sharlene",
         "last_name": "Lye",
         "email": "slye1h@patch.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "669657b1-5425-4832-96fe-91f0b94deaaa"
@@ -627,7 +627,7 @@ export default {
         "first_name": "Haily",
         "last_name": "Rickerby",
         "email": "hrickerby1i@g.co",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "df7689c8-3665-4b76-9cf0-d81f3b9a68a5"
@@ -636,7 +636,7 @@ export default {
         "first_name": "Gael",
         "last_name": "Pummery",
         "email": "gpummery1j@latimes.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "72a83c36-8aa3-4b37-b9b1-5a48e9d1af09"
@@ -645,7 +645,7 @@ export default {
         "first_name": "Lind",
         "last_name": "Scraney",
         "email": "lscraney1k@msn.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "b628624a-a6d7-4528-b35d-49fce4c3523f"
@@ -654,7 +654,7 @@ export default {
         "first_name": "Bobbee",
         "last_name": "Paxforde",
         "email": "bpaxforde1l@theguardian.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "07583d27-797f-4c6f-9622-2132f91cbd16"
@@ -663,7 +663,7 @@ export default {
         "first_name": "Phil",
         "last_name": "Bedder",
         "email": "pbedder1m@pinterest.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": true,
         "regKey": "05aee5e6-d889-4e25-b302-63b1e010efa3"
@@ -672,7 +672,7 @@ export default {
         "first_name": "Kristina",
         "last_name": "Dineges",
         "email": "kdineges1n@marketwatch.com",
-        "permission": "Admin",
+        "role": "Admin",
         "regStatus": "Registered",
         "loggedIn": false,
         "regKey": "cbb72169-c33b-46bf-96fd-bd45d41c36b4"
@@ -690,28 +690,81 @@ export default {
     ])
   },
   methods : {
+
+    //Populate Table with users from backend
+    updateTableData(){
+
+      axios.get(this.backend.connect.link + "/users").then(
+          resp => {
+
+            if(resp.data.code === 200){
+
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Updated Table",
+                life: 3000});
+
+             this.tableData = JSON.parse(resp.data.message);
+
+            } else {
+              this.$toast.add({
+                severity: 'warning',
+                summary: 'Error',
+                detail: "Could Not Update Table",
+                life: 3000});
+            }
+            console.log(resp.data);
+
+
+          }
+      )
+
+    },
+    //Add a User to backend
     addUsers(){
 
-      let config
-      let reqObj = {first_name: this.addUserFirstName, last_name: this.addUserLastName, }
+     // let config
+      let reqObj = {first_name: this.addUserFirstName, last_name: this.addUserLastName,
+        email: this.addUserEmail, role: this.addUserRole }
 
-      axios.post(this.backend.connect.link + "/admin/addusers", ).then(
+      let reqBody = JSON.stringify(reqObj);
+
+      axios.post(this.backend.connect.link + "/users", reqBody ).then(
           resp => {
-            console.log(resp.data);
-            this.sources = resp.data.data;
-            let i;
-            for (i = 0; i < this.sources.length; i++) {
-              this.sources[i]["backend"] = "Local"
+
+            if(resp.data === 200){
+
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Added User",
+                life: 3000});
+
+              this.updateTableData();
+
+            } else {
+              this.$toast.add({
+                severity: 'warning',
+                summary: 'Error',
+                detail: "Could not User",
+                life: 3000});
             }
-            this.loading = false
+            console.log(resp.data);
+
+
           }
       )
 
     },
     deleteUsers(){
 
+      let reqBody = this.selectedUsers;
+
+
+
     },
-    changeUserPermissions(){
+    changeUserRoles(){
 
     },
     revokeUserKeys(){
