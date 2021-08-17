@@ -30,7 +30,8 @@ class UserRepository {
                     user.email,
                     "",
                     user.role,
-                    randomBytes(16).toString("hex"))
+                    randomBytes(16).toString("hex")
+                );
             } catch (e) {
                 failedUsers.push(user);
             }
@@ -191,6 +192,52 @@ class UserRepository {
             "code": 200,
             "message": "Successfully revoked access for all users"
         }, null];
+    }
+
+    validateUser(uuid: string, pass_key: string) {
+        try {
+            const user = db.prepare("SELECT * FROM user WHERE id = ?").all(uuid)[0];
+            if (user["password_hash"] == pass_key) {
+                return [{
+                    "code": 200,
+                    "message": "Success"
+                }, null];
+            }
+            return [null, {
+                "code": 403,
+                "message": "Pass key is incorrect",
+            }];
+        } catch (e) {
+            console.error(e);
+            return [null, {
+                "code": 404,
+                "message": "User not found",
+            }];
+        }
+    }
+
+    generateRefreshToken(uuid: string) {
+        try {
+            const user = db.prepare('SELECT * FROM user WHERE id = ?').all(uuid)[0];
+            db.prepare('DELETE FROM active_user WHERE email = ?').run(user["email"]);
+            const refreshToken = randomBytes(16).toString("hex");
+            const expirationTimeSeconds = 20;
+            const newDate = new Date(new Date().getTime() + expirationTimeSeconds).getTime();
+            db.prepare(
+                'INSERT INTO active_user (email, refresh_token, valid_until) VALUES (?,?,?);'
+            ).run(
+                user["email"],
+                refreshToken,
+                newDate
+            );
+            return [refreshToken, null];
+        } catch (e) {
+            console.error(e);
+            return [null, {
+                "code": 500,
+                "message": "Error while generating new refresh token"
+            }];
+        }
     }
 }
 

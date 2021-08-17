@@ -43,7 +43,7 @@ class UserService {
         };
     }
 
-    removeUser(users: {uuid: string}[]) {
+    removeUser(users: { uuid: string }[]) {
         const [result, err] = userRepository.removeUser(users);
         if (err) {
             return {
@@ -63,7 +63,7 @@ class UserService {
         };
     }
 
-    setRole(body: {role: string; users: {uuid: string}[]}) {
+    setRole(body: { role: string; users: { uuid: string }[] }) {
         const [result, err] = userRepository.setRole(body);
         if (err) {
             return {
@@ -155,6 +155,34 @@ class UserService {
             "code": result.code,
             "body": {
                 "message": result.message
+            }
+        };
+    }
+
+    login(body: { uuid: string; pass_key: string; }) {
+        const [, validateErr] = userRepository.validateUser(body.uuid, body.pass_key);
+        if (validateErr) {
+            return {
+                "code": validateErr.code,
+                "body": {
+                    "message": validateErr.message
+                }
+            };
+        }
+        const [tokenResult, tokenErr] = userRepository.generateRefreshToken(body.uuid);
+        if (tokenErr) {
+            return {
+                "code": 500,
+                "body": {
+                    "message": "Unknown error when trying to generate refresh token"
+                }
+            };
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Successfully logged in",
+                "refresh_token": tokenResult
             }
         };
     }

@@ -86,6 +86,6 @@ userRouter.post("/generatetoken", (req: Request, res: Response) => {
 });
 
 userRouter.post("/login", (req: Request, res: Response) => {
-    req.body.uuid
-    req.body.pass_key
+    const result = userService.login(req.body);
+    res.status(result.code).send(result.body);
 });
