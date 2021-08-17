@@ -268,10 +268,15 @@ const store = createStore({
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
             let encryptedSecretPair = aes.utils.hex.toBytes(encrypted.secretPair);
             let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
+            let stringPair = aesCtr.decrypt(encryptedSecretPair);
+            let pairObject = stringPair.toJSON();
+            if (!pairObject["passkey"] || !pairObject["secret"]) {
+                let pairObject = null;
+            }
             return  {
                 id: payload.id,
                 email: payload.email,
-                secretPair: aesCtr.decrypt(encryptedSecretPair),
+                secretPair: pairObject,
             }
         }
     }
