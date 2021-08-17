@@ -36,6 +36,8 @@
 <script>
     import axios from 'axios'
     const electron = require('@electron/remote');
+    const FormData = require('form-data');
+    const fs = require('fs');
     export default {
         name: "AddFolderDatasource",
         props:{
@@ -49,7 +51,7 @@
               tag2: null,
               type: 'folder',
               path: [],
-              folderpaths: null,
+              folderpaths: [],
               depth: 0,
               ignore: '# Files/folders to be ignored are accepted in a .gitignore format # \n \n'  +
                   'node_modules/ \n' +
@@ -59,37 +61,67 @@
         },
         methods: {
             addDataSource() {
+              if(this.backend==='Local'){
+                electron.dialog.showOpenDialog({
+                  title: 'Select Folders to Add as Data Sources',
+                  buttonLabel: "Select",
 
-              electron.dialog.showOpenDialog({
-                title: 'Select Folders to Add as Data Sources',
-                buttonLabel: "Select",
+                  properties: ['openDirectory', 'multiSelections'] })
+                    .then(dirs => {
 
-                properties: ['openDirectory', 'multiSelections'] })
-                  .then(dirs => {
+                      //Check that files were successfully selected
+                      if(dirs.filePaths && dirs.filePaths[0]) {
 
-                    //Check that files were successfully selected
-                    if(dirs.filePaths && dirs.filePaths[0]) {
+                        let str;
+                        let temp;
+                        //for every folder selected
+                        for (let i = 0; i < dirs.filePaths.length; i++) {
 
-                      let str;
-                      let temp;
-                      //for every folder selected
-                      for (let i = 0; i < dirs.filePaths.length; i++) {
+                          str = (dirs.filePaths[i])
 
-                        str = (dirs.filePaths[i])
+                          //Force use of / in URI's across all platforms
+                          temp = str.replaceAll("\\", "/")
+                          this.path.push(temp)
 
-                        //Force use of / in URI's across all platforms
-                        temp = str.replaceAll("\\", "/")
-                        this.path.push(temp)
-
+                        }
                       }
-                    }
-                    console.log(this.path)
-                  })
+                      console.log(this.path)
+                    })
+              }
+              else{
+                electron.dialog.showOpenDialog({
+                  title: 'Select Folders to Add as Data Sources',
+                  buttonLabel: "Select",
+
+                  properties: ['openDirectory', 'multiSelections'] })
+                    .then(dirs => {
+
+                      //Check that files were successfully selected
+                      if(dirs.filePaths && dirs.filePaths[0]) {
+
+                        let str;
+                        let temp;
+                        //for every folder selected
+                        for (let i = 0; i < dirs.filePaths.length; i++) {
+
+                          str = (dirs.filePaths[i])
+
+                          //Force use of / in URI's across all platforms
+                          temp = str.replaceAll("\\", "/")
+                          this.path.push(temp)
+                          this.folderpaths.push(dirs.filePaths[i])
+                        }
+                      }
+                      console.log(this.folderpaths)
+                    })
+              }
+
             },
           submitSource() {
-              console.log(this.ignore)
-            if(this.path.length>0 || this.folderpaths!==null){
-              for (let i = 0; i < this.path.length; i++) {
+            console.log(this.ignore)
+            if(this.path.length>0 || this.folderpaths>0){
+              if(this.backend==='Local'){
+                for (let i = 0; i < this.path.length; i++) {
                 let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
                 axios
                     .post("http://localhost:3001/folderdatasources", respObject)
@@ -111,6 +143,39 @@
                         life: 3000
                       })
                     })
+                }
+              }
+              else if(this.folderpaths && this.folderpaths[0]){
+                let formData = new FormData();
+                for(let i = 0; i<this.folderpaths.length; i++){
+                  formData.set('folder', this.folderpaths[i]);
+                  formData.set('tag1', this.tag1);
+                  formData.set('tag2', this.tag2);
+
+                  axios
+                      .post(this.$store.getters.getUserBackendURL(this.backend), formData, {
+                        headers: {'Content-Type': 'multipart/form-data'}
+                      })
+                      .then((resp) => {
+                        this.$toast.add({
+                          severity: 'success',
+                          summary: 'Success',
+                          detail: resp.data.message,
+                          life: 3000
+                        })
+                        this.$emit('addFolder')
+                        this.$emit("submitted")
+                        console.log(resp.data)
+                      })
+                      .catch((error) => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error.response.data.message,
+                          life: 3000
+                        })
+                      })
+                }
               }
             }
             else{
