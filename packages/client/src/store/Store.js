@@ -253,8 +253,10 @@ const store = createStore({
             // Generate random key to be encrypted by master key
             let masterKey = new Uint8Array(256 / 8);
             window.crypto.getRandomValues(masterKey);
+            // Encrypt this random key
             let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey)
             let encryptedMasterKey = aesCtr.encrypt(masterKey)
+            // Save Encrypted key
             commit.saveMasterKey({
                 email: payload.email,
                 keyObject: {key: aes.utils.hex.fromBytes(encryptedMasterKey)}
