@@ -35,6 +35,15 @@ import Ripple from 'primevue/ripple';
 import BadgeDirective from "primevue/badgedirective";
 import Divider from 'primevue/divider';
 import InputSwitch from 'primevue/inputswitch';
+import Toolbar from "primevue/toolbar";
+import SplitButton from "primevue/splitbutton";
+import SelectButton from "primevue/selectbutton";
+import Checkbox from 'primevue/checkbox';
+import InputNumber from 'primevue/inputnumber';
+import Textarea from 'primevue/textarea';
+import ContextMenu from "primevue/contextmenu";
+import RadioButton from "primevue/radiobutton";
+
 
 const app = createApp(App);
 app.use(router);
@@ -70,3 +79,12 @@ app.directive('badge', BadgeDirective);
 app.directive('ripple', Ripple);
 app.component('Divider', Divider);
 app.component('InputSwitch', InputSwitch);
+app.component('Toolbar', Toolbar);
+app.component('SplitButton', SplitButton);
+app.component('SelectButton', SelectButton);
+app.component("Checkbox", Checkbox);
+app.component('InputNumber', InputNumber);
+app.component('Textarea', Textarea);
+app.component('ContextMenu', ContextMenu);
+app.component('RadioButton', RadioButton);
+

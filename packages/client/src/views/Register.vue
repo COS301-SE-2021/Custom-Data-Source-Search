@@ -4,34 +4,49 @@
             <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
                 REGISTER
             </div>
-            <div v-if="notContinue" class="input-fields">
-                <InputText type="text" v-model="userName" label="Name" placeholder="Name" />
-                <InputText type="text" v-model="masterEmail" label="Email" placeholder="Email" />
-                <div>
-                    <PasswordInputField style="width: 100%" id="masterPassword" v-model="masterPassword" placeholder="Master Password" :feedback="false" :toggle-mask="true"/>
-                </div>
-                <div>
-                    <PasswordInputField style="width: 100%" id="masterPassCheck" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
-                </div>
-                <div id="checkboxBox">
-                    <checkbox id="checkBox" name="checkbox" v-model="backupVault" :binary="true"/>
-                    <label for="checkBox">Enable remote access to account?</label>
-                </div>
-                <div style="text-align: left; vertical-align: center">
-                    <span>Already have an account? </span> <u><a v-on:click="showPopup">Sign in</a></u>
-                    <Button @click="loadValues" icon="pi pi-arrow-circle-right"  class="p-button-lg p-button-outlined" />
-                </div>
-                <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+            <form class="input-fields"
+                id="register"
+                @submit="loadValues"
+            >
+                <div class="input-fields" style="max-height: 20vh">
+                    <InputText type="text"  v-model="userDetails.userName" label="Name" placeholder="Name" />
+                    <InputText type="email" v-model="userDetails.masterEmail" label="Email" placeholder="Email" />
+                    <div>
+                        <PasswordInputField id="masterPassword" style="width: 100%" v-model="masterPassword" placeholder="Master Password" :feedback="true" :toggle-mask="true"/>
+                        <span style="font-size: small; margin-top: 30px">
+                            The master password is the password you use to access your vault. It is very important that you do not forget your master password.
+                            There is no way to recover the password in the event that you forget it.
+                        </span>
+                    </div>
+                    <div>
+                        <PasswordInputField  id="masterPassCheck" style="width: 100%; margin-bottom: 15px" :feedback="false" :toggle-mask="true" v-model="masterPassCheck" placeholder="Repeat Password" />
 
-            </div>
-            <div v-else class="set-up-backend-box">
-                Do you want to continue on to configure backends?
-               <div>
-                   <Button @click="loadValues" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
-                   <Button @click="loadValues"  style="margin-right: 2%" class="p-button-lg p-button-outlined"> No</Button>
-               </div>
-
-            </div>
+                    </div>
+                    <div id="checkboxBox">
+                        <checkbox id="checkBox" name="checkbox" v-model="userDetails.backupVault" :binary="true"/>
+                        <label for="checkBox">Enable remote access to account?</label>
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        <Button type="submit" style="text-align: center;" class="p-button-md p-button-outlined">Register</Button>
+                    </div>
+                    <div>
+                        <span>Already have an account?
+                      <u><a v-on:click="showSignIn">Sign in</a></u></span>
+                    </div>
+                    <div>
+                        <Button v-if="notContinue" @click="back" style="float: right" icon="pi pi-arrow-circle-left"  class="p-button-lg p-button-outlined">Back</Button>
+                    </div>
+                    <div v-if="errors.length" style="max-height: 0.05vh">
+                        <span> <strong>Please correct the following error(s):</strong></span>
+                        <ul>
+                            <li v-for="error in errors">{{ error }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <SignIn :show="displaySignIn" @display-popup="showSignIn"></SignIn>
+            </form>
         </div>
         <div>
             <div class="logo-box">
@@ -39,6 +54,7 @@
                 <div id="imageInRegistrationBox"><img  id="imageInRegistration" src="../assets/search_logo.png" height="300" alt=""></div>
              </div>
         </div>
+
     </div>
 
 </template>
@@ -48,6 +64,7 @@
     import SignIn from "../components/popups/SignIn";
     import Checkbox from 'primevue/checkbox';
     import PasswordInputField from "../components/primeComponents/PasswordInputField";
+    const zxcvbn = require('zxcvbn');
     export default {
         name: "Register",
         components: {
@@ -58,32 +75,113 @@
         },
         data () {
             return {
-                userName: '',
-                backupVault: false,
-                masterEmail: '',
-                masterPassword: '',
-                masterPassCheck: '',
+                errors: [],
+                regexTester: null,
+                masterPassCheck: null,
+                masterPassword: null,
                 displaySignIn: false,
-                notContinue: true
+                notContinue: true,
+                userDetails: {
+                    userName: null,
+                    backupVault: null,
+                    masterEmail: null,
+                    hashToStore: null
+                }
+            }
+        },
+        computed: {
+            passwordStrength() {
+                return zxcvbn(this.masterPassCheck);
             }
         },
         methods: {
             loadValues() {
-                this.continue();
-                console.log("Username: " + this.userName);
-                console.log("Master Email: " + this.masterEmail);
-                console.log("Master Password: " + this.masterPassword);
-                console.log("Master Pass Check: " + this.masterPassCheck);
-                console.log("Backup to Vault: " + this.backupVault);
+
+                //TO DO: Save Username and Master email, check passwords are exactly the same. Store other information for now.
+                //Do we need a way to remove a user? Probably.
+                let passFormValidation = true;
+
+                //Checks:
+                //#1: All fields required
+                this.errors = [];
+
+                if (!this.userDetails.userName) {
+                    this.errors.push('Name required');
+                }
+                if (!this.userDetails.masterEmail) {
+                    this.errors.push("Email required");
+                }
+                let emailArr = this.$store.getters.getUserMasterEmailsArr;
+                for ( let email of emailArr) {
+                    if (email === this.userDetails.masterEmail) {
+                        this.errors.push('Email already registered. Please select another.');
+                        this.userDetails.masterEmail = null;
+                    }
+                }
+
+                //#2: Passwords must match & have some kind of strength test
+                if (!this.masterPassword || !this.masterPassCheck) {
+                    this.errors.push("Password required");
+                }
+                else if (this.masterPassword !== this.masterPassCheck) {
+                    this.errors.push('Your passwords do not match. Please repeat');
+                    this.masterPassword = null;
+                    this.masterPassCheck = null;
+                }
+                else if (this.passwordStrength.score <= 1) {
+                    this.errors.push('Please select a stronger password');
+                    this.masterPassword = null;
+                    this.masterPassCheck = null;
+                }
+
+
+                //#3: Some kind of hash of password and email must happen to unlock file [[[[[[ => TO DO <= ]]]]]]
+
+                if (this.errors.length) {
+                    passFormValidation = false;
+                }
+
+                if (passFormValidation)  {
+
+                    //NB!!! HASH METHOD NEEDS TO CHANGE! TEMPORARY!!!
+                    this.userDetails.hashToStore = this.hashStrings(this.masterPassword);
+                    this.$store.commit("addUserToLocalList", {
+                        name: this.userDetails.userName,
+                        email: this.userDetails.masterEmail,
+                        hash: this.userDetails.hashToStore,
+                        hasVault: this.userDetails.backupVault
+                    });
+                    this.$router.push('ContinueView');
+                }
             },
             checkUsers() {
 
             },
-            showPopup(){
+            hashStrings (s) {
+                let h = 0, l = s.length, i = 0;
+                if ( l > 0 )
+                    while (i < l)
+                        h = (h << 5) - h + s.charCodeAt(i++) | 0;
+                return h;
+            },
+            showSignIn(){
                 this.displaySignIn = !this.displaySignIn
             },
             continue() {
+                console.log ("The idea is that here another little box appears");
                 this.notContinue = false;
+            },
+            back() {
+                if (this.notContinue) {
+                    this.$router.push('/');
+                }
+                this.notContinue = true;
+            },
+            goToSearch() {
+                this.$router.push('Search');
+            },
+            goToSettings() {
+                this.$router.push("Settings");
             }
         }
     }
@@ -92,33 +190,36 @@
 <style scoped>
 
     .registration-grid {
+        overflow-y: scroll;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        height: 100%;
+        height: 100vh;
         padding-left: 5%;
         padding-right: 5%;
     }
 
     .registration-box {
         display: grid;
-        grid-template-rows: 2fr 10fr;
+        grid-template-rows: 1fr 7fr;
         margin: 4%;
         font-size: larger;
         vertical-align: center;
-        text-align: center;
+        text-align: left;
     }
 
     .input-fields {
         display: grid;
-        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 4fr;
+        /*grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 4fr;*/
         margin: 4%;
+        vertical-align: text-top;
     }
 
+    .input-fields div {
+        margin-top: 1.5vh;
+    }
 
-    .set-up-backend-box {
-        display: grid;
-        grid-template-rows: 1fr 1fr 1fr 5fr;
-        margin: 4%;
+    .p-button.p-button-icon-only {
+        width: 5rem;
     }
 
     .logo-box {
@@ -138,11 +239,6 @@
         padding: 10px;
     }
 
-    input::placeholder {
-        color: #575757;
-        font-weight: bold;
-    }
-
     #checkboxBox {
         text-align: left;
     }
@@ -153,13 +249,22 @@
         padding-left: 2%;
     }
 
-    Button {
-      float: right;
-    }
-
     u {
         color: #41B3B2;
         cursor: pointer;
+    }
+
+    input {
+        margin-top: 3vh;
+    }
+
+    .p-button-lg {
+        max-width: 6vw;
+        max-height: 6vh;
+        position: revert;
+        bottom: 3vh;
+        right: 55vw;
+        margin: 1vw;
     }
 
 </style>

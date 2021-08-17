@@ -2,144 +2,18 @@ import {createStore} from 'vuex'
 
 const store = createStore({
     state:{
-        signedInUserId: 2,
-        signedIn : false,
+        signedInUserId: null,
+        signedIn : null,
         users: [
-            {
-                id: 0,
-                info: {
-                    id: 0,
-                    name: 'Marike',
-                    email: 'example@funsail.co.za',
-                    isActive: true,
-                },
-                backends: [
-                    {
-                        id: 0,
-                        name: 'BIRDS',
-                        associatedEmail: 'marike@funsail.co.za',
-                        active: true,
-                        link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
-                        admin: true,
-                        connected: true,
-                        color: '#b34e47'
-                    },
-                    {
-                        id: 1,
-                        name: 'LEGO',
-                        associatedEmail: 'marike1@funsail.co.za',
-                        active: false,
-                        link: 'www.justAnotherExample/LEGO/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey',
-                        admin: true,
-                        connected: true,
-                        color: '#21b312'
-                    },
-                    {
-                        id: 2,
-                        name: 'Fluffy',
-                        associatedEmail: 'marike2@funsail.co.za',
-                        active: true,
-                        link: 'www.fulffy&Bubbles/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
-                        admin: true,
-                        connected: true,
-                        color: '#41B3B2'
-                    }
-                ]
-            },
-            {
-                id: 1,
-                info: {
-                    id: 1,
-                    name: 'Josh',
-                    email: 'joshwalkerdev@gmail.com',
-                    isActive: false
-                },
-                backends: [
-                    {
-                        id: 0,
-                        name: 'CARS',
-                        associatedEmail: 'josh1@gmail.com',
-                        active: true,
-                        link: 'www.randomCarType/inventoryLink/23NSLud93nfskdj',
-                        passKey: 'w489wdN49h$rKL_passKey_9dHWIe4tdfg4REWGsfg',
-                        admin: false,
-                        connected: false,
-                        color: '#b30a8c'
-                    },
-                    {
-                        id: 1,
-                        name: 'WINDOWS',
-                        associatedEmail: 'josh2@gmail.com',
-                        active: false,
-                        link: 'www.justAnotherExample/windows/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey',
-                        admin: false,
-                        connected: true,
-                        color: '#fdff23'
-                    },
-                    {
-                        id: 2,
-                        name: 'TEST',
-                        associatedEmail: 'josh3@gmail.com',
-                        active: true,
-                        link: 'www.doesnotmattermuch/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
-                        admin: false,
-                        connected: true,
-                        color: '#41B3B2'
-                    }
-                ]
-            },
-            {
-                id: 2,
-                info: {
-                    id: 2,
-                    name: 'Lauren',
-                    email: 'lauren@gmail.com',
-                    isActive: true
-                },
-                backends: [
-                    {
-                        id: 0,
-                        name: 'BIRDS',
-                        associatedEmail: 'lauren1@gmail.com',
-                        active: true,
-                        link: 'www.birdsOfEden/inventoryLink/23NSLud93nfskdj',
-                        passKey: 'w489wdN49h$rKLJHF498Yuw9UE4ER89dHWIe4tdfg4REWGsfg',
-                        admin: false,
-                        connected: false,
-                        color: '#25b313'
-                    },
-                    {
-                        id: 1,
-                        name: 'LEGO',
-                        associatedEmail: 'lauren2@gmail.com',
-                        active: false,
-                        link: 'www.justAnotherExample/LEGO/BACKEND',
-                        passKey: 'new84lLKJREpassKD9e7edfjKey',
-                        admin: true,
-                        connected: true,
-                        color: '#1616b3'
-                    },
-                    {
-                        id: 2,
-                        name: 'Fluffy',
-                        associatedEmail: 'lauren2@gmail.com',
-                        active: true,
-                        link: 'www.fulffy&Bubbles/backend/link',
-                        passKey: '_Funny_w489wdN_Pass_498Yuw9UE4ER89_Random_4REWGsfg',
-                        admin: true,
-                        connected: true,
-                        color: '#b3100c'
-                    }
-                ]
-            }
-        ]
+            ]
     },
     getters:{
+
+        //User information related getters
+
+        getNewAppStatus (state) {
+            return state.users.length === 0;
+        },
         getSignedIn(state){
             return state.signedIn;
         },
@@ -153,70 +27,159 @@ const store = createStore({
             }
             return users;
         },
-        getUserBackend: (state) => (id) => {
-            return state.users.find(user => user.id === id).backends;
-        },
         getSignedInUserId(state){
             return state.signedInUserId;
         },
+        getUserMasterEmailsArr(state) {
+            let userNamesArr = [];
+            for (let user of state.users) {
+                userNamesArr.push(user.info.email);
+            }
+            return userNamesArr;
+        },
+        getUserHashCorrect: (state) => (payload) => {
+            let pw = state.users[payload.id].info.hash;
+            let h = 0, l = pw.length, i = 0;
+            if ( l > 0 )
+                while (i < l)
+                    h = (h << 5) - h + pw.charCodeAt(i++) | 0;
+
+            return h === payload.hash;
+
+        },
+
+
+        //Signed in User's backends related getters
+
+        getUserBackend: (state) => (id) => {
+            return state.users.find(user => user.id === id).backends;
+        },
+        getUserBackendNames: (state, getters) => {
+          let backends = getters.getUserBackend(getters.getSignedInUserId);
+          let backendsArr = [];
+          for( let backend of backends){
+              backendsArr.push(backend.local.name);
+          }
+          return backendsArr;
+        },
         getUserAdminStatus: (state) => (backendID) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.id === backendID).admin;
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },
+
+
+        //Unconnected backend related getters
+
         unconnectedBackendNo: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false).length;
+            return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false).length;
         },
-        unconnectedBackendNames: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.connected === false);
+        unconnectedBackendObjects: (state) => {
+            return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false);
+        },
+        unconnectedBackendNames: (state, getters) => {
+            let unconnectedBackends = getters.unconnectedBackendObjects;
+            let unconnectedBackendNamesArr = [];
+            for (let backend of unconnectedBackends) {
+                unconnectedBackendNamesArr.push(backend.local.name);
+            }
+            return unconnectedBackendNamesArr;
         },
         unconnectedBackendBool: (state, getters) => {
             return getters.unconnectedBackendNo !== 0;
+        },
+        //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
+        //should return true or false
+        //this would allow us to determine whether or not a data source can be edited/deleted by a user
+        getBackendAdminStatus: (state) => (backendName) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         }
     },
 
     //synchronous changes to the store
     mutations: {
-        editBackend(state, payload) {
-            console.log ('PAYLOAD NAME: ' + payload.name);
-            console.log ('PAYLOAD email: ' + payload.associatedEmail);
+        //Initialise Store from local storage
 
-            state.users[payload.userIndex].backends[payload.backendIndex].name = payload.name;
-            state.users[payload.userIndex].backends[payload.backendIndex].associatedEmail = payload.associatedEmail;
-            state.users[payload.userIndex].backends[payload.backendIndex].link = payload.link;
-            state.users[payload.userIndex].backends[payload.backendIndex].passKey = payload.passKey;
-            state.users[payload.userIndex].backends[payload.backendIndex].active = payload.active;
-            state.users[payload.userIndex].backends[payload.backendIndex].id = payload.id;
-            state.users[payload.userIndex].backends[payload.backendIndex].admin = payload.admin;
+        initialiseStore(state) {
+            // Check if the ID exists
+            if(localStorage.getItem('store')) {
+                // Replace the state object with the stored item
+                this.replaceState(
+                    Object.assign(state, JSON.parse(localStorage.getItem('store')))
+                );
+            }
+        },
+
+        //Signed-in user backend related mutations
+
+        signInUser (state, payload) {
+              let thisUser =  state.users.find( user => user.info.email === payload.email);
+              thisUser.info.isActive = true;
+        },
+
+        signOutUser (state, payload) {
+             state.users[payload.user.id].info.isActive = false;
+        },
+
+        editBackend(state, payload) {
+            let backend = state.users[payload.userIndex].backends[payload.backendIndex]
+            backend.local.id = payload.id;
+            backend.local.name = payload.name;
+            backend.local.active = payload.active;
+
+            backend.connect.associatedEmail = payload.associatedEmail;
+            backend.connect.link = payload.link;
+            backend.connect.passKey = payload.passKey;
+
+            backend.receive.admin = payload.admin;
 
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
-                state.users[state.signedInUserId].backends[x].id = x;
+                state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
         addBackend(state, payload){
-
             let newBackend = {
-                id: null,
-                name: '',
-                active: null,
-                link: '',
-                passKey: '',
-                associatedEmail: ''
+                local: {
+                    id: null,
+                    name: '',
+                    active: null,
+                },
+                connect: {
+                    associatedEmail: '',
+                    link: '',
+                    passKey: ''
+                },
+                receive: {
+                    admin: null,
+                    connected: false
+                }
             };
 
-            newBackend.name = payload.name;
-            newBackend.link = payload.link;
-            newBackend.passKey = payload.passKey;
-            newBackend.active = payload.active;
-            newBackend.associatedEmail = payload.associatedEmail;
-            newBackend.admin = payload.admin;
+            newBackend.local.name = payload.name;
+            newBackend.local.active = payload.active;
+
+            newBackend.connect.associatedEmail = payload.associatedEmail;
+            newBackend.connect.link = payload.link;
+            newBackend.connect.passKey = payload.passKey;
+
+            newBackend.receive.admin = payload.admin;
 
             state.users[payload.userIndex].backends.push(newBackend);
+            state.signedIn = true;
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
-                state.users[state.signedInUserId].backends[x].id = x;
+                state.users[state.signedInUserId].backends[x].local.id = x;
             }
 
         },
+        deleteBackend(state, payload) {
+            state.users[state.signedInUserId].backends.splice(payload,1);
+            let l = state.users[state.signedInUserId].backends.length;
+            for(let x = 0; x < l; x++) {
+                state.users[state.signedInUserId].backends[x].local.id = x;
+            }
+        },
+
+        //User management
         setSignedIn(state, payload){
             state.signedIn = payload;
         },
@@ -225,25 +188,69 @@ const store = createStore({
             state.users[payload.userID].info.isActive = payload.signedIn;
             state.signedIn = true;
         },
-        deleteBackend(state, payload) {
-            state.users[state.signedInUserId].backends.splice(payload,1);
-            let l = state.users[state.signedInUserId].backends.length;
-            for(let x = 0; x < l; x++) {
-                state.users[state.signedInUserId].backends[x].id = x;
+        addUserToLocalList(state, payload) {
+            let newUser = {
+                id: null,
+                info: {
+                    id: null,
+                    name: null,
+                    email: null,
+                    isActive: true,
+                    hash: null,
+                    hasVault: null
+                },
+                backends: []
+            };
+
+            newUser.info.name = payload.name;
+            newUser.info.email = payload.email;
+            newUser.info.isActive = true;
+            newUser.info.hash = payload.hash;
+            newUser.info.hasVault = payload.hasVault;
+
+            state.users.push(newUser);
+
+            let x = 0;
+            for (let user of state.users) {
+                user.id = x;
+                user.info.id = x;
+                x++;
             }
+
+            state.signedInUserId = state.users.length-1;
+            state.signedIn = true;
+
         },
-        setCurrentUserName(state, payload){
-            state.name = payload;
-        },
-        setCurrentUserEmail(state, payload){
-            state.email = payload;
+        deleteUserFromLocalList (state, payload) {
+            if (payload.deleteVault) {
+                //Do some server side call to delete file on web
+            }
+
+
+            //Delete local
+            state.users.splice(payload.user.id, 1);
+            let x = 0;
+            for (let user of state.users) {
+                   user.info.id = x;
+                   user.id = x++;
+            }
+
         }
+
     },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
+        //Information to be obtained for backend connected and admin status
+
 
     }
+});
+
+// Subscribe to store updates
+store.subscribe((mutation, state) => {
+    // Store the state object as a JSON string
+    localStorage.setItem('store', JSON.stringify(state));
 });
 
 export default store;

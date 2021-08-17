@@ -13,16 +13,6 @@ import hljs from "highlight.js";
 class FileDataSourceService {
 
     /**
-     * In-Memory Store
-     */
-
-    fileDataSourceArray: FileDataSource[];
-
-    constructor() {
-        this.fileDataSourceArray = [];
-    }
-
-    /**
      * Service Methods
      */
     getAllFileDataSources() {
@@ -60,24 +50,24 @@ class FileDataSourceService {
         }
     }
 
-    async addFileDataSource(fileName: string, filePath: string) {
-        filePath = this.correctPath(filePath);
-        if (fileName === '') {
+    async addFileDataSource(dataSource: FileDataSource) {
+        dataSource.path = this.correctPath(dataSource.path);
+        if (dataSource.filename === '') {
             return [null, {
                 "code": 400,
                 "message": "No file name"
             }]
-        } else if (filePath === '') {
+        } else if (dataSource.path === '') {
             return [null, {
                 "code": 400,
                 "message": "No file path"
             }]
         }
-        if (filePath[filePath.length - 1] !== '/') {
-            filePath += '/';
+        if (dataSource.path[dataSource.path.length - 1] !== '/') {
+            dataSource.path += '/';
         }
         try {
-            fs.readFileSync(filePath + fileName);
+            fs.readFileSync(dataSource.path + dataSource.filename);
         } catch (err) {
             if (err.code == 'ENOENT') {
                 return [null, {
@@ -95,8 +85,7 @@ class FileDataSourceService {
                 "message": "Unknown error"
             }];
         }
-        const temp: FileDataSource = {filename: fileName, path: filePath};
-        let [, e] = await fileDataSourceRepository.addDataSource(temp);
+        let [, e] = await fileDataSourceRepository.addDataSource(dataSource);
         if (e) {
             return [null, e]
         }
@@ -107,6 +96,9 @@ class FileDataSourceService {
     }
 
     correctPath(filePath: string) {
+        if (filePath === undefined) {
+            return filePath;
+        }
         return filePath.replace(/\\/g, "/");
     }
 
@@ -224,7 +216,11 @@ class FileDataSourceService {
             while (snippet.indexOf('\n') == 0) {
                 snippet = snippet.substr(1, snippet.length);
             }
-            snippet = hljs.highlight(snippet, {language: extension}).value;
+            try {
+                snippet = hljs.highlight(snippet, {language: extension}).value;
+            } catch (e) {
+                snippet = hljs.highlightAuto(snippet).value;
+            }
             /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
             snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
             snippet = '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' + snippet + '</pre>';

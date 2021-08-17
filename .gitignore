@@ -33,3 +33,11 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+/packages/client/res/
+
+
+/packages/api/src/repositories/store/
+/data/*
+!/data/datasleuth_reference.db
+!/data/datasleuth.db.sql

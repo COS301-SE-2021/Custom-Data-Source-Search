@@ -8,6 +8,9 @@
             <div>
                 <user-info-card :user-index="getSignedInUserId"/>
             </div>
+            <div>
+
+            </div>
         </div>
         <div class="info-div">
             <div class="settings-subheading">
@@ -18,16 +21,20 @@
                 <backend-card
                         v-if="newBackendBool"
                         :new-backend="newBackendBool"
-                        :fed-in-backend="newBackendObject"
+                        :local="newBackendObject.local"
+                        :connect="newBackendObject.connect"
+                        :receive="newBackendObject.receive"
                         @save-new-backend="saveNewBackend()"
                         :user-index="getSignedInUserId"
                 />
                 <backend-card
-                        v-for="(backend, i) in getUserBackend(getSignedInUserId)"
+                        v-for="(backend) in getUserBackend(getSignedInUserId)"
                         :user-index="getSignedInUserId"
-                        :backend-index="i"
-                        :fed-in-backend="backend"
-                        :key="i"
+                        :backend-index="backend.local.id"
+                        :local = backend.local
+                        :connect = backend.connect
+                        :receive = backend.receive
+                        :key="backend.local.id"
                 />
             </div>
         </div>
@@ -48,16 +55,28 @@
             return {
                 newBackendBool: false,
                 newBackendObject: {
-                    name: 'New Backend',
-                    active: false,
-                    link: '',
-                    passKey: '',
-                    admin: false,
-                    connected: false
+                    local: {
+                        name: 'New Backend',
+                        active: false,
+                    },
+                    connect: {
+                        link: '',
+                        passKey: '',
+                        associatedEmail: ''
+                    },
+                    receive: {
+                        admin: false,
+                        connected: false
+                    }
                 },
             }
         },
         name: "SettingsPage",
+        beforeMount() {
+            if (this.$store.getters.getNewAppStatus) {
+                this.$router.push('/');
+            }
+        },
         methods: {
             newBackend() {
                 this.newBackendBool = !this.newBackendBool;
@@ -71,7 +90,7 @@
         computed: {
             ...mapGetters ([
                 'getUserBackend',
-                'getSignedInUserId'
+                'getSignedInUserId',
              ])
         }
     }
@@ -81,6 +100,7 @@
 
     .settings-box {
         padding-left: 1%;
+        height: 100vh;
     }
 
     .info-div {

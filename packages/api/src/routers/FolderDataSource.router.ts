@@ -33,7 +33,7 @@ folderDataSourceRouter.get("/:id", (req: Request, res: Response) => {
  * Add a data source by it's path
  */
 folderDataSourceRouter.post("/", (req: Request, res: Response) => {
-    const result = folderDataSourceService.addFolderDataSource(req.body.path);
+    const result = folderDataSourceService.addFolderDataSource(req.body);
     res.status(result.code).send(result.body);
 });
 
