@@ -62,6 +62,9 @@ const store = createStore({
           }
           return backendsArr;
         },
+        getUserBackendURL: (state, getters) => (backendName) =>{
+          return state.getUserBackend(state.signedInUserId).find(backend => backend.local.name === backendName).connect.link;
+        },
         getUserAdminStatus: (state) => (backendID) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },

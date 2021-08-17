@@ -26,6 +26,7 @@
 import axios from 'axios';
 const electron = require('@electron/remote');
 const fs = require('fs');
+const FormData = require('form-data')
 export default {
   name: "AddFileDatasource",
   props:{
@@ -99,8 +100,15 @@ export default {
 
                 //for every file selected
                 for (let i = 0; i < files.filePaths.length; i++) {
+                  let p, str;
+                  str = files.filePaths[i]
 
-                  this.filepaths.push(files.filePaths[i])
+                  //Force use of / in URI's across all platforms
+                  str = str.replaceAll("\\", "/")
+
+                  p = str.split("/")
+                  this.filename.push(p.pop())
+                  this.filepaths.push(files.filePaths[i].toString())
                   console.log(this.filepaths[i])
                 }
               }
@@ -108,15 +116,8 @@ export default {
       }
     },
     submitSource(){
-      if(this.filename.length<1 || this.filepaths.length<1){
-        this.$toast.add({
-          severity: 'info',
-          summary: 'No files selected',
-          detail: 'Please select files to upload',
-          life: 3000
-        })
-      }
-      else if(this.backend==='Local'){
+      if(this.filename.length>0 || this.filepaths.length>0){
+        if(this.backend==='Local'){
           for (let i = 0; i < this.filename.length; i++) {
             let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
             axios
@@ -141,13 +142,48 @@ export default {
                 })
           }
         }
-      else if(this.filepaths && this.filepaths[0]){
-        let formData = new FormData();
-        for(let i =0; i<this.filepaths.length; i++){
-          formData.append('file', this.filepaths[i]);
-          //call axios post
-          //specify header: 'Content-Type: 'multipart/form-data'
+        else if(this.filepaths && this.filepaths[0]){
+          let formData = new FormData();
+          let fileStream;
+          for(let i =0; i<this.filepaths.length; i++){
+            fileStream = fs.readFileSync(this.filepaths[i]);
+            formData.set('file', fileStream);
+            formData.set('tag1', this.tag1);
+            formData.set('tag2', this.tag2);
+
+            axios
+              .post(this.$store.getters.getUserBackendURL(this.backend), formData, {
+                headers: {'Content-Type': 'multipart/form-data'}
+              })
+              .then((resp) =>{
+                this.$toast.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: resp.data.message,
+                  life: 3000
+              })
+                this.$emit('addFile')
+                this.$emit("submitted")
+                console.log(resp.data)
+              })
+              .catch((error) =>{
+                this.$toast.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: error.response.data.message,
+                  life: 3000
+                })
+              })
+          }
         }
+      }
+      else{
+        this.$toast.add({
+          severity: 'info',
+          summary: 'No files selected',
+          detail: 'Please select files to upload',
+          life: 3000
+        })
       }
     }
   }
