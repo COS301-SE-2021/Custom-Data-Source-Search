@@ -271,7 +271,7 @@ const store = createStore({
             let stringPair = aesCtr.decrypt(encryptedSecretPair);
             let pairObject = stringPair.toJSON();
             if (!pairObject["passkey"] || !pairObject["secret"]) {
-                let pairObject = null;
+                pairObject = null;
             }
             return  {
                 id: payload.id,
