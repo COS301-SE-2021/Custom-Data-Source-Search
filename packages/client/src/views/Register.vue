@@ -143,7 +143,7 @@
 
                 if (passFormValidation)  {
 
-                    this.$store.dispatch("addNewUser", {
+                        this.$store.dispatch("addNewUser", {
                         name: this.userDetails.userName,
                         email: this.userDetails.masterEmail,
                         masterPassword: this.masterPassword,

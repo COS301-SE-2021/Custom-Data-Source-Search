@@ -113,13 +113,15 @@ const store = createStore({
         //Signed-in user backend related mutations
 
         //Action will call this specific mutation after password validation checks out
-        signInUser (state, payload) {
+        signInUser: function (state, payload) {
               let thisUser =  state.users.find( user => user.info.email === payload.email);
               thisUser.info.isActive = true;
+              let thisUserPassKey = state.passKeyArr.find(thisUser => thisUser.email === payload.email);
+              thisUserPassKey.masterPassKey = generateMasterKey(payload.passWord, payload.email);
         },
 
         signOutUser (state, payload) {
-            state.masterPass[payload.user.id].masterPass = null;
+            state.passKeyArr[payload.user.id].masterPassKey = null;
             state.users[payload.user.id].info.isActive = false;
         },
 
@@ -260,18 +262,10 @@ const store = createStore({
         addNewUser: function ({commit, dispatch}, payload) {
             //Payload: name, email, masterPassword, hasVault
             console.log ("Adding a new user");
-            //Called by component
-            // => calls "add" mutation once it has sorted out passKeys, and user is really signed in
 
-            let newPassKey = generateMasterKey({
-                email: payload.email,
-                masterPassword: payload.masterPassword
-                });
-
-            console.log("Problems: " + newPassKey.masterPassKey + ' ' + JSON.stringify(newPassKey.encryptedMasterKey));
+            let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
 
             commit('addUserToLocalList', {name: payload.name, email: payload.email, hasVault: payload.hasVault, passKey: newPassKey});
-
         },
 
         decryptMasterKey(commit, getters, payload) {
@@ -323,14 +317,14 @@ store.subscribe((mutation, state) => {
     localStorage.setItem('store', JSON.stringify(state));
 });
 
-function generateMasterKey(payload) {
+function generateMasterKey(masterPassword, email) {
     //Payload: masterPassword, email
 
     console.log ("Generating masterPassKey");
 
     let encryptionKey = pbkdf2.pbkdf2Sync(
-        JSON.stringify(payload.masterPassword),
-        payload.email,
+        JSON.stringify(masterPassword),
+        email,
         1000,
         256 / 8,
         'sha512'
