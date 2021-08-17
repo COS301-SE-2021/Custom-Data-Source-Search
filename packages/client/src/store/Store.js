@@ -299,7 +299,7 @@ const store = createStore({
 
             //For now, just mock the async function:
             let newSecretPair = null;
-            let followLinkSuccess = false;
+            let followLinkSuccess = true;
             if (followLinkSuccess) {
                 newSecretPair = {
                     p_sessionKey: 'slkj4ewodf9jlwk4j09fdw4jslef49',
@@ -310,6 +310,7 @@ const store = createStore({
                 console.log ("OneTimeKey did not work");
                 return false;
             }
+
 
 
 
@@ -388,7 +389,7 @@ function decryptMasterKey(encryptedMasterPassKey, fedInPassword, email) {
     return masterKeyObject;
 }
 
-function  encryptAndSaveBackendSecretPair(masterKey, secretPair) {
+function  encryptBackendSecretPair(masterKey, secretPair) {
     let aesCtr = new aes.ModeOfOperation.ctr(masterKey);
     let encryptedSecretPair = aesCtr.encrypt(secretPair.toBytes());
     return aes.utils.hex.fromBytes(encryptedSecretPair);

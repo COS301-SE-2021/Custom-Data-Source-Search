@@ -21,9 +21,11 @@
                 <input-text v-model="tempBackendInfo.oneTimeKey"/>
                 <div><em>Secret: </em></div>
                 <input-text v-model="tempBackendInfo.secret"/>
+                <div><em>Master Password: </em></div>
+                <input-text v-model="tempBackendInfo.masterPassword"/>
                 <div></div>
                 <div>
-                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined">Connect</Button>
+                    <Button @click="connectToBackendChecks" style="float: right" class="p-button p-button-outlined">Connect</Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
                 </div>
             </form>
@@ -57,7 +59,7 @@
                     oneTimeKey: '',
                     secret: '',
 
-                    admin: null
+                    masterPassword: ''
                 }
             }
         },
@@ -93,30 +95,38 @@
                 this.expand = !this.expand;
                 this.editBackendBool = !this.editBackendBool;
             },
-            connectToBackend() {
-                this.expand = true;
-                this.editBackendBool = false;
-
-                //Operations changing store
-                if(this.newBackend) {
-
-                    //Change from commit to action
-                    this.addBackendSuccess = this.$store.dispatch("addNewBackend", {
-                        userIndex: this.userIndex,
-                        name: this.tempBackendInfo.name,
-                        associatedEmail: this.tempBackendInfo.associatedEmail,
-                        link: this.tempBackendInfo.link,
-                        oneTimeKey: this.tempBackendInfo.oneTimeKey,
-                        secret: this.secret,
-                    });
-                    console.log (this.addBackendSuccess);
-                    if(!this.addBackendSuccess.state){
-                        this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'Please review details or request a new One Time Key', life: 3000});
-                    }
-                    this.$emit('saveNewBackend');
+            connectToBackendChecks(){
+                if (
+                    this.tempBackendInfo.masterPassword === '' ||
+                    this.tempBackendInfo.link === '' ||
+                    this.tempBackendInfo.associatedEmail === '' ||
+                    this.tempBackendInfo.secret === '' ||
+                    this.tempBackendInfo.oneTimeKey === ''
+                ) {
+                    this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'All the fields have not been filled.', life: 3000});
                 }
-
+                else {
+                    this.connectToBackend();
+                }
             },
+            connectToBackend() {
+                //Change from commit to action
+                this.addBackendSuccess = this.$store.dispatch("addNewBackend", {
+                    userIndex: this.userIndex,
+                    name: this.tempBackendInfo.name,
+                    associatedEmail: this.tempBackendInfo.associatedEmail,
+                    link: this.tempBackendInfo.link,
+                    oneTimeKey: this.tempBackendInfo.oneTimeKey,
+                    secret: this.secret,
+                    masterPassword: this.tempBackendInfo.masterPassword
+                });
+                 console.log (this.addBackendSuccess);
+                if(!this.addBackendSuccess.state){
+                    this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'Please review details or request a new One Time Key', life: 3000});
+                }
+                this.$emit('saveNewBackend');
+            },
+
             cancelChanges() {
                 this.expand = true;
                 this.editBackendBool = false;
