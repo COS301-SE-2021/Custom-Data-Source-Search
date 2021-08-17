@@ -367,7 +367,7 @@ const store = createStore({
             let encryptedSecretPair = aes.utils.hex.toBytes(encrypted.secretPair);
             let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
             let stringPair = aesCtr.decrypt(encryptedSecretPair);
-            let pairObject = stringPair.toJSON();
+            let pairObject = JSON.parse(aes.utils.utf8.fromBytes(stringPair));
             if (!pairObject["passkey"] || !pairObject["secret"]) {
                 pairObject = null;
             }
