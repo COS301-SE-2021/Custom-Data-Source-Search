@@ -243,21 +243,42 @@ const store = createStore({
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
         generateMasterKey(commit, payload) {
-            let key = pbkdf2.pbkdf2Sync(
+            let encryptionKey = pbkdf2.pbkdf2Sync(
                 payload.masterPassword,
                 payload.email,
                 1000,
                 256 / 8,
                 'sha512'
             )
+            // Generate random key to be encrypted by master key
+            let masterKey = new Uint8Array(256 / 8);
+            window.crypto.getRandomValues(masterKey);
+            let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey)
+            let encryptedMasterKey = aesCtr.encrypt(masterKey)
             commit.saveMasterKey({
                 email: payload.email,
-                key: key
+                keyObject: {key: aes.utils.hex.fromBytes(encryptedMasterKey)}
             })
         },
-        encryptAndSaveBackendSecretPair(commit, getters, payload) {
+        decryptMasterKey(commit, getters, payload) {
+            let decryptionKey = pbkdf2.pbkdf2Sync(
+                payload.masterPassword,
+                payload.email,
+                1000,
+                256 / 8,
+                'sha512'
+            )
+            let masterKeyEncrypted = aes.utils.hex.toBytes(getters.getEncryptedMasterKey(payload.email))
+            let easCtr = new aes.ModeOfOperation.ctr(decryptionKey)
+            let masterKeyObject = aes.utils.hex.fromBytes(easCtr.decrypt(masterKeyEncrypted))
+            if (!masterKeyObject["key"]) {
+                masterKeyObject = null
+            }
+            commit.saveMasterKeyOpen(masterKeyObject)
+        },
+        encryptAndSaveBackendSecretPair(commit, payload) {
             let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
-            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toString())
+            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toBytes())
             commit.saveEncryptedBackendSecretPair({
                 id: payload.id,
                 email: payload.email,
