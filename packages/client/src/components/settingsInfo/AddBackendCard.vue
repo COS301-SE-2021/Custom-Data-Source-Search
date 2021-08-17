@@ -4,13 +4,10 @@
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
-                    <em v-if="receive.connected"  :style="connectedStyle" class="pi pi-circle-on" />
-                    <em v-if="!receive.connected" class="pi pi-circle-off" />
-                    <span> {{local.name}} </span>
-                    <span v-if="receive.admin" style="float: right; padding-top: 3px">ADMIN</span>
+                    <em class="pi pi-circle-off" />
+                    <span> {{cardName}} </span>
                 </div>
                 <div>
-                    <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="local.active"/>
                 </div>
             </div>
             <form @submit="saveChanges" class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
@@ -44,11 +41,12 @@
         },
         data () {
             return {
-                tempNameNo: 0,
-                checked: false,
-                editBackendBool: false,
                 expand: false,
-                newBackendT: null,
+                checked: false,
+                editBackendBool: true,
+                addBackendSuccess: null,
+                newBackend: true,
+                cardName: 'New Backend',
                 tempBackendInfo: {
                     id: null,
                     name: '',
@@ -76,41 +74,8 @@
             userIndex: {
                 type: Number,
                 default: null
-            },
-            backendIndex: {
-                type: Number,
-                default: null
-            },
-            newBackend: {
-                type: Boolean,
-                default: false
-            },
-
-            local: {
-                id: Number,
-                name: String,
-                active: Boolean,
-                color: String
-            },
-            connect: {
-                associatedEmail: String,
-                link: String,
-                passKey: String
-            },
-            receive: {
-                admin: Boolean,
-                connected: Boolean
             }
         },
-        mounted() {
-            this.setTempVars();
-
-            if (this.newBackend) {
-                this.editBackendBool = true;
-                this.expand = false;
-            }
-        },
-
         methods: {
 
             //View changes
@@ -135,15 +100,19 @@
                 //Operations changing store
                 if(this.newBackend) {
 
-                    this.$store.commit("addBackend", {
+                    //Change from commit to action
+                    this.addBackendSuccess = this.$store.dispatch("addNewBackend", {
                         userIndex: this.userIndex,
                         name: this.tempBackendInfo.name,
-                        link: this.tempBackendInfo.link,
-                        passKey: this.tempBackendInfo.passKey,
                         associatedEmail: this.tempBackendInfo.associatedEmail,
-                        active: this.tempBackendInfo.active,
+                        link: this.tempBackendInfo.link,
+                        oneTimeKey: this.tempBackendInfo.oneTimeKey,
+                        secret: this.secret,
                     });
-
+                    console.log (this.addBackendSuccess);
+                    if(!this.addBackendSuccess.state){
+                        this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'Please review details or request a new One Time Key', life: 3000});
+                    }
                     this.$emit('saveNewBackend');
                 }
 
@@ -154,35 +123,6 @@
                 if (this.newBackend) {
                     this.$emit('saveNewBackend');
                 }
-            },
-
-            //Operations changing store
-            deleteBackend() {
-                this.expand = false;
-                this.editBackendBool = false;
-                this.$store.commit("deleteBackend", this.backendIndex);
-                this.setTempVars();
-                // Still need "are you sure you want to delete this backend?" warning
-            },
-
-            editPermissions() {
-                console.log("To be implemented");
-            },
-
-            //Initialize component state
-            setTempVars() {
-                if (!this.newBackend) {
-                    this.tempBackendInfo.name = this.local.name;
-                }
-                this.tempBackendInfo.id = this.local.id;
-                this.tempBackendInfo.active = this.local.active;
-
-                this.tempBackendInfo.associatedEmail = this.connect.associatedEmail;
-                this.tempBackendInfo.link = this.connect.link;
-                this.tempBackendInfo.sessionKey = this.connect.keys.sessionKey;
-
-                this.tempBackendInfo.admin = this.receive.admin;
-                this.newBackendT = this.newBackend;
             }
         }
     }
@@ -213,13 +153,6 @@
     .expanded-backend-info div {
         max-height: 45px;
     }
-
-    .pi-circle-on, .pi-circle-off {
-        padding-top: 2px;
-        padding-left: 2px;
-        padding-bottom: 2px;
-    }
-
 
     input {
         margin-right: 2%;

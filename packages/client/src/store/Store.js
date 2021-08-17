@@ -279,20 +279,43 @@ const store = createStore({
         //Backend management
 
         addNewBackend: function ({commit}, payload) {
-            //Payload: name, active, associatedEmail, link, oneTimeKey, secret, userIndex, send: admin
+            //Payload: userIndex, name, associatedEmail, link, oneTimeKey, secret
+            console.log("Adding a new backend");
+
+            //Use link to get partial_seed and partial_backendKey from wherever it comes from
+            // let promise = new Promise((resolve , reject) => {
+            //     fetch(payload.link)
+            //         .then((res) => {
+            //             // successfully got data => ie, data returned: { p_sessionKey: String, p_seed: String } (or whatever types they are)
+            //             resolve(res);
+            //         })
+            //         .catch((err) => {
+            //             // an error occurred
+            //
+            //             reject(err);
+            //         });
+            // });
+
+
+            //For now, just mock the async function:
+            let newSecretPair = null;
+            let followLinkSuccess = false;
+            if (followLinkSuccess) {
+                newSecretPair = {
+                    p_sessionKey: 'slkj4ewodf9jlwk4j09fdw4jslef49',
+                    p_seed: '3984729829r83'
+                }
+            }
+            else {
+                console.log ("OneTimeKey did not work");
+                return false;
+            }
+
+
+
 
         },
 
-
-        encryptAndSaveBackendSecretPair(commit, payload) {
-            let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
-            let encryptedSecretPair = aesCtr.encrypt(payload.secretPair.toBytes());
-            commit.saveEncryptedBackendSecretPair({
-                id: payload.id,
-                email: payload.email,
-                secretPair: aes.utils.hex.fromBytes(encryptedSecretPair),
-            });
-        },
         decryptBackendSecretPair(getters, payload) {
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
             let encryptedSecretPair = aes.utils.hex.toBytes(encrypted.secretPair);
@@ -363,6 +386,12 @@ function decryptMasterKey(encryptedMasterPassKey, fedInPassword, email) {
         masterKeyObject = null
     }
     return masterKeyObject;
+}
+
+function  encryptAndSaveBackendSecretPair(masterKey, secretPair) {
+    let aesCtr = new aes.ModeOfOperation.ctr(masterKey);
+    let encryptedSecretPair = aesCtr.encrypt(secretPair.toBytes());
+    return aes.utils.hex.fromBytes(encryptedSecretPair);
 }
 
 
