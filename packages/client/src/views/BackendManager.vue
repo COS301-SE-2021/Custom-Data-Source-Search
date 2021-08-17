@@ -113,6 +113,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import axios from "axios";
 
 export default {
   name: "BackendManager.vue",
@@ -690,6 +691,21 @@ export default {
   },
   methods : {
     addUsers(){
+
+      let config
+      let reqObj = {first_name: this.addUserFirstName, last_name: this.addUserLastName, }
+
+      axios.post(this.backend.connect.link + "/admin/addusers", ).then(
+          resp => {
+            console.log(resp.data);
+            this.sources = resp.data.data;
+            let i;
+            for (i = 0; i < this.sources.length; i++) {
+              this.sources[i]["backend"] = "Local"
+            }
+            this.loading = false
+          }
+      )
 
     },
     deleteUsers(){
