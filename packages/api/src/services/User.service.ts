@@ -1,4 +1,5 @@
 import userRepository from "../repositories/UserRepository";
+import jwt from "jsonwebtoken";
 
 
 class UserService {
@@ -183,6 +184,27 @@ class UserService {
             "body": {
                 "message": "Successfully logged in",
                 "refresh_token": tokenResult
+            }
+        };
+    }
+
+    generateToken(body: { uuid: string; refresh_token: string; }) {
+        const [validateResult, validateErr] = userRepository.validateRefreshToken(body.uuid, body.refresh_token);
+        if (validateErr) {
+            return {
+                "code": validateErr.code,
+                "body": {
+                    "message": validateErr.message
+                }
+            };
+        }
+        let secret: string = process.env.JWT_SECRET_KEY;
+        const token = jwt.sign(validateResult, secret);
+        return {
+            "code": 200,
+            "body": {
+                "message": "Successfully generated jwt token",
+                "jwt": token
             }
         };
     }

@@ -222,7 +222,7 @@ class UserRepository {
             db.prepare('DELETE FROM active_user WHERE email = ?').run(user["email"]);
             const refreshToken = randomBytes(16).toString("hex");
             const expirationTimeSeconds = 20;
-            const newDate = new Date(new Date().getTime() + expirationTimeSeconds).getTime();
+            const newDate = new Date(new Date().getTime() + expirationTimeSeconds * 1000).getTime();
             db.prepare(
                 'INSERT INTO active_user (email, refresh_token, valid_until) VALUES (?,?,?);'
             ).run(
@@ -236,6 +236,33 @@ class UserRepository {
             return [null, {
                 "code": 500,
                 "message": "Error while generating new refresh token"
+            }];
+        }
+    }
+
+    validateRefreshToken(uuid: string, refreshToken: string) {
+        try {
+            const user = db.prepare('SELECT * FROM user WHERE id = ?').all(uuid)[0];
+            const activeUser = db.prepare('SELECT * FROM active_user WHERE refresh_token = ?').all(refreshToken)[0];
+            if (activeUser === undefined) {
+                return [null, {
+                    "code": 400,
+                    "message": "No active refresh token found"
+                }];
+            }
+            const time: number = parseInt(activeUser["valid_until"]);
+            if (time < new Date().getTime()) {
+                return [null, {
+                    "code": 400,
+                    "message": "Time out of refresh token"
+                }];
+            }
+            return [user, null];
+        } catch (e) {
+            console.error(e);
+            return [null, {
+                "code": 500,
+                "message": "Error while validating refresh token"
             }];
         }
     }

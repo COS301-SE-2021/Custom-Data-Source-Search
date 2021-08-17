@@ -4,7 +4,6 @@
 import express, {Request, Response} from "express";
 import userService from "../services/User.service";
 import {check} from "express-validator";
-import jwt from "jsonwebtoken";
 
 /**
  * Router Definition
@@ -74,15 +73,8 @@ userRouter.post("/global/revoke", (req: Request, res: Response) => {
 });
 
 userRouter.post("/generatetoken", (req: Request, res: Response) => {
-   let secret: string = process.env.JWT_SECRET_KEY;
-   let data = {
-       uuid: 2,
-       role: "viewer"
-   }
-   const token = jwt.sign(data, secret);
-   res.send({
-       "token": token
-   })
+    const result = userService.generateToken(req.body);
+    res.status(result.code).send(result.body);
 });
 
 userRouter.post("/login", (req: Request, res: Response) => {
