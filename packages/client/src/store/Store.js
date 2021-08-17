@@ -6,8 +6,7 @@ const store = createStore({
     state:{
         signedInUserId: null,
         signedIn : null,
-        users: [
-            ]
+        users: []
     },
     getters:{
 
@@ -244,8 +243,42 @@ const store = createStore({
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
         //Information to be obtained for backend connected and admin status
-
-
+        generateMasterKey(payload) {
+            let key = pbkdf2.pbkdf2Sync(
+                payload.masterPassword,
+                payload.email,
+                1000,
+                256 / 8,
+                'sha512'
+            )
+           return {
+                email: payload.email,
+                key: key
+            }
+        },
+        encryptAndSaveBackendPasswordAndSecret(commit, getters, payload) {
+            let aesCtr = new aes.ModeOfOperation.ctr(payload.key);
+            let encryptedPasskey = aesCtr.encrypt(payload.passkey);
+            let encryptedSeed = aesCtr.encrypt(payload.seed);
+            commit.saveEncryptedBackendPasswordAndSeed({
+                id: payload.id,
+                email: payload.email,
+                passkey: aes.utils.hex.fromBytes(encryptedPasskey),
+                encryptedSeed: aes.utils.hex.fromBytes(encryptedSeed)
+            });
+        },
+        decryptBackendPasswordAndSecret(getters, payload) {
+            let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
+            let encryptedPasskey = aes.utils.hex.toBytes(encrypted.passkey);
+            let encryptedSeed = aes.utils.hex.toBytes(encrypted.seed);
+            let aesCtr = new aes.ModeOfOperation.ctr(payload.key);
+            return  {
+                id: payload.id,
+                email: payload.email,
+                passkey: aesCtr.decrypt(encryptedPasskey),
+                seed: aesCtr.decrypt(encryptedSeed)
+            }
+        }
     }
 });
 
