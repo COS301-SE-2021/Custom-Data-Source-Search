@@ -246,7 +246,7 @@
         display: grid;
         grid-template-columns: 1fr 3fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
-        row-gap: 2px;
+        row-gap: 4px;
     }
 
     .expanded-backend-info div {

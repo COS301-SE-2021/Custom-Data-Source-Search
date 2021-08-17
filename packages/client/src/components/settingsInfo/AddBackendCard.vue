@@ -82,6 +82,8 @@
 
             //View changes
             change() {
+                //TO DO: check that masterKey is there before adding a backend
+
                 if (!this.newBackend) {
                     this.expand = !this.expand;
                     if (this.editBackendBool) {
@@ -96,6 +98,7 @@
                 this.editBackendBool = !this.editBackendBool;
             },
             connectToBackendChecks(){
+
                 if (
                     this.tempBackendInfo.masterPassword === '' ||
                     this.tempBackendInfo.link === '' ||
@@ -112,7 +115,6 @@
             connectToBackend() {
                 //Change from commit to action
                 this.addBackendSuccess = this.$store.dispatch("addNewBackend", {
-                    userIndex: this.userIndex,
                     name: this.tempBackendInfo.name,
                     associatedEmail: this.tempBackendInfo.associatedEmail,
                     link: this.tempBackendInfo.link,
@@ -157,7 +159,7 @@
         display: grid;
         grid-template-columns: 1fr 3fr;
         grid-template-rows: 1fr 1fr 1fr 1fr;
-        row-gap: 2px;
+        row-gap: 4px;
     }
 
     .expanded-backend-info div {

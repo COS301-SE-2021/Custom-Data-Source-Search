@@ -39,15 +39,8 @@ const store = createStore({
             }
             return userNamesArr;
         },
-        getUserHashCorrect: (state) => (payload) => {
-            let pw = state.users[payload.id].info.hash;
-            let h = 0, l = pw.length, i = 0;
-            if ( l > 0 )
-                while (i < l)
-                    h = (h << 5) - h + pw.charCodeAt(i++) | 0;
-
-            return h === payload.hash;
-
+        getMasterKey(state) {
+            return state.passKeyArr[state.signedInUserId].masterKey;
         },
 
 
@@ -115,13 +108,13 @@ const store = createStore({
         //Action will call this specific mutation after password validation checks out
         signInUser: function (state, payload) {
             let thisUserPassKey = state.passKeyArr.find(thisUser => thisUser.email === payload.email);
-            thisUserPassKey.masterPassKey = generateMasterKey(payload.passWord, payload.email);
+            thisUserPassKey.masterKey = generateMasterKey(payload.passWord, payload.email);
             let thisUser =  state.users.find( user => user.info.email === payload.email);
             thisUser.info.isActive = true;
         },
 
         signOutUser (state, payload) {
-            state.passKeyArr[payload.user.id].masterPassKey = null;
+            state.passKeyArr[payload.user.id].masterKey = null;
             state.users[payload.user.id].info.isActive = false;
             for (let backend of state.users[payload.user.id].backends) {
                 backend.connect.keys.sessionKey = null;
@@ -173,11 +166,13 @@ const store = createStore({
 
             newBackend.connect.associatedEmail = payload.associatedEmail;
             newBackend.connect.link = payload.link;
-            newBackend.connect.passKey = payload.passKey;
+            newBackend.connect.keys.secretPair = payload.secretPair;
+            newBackend.connect.keys.sessionKey = payload.sessionKey;
+            newBackend.connect.keys.refreshKey = payload.refreshKey;
 
-            newBackend.receive.admin = payload.admin; //Include, because we will have the result by now
+            newBackend.receive.admin = payload.admin; //Changed to a string
 
-            state.users[payload.userIndex].backends.push(newBackend);
+            state.users[state.signedInUserId].backends.push(newBackend);
             state.signedIn = true;
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
@@ -203,7 +198,7 @@ const store = createStore({
             state.signedIn = true;
         },
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { masterPassKey, encryptedMasterPassKey}
+            //Payload: name, email, hasVault, passKey: { masterKey, encryptedmasterKey}
             let newUser = {
                 id: null,
                 info: {
@@ -212,7 +207,7 @@ const store = createStore({
                     email: null,
                     isActive: true,
                     hasVault: null,
-                    masterPassKey: null
+                    masterKey: null
                 },
                 backends: []
             };
@@ -221,13 +216,13 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
-            newUser.info.encryptedMasterPassKey = payload.passKey.masterPassKey;
+            newUser.info.encryptedmasterKey = payload.passKey.masterKey;
 
             state.users.push(newUser);
             state.passKeyArr.push({
                 id: null,
                 email: payload.email,
-                masterPassKey: payload.passKey.masterPassKey
+                masterKey: payload.passKey.masterKey
             });
 
             let x = 0;
@@ -278,11 +273,11 @@ const store = createStore({
 
         //Backend management
 
-        addNewBackend: function ({commit}, payload) {
-            //Payload: userIndex, name, associatedEmail, link, oneTimeKey, secret
+        addNewBackend: function ({commit, getters}, payload) {
+            //Payload:  name, associatedEmail, link, oneTimeKey, secret, masterPass
             console.log("Adding a new backend");
 
-            //Use link to get partial_seed and partial_backendKey from wherever it comes from
+            //____[1]____ >>>>>>Use link to get partial_seed and partial_backendKey from wherever it comes from
             // let promise = new Promise((resolve , reject) => {
             //     fetch(payload.link)
             //         .then((res) => {
@@ -298,11 +293,12 @@ const store = createStore({
 
 
             //For now, just mock the async function:
-            let newSecretPair = null;
+            ////___[1]___Mock Connection to retrieve partial_pair_______/////////
+            let partialSecretPair = null;
             let followLinkSuccess = true;
             if (followLinkSuccess) {
-                newSecretPair = {
-                    p_sessionKey: 'slkj4ewodf9jlwk4j09fdw4jslef49',
+                partialSecretPair = {
+                    p_backendKey: 'slkj4ewodf9jlwk4j09fdw4jslef49',
                     p_seed: '3984729829r83'
                 }
             }
@@ -310,9 +306,35 @@ const store = createStore({
                 console.log ("OneTimeKey did not work");
                 return false;
             }
+            //////______End [1]_______//////
 
 
+            /////_____[2]_____Get full secret pair using secret:
+            /// Some kind of hash should be used, mocking for now:
+            let newSecretPair = {
+                backendKey:  'slkj39osdijf3w49usjdiwe',    //get by using payload.secret with partialSecretPair.p_backendKey
+                seed: '34t34329238i4'                     //get by using payload.secret with partialSecretPair.p_seed
+            };
+            //-----------End [2]-----------////
 
+            //////_______[3]______Ask for sessionKey, refreshKeys and adminStatus from server
+            //////__MOCK___//actual values to be obtained using __backendKey___
+            let sessionKey = '23948uwodifjn3j498hd';
+            let refreshKey = 'w34ior89o3i';
+            let adminStatus = 'Editor';     //Default empty
+            //if successful, continue, else fail here
+            //-------------End [3]---------------////
+            let encryptedPair = encryptBackendSecretPair(getters.getMasterKey(), newSecretPair);
+
+            commit('addBackend', {
+                name: payload.name,
+                associatedEmail: payload.associatedEmail,
+                link: payload.link,
+                secretPair: encryptedPair,
+                sessionKey: sessionKey,
+                refreshKey: refreshKey,
+                admin: adminStatus
+            })
 
 
         },
@@ -344,7 +366,7 @@ store.subscribe((mutation, state) => {
 function generateMasterKey(masterPassword, email) {
     //Payload: masterPassword, email
 
-    console.log ("Generating masterPassKey");
+    console.log ("Generating masterKey");
 
     let encryptionKey = pbkdf2.pbkdf2Sync(
         JSON.stringify(masterPassword),
@@ -365,13 +387,13 @@ function generateMasterKey(masterPassword, email) {
 
     // Return Encrypted key
     return {
-        masterPassKey: masterKey,
+        masterKey: masterKey,
         encryptedMasterKey: aes.utils.hex.fromBytes(newEncryptedMasterKey)
     };
 }
 
-function decryptMasterKey(encryptedMasterPassKey, fedInPassword, email) {
-    //Parameters: encryptedMasterPassKey,
+function decryptMasterKey(encryptedmasterKey, fedInPassword, email) {
+    //Parameters: encryptedmasterKey,
     let decryptionKey = pbkdf2.pbkdf2Sync(
         JSON.stringify(fedInPassword),
         email,
@@ -380,7 +402,7 @@ function decryptMasterKey(encryptedMasterPassKey, fedInPassword, email) {
         'sha512'
     );
 
-    let masterKeyEncrypted = aes.utils.hex.toBytes(encryptedMasterPassKey);
+    let masterKeyEncrypted = aes.utils.hex.toBytes(encryptedmasterKey);
     let easCtr = new aes.ModeOfOperation.ctr(decryptionKey);
     let masterKeyObject = aes.utils.hex.fromBytes(easCtr.decrypt(masterKeyEncrypted));
     if (!masterKeyObject["key"]) {
