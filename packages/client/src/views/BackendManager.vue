@@ -35,7 +35,7 @@
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <Button :disabled="!isUserSelected" @click="changeUserPermissions" label="Change Permissions" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
-        <Dropdown :disabled="!isUserSelected" v-model="selectedPermissionLevel" :options="permissionOptions" placeholder="Select a Role" />
+        <Dropdown class="toolbar-dropdown" :disabled="!isUserSelected" v-model="selectedPermissionLevel" :options="permissionOptions" placeholder="Select a Role" />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <span class="p-buttonset">
         <Button :disabled="!isUserSelected" @click="logOutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
@@ -47,15 +47,23 @@
       </template>
       </Toolbar>
 
-      <Dialog header="Add User" v-model:visible="showAddUserDialog" :style="{width: '50vw'}" :position="addUserPos" :modal="true" dismissable-mask=true>
+      <Dialog header="Add User" v-model:visible="showAddUserDialog" :style="{width: '35em'}" :position="addUserPos" :modal="true" dismissable-mask=true>
 
-        <div style="display: flex">
-        <div class="p-field p-grid" style="margin-top: 0.8em; margin-left:0.8em">
+        <div style="display: flex; flex-direction: column;">
+
+        <div class="p-field p-grid" style="margin-top: 0.8em; margin-left:0.8em; display: flex">
 
           <div class="p-field p-col-12 p-md-4" >
             <span class="p-float-label">
-                        <InputText id="input-name" type="text" v-model="addUserName"  />
-                        <label for="input-name">Name</label>
+                        <InputText id="input-firstname" type="text" v-model="addUserFirstName"  />
+                        <label for="input-firstname">First Name</label>
+                    </span>
+          </div>
+
+          <div class="p-field p-col-12 p-md-4" style="margin-left: 2em">
+            <span class="p-float-label">
+                        <InputText id="input-lastname" type="text" v-model="addUserLastName"  />
+                        <label for="input-lastname">Last Name</label>
                     </span>
           </div>
 
@@ -74,12 +82,14 @@
 
           <div class="p-field p-col-12 p-md-4" >
             <span class="p-float-label">
-                        <InputText id="input-perm" type="text" v-model="addUserPermission"  />
+                <Dropdown id="input-perm" v-model="addUserPermission" :options="permissionOptions" />
                         <label for="input-perm">Permission</label>
                     </span>
           </div>
 
         </div>
+
+
 
         </div>
 
@@ -116,7 +126,8 @@ export default {
       showAddUserDialog : false,
       addUserPos: "bottomleft",
 
-      addUserName: "",
+      addUserFirstName: "",
+      addUserLastName: "",
       addUserEmail: "",
       addUserPermission: "",
 
@@ -836,7 +847,7 @@ export default {
 
 }
 
-::v-deep(.p-dropdown) {
+::v-deep(.p-dropdown){
 
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
