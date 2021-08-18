@@ -88,11 +88,14 @@ const store = createStore({
         getBackendJWTToken: (state) => (id) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).jwtToken;
         },
-        getBackendSecretPair: (state) => (id, email) => {
+        getBackendRefreshToken: (state) => (id) => {
+          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).refreshToken
+        },
+        getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null
             try {
                 pairObject =  decryptJsonObject(
-                    masterKey,
+                    getters.getMasterKey(),
                     state.users[state.signedInUserId].backends.find(b => b.local.id === id).secretPair
                 );
             } catch (ignore) {}
@@ -296,13 +299,6 @@ const store = createStore({
                 masterKey,
                 {backendKey: payload.passKey, seed: payload.seed}
             );
-            console.log({
-                name: payload.name,
-                associatedEmail: payload.associatedEmail,
-                link: payload.link,
-                secretPair: encryptedPair,
-                refreshToken: payload.refreshToken
-            })
             commit('addBackend', {
                 name: payload.name,
                 associatedEmail: payload.associatedEmail,
