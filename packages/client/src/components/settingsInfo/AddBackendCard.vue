@@ -3,9 +3,8 @@
         <Toast position="top-right"/>
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
-                <div style="cursor: pointer" @click="change">
-                    <em class="pi pi-circle-off" />
-                    <span> {{cardName}} </span>
+                <div style="cursor: pointer; margin-top: 0.1em;" @click="change">
+                    <span style="padding-left: 2px; font-size: large"> {{cardName}} </span>
                 </div>
                 <div>
                 </div>
@@ -198,6 +197,5 @@
         display: grid;
         grid-template-columns: 3fr 1fr;
     }
-
 
 </style>
