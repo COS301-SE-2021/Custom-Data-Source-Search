@@ -43,7 +43,7 @@ class WebPageDataSourceRepository {
             let content: any = Buffer.from(page);
             let formData = new FormData();
             formData.append("file", content, url);
-            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
+            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update/extract?literal.id=' + id
                 + '&commit=true&literal.datasource_type=webpage',
                 formData,
                 {
@@ -102,7 +102,7 @@ class WebPageDataSourceRepository {
 
     async deleteFromSolr(uuid: string) {
         try {
-            await axios.post('http://localhost:8983/solr/files/update?commit=true',
+            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update?commit=true',
                 {
                     "delete": {
                         "query": "id:" + uuid
