@@ -37,6 +37,7 @@
               :type="r.type"
               :match_snippets="r.match_snippets"
               :source="r.source"
+              :link="r.link"
               @resultClicked="loadFullFile"
           />
         </div>
@@ -120,7 +121,7 @@
             axios
               .get(url, {headers})
               .then((resp) => {
-                this.handleSuccess(resp.data.searchResults)
+                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
               })
               .catch(async () => {
                 await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
@@ -129,7 +130,7 @@
                 };
                 await axios.get(url, {headers})
                   .then((resp) => {
-                    this.handleSuccess(resp.data.searchResults)
+                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
                   })
                   .catch((e) => {
                     console.error(e);
@@ -137,7 +138,11 @@
               })
           }
         },
-        handleSuccess(results) {
+        handleSuccess(results, link, id) {
+          for(let r of results) {
+            r.link = link;
+            r.backendId = id
+          }
           this.searchResults = this.searchResults.concat(results);
           if (this.searchResults.length === 0) {
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
@@ -145,9 +150,6 @@
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn
-        },
-        getIdOfCurrentFullFile() {
-          return this.fullFileID;
         },
         loadFullFile(fileData, lineNumber, lineNumbers) {
           this.fullFileData = fileData;
