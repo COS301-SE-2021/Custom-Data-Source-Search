@@ -55,4 +55,12 @@ CREATE TABLE IF NOT EXISTS "pending_user" (
 	PRIMARY KEY("email"),
 	FOREIGN KEY("email") REFERENCES "user"("email")
 );
+DROP TABLE IF EXISTS "webpage_data";
+CREATE TABLE IF NOT EXISTS "webpage_data" (
+	"uuid"	TEXT NOT NULL UNIQUE,
+	"url"	TEXT NOT NULL,
+	"tag1"	TEXT,
+	"tag2"	TEXT,
+	PRIMARY KEY("uuid")
+);
 COMMIT;
