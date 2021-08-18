@@ -9,23 +9,13 @@ CREATE TABLE IF NOT EXISTS "folder_data" (
 	"dot_ignore"	TEXT NOT NULL,
 	PRIMARY KEY("uuid")
 );
-DROP TABLE IF EXISTS "folder_file_data";
-CREATE TABLE IF NOT EXISTS "folder_file_data" (
-	"filename"	TEXT NOT NULL,
-	"path"	TEXT NOT NULL,
-	"last_modified"	NUMERIC NOT NULL,
-	"folder_uuid"	TEXT NOT NULL UNIQUE,
-	"uuid"	TEXT NOT NULL UNIQUE,
-	PRIMARY KEY("uuid"),
-	FOREIGN KEY("folder_uuid") REFERENCES "folder_data"("uuid")
-);
 DROP TABLE IF EXISTS "active_user";
 CREATE TABLE IF NOT EXISTS "active_user" (
 	"email"	TEXT NOT NULL UNIQUE,
 	"refresh_token"	TEXT NOT NULL UNIQUE,
 	"valid_until"	TEXT NOT NULL,
-	PRIMARY KEY("refresh_token"),
-	FOREIGN KEY("email") REFERENCES "user"("email")
+	FOREIGN KEY("email") REFERENCES "user"("email"),
+	PRIMARY KEY("refresh_token")
 );
 DROP TABLE IF EXISTS "file_data";
 CREATE TABLE IF NOT EXISTS "file_data" (
@@ -52,8 +42,8 @@ CREATE TABLE IF NOT EXISTS "pending_user" (
 	"email"	TEXT NOT NULL UNIQUE,
 	"single_use_registration_token"	TEXT NOT NULL,
 	"secret"	TEXT,
-	PRIMARY KEY("email"),
-	FOREIGN KEY("email") REFERENCES "user"("email")
+	FOREIGN KEY("email") REFERENCES "user"("email"),
+	PRIMARY KEY("email")
 );
 DROP TABLE IF EXISTS "webpage_data";
 CREATE TABLE IF NOT EXISTS "webpage_data" (
@@ -61,6 +51,15 @@ CREATE TABLE IF NOT EXISTS "webpage_data" (
 	"url"	TEXT NOT NULL,
 	"tag1"	TEXT,
 	"tag2"	TEXT,
+	PRIMARY KEY("uuid")
+);
+DROP TABLE IF EXISTS "folder_file_data";
+CREATE TABLE IF NOT EXISTS "folder_file_data" (
+	"file_path"	TEXT NOT NULL,
+	"last_modified"	NUMERIC NOT NULL,
+	"folder_uuid"	TEXT NOT NULL,
+	"uuid"	TEXT NOT NULL UNIQUE,
+	FOREIGN KEY("folder_uuid") REFERENCES "folder_data"("uuid"),
 	PRIMARY KEY("uuid")
 );
 COMMIT;
