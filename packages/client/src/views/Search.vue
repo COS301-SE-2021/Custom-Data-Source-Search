@@ -137,6 +137,11 @@
                     console.error(e);
                   })
               })
+              .finally(() => {
+                if (this.searchResults.length === 0) {
+                  this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+                }
+              })
           }
         },
         handleSuccess(results, link, id) {
@@ -145,9 +150,6 @@
             r.backendId = id
           }
           this.searchResults = this.searchResults.concat(results);
-          if (this.searchResults.length === 0) {
-            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-          }
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn
