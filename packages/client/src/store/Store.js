@@ -20,8 +20,6 @@ const store = createStore({
             return state.signedIn;
         },
         getUserInfo: (state) => (id) => {
-            console.log(id)
-            console.log(JSON.stringify(state.users))
             return state.users.find(user => user.id === id).info;
         },
         getArrUserInfo(state) {
@@ -324,7 +322,6 @@ const store = createStore({
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
             const email = getters.getBackendUserEmail(payload.id);
-            console.log(email)
             await axios
                 .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
                 .then((resp) => {
