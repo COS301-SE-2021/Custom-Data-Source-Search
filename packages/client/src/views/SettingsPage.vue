@@ -41,7 +41,7 @@
     </div>
    <ReEnterMasterPassword
            :show="displayMasterPwInput"
-           @new-backend="newBackend"
+           @action-to-Occur="newBackend"
    />
 </template>
 

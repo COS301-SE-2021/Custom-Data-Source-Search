@@ -17,12 +17,16 @@
                   v-if="unconnectedBackendBool"
                   id="expiration-indicator"
                   class="pi pi-info-circle p-text-secondary"
-                  @click="showPopup"
+                  @click="showAskMasterPw"
                   v-badge.custom-warning="unconnectedBackendNo"
               ></em>
             </CustomTooltip>
           </div>
           <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+          <ReEnterMasterPassword
+                  :show="displayMasterPwInput"
+                  @action-to-Occur="showAskMasterPw"
+          />
         </div>
         <div class="search-results container">
           <search-result-card
@@ -61,10 +65,12 @@
     import CustomTooltip from "../components/primeComponents/CustomTooltip";
     import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
     import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
     export default {
       name: "SearchBar",
       data() {
         return {
+          displayMasterPwInput: false,
           fullFileLineNumbers: [],
           currentLineNumber: -1,
           fullFileData: "",
@@ -89,6 +95,9 @@
         }
       },
       methods: {
+        showAskMasterPw() {
+            this.displayMasterPwInput = !this.displayMasterPwInput;
+        },
         escapeSpecialCharacters(query) {
           return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
             return '\\' + match
@@ -141,6 +150,7 @@
         }
       },
       components: {
+        ReEnterMasterPassword,
         IconSimpleExpandLess,
         IconSimpleExpandMore,
         CustomTooltip,

@@ -44,7 +44,9 @@
             assignData() {
                 this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
                 if(this.$store.getters.getMasterKey != null) {
-                    this.$emit("newBackend");
+                    this.passwordIncorrect = false;
+                    this.masterPass = '';
+                    this.$emit("actionToOccur");
                     this.display = false;
                 }
                 else {
