@@ -7,7 +7,6 @@
             <form class="input-fields"
                 id="register"
                 @submit="loadValues"
-                  action="#"
             >
                 <div class="input-fields" style="max-height: 20vh">
                     <InputText type="text"  v-model="userDetails.userName" label="Name" placeholder="Name" />
@@ -26,6 +25,10 @@
                     <div id="checkboxBox">
                         <checkbox id="checkBox" name="checkbox" v-model="userDetails.backupVault" :binary="true"/>
                         <label for="checkBox">Enable remote access to account?</label>
+                        <br>
+                        <span style="font-size: small; margin-top: 30px">
+                            Remote access enables the user to log into their account on the web browser version of DataSleuth.
+                        </span>
                     </div>
                     <br>
                     <br>
@@ -141,7 +144,7 @@
                             masterPassword: this.masterPassword,
                             hasVault: this.userDetails.backupVault
                     });
-                    let frustrated = true;
+                    let frustrated = false;
                     if (frustrated) {
                         this.$router.push({name: 'ContinueView'});
                     };
@@ -224,7 +227,6 @@
     #checkboxBox {
         text-align: left;
     }
-
 
     label {
         padding-bottom: 4%;
