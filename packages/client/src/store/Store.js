@@ -263,7 +263,26 @@ const store = createStore({
                     hasVault: null,
                     encryptedMasterKeyObject: null
                 },
-                backends: []
+                backends: [{
+                    local: {
+                        id: 0,
+                        name: 'Local',
+                        active: true,
+                    },
+                    connect: {
+                        associatedEmail: payload.email,
+                        link: 'localhost:3001',
+                        keys: {
+                            secretPair: null,
+                            jwtToken: null,
+                            refreshToken: null
+                        }
+                    },
+                    receive: {
+                        admin: null,
+                        connected: false
+                    }
+                }]
             };
 
             newUser.info.name = payload.name;
