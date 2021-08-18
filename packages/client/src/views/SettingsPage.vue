@@ -28,7 +28,7 @@
                         :user-index="getSignedInUserId"
                 />
                 <backend-card
-                        v-for="(backend) in getUserBackend(getSignedInUserId)"
+                        v-for="(backend) in getUserBackends(getSignedInUserId)"
                         :user-index="getSignedInUserId"
                         :backend-index="backend.local.id"
                         :local = backend.local
@@ -264,7 +264,7 @@
         },
         computed: {
             ...mapGetters ([
-                'getUserBackend',
+                'getUserBackends',
                 'getSignedInUserId',
              ])
         }
