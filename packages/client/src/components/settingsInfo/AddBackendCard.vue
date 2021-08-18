@@ -97,7 +97,13 @@
                     this.tempBackendInfo.secret === '' ||
                     this.tempBackendInfo.oneTimeKey === ''
                 ) {
-                    this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'All the fields have not been filled.', life: 3000});
+                    this.$toast.add(
+                        {
+                            severity:'error',
+                            summary: 'Backend Could Not Be Added',
+                            detail:'All the fields have not been filled.',
+                            life: 3000
+                        });
                 }
                 else {
                     this.connectToBackend();
@@ -120,15 +126,19 @@
                         single_use_registration_token: this.tempBackendInfo.oneTimeKey
                     }
                 ).then((resp) => {
-                    let hmac = createHmac('sha512', this.tempBackendInfo.secret)
-                    this.$store.dispatch("addNewBackend", {
-                        name: this.tempBackendInfo.name,
-                        associatedEmail: this.tempBackendInfo.associatedEmail,
-                        link: this.tempBackendInfo.link,
-                        passKey: hmac.update(resp.data.partial_pass_key).digest('hex'),
-                        seed: hmac.update(resp.data.partial_seed).digest('hex'),
-                        refreshToken: resp.data.refresh_token
-                    });
+                    try {
+                        this.$store.dispatch("addNewBackend", {
+                            name: this.tempBackendInfo.name,
+                            associatedEmail: this.tempBackendInfo.associatedEmail,
+                            link: this.tempBackendInfo.link,
+                            passKey: this.applyHmac(resp.data.partial_pass_key, this.tempBackendInfo.secret),
+                            seed: this.applyHmac(resp.data.partial_seed, this.tempBackendInfo.secret),
+                            refreshToken: resp.data.refresh_token
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        return
+                    }
                     this.$emit('saveNewBackend');
                 }).catch((err) => {
                     this.$toast.add(
@@ -136,7 +146,10 @@
                     )
                 })
             },
-
+            applyHmac(key, secret) {
+                let hmac = createHmac('sha512', secret);
+                return hmac.update(key).digest('hex');
+            },
             cancelChanges() {
                 this.expand = true;
                 this.editBackendBool = false;
