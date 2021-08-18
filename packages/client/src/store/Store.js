@@ -87,6 +87,16 @@ const store = createStore({
         },
         getBackendJWTToken: (state) => (id) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).jwtToken;
+        },
+        getBackendSecretPair: (state) => (id, email) => {
+            let pairObject = null
+            try {
+                pairObject =  decryptJsonObject(
+                    masterKey,
+                    state.users[state.signedInUserId].backends.find(b => b.local.id === id).secretPair
+                );
+            } catch (ignore) {}
+            return pairObject;
         }
     },
 
@@ -243,24 +253,19 @@ const store = createStore({
             if (payload.deleteVault) {
                 //Do some server side call to delete file on web
             }
-
-
             //Delete local
             state.users.splice(payload.user.id, 1);
             masterKey = null;
-
             let x = 0;
             for (let user of state.users) {
                    user.info.id = x;
                    user.id = x++;
             }
-
         },
         setJWTToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.id = payload.id).jwtToken = payload.jwtToken
         }
-
     },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
@@ -305,19 +310,6 @@ const store = createStore({
                 secretPair: encryptedPair,
                 refreshToken: payload.refreshToken
             });
-        },
-
-        decryptBackendSecretPair(getters, payload) {
-            let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let pairObject = null;
-            try {
-                pairObject =  decryptJsonObject(payload.masterKey, encrypted);
-            } catch (ignore) {}
-            return  {
-                id: payload.id,
-                email: payload.email,
-                secretPair: pairObject,
-            }
         }
     }
 });
