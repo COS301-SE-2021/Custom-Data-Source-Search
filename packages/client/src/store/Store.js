@@ -127,7 +127,7 @@ const store = createStore({
             state.users[payload.user.id].info.isActive = false;
             for (let backend of state.users[payload.user.id].backends) {
                 backend.connect.keys.sessionKey = null;
-                backend.connect.keys.refreshKey = null;
+                backend.connect.keys.refreshToken = null;
             }
         },
 
@@ -150,6 +150,7 @@ const store = createStore({
             }
         },
         addBackend(state, payload){
+            //Payload: name, associatedEmail, link, secretPair, refreshToken
             let newBackend = {
                 local: {
                     id: null,
@@ -161,8 +162,8 @@ const store = createStore({
                     link: '',
                     keys: {
                         secretPair: null,
-                        sessionKey: null,
-                        refreshKey: null
+                        jwtToken: null,
+                        refreshToken: null
                     }
                 },
                 receive: {
@@ -172,15 +173,11 @@ const store = createStore({
             };
 
             newBackend.local.name = payload.name;
-            newBackend.local.active = payload.active;
 
             newBackend.connect.associatedEmail = payload.associatedEmail;
             newBackend.connect.link = payload.link;
             newBackend.connect.keys.secretPair = payload.secretPair;
-            newBackend.connect.keys.sessionKey = payload.sessionKey;
-            newBackend.connect.keys.refreshKey = payload.refreshKey;
-
-            newBackend.receive.admin = payload.admin; //Changed to a string
+            newBackend.connect.keys.refreshToken = payload.refreshToken;
 
             state.users[state.signedInUserId].backends.push(newBackend);
             state.signedIn = true;
@@ -188,7 +185,6 @@ const store = createStore({
             for(let x = 0; x < l; x++) {
                 state.users[state.signedInUserId].backends[x].local.id = x;
             }
-
         },
         deleteBackend(state, payload) {
             state.users[state.signedInUserId].backends.splice(payload,1);
@@ -279,7 +275,7 @@ const store = createStore({
         //Backend management
 
         addNewBackend: function ({commit, getters}, payload) {
-            //Payload:  name, associatedEmail, link, oneTimeKey, secret
+            //Payload: name, associatedEmail, link, passKey, seed, refreshToken
             let masterKey = getters.getMasterKey;
             if(masterKey === null) {
                 return;
@@ -288,6 +284,7 @@ const store = createStore({
                 masterKey,
                 {backendKey: payload.passKey, seed: payload.seed}
             );
+            
             commit('addBackend', {
                 name: payload.name,
                 associatedEmail: payload.associatedEmail,

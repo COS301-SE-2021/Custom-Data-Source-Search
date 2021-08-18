@@ -124,8 +124,8 @@
                         name: this.tempBackendInfo.name,
                         associatedEmail: this.tempBackendInfo.associatedEmail,
                         link: this.tempBackendInfo.link,
-                        passKey: hmac(resp.data.partial_pass_key),
-                        seed: hmac(resp.data.partial_seed),
+                        passKey: hmac.update(resp.data.partial_pass_key, 'utf8').digest('hex'),
+                        seed: hmac.update(resp.data.partial_seed, 'utf8').digest('hex'),
                         refreshToken: resp.data.refresh_token
                     });
                     this.$emit('saveNewBackend');
