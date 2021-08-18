@@ -285,6 +285,50 @@ class UserRepository {
             }];
         }
     }
+
+
+    generateRegistrationKey(users: { uuid: string }[]) {
+        let failedUsers: any[] = [];
+        for (let userId of users) {
+            let user;
+            try {
+                user = db.prepare('SELECT * FROM user WHERE id = ?').all(userId["uuid"])[0];
+                if (user === undefined) {
+                    failedUsers.push(userId);
+                    continue;
+                }
+                try {
+                    db.prepare(
+                        'INSERT INTO pending_user (email, single_use_registration_token) VALUES (?,?);'
+                    ).run(
+                        user["email"],
+                        randomBytes(16).toString("hex") + '.' + randomBytes(16).toString("hex")
+                    );
+                } catch (e) {
+                    db.prepare(
+                        'UPDATE pending_user SET single_use_registration_token = ? WHERE email = ?'
+                    ).run(
+                        randomBytes(16).toString("hex") + '.' + randomBytes(16).toString("hex"),
+                        user["email"]
+                    );
+                }
+            } catch (e) {
+                console.error(e);
+                failedUsers.push(userId);
+            }
+        }
+        if (failedUsers.length !== 0) {
+            return [null, {
+                "code": 400,
+                "message": "Could not generate registration keys for specified users",
+                "users": failedUsers
+            }];
+        }
+        return [{
+            "code": 200,
+            "message": "Successfully generated registration keys for specified users"
+        }, null];
+    }
 }
 
 const userRepository = new UserRepository();

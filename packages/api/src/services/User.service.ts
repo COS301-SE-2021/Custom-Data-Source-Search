@@ -208,6 +208,26 @@ class UserService {
             }
         };
     }
+
+    generateRegistrationKey(users: { uuid: string; }[]) {
+        const [result, err] = userRepository.generateRegistrationKey(users);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message,
+                    // @ts-ignore
+                    "users": err.users
+                }
+            };
+        }
+        return {
+            "code": result.code,
+            "body": {
+                "message": result.message
+            }
+        };
+    }
 }
 
 const userService = new UserService();
