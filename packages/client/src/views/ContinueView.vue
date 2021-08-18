@@ -16,7 +16,8 @@
     export default {
         name: "ContinueView",
         beforeMount() {
-            if (this.$store.getters.getNewAppStatus) {
+            console.log ("Showed Continue for a split seccond");
+            if (this.$store.getters.getNewAppStatus || this.$store.getters.getMasterKey === null) {
                 this.$router.push('/');
             }
         },

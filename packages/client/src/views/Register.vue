@@ -7,6 +7,7 @@
             <form class="input-fields"
                 id="register"
                 @submit="loadValues"
+                  action="#"
             >
                 <div class="input-fields" style="max-height: 20vh">
                     <InputText type="text"  v-model="userDetails.userName" label="Name" placeholder="Name" />
@@ -140,14 +141,17 @@
                             hasVault: this.userDetails.backupVault
                     });
                     console.log ("Do I get here?");
-                    this.$router.push('ContinueView');
+                    let frustrated = true;
+                    if (frustrated) {
+                        console.log(frustrated);
+                        this.$router.push({name: 'ContinueView'});
+                    };
                 }
             },
             showSignIn(){
                 this.displaySignIn = !this.displaySignIn
             },
             continue() {
-                console.log ("The idea is that here another little box appears");
                 this.notContinue = false;
             },
             back() {
