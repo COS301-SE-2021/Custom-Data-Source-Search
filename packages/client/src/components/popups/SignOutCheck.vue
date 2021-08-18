@@ -39,6 +39,7 @@
             signOut () {
                 this.$store.commit('signOutUser', {user: this.user});
                 this.closePopUp();
+                this.$router.push('/');
             }
         },
         watch:{

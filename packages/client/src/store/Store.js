@@ -1,4 +1,7 @@
 import {createStore} from 'vuex'
+import axios from "axios";
+import {authenticator} from 'otplib';
+
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
 
@@ -9,9 +12,7 @@ const store = createStore({
         users: []
     },
     getters:{
-
         //User information related getters
-
         getNewAppStatus (state) {
             return state.users.length === 0;
         },
@@ -44,12 +45,11 @@ const store = createStore({
 
 
         //Signed in User's backends related getters
-
-        getUserBackend: (state) => (id) => {
+        getUserBackends: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
         getUserBackendNames: (state, getters) => {
-          let backends = getters.getUserBackend(getters.getSignedInUserId);
+          let backends = getters.getUserBackends(getters.getSignedInUserId);
           let backendsArr = [];
           for( let backend of backends){
               backendsArr.push(backend.local.name);
@@ -59,7 +59,6 @@ const store = createStore({
         getUserAdminStatus: (state) => (backendID) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },
-
 
         //Unconnected backend related getters
 
@@ -85,6 +84,25 @@ const store = createStore({
         //this would allow us to determine whether or not a data source can be edited/deleted by a user
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
+        },
+        getBackendLink: (state) => (id) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.link;
+        },
+        getBackendJWTToken: (state) => (id) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.jwtToken;
+        },
+        getBackendRefreshToken: (state) => (id) => {
+          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.refreshToken
+        },
+        getBackendSecretPair: (state, getters) => (id) => {
+            let pairObject = null;
+            try {
+                pairObject =  decryptJsonObject(
+                    getters.getMasterKey["key"],
+                    state.users[state.signedInUserId].backends.find(b => b.local.id === id).connect.keys.secretPair
+                );
+            } catch (ignore) {}
+            return pairObject;
         }
     },
 
@@ -109,12 +127,13 @@ const store = createStore({
             let thisUser = state.users[state.signedInUserId];
             thisUser.info.isActive = true;
         },
-
-        signInThisUser: function (state, payload) {
-            //Payload: masterPassword
-            let thisUser = state.users[state.signedInUserId];
+        signInAUser: function (state, payload) {
+            //Payload: masterPassword, user { id, etc}
+            let thisUser = state.users[payload.userID];
             let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
             if (passCheck) {
+                state.users[payload.userID].info.isActive = true;
+                state.signedInUserId = payload.userID;
                 masterKey = passCheck;
                 return true;
             }
@@ -122,9 +141,25 @@ const store = createStore({
                 return false;
             }
         },
+        signInThisUser: function (state, payload) {
+            //Payload: masterPassword
+            let thisUser = state.users[state.signedInUserId];
+            let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
+            if (passCheck) {
+                masterKey = passCheck;
+                state.users[state.signedInUserId].info.isActive = true;
+                return true;
+            }
+            else {
+                return false;
+            }
+        },
+
         signOutUser (state, payload) {
+            //Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKey = null;
             state.users[payload.user.id].info.isActive = false;
+            state.signedIn = false;
             for (let backend of state.users[payload.user.id].backends) {
                 backend.connect.keys.sessionKey = null;
                 backend.connect.keys.refreshToken = null;
@@ -197,11 +232,18 @@ const store = createStore({
         //User management
         setSignedIn(state, payload){
             state.signedIn = payload;
+            if (!payload) {
+                masterKey = null;
+            }
         },
         setSignedInUserID(state, payload) {
             state.signedInUserId = payload.userID;
-            state.users[payload.userID].info.isActive = payload.signedIn;
-            state.signedIn = true;
+            if ( payload.userID != null ){
+                state.users[payload.userID].info.isActive = payload.signedIn;
+                state.signedIn = true;
+            } else {
+                state.signedIn = null;
+            }
         },
         addUserToLocalList(state, payload) {
             //Payload: name, email, hasVault, passKey: { encryptedMasterKeyObject}
@@ -241,25 +283,28 @@ const store = createStore({
                 //Do some server side call to delete file on web
             }
 
-
             //Delete local
             state.users.splice(payload.user.id, 1);
             masterKey = null;
-
             let x = 0;
             for (let user of state.users) {
                    user.info.id = x;
                    user.id = x++;
             }
-
+        },
+        setRefreshToken(state, payload) {
+            state.users[state.signedInUserId].backends
+                .find(backend => backend.local.id === payload.id).connect.keys.refreshToken = payload.refreshToken;
+        },
+        setJWTToken(state, payload) {
+            state.users[state.signedInUserId].backends
+                .find(backend => backend.local.id === payload.id).connect.keys.jwtToken = payload.jwtToken
         }
-
     },
 
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
         //User management
-
         addNewUser: function ({commit}, payload) {
             //Payload: name, email, masterPassword, hasVault
             let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
@@ -271,9 +316,56 @@ const store = createStore({
             });
             masterKey = newPassKey.masterKey;
         },
-
+        refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
+            const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
+            const email = getters.getUserInfo(payload.id).email;
+            await axios
+                .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
+                .then((resp) => {
+                    commit('setJWTToken', {
+                        id: payload.id,
+                        jwtToken: resp.data.jwt
+                    })
+                })
+                .catch(async () => {
+                    await dispatch("backendLogin", {id: payload.id})
+                    await axios
+                        .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
+                        .then((resp) => {
+                            commit('setJWTToken', {
+                                id: payload.id,
+                                jwtToken: resp.data.jwt
+                            })
+                        })
+                        .catch((e) => {
+                            console.error(e);
+                        })
+                });
+        },
+        backendLogin: async function ({commit, getters}, payload) {
+            let secretPair = getters.getBackendSecretPair(payload.id);
+            if(secretPair === null) {
+                return;
+            }
+            await axios.post(
+                "http://" + getters.getBackendLink(payload.id) + "/users/login",
+                {
+                        email: getters.getUserInfo(payload.id).email,
+                        pass_key: secretPair.backendKey,
+                        otp: authenticator.generate(secretPair.seed)
+                    }
+                )
+                .then((resp) => {
+                    commit('setRefreshToken', {
+                        id: payload.id,
+                        refreshToken: resp.data.refresh_token
+                    })
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        },
         //Backend management
-
         addNewBackend: function ({commit, getters}, payload) {
             //Payload: name, associatedEmail, link, passKey, seed, refreshToken
             let masterKey = getters.getMasterKey;
@@ -284,13 +376,6 @@ const store = createStore({
                 masterKey,
                 {backendKey: payload.passKey, seed: payload.seed}
             );
-            console.log({
-                name: payload.name,
-                associatedEmail: payload.associatedEmail,
-                link: payload.link,
-                secretPair: encryptedPair,
-                refreshToken: payload.refreshToken
-            })
             commit('addBackend', {
                 name: payload.name,
                 associatedEmail: payload.associatedEmail,
@@ -298,19 +383,6 @@ const store = createStore({
                 secretPair: encryptedPair,
                 refreshToken: payload.refreshToken
             });
-        },
-
-        decryptBackendSecretPair(getters, payload) {
-            let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let pairObject = null;
-            try {
-                pairObject =  decryptJsonObject(payload.masterKey, encrypted);
-            } catch (ignore) {}
-            return  {
-                id: payload.id,
-                email: payload.email,
-                secretPair: pairObject,
-            }
         }
     }
 });
@@ -372,7 +444,7 @@ function encryptJsonObject(masterKey, jsonObject) {
 
 function decryptJsonObject(masterKey, jsonObject) {
     let encryptedJsonObject = aes.utils.hex.toBytes(jsonObject);
-    let aesCtr = new aes.ModeOfOperation.ctr(masterKey);
+    let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
     let decrypted = aesCtr.decrypt(encryptedJsonObject);
     return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }

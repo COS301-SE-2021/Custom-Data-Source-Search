@@ -37,6 +37,8 @@
               :type="r.type"
               :match_snippets="r.match_snippets"
               :source="r.source"
+              :link="r.link"
+              :backendId="r.backendId"
               @resultClicked="loadFullFile"
           />
         </div>
@@ -82,9 +84,9 @@
       },
       computed: {
         ...mapGetters([
-                'unconnectedBackendNo',
-                'unconnectedBackendBool',
-                'unconnectedBackendNames'
+          'unconnectedBackendNo',
+          'unconnectedBackendBool',
+          'unconnectedBackendNames'
         ])
       },
       beforeMount() {
@@ -98,7 +100,6 @@
             if (this.$store.getters.unconnectedBackendBool) {
               this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
             }
-            return;
           } else {
             this.displayMasterPwInput = true;
           }
@@ -111,22 +112,47 @@
         queryServer() {
           this.firstSearch = false;
           this.searchResults = [];
-          axios
-                  .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
+          for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+            const url = `http://${backend.connect.link}/general/?q=${
+              encodeURIComponent(this.escapeSpecialCharacters(this.query))
+            }`
+            const headers = {
+              "Authorization": "Bearer " + backend.connect.keys.jwtToken
+            };
+            axios
+              .get(url, {headers})
+              .then((resp) => {
+                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
+              })
+              .catch(async () => {
+                await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
+                const headers = {
+                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
+                };
+                await axios.get(url, {headers})
                   .then((resp) => {
-                    this.searchResults = resp.data.searchResults;
-                    if (this.searchResults.length === 0) {
-                      this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-                    }
-                  }).catch(() => {
-            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-          })
+                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
+                  })
+                  .catch((e) => {
+                    console.error(e);
+                  })
+              })
+              .finally(() => {
+                if (this.searchResults.length === 0) {
+                  this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+                }
+              })
+          }
+        },
+        handleSuccess(results, link, id) {
+          for(let r of results) {
+            r.link = link;
+            r.backendId = id
+          }
+          this.searchResults = this.searchResults.concat(results);
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn
-        },
-        getIdOfCurrentFullFile() {
-          return this.fullFileID;
         },
         loadFullFile(fileData, lineNumber, lineNumbers) {
           this.fullFileData = fileData;
@@ -279,5 +305,9 @@ input {
 #divider_usage_message {
   color: #4d4d4d;
   padding-left: 10px;
+}
+
+.p-splitter{
+  border: none;
 }
 </style>

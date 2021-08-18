@@ -30,19 +30,23 @@
         data() {
             return {
                 masterPass: null,
-                email: '',
                 display: this.show,
                 passwordIncorrect: false,
-                messageArrCount: 0,
                 errMessage: 'Please repeat master password.',
             }
         },
         props: {
             show: Boolean,
+            user: Object,
+            welcomePage: Boolean
         },
         methods: {
             assignData() {
-                this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                if (this.welcomePage) {
+                    this.$store.commit('signInAUser', {masterPassword: this.masterPass, userID: this.user.id})
+                } else {
+                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                }
                 if(this.$store.getters.getMasterKey != null) {
                     this.passwordIncorrect = false;
                     this.masterPass = '';
