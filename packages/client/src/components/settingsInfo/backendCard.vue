@@ -18,44 +18,50 @@
                 <div> {{ connect.associatedEmail }} </div>
                 <div><em>Link: </em></div>
                 <div> {{connect.link}} </div>
-                <div><em>Pass Key: </em></div>
-                <div> {{connect.keys.sessionKey}} </div>
                 <div></div>
                 <div>
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
-                    <Button @click="deleteBackend" style="float: right" class="p-button p-button-outlined">Delete </Button>
+                    <Button @click="showBackendDeleteCheck" style="float: right" class="p-button p-button-outlined">Delete </Button>
                 </div>
             </div>
-            <form @submit="saveChanges" class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
+            <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><em>Name: </em></div>
-                <input-text v-model="tempBackendInfo.name"/>
+                <input-text v-model="tempBackendInfo.name" @keyup.enter="saveChanges"/>
                 <div><em>Email: </em></div>
-                <input-text v-model="tempBackendInfo.associatedEmail"/>
+                <div>{{tempBackendInfo.associatedEmail}}</div>
                 <div><em>Link: </em></div>
-                <input-text v-model="tempBackendInfo.link"/>
-                <div><em>Session Key: </em></div>
-                <input-text v-model="tempBackendInfo.sessionKey"/>
+                <div>{{tempBackendInfo.link}}</div>
                 <div></div>
                 <div>
                     <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions</Button>
-                    <Button type="submit" style="float: right" class="p-button p-button-outlined">Connect</Button>
+                    <Button type="button" style="float: right" @click="saveChanges" class="p-button p-button-outlined">Save</Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+    <BackendDeleteCheck
+            :show="displayBackendDeleteCheck"
+            @display-popup="showBackendDeleteCheck"
+            :backend="local"
+            @delete-backend="deleteBackend"
+    />
 </template>
 
 <script>
     import InputSwitch from 'primevue/inputswitch';
     import {mapGetters} from 'vuex';
+    import BackendDeleteCheck from "../popups/BackendDeleteCheck";
+
     export default {
         name: "backendCard",
         components: {
+            BackendDeleteCheck,
           InputSwitch
         },
         data () {
             return {
+                displayBackendDeleteCheck: false,
                 tempNameNo: 0,
                 checked: false,
                 editBackendBool: false,
@@ -123,6 +129,10 @@
         },
 
         methods: {
+
+            showBackendDeleteCheck() {
+                this.displayBackendDeleteCheck = !this.displayBackendDeleteCheck;
+            },
 
             //View changes
             change() {
@@ -239,14 +249,14 @@
 
     .expanded-backend-info {
         border-radius: 5px;
-        margin-top: 4px;
+        margin-top: 1em;
         padding-top: 4px;
         padding-left: 4px;
         padding-bottom: 4px;
         display: grid;
         grid-template-columns: 1fr 3fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
-        row-gap: 4px;
+        grid-template-rows: 1fr 1fr 1fr;
+        align-content: baseline;
     }
 
     .expanded-backend-info div {
@@ -262,6 +272,7 @@
 
     input {
         margin-right: 2%;
+        margin-bottom: 1em;
     }
 
     Button {
