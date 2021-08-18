@@ -34,6 +34,11 @@
 <script>
     import InputSwitch from 'primevue/inputswitch';
     import {mapGetters} from 'vuex';
+    import axios from "axios";
+    const sha512 = require('js-sha512');
+    const createHmac = require('hmac')
+        .bind(null, () => {return new sha512()}, 128)
+
     export default {
         name: "AddBackendCard",
         components: {
@@ -51,7 +56,6 @@
                     id: null,
                     name: '',
                     active: false,
-
                     associatedEmail: '',
                     link: '',
                     oneTimeKey: '',
@@ -94,7 +98,6 @@
                 this.editBackendBool = !this.editBackendBool;
             },
             connectToBackendChecks(){
-
                 if (
                     this.tempBackendInfo.link === '' ||
                     this.tempBackendInfo.associatedEmail === '' ||
@@ -109,15 +112,27 @@
             },
             connectToBackend() {
                 //Change from commit to action
-                this.addBackendSuccess = this.$store.dispatch("addNewBackend", {
-                    name: this.tempBackendInfo.name,
-                    associatedEmail: this.tempBackendInfo.associatedEmail,
-                    link: this.tempBackendInfo.link,
-                    oneTimeKey: this.tempBackendInfo.oneTimeKey,
-                    secret: this.secret
-                });
-                    // this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'Please review details or request a new One Time Key', life: 3000});
-                this.$emit('saveNewBackend');
+                axios.post(
+                    this.tempBackendInfo.link + "/register",
+                {
+                        email: this.tempBackendInfo.associatedEmail,
+                        single_use_registration_token: this.tempBackendInfo.oneTimeKey
+                    }
+                ).then((resp) => {
+                    let hmac = createHmac(this.tempBackendInfo.secret)
+                    this.$store.dispatch("addNewBackend", {
+                        name: this.tempBackendInfo.name,
+                        associatedEmail: this.tempBackendInfo.associatedEmail,
+                        link: this.tempBackendInfo.link,
+                        passKey: hmac(resp.data.partial_pass_key),
+                        seed: hmac(resp.data.partial_seed),
+                        refreshToken: resp.data.refresh_token
+                    });
+                    this.$emit('saveNewBackend');
+                }).catch((err) => {
+                    this.$toast.add({severity: 'error', summary: 'Failed To Add Backend', detail: err.message})
+                })
+
             },
 
             cancelChanges() {

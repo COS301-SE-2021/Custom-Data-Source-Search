@@ -1,9 +1,6 @@
 import {createStore} from 'vuex'
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
-const sha512 = require('js-sha512');
-const createHmac = require('hmac')
-    .bind(null, () => {return new sha512()}, 128)
 
 const store = createStore({
     state:{
@@ -285,7 +282,7 @@ const store = createStore({
             //Payload:  name, associatedEmail, link, oneTimeKey, secret
             let masterKey = getters.getMasterKey;
             if(masterKey === null) {
-                return false;
+                return;
             }
             let encryptedPair = encryptJsonObject(
                 masterKey,
@@ -296,9 +293,8 @@ const store = createStore({
                 associatedEmail: payload.associatedEmail,
                 link: payload.link,
                 secretPair: encryptedPair,
-                refreshToken: payload.refresh_token
+                refreshToken: payload.refreshToken
             });
-            return true;
         },
 
         decryptBackendSecretPair(getters, payload) {
