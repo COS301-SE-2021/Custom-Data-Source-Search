@@ -284,7 +284,7 @@
         padding-left: 4px;
         background-color: rgba(189, 189, 189, 0.05);
         display: grid;
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 5fr 1fr;
     }
 
 

@@ -17,12 +17,15 @@
                   v-if="unconnectedBackendBool"
                   id="expiration-indicator"
                   class="pi pi-info-circle p-text-secondary"
-                  @click="showPopup"
+                  @click="showAskMasterPw"
                   v-badge.custom-warning="unconnectedBackendNo"
               ></em>
             </CustomTooltip>
           </div>
-          <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
+          <ReEnterMasterPassword
+                  :show="displayMasterPwInput"
+                  @action-to-Occur="showAskMasterPw"
+          />
         </div>
         <div class="search-results container">
           <search-result-card
@@ -55,16 +58,17 @@
 
   <script>
     import axios from "axios";
-    import SignIn from "@/components/popups/SignIn";
     import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
     import CustomTooltip from "../components/primeComponents/CustomTooltip";
     import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
     import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
     export default {
       name: "SearchBar",
       data() {
         return {
+          displayMasterPwInput: false,
           fullFileLineNumbers: [],
           currentLineNumber: -1,
           fullFileData: "",
@@ -89,6 +93,16 @@
         }
       },
       methods: {
+        showAskMasterPw() {
+          if(this.$store.getters.getMasterKey != null) {
+            if (this.$store.getters.unconnectedBackendBool) {
+              this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
+            }
+            return;
+          } else {
+            this.displayMasterPwInput = true;
+          }
+        },
         escapeSpecialCharacters(query) {
           return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
             return '\\' + match
@@ -141,11 +155,11 @@
         }
       },
       components: {
+        ReEnterMasterPassword,
         IconSimpleExpandLess,
         IconSimpleExpandMore,
         CustomTooltip,
         SearchResultCard,
-        SignIn
       }
     }
   </script>

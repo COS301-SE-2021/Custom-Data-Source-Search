@@ -41,7 +41,7 @@
     </div>
    <ReEnterMasterPassword
            :show="displayMasterPwInput"
-           @new-backend="newBackend"
+           @action-to-Occur="newBackend"
    />
 </template>
 
@@ -92,8 +92,8 @@
         },
         methods: {
             showMasterPwInput(){
-                this.displayMasterPwInput = !this.displayMasterPwInput
-            },
+                this.displayMasterPwInput = !this.displayMasterPwInput;
+             },
             newBackend() {
                 if (this.$store.getters.getMasterKey != null) {
                     this.newBackendBool = !this.newBackendBool;
