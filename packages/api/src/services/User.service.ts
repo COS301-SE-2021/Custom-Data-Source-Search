@@ -1,5 +1,6 @@
 import userRepository from "../repositories/UserRepository";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 
 class UserService {
@@ -227,6 +228,79 @@ class UserService {
                 "message": result.message
             }
         };
+    }
+
+    sendEncodedRegistrationKeyToUser(users: { uuid: string; }[]) {
+        const userResult = userRepository.getUsers(users);
+        const pendingUsers = userRepository.getPendingUsers(userResult);
+        for (let pendingUser of pendingUsers) {
+            let encodedRegistrationKey: string = UserService.encodeRegistrationKey(
+                pendingUser["email"],
+                process.env.BACKEND_URL,
+                pendingUser["single_use_registration_token"]
+            );
+            this.sendEmail(pendingUser["email"], encodedRegistrationKey);
+        }
+        if (pendingUsers.length !== users.length) {
+            return {
+                "code": 400,
+                "body": {
+                    "message": "Could not send email to all specified users"
+                }
+            };
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Email sent to users"
+            }
+        };
+    }
+
+    private sendEmail(address: string, registrationToken: string) {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_ADDRESS,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+
+        let mailOptions = {
+            from: process.env.EMAIL_ADDRESS,
+            to: address,
+            subject: 'Registration key for data sleuth',
+            text: registrationToken
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    }
+
+    private static encodeRegistrationKey(email: string, BACKEND_URL: string, tokenSecret: string) {
+        const token: string = tokenSecret.split('.')[0];
+        const secret: string = tokenSecret.substr(token.length + 1, tokenSecret.length);
+        const emailBuffer = Buffer.from(email, 'utf-8');
+        const backendBuffer = Buffer.from(BACKEND_URL, 'utf-8');
+        const tokenBuffer = Buffer.from(token, 'utf-8');
+        const secretBuffer = Buffer.from(secret, 'utf-8');
+
+        const encodedEmail = emailBuffer.toString('base64');
+        const encodedBackend = backendBuffer.toString('base64');
+        const encodedToken = tokenBuffer.toString('base64');
+        const encodedSecret = secretBuffer.toString('base64');
+
+        return (
+            encodedEmail + '.' +
+            encodedBackend + '.' +
+            encodedToken + '.' +
+            encodedSecret
+        );
     }
 }
 

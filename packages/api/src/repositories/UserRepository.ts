@@ -329,6 +329,38 @@ class UserRepository {
             "message": "Successfully generated registration keys for specified users"
         }, null];
     }
+
+    getUsers(users: { uuid: string }[]) {
+        let result: any[] = [];
+        for (let userId of users) {
+            let user;
+            try {
+                user = db.prepare('SELECT * FROM user WHERE id = ?').all(userId["uuid"])[0];
+                if (user !== undefined) {
+                    result.push(user);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        return result;
+    }
+
+    getPendingUsers(users: any[]) {
+        let result: any[] = [];
+        for (let user of users) {
+            let pendingUser;
+            try {
+                pendingUser = db.prepare('SELECT * FROM pending_user WHERE email = ?').all(user["email"])[0];
+                if (pendingUser !== undefined) {
+                    result.push(pendingUser);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        return result;
+    }
 }
 
 const userRepository = new UserRepository();
