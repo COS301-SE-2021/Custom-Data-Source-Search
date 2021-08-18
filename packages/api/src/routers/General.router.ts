@@ -24,6 +24,9 @@ generalRouter.get("/", authUser("viewer"), async (req: Request, res: Response) =
     res.status(result.code).send(result.body);
 });
 
+/**
+ * Return content of file associated with a certain document
+ */
 generalRouter.get("/fullfile", authUser("viewer"), async (req: Request, res: Response) => {
     const type: string = req.query.type.toString();
     const id: string = req.query.id.toString();
@@ -31,11 +34,17 @@ generalRouter.get("/fullfile", authUser("viewer"), async (req: Request, res: Res
     res.status(result.code).send(result.body);
 });
 
+/**
+ * Return all datasources that are added
+ */
 generalRouter.get("/datasources", authUser("viewer"), async (req: Request, res: Response) => {
     const result = await generalService.getAllDataSources();
     res.status(result.code).send(result.body);
 });
 
+/**
+ * Delete a datasource by id and type
+ */
 generalRouter.delete("/datasources", authUser("editor"), async (req: Request, res: Response) => {
     const result = await generalService.deleteDatasource(req.body.type, req.body.id);
     res.status(result.code).send(result.body);
