@@ -1,6 +1,8 @@
 import {createStore} from 'vuex'
+import axios from "axios";
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
+import { authenticator } from 'otplib';
 
 const store = createStore({
     state:{
@@ -9,9 +11,7 @@ const store = createStore({
         users: []
     },
     getters:{
-
         //User information related getters
-
         getNewAppStatus (state) {
             return state.users.length === 0;
         },
@@ -44,7 +44,6 @@ const store = createStore({
 
 
         //Signed in User's backends related getters
-
         getUserBackend: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
@@ -85,6 +84,9 @@ const store = createStore({
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         },
+        getBackendLink: (state) => (id) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).link;
+        },
         getBackendJWTToken: (state) => (id) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).jwtToken;
         },
@@ -95,7 +97,7 @@ const store = createStore({
             let pairObject = null
             try {
                 pairObject =  decryptJsonObject(
-                    getters.getMasterKey(),
+                    getters.getMasterKey,
                     state.users[state.signedInUserId].backends.find(b => b.local.id === id).secretPair
                 );
             } catch (ignore) {}
@@ -265,6 +267,10 @@ const store = createStore({
                    user.id = x++;
             }
         },
+        setRefreshToken(state, payload) {
+            state.users[state.signedInUserId].backends
+                .find(backend => backend.id = payload.id).refreshToken = payload.refreshToken;
+        },
         setJWTToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.id = payload.id).jwtToken = payload.jwtToken
@@ -274,7 +280,6 @@ const store = createStore({
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
         //User management
-
         addNewUser: function ({commit}, payload) {
             //Payload: name, email, masterPassword, hasVault
             let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
@@ -286,9 +291,41 @@ const store = createStore({
             });
             masterKey = newPassKey.masterKey;
         },
+        refreshJWTToken: function ({commit, getters}, payload) {
+            axios.post(
+                "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken",
+                {
+                    email: getters.getUserInfo.email,
+                    refresh_token: getters.getBackendRefreshToken(payload.id)
+                }
+            ).then((resp) => {
+                commit('setJWTToken', {
+                    id: payload.id,
+                    jwtToken: resp.data.jwt
+                })
+            }).catch();
 
+        },
+        login: function ({commit, getters}, payload) {
+            let secretPair = getters.getBackendSecretPair(payload.id);
+            if(secretPair === null) {
+                return;
+            }
+            axios.post(
+                "http://" + getters.getBackendLink(payload.id) + "/users/login",
+                {
+                    email: getters.getUserInfo.email,
+                    pass_key: secretPair.pass_key,
+                    otp: authenticator.generate(secretPair.seed)
+                }
+            ).then((resp) => {
+                commit('setRefreshToken', {
+                    id: payload.id,
+                    refreshToken: resp.data.refresh_token
+                })
+            }).catch()
+        },
         //Backend management
-
         addNewBackend: function ({commit, getters}, payload) {
             //Payload: name, associatedEmail, link, passKey, seed, refreshToken
             let masterKey = getters.getMasterKey;
