@@ -7,7 +7,7 @@
             <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
             <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
             <!--            <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>-->
-            <div class="icon-container" @click="toggle">
+            <div class="icon-container" title="User" @click="toggle">
                 <div class="image-ring-main" >
                     <h3 class="name-initial-main">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
                 </div>
