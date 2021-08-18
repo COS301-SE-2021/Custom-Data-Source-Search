@@ -85,20 +85,20 @@ const store = createStore({
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         },
         getBackendLink: (state) => (id) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).link;
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.link;
         },
         getBackendJWTToken: (state) => (id) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).jwtToken;
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.jwtToken;
         },
         getBackendRefreshToken: (state) => (id) => {
-          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).refreshToken
+          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.refreshToken
         },
         getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null
             try {
                 pairObject =  decryptJsonObject(
                     getters.getMasterKey,
-                    state.users[state.signedInUserId].backends.find(b => b.local.id === id).secretPair
+                    state.users[state.signedInUserId].backends.find(b => b.local.id === id).connect.keys.secretPair
                 );
             } catch (ignore) {}
             return pairObject;
@@ -126,7 +126,6 @@ const store = createStore({
             let thisUser = state.users[state.signedInUserId];
             thisUser.info.isActive = true;
         },
-
         signInAUser: function (state, payload) {
             //Payload: masterPassword, user { id, etc}
             let thisUser = state.users[payload.userID];
@@ -307,11 +306,11 @@ const store = createStore({
             });
             masterKey = newPassKey.masterKey;
         },
-        refreshJWTToken: function ({commit, getters}, payload) {
+        refreshJWTToken: function ({dispatch, commit, getters}, payload) {
             axios.post(
                 "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken",
                 {
-                    email: getters.getUserInfo.email,
+                    email: getters.getUserInfo(payload.id).email,
                     refresh_token: getters.getBackendRefreshToken(payload.id)
                 }
             ).then((resp) => {
@@ -319,11 +318,14 @@ const store = createStore({
                     id: payload.id,
                     jwtToken: resp.data.jwt
                 })
-            }).catch();
+            }).catch((e) => {
+                dispatch("backendLogin", {id: payload.id})
+            });
 
         },
         backendLogin: function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
+            console.log(JSON.stringify(secretPair))
             if(secretPair === null) {
                 return;
             }
@@ -340,7 +342,9 @@ const store = createStore({
                     id: payload.id,
                     refreshToken: resp.data.refresh_token
                 })
-            }).catch()
+            }).catch((err) => {
+                console.error(err)
+            })
         },
         //Backend management
         addNewBackend: function ({commit, getters}, payload) {

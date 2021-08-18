@@ -118,17 +118,20 @@
               }
               axios
                   .get(
-                      `http://${backend.connect.link}/general/?q=${encodeURIComponent(this.escapeSpecialCharacters(this.query))}`
+                      `http://${backend.connect.link}/general/?q=${encodeURIComponent(this.escapeSpecialCharacters(this.query))}`,
+                      {headers}
                   )
                   .then((resp) => {
                       this.searchResults = resp.data.searchResults;
                       if (this.searchResults.length === 0) {
                           this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
                       }
-                  }).catch((err) => {
-                    console.log(JSON.stringify(err))
-                    this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-              })
+                  })
+                  .catch((err) => {
+                      if(err.response.status === 403) {
+                          this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
+                      }
+                  })
           }
         },
         showPopup(){
