@@ -320,6 +320,7 @@ const store = createStore({
                 hasVault: payload.hasVault,
                 passKey: { masterKey: newPassKey.masterKey, encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject }
             });
+            masterKeyObject = {key: newPassKey.masterKey}
         },
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
