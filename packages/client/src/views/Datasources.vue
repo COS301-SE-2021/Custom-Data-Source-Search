@@ -187,24 +187,13 @@ export default {
     if (this.$store.getters.getNewAppStatus) {
       this.$router.push('/');
     }
+    this.backends = this.$store.getters.getUserBackendNames;
+    this.updateSources();
   },
   productService: null,
-  mounted() {
-    this.backends = this.$store.getters.getUserBackendNames;
-    this.backends.push("Local");
-
-    axios.get("http://localhost:3001/general/datasources").then(
-        resp => {
-          console.log(resp.data);
-          this.sources = resp.data.data;
-          let i;
-          for (i = 0; i < this.sources.length; i++) {
-            this.sources[i]["backend"] = "Local"
-          }
-          this.loading = false
-        }
-    )
-  },
+  // mounted() {
+  //   this.updateSources();
+  // },
   methods: {
 
     toggle(event) {
@@ -214,18 +203,54 @@ export default {
     },
     updateSources(){
       //Update list of sources upon addition of new source.
-      this.loading = true;
-
-      axios.get("http://localhost:3001/general/datasources").then(
-          resp => {
-            this.sources = resp.data.data;
-            let i;
-            for (i = 0; i < this.sources.length; i++) {
-              this.sources[i]["backend"] = "Local"
-            }
-            this.loading = false
-          }
-      )
+      this.loading = false;
+      this.sources = [];
+      // axios.get("http://localhost:3001/general/datasources").then(
+      //     resp => {
+      //       console.log(resp.data);
+      //       this.sources = resp.data.data;
+      //       let i;
+      //       for (i = 0; i < this.sources.length; i++) {
+      //         this.sources[i]["backend"] = "Local"
+      //       }
+      //       this.loading = false
+      //     }
+      // )
+      for(let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+        const url = `http://${backend.connect.link}/general/datasources`;
+        const headers = {
+          "Authorization": "Bearer " + backend.connect.keys.jwtToken
+        };
+        axios
+          .get(url, {headers})
+          .then((resp) => {
+            this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id);
+          })
+          .catch(async () => {
+            await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
+            const headers = {
+              "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
+            };
+            await axios.get(url, {headers})
+              .then((resp) => {
+                this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id)
+              })
+              .catch((e) => {
+                console.error(e);
+              })
+          })
+      }
+    },
+    handleSuccess(results, link, id){
+      for(let r of results){
+        r.link = link;
+        r.backendId = id;
+      }
+      this.sources = this.sources.concat(results);
+      if(this.sources.length === 0){
+        this.$toast.add({severity: 'warn', summary: 'No sources', detail: "Try adding data sources", life: 3000})
+      }
+      this.loading = false;
     },
     deleteSourceStatus(source){
       if(source === "Local"){
