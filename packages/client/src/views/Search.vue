@@ -110,16 +110,26 @@
         queryServer() {
           this.firstSearch = false;
           this.searchResults = [];
-          axios
-                  .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
+          for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+              console.log(JSON.stringify(backend))
+              console.log(backend.connect.jwtToken);
+              const headers = {
+                  "Authorization": "Bearer " + backend.connect.jwtToken
+              }
+              axios
+                  .get(
+                      `http://${backend.connect.link}/general/?q=${encodeURIComponent(this.escapeSpecialCharacters(this.query))}`
+                  )
                   .then((resp) => {
-                    this.searchResults = resp.data.searchResults;
-                    if (this.searchResults.length === 0) {
-                      this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-                    }
-                  }).catch(() => {
-            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-          })
+                      this.searchResults = resp.data.searchResults;
+                      if (this.searchResults.length === 0) {
+                          this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+                      }
+                  }).catch((err) => {
+                    console.log(JSON.stringify(err))
+                    this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+              })
+          }
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn

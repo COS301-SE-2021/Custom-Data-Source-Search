@@ -109,7 +109,7 @@
         },
         computed: {
             ...mapGetters ([
-                'getUserBackend',
+                'getUserBackends',
                 'getSignedInUserId'
              ])
         }

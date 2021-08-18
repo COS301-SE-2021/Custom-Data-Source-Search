@@ -44,11 +44,11 @@ const store = createStore({
 
 
         //Signed in User's backends related getters
-        getUserBackend: (state) => (id) => {
+        getUserBackends: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
         getUserBackendNames: (state, getters) => {
-          let backends = getters.getUserBackend(getters.getSignedInUserId);
+          let backends = getters.getUserBackends(getters.getSignedInUserId);
           let backendsArr = [];
           for( let backend of backends){
               backendsArr.push(backend.local.name);

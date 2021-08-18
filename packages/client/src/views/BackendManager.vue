@@ -203,7 +203,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getUserBackend',
+      'getUserBackends',
       'getSignedInUserId',
     ])
   },
@@ -570,7 +570,7 @@ export default {
   },
   beforeMount() {
     //console.log(this.backendID)
-    this.backend = this.getUserBackend(this.getSignedInUserId)[this.backendID];
+    this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
     this.updateTableData();
   //  console.log(this.backend.name)
   }
