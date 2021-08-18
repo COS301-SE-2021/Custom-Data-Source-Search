@@ -409,7 +409,7 @@ class UserRepository {
             )[0];
             db.prepare('DELETE FROM pending_user WHERE email = ?').run(body.email);
             if (pendingUser !== undefined) {
-                return [pendingUser, null];
+                return [pendingUser["secret"], null];
             }
         } catch (e) {
             console.error(e);

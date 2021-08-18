@@ -114,7 +114,7 @@
             connectToBackend() {
                 //Change from commit to action
                 axios.post(
-                    this.tempBackendInfo.link + "/users/registrationkey",
+                    "http://" + this.tempBackendInfo.link + "/users/register",
                 {
                         email: this.tempBackendInfo.associatedEmail,
                         single_use_registration_token: this.tempBackendInfo.oneTimeKey
@@ -131,7 +131,9 @@
                     });
                     this.$emit('saveNewBackend');
                 }).catch((err) => {
-                    this.$toast.add({severity: 'error', summary: 'Failed To Add Backend', detail: err.message, life:3000})
+                    this.$toast.add(
+                        {severity: 'error', summary: 'Failed To Add Backend', detail: err.message, life:3000}
+                    )
                 })
             },
 
