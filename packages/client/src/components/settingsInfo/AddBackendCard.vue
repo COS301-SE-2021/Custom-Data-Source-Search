@@ -10,23 +10,17 @@
                 <div>
                 </div>
             </div>
-            <form @submit="saveChanges" class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
+            <div class="expanded-backend-info">
                 <div><em>Name: </em></div>
                 <input-text v-model="tempBackendInfo.name"/>
-                <div><em>Email: </em></div>
-                <input-text v-model="tempBackendInfo.associatedEmail"/>
-                <div><em>Link: </em></div>
-                <input-text v-model="tempBackendInfo.link"/>
-                <div><em>One Time Key: </em></div>
-                <input-text v-model="tempBackendInfo.oneTimeKey"/>
-                <div><em>Secret: </em></div>
-                <input-text v-model="tempBackendInfo.secret"/>
+                <div><em>Registration String: </em></div>
+                <input-text type="text" id="registration-string" v-model="registrationString"/>
                 <div></div>
                 <div>
                     <Button @click="connectToBackendChecks" style="float: right" class="p-button p-button-outlined">Connect</Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </template>
@@ -50,6 +44,7 @@
                 addBackendSuccess: null,
                 newBackend: true,
                 cardName: 'New Backend',
+                registrationString: '',
                 tempBackendInfo: {
                     id: null,
                     name: '',
@@ -165,7 +160,7 @@
         padding-bottom: 4px;
         display: grid;
         grid-template-columns: 1fr 3fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
         row-gap: 4px;
     }
 
@@ -199,5 +194,6 @@
         display: grid;
         grid-template-columns: 3fr 1fr;
     }
+
 
 </style>

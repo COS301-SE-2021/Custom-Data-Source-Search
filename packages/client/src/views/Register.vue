@@ -143,7 +143,6 @@
                     console.log ("Do I get here?");
                     let frustrated = true;
                     if (frustrated) {
-                        console.log(frustrated);
                         this.$router.push({name: 'ContinueView'});
                     };
                 }
