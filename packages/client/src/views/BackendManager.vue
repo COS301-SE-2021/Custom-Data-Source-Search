@@ -353,75 +353,145 @@ export default {
     },
     revokeKeys(isGlobal){
 
-      console.log(isGlobal);
 
-      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
 
-      let reqObj = { users: usersArr };
 
-      let reqBody = JSON.stringify(reqObj);
+      if(isGlobal){
 
-     // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-      axios.post("http://localhost:3001/users/revoke", reqBody,
-          { headers : {"Content-Type" : "application/json" }} )
-       .then( resp => {
 
-         this.$toast.add({
-           severity: 'success',
-           summary: 'Success',
-           detail: "Updated Table",
-           life: 3000
-         });
 
-         console.log(resp.data);
-         this.updateTableData();
+        // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
+        axios.post("http://localhost:3001/users/gloal/revoke")
+            .then( resp => {
 
-       }).catch( (error) => {
-        this.$toast.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.response.data.message,
-          life: 3000
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Updated Table",
+                life: 3000
+              });
+
+              console.log(resp.data);
+              this.updateTableData();
+
+            }).catch( (error) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.response.data.message,
+            life: 3000
+          })
+          console.log(error);
         })
-        console.log(error);
-      })
+
+
+      }else {
+
+        let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+
+        let reqObj = { users: usersArr };
+
+        let reqBody = JSON.stringify(reqObj);
+
+        // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
+        axios.post("http://localhost:3001/users/revoke", reqBody,
+            { headers : {"Content-Type" : "application/json" }} )
+            .then( resp => {
+
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Updated Table",
+                life: 3000
+              });
+
+              console.log(resp.data);
+              this.updateTableData();
+
+            }).catch( (error) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.response.data.message,
+            life: 3000
+          })
+          console.log(error);
+        })
+
+
+      }
 
 
     },
     logOutUsers(isGlobal){
 
-      console.log("isGlobal = " + isGlobal )
 
-      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
 
-      let reqObj = { users: usersArr };
+      if(isGlobal){
 
-      let reqBody = JSON.stringify(reqObj);
 
-      // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-      axios.post("http://localhost:3001/users/logout", reqBody,
-          { headers : {"Content-Type" : "application/json" }} )
-          .then( resp => {
 
-            this.$toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: "Updated Table",
-              life: 3000
-            });
+        // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
+        axios.post("http://localhost:3001/users/gloal/logout")
+            .then( resp => {
 
-            console.log(resp.data);
-            this.updateTableData();
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Updated Table",
+                life: 3000
+              });
 
-          }).catch( (error) => {
-        this.$toast.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.response.data.message,
-          life: 3000
+              console.log(resp.data);
+              this.updateTableData();
+
+            }).catch( (error) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.response.data.message,
+            life: 3000
+          })
+          console.log(error);
         })
-        console.log(error);
-      })
+
+
+      }else {
+
+        let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+
+        let reqObj = { users: usersArr };
+
+        let reqBody = JSON.stringify(reqObj);
+
+        // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
+        axios.post("http://localhost:3001/users/logout", reqBody,
+            { headers : {"Content-Type" : "application/json" }} )
+            .then( resp => {
+
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Updated Table",
+                life: 3000
+              });
+
+              console.log(resp.data);
+              this.updateTableData();
+
+            }).catch( (error) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.response.data.message,
+            life: 3000
+          })
+          console.log(error);
+        })
+
+
+      }
+
 
     },
     //Copy backend url and user name, email, registration key to clipboard
