@@ -39,15 +39,24 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^8.5.4",
+    "@types/nodemailer": "^6.4.4",
+    "@types/otplib": "^10.0.0",
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "better-sqlite3": "^7.4.3",
     "cheerio": "^1.0.0-rc.10",
     "cors": "^2.8.5",
     "coveralls": "^3.1.0",
     "express": "^4.17.1",
+    "express-validator": "^6.12.1",
     "global": "^4.4.0",
     "highlight.js": "^11.0.1",
-    "hmac": "^1.0.1",
-    "js-sha512": "^0.8.0",
-    "node-fetch": "^2.6.1"
+    "jsonwebtoken": "^8.5.1",
+    "node-fetch": "^2.6.1",
+    "nodemailer": "^6.6.3",
+    "otplib": "^12.0.1",
+    "sqlite3": "^5.0.2"
   }
 }
