@@ -153,7 +153,7 @@ class UserRepository {
         for (let user of users) {
             try {
                 db.prepare(
-                    "DELETE active_user FROM active_user INNER JOIN user ON email=email WHERE id = ?"
+                    "DELETE FROM active_user WHERE email = (SELECT email FROM user WHERE id = ?)"
                 ).run(parseInt(user.uuid));
             } catch (e) {
                 console.error(e);
@@ -185,7 +185,7 @@ class UserRepository {
             }
             try {
                 db.prepare(
-                    "DELETE active_user FROM active_user INNER JOIN user ON email=email WHERE id = ?"
+                    "DELETE FROM active_user WHERE email = (SELECT email FROM user WHERE id = ?)"
                 ).run(parseInt(user.uuid));
             } catch (e) {
                 console.error(e);
