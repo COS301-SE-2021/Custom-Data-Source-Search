@@ -42,7 +42,7 @@
           <Button @click="showRevokeUserKeys" label="Revoke Keys" icon="pi pi-ban" class="p-button-danger p-button-custom-med" />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
-        <Button :disabled="!isUserSelected" @click="copyUsers" label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
+        <SplitButton :disabled="!isUserSelected" :model="copyOptions" @click="copyUsers" label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
 
       </template>
       </Toolbar>
@@ -186,7 +186,16 @@ export default {
       roleOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
 
       //Temporarily Hardcoded for Testing
-      tableData: []
+      tableData: [],
+
+      copyOptions: [
+        {
+          label: 'Email',
+          icon: 'pi pi-mail',
+          command: () => {
+            //Need to Implement
+          }
+        } ],
   }
   },
   props: {
@@ -207,13 +216,6 @@ export default {
 
       axios.get("http://localhost:3001/users")
           .then((resp) => {
-
-            this.$toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: "Updated Table",
-              life: 3000
-            });
 
             this.tableData = resp.data.data;
 
@@ -253,7 +255,7 @@ export default {
             this.$toast.add({
               severity: 'success',
               summary: 'Success',
-              detail: "Updated Table",
+              detail: "Added Users",
               life: 3000
             });
 
@@ -288,7 +290,7 @@ export default {
             this.$toast.add({
               severity: 'success',
               summary: 'Success',
-              detail: "Updated Table",
+              detail: "Deleted Users",
               life: 3000
             });
 
@@ -324,7 +326,7 @@ export default {
             this.$toast.add({
               severity: 'success',
               summary: 'Success',
-              detail: "Updated Table",
+              detail: "Updated Roles",
               life: 3000
             });
 
@@ -361,13 +363,13 @@ export default {
 
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/gloal/revoke")
+        axios.post("http://localhost:3001/users/global/revoke")
             .then( resp => {
 
               this.$toast.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: "Updated Table",
+                detail: "Revoked All User Keys",
                 life: 3000
               });
 
@@ -401,7 +403,7 @@ export default {
               this.$toast.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: "Updated Table",
+                detail: "Revoked User Keys",
                 life: 3000
               });
 
@@ -432,13 +434,13 @@ export default {
 
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/gloal/logout")
+        axios.post("http://localhost:3001/users/global/logout")
             .then( resp => {
 
               this.$toast.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: "Updated Table",
+                detail: "Logged All Users Out",
                 life: 3000
               });
 
@@ -472,7 +474,7 @@ export default {
               this.$toast.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: "Updated Table",
+                detail: "Logged Users Out",
                 life: 3000
               });
 
@@ -631,7 +633,7 @@ export default {
   font-size: 1rem;
 }
 
-.p-button {
+::v-deep(.p-button) {
   padding: 0.54rem 0.74rem;
   font-size: 1rem;
 }

@@ -208,7 +208,7 @@ class UserRepository {
 
     logoutAllUsers() {
         try {
-            db.prepare("DELETE FROM active_user").all();
+            db.prepare("DELETE FROM active_user").run();
         } catch (e) {
             console.error(e);
             return [null, {
