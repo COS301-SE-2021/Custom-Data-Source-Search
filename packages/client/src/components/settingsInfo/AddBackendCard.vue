@@ -75,7 +75,6 @@
             //View changes
             change() {
                 //TO DO: check that masterKey is there before adding a backend
-
                 if (!this.newBackend) {
                     this.expand = !this.expand;
                     if (this.editBackendBool) {
@@ -140,9 +139,22 @@
                         return
                     }
                     this.$emit('saveNewBackend');
+                    this.$toast.add(
+                            {
+                                severity: 'success',
+                                summary: "Added New Backend",
+                                detail: "Whooo! Let the searching Begin!",
+                                life: 4000
+                            }
+                        )
                 }).catch((err) => {
                     this.$toast.add(
-                        {severity: 'error', summary: 'Failed To Add Backend', detail: err.message, life:3000}
+                        {
+                            severity: 'error',
+                            summary: 'Failed To Add Backend',
+                            detail: err.response.data.message,
+                            life:6000
+                        }
                     )
                 })
             },
