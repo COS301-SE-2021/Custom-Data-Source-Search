@@ -132,7 +132,7 @@ button {
 }
 
 .image-ring-main {
-    width: 250%;
+    width: 40px;
     max-height: 40%;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
@@ -169,7 +169,7 @@ button {
     text-align: left;
     max-width: 30px;
     max-height: 30px;
-    padding-left: 1%;
+    padding-left: 0.7em;
     bottom: 2em;
     cursor: pointer;
     padding-bottom: 0.8vh;
