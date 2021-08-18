@@ -49,7 +49,7 @@ const store = createStore({
             return state.users.find(user => user.id === id).backends;
         },
         getSignedInUserBackend: (state, getters) => (id) => {
-            return getters.getUserBackends(getters.getSignedInUserId).find(b => b.id === id)
+            return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.id === id)
         },
         getUserBackendNames: (state, getters) => {
           let backends = getters.getUserBackends(getters.getSignedInUserId);
@@ -320,7 +320,6 @@ const store = createStore({
                 hasVault: payload.hasVault,
                 passKey: { masterKey: newPassKey.masterKey, encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject }
             });
-            masterKeyObject = {key: newPassKey.masterKey};
         },
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
