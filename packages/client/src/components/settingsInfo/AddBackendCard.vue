@@ -114,7 +114,7 @@
             connectToBackend() {
                 //Change from commit to action
                 axios.post(
-                    this.tempBackendInfo.link + "/register",
+                    this.tempBackendInfo.link + "/users/registrationkey",
                 {
                         email: this.tempBackendInfo.associatedEmail,
                         single_use_registration_token: this.tempBackendInfo.oneTimeKey
