@@ -96,7 +96,7 @@
       },
       methods: {
         showAskMasterPw() {
-          if(this.$store.getters.getMasterKey != null) {
+          if(this.$store.getters.getMasterKeyObject != null) {
             if (this.$store.getters.unconnectedBackendBool) {
               this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
             }
@@ -109,7 +109,7 @@
             return '\\' + match
           })
         },
-        queryServer() {
+        async queryServer() {
           this.firstSearch = false;
           this.searchResults = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -119,7 +119,7 @@
             const headers = {
               "Authorization": "Bearer " + backend.connect.keys.jwtToken
             };
-            axios
+            await axios
               .get(url, {headers})
               .then((resp) => {
                 this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
@@ -137,11 +137,9 @@
                     console.error(e);
                   })
               })
-              .finally(() => {
-                if (this.searchResults.length === 0) {
-                  this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-                }
-              })
+          }
+          if (this.searchResults.length === 0) {
+            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           }
         },
         handleSuccess(results, link, id) {
@@ -163,7 +161,7 @@
         },
         goToFullFileLine(lineNumber) {
           this.currentLineNumber = lineNumber;
-          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView({behavior: "smooth"});
+          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
         },
         goToPrev() {
           let index = Math.max(

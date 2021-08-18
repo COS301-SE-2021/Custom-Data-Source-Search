@@ -204,7 +204,6 @@ export default {
           this.loading = false
         }
     )
-    console.log(this.backends)
   },
   methods: {
 
@@ -219,7 +218,6 @@ export default {
 
       axios.get("http://localhost:3001/general/datasources").then(
           resp => {
-            console.log(resp.data);
             this.sources = resp.data.data;
             let i;
             for (i = 0; i < this.sources.length; i++) {
@@ -238,7 +236,6 @@ export default {
       }
     },
     deleteSource(){
-      console.log(this.selectedSources)
       if(this.selectedSources===null){
         this.$toast.add({severity:'info', summary: 'No Sources Selected', detail:'Please select sources to delete', life: 3000});
         return;
