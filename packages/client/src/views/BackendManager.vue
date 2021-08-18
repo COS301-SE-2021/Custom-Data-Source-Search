@@ -38,8 +38,8 @@
         <Dropdown class="toolbar-dropdown" :disabled="!isUserSelected" v-model="selectedRole" :options="roleOptions" placeholder="Select a Role" />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <span class="p-buttonset">
-        <Button :disabled="!isUserSelected" @click="logOutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
-          <Button :disabled="!isUserSelected" @click="revokeUserKeys" label="Revoke Keys" icon="pi pi-ban" class="p-button-danger p-button-custom-med" />
+        <Button  @click="showLogoutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
+          <Button @click="showRevokeUserKeys" label="Revoke Keys" icon="pi pi-ban" class="p-button-danger p-button-custom-med" />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
         <Button :disabled="!isUserSelected" @click="copyUsers" label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
@@ -101,6 +101,50 @@
 
       </Dialog>
 
+      <Dialog header="Confirmation" v-model:visible="displayGlobalLogoutConfirmation" :style="{width: '32em'}" :modal="true">
+        <div class="confirmation-content">
+          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
+          <span style="margin-left: 0.8em;"> Are you sure you want to log all users out?</span>
+        </div>
+        <template #footer>
+          <Button label="No" icon="pi pi-times" @click="closeGlobalLogoutConfirmation" class="p-button-text"/>
+          <Button label="Yes" icon="pi pi-check" @click="logOutUsers(true)" class="p-button-text" autofocus />
+        </template>
+      </Dialog>
+
+      <Dialog header="Confirmation" v-model:visible="displayLogoutConfirmation" :style="{width: '32em'}" :modal="true">
+        <div class="confirmation-content">
+          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
+          <span style="margin-left: 0.8em;">Are you sure you want to log the selected users out?</span>
+        </div>
+        <template #footer>
+          <Button label="No" icon="pi pi-times" @click="closeLogoutConfirmation" class="p-button-text"/>
+          <Button label="Yes" icon="pi pi-check" @click="logOutUsers(false)" class="p-button-text" autofocus />
+        </template>
+      </Dialog>
+
+      <Dialog header="Confirmation" v-model:visible="displayGlobalRevokeConfirmation" :style="{width: '32em'}" :modal="true">
+        <div class="confirmation-content">
+          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
+          <span style="margin-left: 0.8em;"> Are you sure you want to revoke all user keys?</span>
+        </div>
+        <template #footer>
+          <Button label="No" icon="pi pi-times" @click="closeGlobalRevokeConfirmation" class="p-button-text"/>
+          <Button label="Yes" icon="pi pi-check" @click="revokeKeys(true)" class="p-button-text" autofocus />
+        </template>
+      </Dialog>
+
+      <Dialog header="Confirmation" v-model:visible="displayRevokeConfirmation" :style="{width: '32em'}" :modal="true">
+        <div class="confirmation-content">
+          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
+          <span style="margin-left: 0.8em;">Are you sure you want to revoke the selected user's keys?</span>
+        </div>
+        <template #footer>
+          <Button label="No" icon="pi pi-times" @click="closeRevokeConfirmation" class="p-button-text"/>
+          <Button label="Yes" icon="pi pi-check" @click="revokeKeys(false)" class="p-button-text" autofocus />
+        </template>
+      </Dialog>
+
     </div>
 
     <Toast position="bottom-right"/>
@@ -126,6 +170,12 @@ export default {
 
       showAddUserDialog : false,
       addUserPos: "bottomleft",
+
+      displayGlobalLogoutConfirmation : false,
+      displayLogoutConfirmation : false,
+
+      displayGlobalRevokeConfirmation : false,
+      displayRevokeConfirmation : false,
 
       addUserFirstName: "",
       addUserLastName: "",
@@ -224,7 +274,7 @@ export default {
     },
     deleteUsers(){
 
-      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.id};});
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
 
       let reqObj = { users: usersArr };
 
@@ -259,99 +309,119 @@ export default {
     },
     changeUserRoles(){
 
-      let reqObj = {role: this.selectedRole,
-                    users: this.selectedUsers}
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+
+      let reqObj = {role: this.selectedRole.toLowerCase(),
+                    users: usersArr}
 
       let reqBody = JSON.stringify(reqObj);
 
-      axios.post(this.backend.connect.link + "/users/role", reqBody).then(
-          resp => {
+    //  axios.post(this.backend.connect.link + "/users/role", reqBody)
+      axios.post("http://localhost:3001/users/role", reqBody,
+          { headers : {"Content-Type" : "application/json" }} )
+          .then((resp) => {
 
-            if(resp.data === 200){
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: "Updated Table",
+              life: 3000
+            });
 
-              this.$toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: "Changed Roles",
-                life: 3000});
-
-              this.updateTableData();
-
-            } else {
-              this.$toast.add({
-                severity: 'warning',
-                summary: 'Error',
-                detail: "Could Not Change Roles",
-                life: 3000});
-            }
             console.log(resp.data);
+            this.updateTableData();
 
-          }
-      )
+          }).catch( (error) => {
+        this.$toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          life: 3000
+        })
+        console.log(error);
+      })
 
     },
-    revokeUserKeys(){
+    showRevokeUserKeys(){
 
-      let reqObj = { users: this.selectedUsers}
-
-      let reqBody = JSON.stringify(reqObj);
-
-      axios.post(this.backend.connect.link + "/users/revoke", reqBody).then(
-          resp => {
-
-            if(resp.data === 200){
-
-              this.$toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: "Revoked Keys",
-                life: 3000});
-
-              this.updateTableData();
-
-            } else {
-              this.$toast.add({
-                severity: 'warning',
-                summary: 'Error',
-                detail: "Could Not Revoke Keys",
-                life: 3000});
-            }
-            console.log(resp.data);
-
-          }
-      )
+      if(this.selectedUsers === null || this.selectedUsers.length === 0){
+        this.displayGlobalRevokeConfirmation = true;
+      } else {
+        this.displayRevokeConfirmation = true;
+      }
 
     },
-    logOutUsers(){
+    revokeKeys(isGlobal){
 
-      let reqObj = { users: this.selectedUsers}
+      console.log(isGlobal);
+
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+
+      let reqObj = { users: usersArr };
 
       let reqBody = JSON.stringify(reqObj);
 
-      axios.post(this.backend.connect.link + "/users/logout", reqBody).then(
-          resp => {
+     // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
+      axios.post("http://localhost:3001/users/revoke", reqBody,
+          { headers : {"Content-Type" : "application/json" }} )
+       .then( resp => {
 
-            if(resp.data === 200){
+         this.$toast.add({
+           severity: 'success',
+           summary: 'Success',
+           detail: "Updated Table",
+           life: 3000
+         });
 
-              this.$toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: "Logged Users Out",
-                life: 3000});
+         console.log(resp.data);
+         this.updateTableData();
 
-              this.updateTableData();
+       }).catch( (error) => {
+        this.$toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          life: 3000
+        })
+        console.log(error);
+      })
 
-            } else {
-              this.$toast.add({
-                severity: 'warning',
-                summary: 'Error',
-                detail: "Could Not Log Users out",
-                life: 3000});
-            }
+
+    },
+    logOutUsers(isGlobal){
+
+      console.log("isGlobal = " + isGlobal )
+
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+
+      let reqObj = { users: usersArr };
+
+      let reqBody = JSON.stringify(reqObj);
+
+      // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
+      axios.post("http://localhost:3001/users/logout", reqBody,
+          { headers : {"Content-Type" : "application/json" }} )
+          .then( resp => {
+
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: "Updated Table",
+              life: 3000
+            });
+
             console.log(resp.data);
+            this.updateTableData();
 
-          }
-      )
+          }).catch( (error) => {
+        this.$toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          life: 3000
+        })
+        console.log(error);
+      })
 
     },
     //Copy backend url and user name, email, registration key to clipboard
@@ -405,7 +475,26 @@ export default {
 
       this.showAddUserDialog = false;
 
-    }
+    },
+    closeGlobalLogoutConfirmation(){
+      this.displayGlobalLogoutConfirmation = false;
+    },
+    closeLogoutConfirmation(){
+      this.displayLogoutConfirmation = false;
+    },
+    closeGlobalRevokeConfirmation(){
+      this.displayGlobalRevokeConfirmation = false;
+    },
+    closeRevokeConfirmation(){
+      this.displayRevokeConfirmation = false;
+    },
+    showLogoutUsers(){
+      if(this.selectedUsers === null || this.selectedUsers.length === 0){
+        this.displayGlobalLogoutConfirmation = true;
+      } else {
+        this.displayLogoutConfirmation = true;
+      }
+    },
   },
   beforeMount() {
     //console.log(this.backendID)
