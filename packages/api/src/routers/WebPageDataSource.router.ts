@@ -23,6 +23,7 @@ export const webPageDataSourceRouter = express.Router();
  * Add a data source by it's url
  */
 webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
+    console.log(Buffer.from("what is this"))
     const [, err] = await webPageDataSourceService.addWebPageDataSource(req.body);
     if (err) {
         res.status(err.code).send({'message': err.message});

@@ -1,7 +1,6 @@
 import {WebPageDataSource} from "../models/WebPageDataSource.interface";
 import {randomBytes} from "crypto";
 import FormData from "form-data";
-import fetch from 'node-fetch'
 import axios from "axios";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
@@ -9,7 +8,7 @@ const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 class WebPageDataSourceRepository {
 
-    async addDataSource(dataSource: WebPageDataSource): Promise<[{ code: number, message: string }, { code: number, message: string }]> {
+    async addDataSource(dataSource: WebPageDataSource, page: string): Promise<[{ code: number, message: string }, { code: number, message: string }]> {
         const uuid: string = randomBytes(16).toString("hex")
         try {
             db.prepare(
@@ -26,13 +25,7 @@ class WebPageDataSourceRepository {
                 "message": "Webpage datasource already exists"
             }];
         }
-        const body: string = await fetch(dataSource.url)
-            .then(res => res.text())
-            .then(body => {
-                return body
-            });
-
-        const [, err] = await this.postToSolr(body, uuid, dataSource.url);
+        const [, err] = await this.postToSolr(page, uuid, dataSource.url);
         if (err) {
             try {
                 db.prepare("DELETE FROM webpage_data WHERE uuid = ?").run(uuid);
@@ -45,10 +38,11 @@ class WebPageDataSourceRepository {
         }, null];
     }
 
-    async postToSolr(content: string, id: string, url: string) {
-        let formData = new FormData();
-        formData.append("file", content, url);
+    async postToSolr(page: string, id: string, url: string) {
         try {
+            let content: any = Buffer.from(page);
+            let formData = new FormData();
+            formData.append("file", content, url);
             await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
                 + '&commit=true&literal.datasource_type=webpage',
                 formData,

@@ -1,8 +1,7 @@
 import {WebPageDataSource} from "../models/WebPageDataSource.interface";
 import {WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
-
-const fetch = require("node-fetch");
+import fetch from 'node-fetch';
 
 class WebPageDataSourceService {
 
@@ -70,7 +69,7 @@ class WebPageDataSourceService {
             }];
         }
         if (page.status == 200) {
-            let [, e] = await webPageDataSourceRepository.addDataSource(dataSource);
+            let [, e] = await webPageDataSourceRepository.addDataSource(dataSource, await page.text());
             if (e) {
                 return [null, e]
             }
