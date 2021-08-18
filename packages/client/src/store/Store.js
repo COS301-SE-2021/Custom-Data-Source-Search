@@ -326,26 +326,6 @@ const store = createStore({
 
 
             //User log in to backend
-            let promise = new Promise((resolve , reject) => {
-                fetch("localhost:3001/users/login", {             //Should be more general? Eg: payload.link + "/login"
-                    method: 'POST',
-                    body: { "email": payload.email,
-                        "pass_key": newSecretPair.backendKey,
-                        "otp": oneTimePin},
-                    'Content-type': 'Object'
-                })
-                    .then((res) => {
-                        // successfully got data => ie, data returned: { p_sessionKey: String, p_seed: String }
-
-                        resolve(res);
-                    })
-                    .catch((err) => {
-                        // an error occurred
-
-                        reject(err);
-                    });
-            });
-
 
 
             //////_______[3]______Ask for sessionKey, refreshKeys and adminStatus from server
