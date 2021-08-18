@@ -279,7 +279,7 @@ class UserRepository {
         try {
             db.prepare('DELETE FROM active_user WHERE email = ?').run(email);
             const refreshToken = randomBytes(16).toString("hex");
-            const expirationTimeSeconds = 20;
+            const expirationTimeSeconds = parseInt(process.env.LOGIN_EXPIRATION_TIME_MINUTES) * 60;
             const newDate = new Date(new Date().getTime() + expirationTimeSeconds * 1000).getTime();
             db.prepare(
                 'INSERT INTO active_user (email, refresh_token, valid_until) VALUES (?,?,?);'
