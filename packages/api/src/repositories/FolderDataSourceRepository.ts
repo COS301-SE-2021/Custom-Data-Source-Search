@@ -61,6 +61,7 @@ class FolderDataSourceRepository {
                 uuid
             )
         } catch (e) {
+            console.error(e);
             return [null, {
                 "code": 400,
                 "message": "File from folder datasource already exists"
@@ -88,8 +89,12 @@ class FolderDataSourceRepository {
         return [fileDataList.map(FolderDataSourceRepository.castToStoredDataSource), null];
     }
 
-    deleteDataSource(uuid: string) {
+    async deleteDataSource(uuid: string) {
         try {
+            for (let folderFile of db.prepare("SELECT * FROM folder_file_data WHERE folder_uuid = ?;").all(uuid)) {
+                await fileDataSourceRepository.deleteFromSolr(folderFile["uuid"]);
+            }
+            db.prepare("DELETE FROM folder_file_data WHERE folder_uuid = ?").run(uuid);
             db.prepare("DELETE FROM folder_data WHERE uuid = ?").run(uuid);
         } catch (e) {
             console.error(e)
@@ -105,7 +110,7 @@ class FolderDataSourceRepository {
     }
 
     private static getFolderName(path: string) {
-        return path.split("/").pop();
+        return path.substr(0, path.length - 1).split("/").pop();
     }
 
     private static castToStoredDataSource(dataSource: any) {

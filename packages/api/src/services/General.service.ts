@@ -229,7 +229,7 @@ class GeneralService {
             case "file":
                 return await fileDataSourceService.removeFileDataSource(id);
             case "folder":
-                return folderDataSourceService.removeFolderDataSource(id);
+                return await folderDataSourceService.removeFolderDataSource(id);
             case "webpage":
                 return webPageDataSourceService.removeWebPageDataSource(id);
             default:
