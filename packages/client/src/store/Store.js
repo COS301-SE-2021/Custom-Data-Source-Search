@@ -329,8 +329,9 @@ const store = createStore({
                     id: payload.id,
                     jwtToken: resp.data.jwt
                 })
-            }).catch((e) => {
-                dispatch("backendLogin", {id: payload.id})
+            }).catch(async (e) => {
+                await dispatch("backendLogin", {id: payload.id})
+
             });
 
         },
