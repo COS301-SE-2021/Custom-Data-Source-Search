@@ -96,9 +96,11 @@ const store = createStore({
         },
         getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null;
+            console.log(getters.getMasterKey["key"]);
+            console.log(state.users[state.signedInUserId].backends.find(b => b.local.id === id).connect.keys.secretPair)
             try {
                 pairObject =  decryptJsonObject(
-                    getters.getMasterKey,
+                    getters.getMasterKey["key"],
                     state.users[state.signedInUserId].backends.find(b => b.local.id === id).connect.keys.secretPair
                 );
             } catch (ignore) {}
@@ -293,12 +295,13 @@ const store = createStore({
             }
         },
         setRefreshToken(state, payload) {
+            console.log(JSON.stringify(state.users[state.signedInUserId].backends))
             state.users[state.signedInUserId].backends
-                .find(backend => backend.id = payload.id).refreshToken = payload.refreshToken;
+                .find(backend => backend.local.id === payload.id).connect.keys.refreshToken = payload.refreshToken;
         },
         setJWTToken(state, payload) {
             state.users[state.signedInUserId].backends
-                .find(backend => backend.id = payload.id).jwtToken = payload.jwtToken
+                .find(backend => backend.local.id === payload.id).connect.keys.jwtToken = payload.jwtToken
         }
     },
 
@@ -342,12 +345,11 @@ const store = createStore({
             axios.post(
                 "http://" + getters.getBackendLink(payload.id) + "/users/login",
                 {
-                    email: getters.getUserInfo.email,
-                    pass_key: secretPair.pass_key,
+                    email: getters.getUserInfo(payload.id).email,
+                    pass_key: secretPair.backendKey,
                     otp: authenticator.generate(secretPair.seed)
                 }
             ).then((resp) => {
-                console.log(resp.data.refresh_token);
                 commit('setRefreshToken', {
                     id: payload.id,
                     refreshToken: resp.data.refresh_token
@@ -435,7 +437,7 @@ function encryptJsonObject(masterKey, jsonObject) {
 
 function decryptJsonObject(masterKey, jsonObject) {
     let encryptedJsonObject = aes.utils.hex.toBytes(jsonObject);
-    let aesCtr = new aes.ModeOfOperation.ctr(masterKey);
+    let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
     let decrypted = aesCtr.decrypt(encryptedJsonObject);
     return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }

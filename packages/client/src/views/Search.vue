@@ -111,10 +111,8 @@
           this.firstSearch = false;
           this.searchResults = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
-              console.log(JSON.stringify(backend))
-              console.log(backend.connect.jwtToken);
               const headers = {
-                  "Authorization": "Bearer " + backend.connect.jwtToken
+                  "Authorization": "Bearer " + backend.connect.keys.jwtToken
               }
               axios
                   .get(
