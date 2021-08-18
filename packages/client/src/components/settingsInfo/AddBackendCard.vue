@@ -78,7 +78,7 @@
         },
         mounted() {
             let hmac = createHmac('sha512', 'secret');
-            console.log(hmac.update("this is the data", ).digest('hex'));
+            console.log(hmac.update("this is the data").digest('hex'));
         },
         methods: {
 
