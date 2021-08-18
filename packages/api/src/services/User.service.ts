@@ -238,7 +238,8 @@ class UserService {
             let encodedRegistrationKey: string = UserService.encodeRegistrationKey(
                 pendingUser["email"],
                 process.env.BACKEND_URL,
-                pendingUser["single_use_registration_token"]
+                pendingUser["single_use_registration_token"],
+                pendingUser["secret"]
             );
             this.sendEmail(pendingUser["email"], encodedRegistrationKey);
         }
@@ -283,9 +284,7 @@ class UserService {
         });
     }
 
-    private static encodeRegistrationKey(email: string, BACKEND_URL: string, tokenSecret: string) {
-        const token: string = tokenSecret.split('.')[0];
-        const secret: string = tokenSecret.substr(token.length + 1, tokenSecret.length);
+    private static encodeRegistrationKey(email: string, BACKEND_URL: string, token: string, secret: string) {
         const emailBuffer = Buffer.from(email, 'utf-8');
         const backendBuffer = Buffer.from(BACKEND_URL, 'utf-8');
         const tokenBuffer = Buffer.from(token, 'utf-8');
