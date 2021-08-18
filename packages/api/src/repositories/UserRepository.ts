@@ -266,7 +266,7 @@ class UserRepository {
             if (activeUser === undefined) {
                 return [null, {
                     "code": 400,
-                    "message": "No active refresh token found"
+                    "message": "Refresh token is not active"
                 }];
             }
             const time: number = parseInt(activeUser["valid_until"]);
