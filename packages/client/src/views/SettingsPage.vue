@@ -39,8 +39,8 @@
             </div>
         </div>
       <div class="info-div start-stop">
-          <Button class="p-button-text start-backend p-button-plain inline" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
-          <Button class="p-button-text stop-backend p-button-plain inline" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
+          <Button class="p-button-text start-backend p-button-plain inline"  style="float: left" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
+          <Button class="p-button-text stop-backend p-button-plain inline" style="float: left; padding-left: 5em" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
       </div>
     </div>
    <ReEnterMasterPassword
@@ -295,12 +295,20 @@
         max-width: fit-content;
     }
 
+
+    .inline {
+        margin-left: 1em !important;
+    }
+
     .start-stop{
-      max-width: 600px;
+        width: 600px;
+        position: fixed;
+        bottom: 0;
+        text-align: left;
     }
 
     .inline{
-      float: left;
-      margin-left: 10%;
+        float: left;
+        margin-left: 10%;
     }
 </style>
