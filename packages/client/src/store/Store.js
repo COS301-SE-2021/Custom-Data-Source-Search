@@ -306,7 +306,7 @@ const store = createStore({
             }).catch();
 
         },
-        login: function ({commit, getters}, payload) {
+        backendLogin: function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
             if(secretPair === null) {
                 return;
@@ -319,6 +319,7 @@ const store = createStore({
                     otp: authenticator.generate(secretPair.seed)
                 }
             ).then((resp) => {
+                console.log(resp.data.refresh_token)
                 commit('setRefreshToken', {
                     id: payload.id,
                     refreshToken: resp.data.refresh_token
