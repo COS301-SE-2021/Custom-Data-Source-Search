@@ -48,16 +48,17 @@
 </template>
 
 <script>
-import UserCard from "@/components/users/UserCard";
-import AddUserCard from "@/components/users/AddUserCard";
-const electron = require('@electron/remote');
-import {mapGetters} from "vuex";
-import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
-import SignOutCheck from "../components/popups/SignOutCheck";
-import SignIn from "../components/popups/SignIn";
-import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
+  import UserCard from "@/components/users/UserCard";
+  import AddUserCard from "@/components/users/AddUserCard";
+  import {mapGetters} from "vuex";
+  import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+  import SignOutCheck from "../components/popups/SignOutCheck";
+  import SignIn from "../components/popups/SignIn";
+  import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
-export default {
+  const electron = require('@electron/remote');
+
+  export default {
   name: "Welcome",
   components: {ReEnterMasterPassword, SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
@@ -100,7 +101,7 @@ export default {
       this.displaySignIn = !this.displaySignIn
     },
     clearCurrentUser() {
-         this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
+         this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
          console.log("Current User cleared");
     },
     cleanPopUp() {

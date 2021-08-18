@@ -1,8 +1,9 @@
 import {createStore} from 'vuex'
 import axios from "axios";
+import {authenticator} from 'otplib';
+
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
-import { authenticator } from 'otplib';
 
 const store = createStore({
     state:{
@@ -94,7 +95,7 @@ const store = createStore({
           return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).refreshToken
         },
         getBackendSecretPair: (state, getters) => (id) => {
-            let pairObject = null
+            let pairObject = null;
             try {
                 pairObject =  decryptJsonObject(
                     getters.getMasterKey,
@@ -159,6 +160,7 @@ const store = createStore({
             //Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKey = null;
             state.users[payload.user.id].info.isActive = false;
+            state.signedIn = false;
             for (let backend of state.users[payload.user.id].backends) {
                 backend.connect.keys.sessionKey = null;
                 backend.connect.keys.refreshToken = null;
@@ -234,8 +236,12 @@ const store = createStore({
         },
         setSignedInUserID(state, payload) {
             state.signedInUserId = payload.userID;
-            state.users[payload.userID].info.isActive = payload.signedIn;
-            state.signedIn = true;
+            if ( payload.userID != null ){
+                state.users[payload.userID].info.isActive = payload.signedIn;
+                state.signedIn = true;
+            } else {
+                state.signedIn = null;
+            }
         },
         addUserToLocalList(state, payload) {
             //Payload: name, email, hasVault, passKey: { encryptedMasterKeyObject}
@@ -274,11 +280,17 @@ const store = createStore({
             if (payload.deleteVault) {
                 //Do some server side call to delete file on web
             }
+
+            for (let user of state.users) {
+                console.log ( user.info.name +" Active State Before Delete: " + user.info.isActive);
+            }
+
             //Delete local
             state.users.splice(payload.user.id, 1);
             masterKey = null;
             let x = 0;
             for (let user of state.users) {
+                    console.log("For user: " + user.info.name + " is active is: " + user.info.isActive);
                    user.info.id = x;
                    user.id = x++;
             }
@@ -335,7 +347,7 @@ const store = createStore({
                     otp: authenticator.generate(secretPair.seed)
                 }
             ).then((resp) => {
-                console.log(resp.data.refresh_token)
+                console.log(resp.data.refresh_token);
                 commit('setRefreshToken', {
                     id: payload.id,
                     refreshToken: resp.data.refresh_token
