@@ -96,7 +96,7 @@
       },
       methods: {
         showAskMasterPw() {
-          if(this.$store.getters.getMasterKey != null) {
+          if(this.$store.getters.getMasterKeyObject != null) {
             if (this.$store.getters.unconnectedBackendBool) {
               this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
             }
@@ -113,6 +113,7 @@
           this.firstSearch = false;
           this.searchResults = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+            console.log(`query: ${backend.local.id}`)
             const url = `http://${backend.connect.link}/general/?q=${
               encodeURIComponent(this.escapeSpecialCharacters(this.query))
             }`
@@ -163,7 +164,7 @@
         },
         goToFullFileLine(lineNumber) {
           this.currentLineNumber = lineNumber;
-          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView({behavior: "smooth"});
+          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
         },
         goToPrev() {
           let index = Math.max(

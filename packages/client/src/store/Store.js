@@ -39,8 +39,8 @@ const store = createStore({
             }
             return userNamesArr;
         },
-        getMasterKey(state) {
-            return masterKey;
+        getMasterKeyObject(state) {
+            return masterKeyObject;
         },
 
 
@@ -98,7 +98,7 @@ const store = createStore({
             let pairObject = null;
             try {
                 pairObject =  decryptJsonObject(
-                    getters.getMasterKey["key"],
+                    getters.getMasterKeyObject["key"],
                     state.users[state.signedInUserId].backends.find(b => b.local.id === id).connect.keys.secretPair
                 );
             } catch (ignore) {}
@@ -130,11 +130,11 @@ const store = createStore({
         signInAUser: function (state, payload) {
             //Payload: masterPassword, user { id, etc}
             let thisUser = state.users[payload.userID];
-            let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
+            let passCheck = decryptMasterKeyObject(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
             if (passCheck) {
                 state.users[payload.userID].info.isActive = true;
                 state.signedInUserId = payload.userID;
-                masterKey = passCheck;
+                masterKeyObject = passCheck;
                 return true;
             }
             else {
@@ -144,9 +144,9 @@ const store = createStore({
         signInThisUser: function (state, payload) {
             //Payload: masterPassword
             let thisUser = state.users[state.signedInUserId];
-            let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
+            let passCheck = decryptMasterKeyObject(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
             if (passCheck) {
-                masterKey = passCheck;
+                masterKeyObject = passCheck;
                 state.users[state.signedInUserId].info.isActive = true;
                 return true;
             }
@@ -157,7 +157,7 @@ const store = createStore({
 
         signOutUser (state, payload) {
             //Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
-            masterKey = null;
+            masterKeyObject = null;
             state.users[payload.user.id].info.isActive = false;
             state.signedIn = false;
             for (let backend of state.users[payload.user.id].backends) {
@@ -233,7 +233,7 @@ const store = createStore({
         setSignedIn(state, payload){
             state.signedIn = payload;
             if (!payload) {
-                masterKey = null;
+                masterKeyObject = null;
             }
         },
         setSignedInUserID(state, payload) {
@@ -285,7 +285,7 @@ const store = createStore({
 
             //Delete local
             state.users.splice(payload.user.id, 1);
-            masterKey = null;
+            masterKeyObject = null;
             let x = 0;
             for (let user of state.users) {
                    user.info.id = x;
@@ -314,7 +314,7 @@ const store = createStore({
                 hasVault: payload.hasVault,
                 passKey: { masterKey: newPassKey.masterKey, encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject }
             });
-            masterKey = newPassKey.masterKey;
+            masterKeyObject = {key: newPassKey.masterKey};
         },
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
@@ -368,12 +368,12 @@ const store = createStore({
         //Backend management
         addNewBackend: function ({commit, getters}, payload) {
             //Payload: name, associatedEmail, link, passKey, seed, refreshToken
-            let masterKey = getters.getMasterKey;
-            if(masterKey === null) {
+            let masterKeyObject = getters.getMasterKeyObject;
+            if(masterKeyObject === null) {
                 return;
             }
             let encryptedPair = encryptJsonObject(
-                masterKey,
+                masterKeyObject["key"],
                 {backendKey: payload.passKey, seed: payload.seed}
             );
             commit('addBackend', {
@@ -413,12 +413,12 @@ function generateMasterKey(masterPassword, email) {
 
     // Return Encrypted key
     return {
-        masterKey: aes.utils.hex.fromBytes(masterKey),
+        masterKey: masterKey,
         encryptedMasterKeyObject: aes.utils.hex.fromBytes(newEncryptedMasterKeyObject)
     };
 }
 
-function decryptMasterKey(encryptedMasterKeyObject, fedInPassword, email) {
+function decryptMasterKeyObject(encryptedMasterKeyObject, fedInPassword, email) {
     let decryptionKey = pbkdf2.pbkdf2Sync(
         fedInPassword,
         email,
@@ -449,6 +449,6 @@ function decryptJsonObject(masterKey, jsonObject) {
     return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }
 
-let masterKey = null;
+let masterKeyObject = null;
 
 export default store;
