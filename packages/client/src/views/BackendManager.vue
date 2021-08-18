@@ -361,7 +361,7 @@ export default {
 
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/gloal/revoke")
+        axios.post("http://localhost:3001/users/global/revoke")
             .then( resp => {
 
               this.$toast.add({
@@ -432,7 +432,7 @@ export default {
 
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/gloal/logout")
+        axios.post("http://localhost:3001/users/global/logout")
             .then( resp => {
 
               this.$toast.add({
