@@ -20,6 +20,8 @@ const store = createStore({
             return state.signedIn;
         },
         getUserInfo: (state) => (id) => {
+            console.log(id)
+            console.log(JSON.stringify(state.users))
             return state.users.find(user => user.id === id).info;
         },
         getArrUserInfo(state) {
@@ -92,7 +94,10 @@ const store = createStore({
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.jwtToken;
         },
         getBackendRefreshToken: (state) => (id) => {
-          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.refreshToken
+          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.refreshToken;
+        },
+        getBackendUserEmail: (state) => (id) => {
+          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.associatedEmail;
         },
         getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null;
@@ -318,7 +323,8 @@ const store = createStore({
         },
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
-            const email = getters.getUserInfo(payload.id).email;
+            const email = getters.getBackendUserEmail(payload.id);
+            console.log(email)
             await axios
                 .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
                 .then((resp) => {
@@ -350,7 +356,7 @@ const store = createStore({
             await axios.post(
                 "http://" + getters.getBackendLink(payload.id) + "/users/login",
                 {
-                        email: getters.getUserInfo(payload.id).email,
+                        email: getters.getBackendUserEmail(payload.id),
                         pass_key: secretPair.backendKey,
                         otp: authenticator.generate(secretPair.seed)
                     }
