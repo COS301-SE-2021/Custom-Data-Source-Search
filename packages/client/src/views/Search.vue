@@ -118,18 +118,26 @@
               "Authorization": "Bearer " + backend.connect.keys.jwtToken
             };
             axios
-              .get(url, {headers}).then((resp) => {this.handleSuccess(resp.data.searchResults)})
+              .get(url, {headers})
+              .then((resp) => {
+                this.handleSuccess(resp.data.searchResults)
+              })
               .catch(async () => {
+                console.log("here1")
                 await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
                 console.log("here")
                 console.log(this.$store.getters.getBackendJWTToken(backend.local.id));
-                const headers = {"Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)};
-                axios.get(url, {headers}).then((resp) => {
-                  this.handleSuccess(resp.data.searchResults)
-                }).catch((e) => {
-                  console.warn("Failed a second time");
-                  console.error(e);
-                })
+                const headers = {
+                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
+                };
+                await axios.get(url, {headers})
+                  .then((resp) => {
+                    this.handleSuccess(resp.data.searchResults)
+                  })
+                  .catch((e) => {
+                    console.warn("Failed a second time");
+                    console.error(e);
+                  })
               })
           }
         },

@@ -317,39 +317,43 @@ const store = createStore({
             });
             masterKey = newPassKey.masterKey;
         },
-        refreshJWTToken: function ({dispatch, commit, getters}, payload) {
+        refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
             const email = getters.getUserInfo(payload.id).email;
-            axios
+            await axios
                 .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
                 .then((resp) => {
                     commit('setJWTToken', {
                         id: payload.id,
                         jwtToken: resp.data.jwt
                     })
+                    return true;
                 })
-                .catch(async (e) => {
+                .catch(async () => {
+                    console.log("refresh jwtFailed")
                     await dispatch("backendLogin", {id: payload.id})
-                    axios
+                    await axios
                         .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
                         .then((resp) => {
                             commit('setJWTToken', {
                                 id: payload.id,
                                 jwtToken: resp.data.jwt
                             })
+                            return true;
                         })
                         .catch((e) => {
                             console.warn("refreshToken failed a second time");
                             console.error(e);
+                            return false;
                         })
-            });
+                });
         },
-        backendLogin: function ({commit, getters}, payload) {
+        backendLogin: async function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
             if(secretPair === null) {
                 return;
             }
-            axios.post(
+            await axios.post(
                 "http://" + getters.getBackendLink(payload.id) + "/users/login",
                 {
                     email: getters.getUserInfo(payload.id).email,
@@ -362,6 +366,7 @@ const store = createStore({
                     refreshToken: resp.data.refresh_token
                 })
             }).catch((err) => {
+                console.log("Error in Backend Login")
                 console.error(err)
             })
         },
