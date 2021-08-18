@@ -41,8 +41,10 @@
         <Button  @click="showLogoutUsers" label="Logout" icon="pi pi-lock" class="p-button-warning p-button-custom-med" />
           <Button @click="showRevokeUserKeys" label="Revoke Keys" icon="pi pi-ban" class="p-button-danger p-button-custom-med" />
         </span>
+        <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
+        <Button @click="generateRegistrationKeys" :disabled="!isUserSelected" label="Generate Registration Keys" icon="pi pi-key" class="p-button-info p-button-custom-med" />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
-        <SplitButton :disabled="!isUserSelected" :model="copyOptions" @click="copyUsers" label="Copy" icon="pi pi-copy" class="p-button-info p-button-custom-med" />
+        <SplitButton :disabled="!isUserSelected" :model="copyOptions" @click="mailUsers" label="Email" icon="pi pi-inbox" class="p-button-info p-button-custom-med" />
 
       </template>
       </Toolbar>
@@ -190,10 +192,27 @@ export default {
 
       copyOptions: [
         {
-          label: 'Email',
-          icon: 'pi pi-mail',
+          label: 'Copy',
+          icon: 'pi pi-copy',
           command: () => {
-            //Need to Implement
+
+            let usersString = "";
+
+            for(let userData of this.selectedUsers) {
+              usersString += "Backend: " + this.backend.connect.link;
+              usersString += " ,Email: " + userData.email;
+              usersString += " ,Name: " + userData.first_name + " " + userData.last_name;
+              usersString += " ,Registration Key: " + userData.regKey + "\n";
+
+            }
+
+            navigator.clipboard.writeText(usersString);
+
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: this.selectedUsers.length + " Users Copied to Clipboard",
+              life: 3000});
           }
         } ],
   }
@@ -559,6 +578,75 @@ export default {
     },
     closeRevokeConfirmation(){
       this.displayRevokeConfirmation = false;
+    },
+    generateRegistrationKeys(){
+
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+
+      let reqObj = { users: usersArr };
+
+      let reqBody = JSON.stringify(reqObj);
+
+      //  axios.delete(this.backend.connect.link + "/users", reqBody )
+      axios.post("http://localhost:3001/users/registrationkey", reqBody,
+          { headers : {"Content-Type" : "application/json" }})
+          .then((resp) => {
+
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: "Generated Registration Keys",
+              life: 3000
+            });
+
+            console.log(resp.data);
+            this.updateTableData();
+
+          }).catch( (error) => {
+        this.$toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          life: 3000
+        })
+        console.log(error);
+      })
+
+    },
+    mailUsers(){
+
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+
+      let reqObj = { users: usersArr };
+
+      let reqBody = JSON.stringify(reqObj);
+
+      //  axios.delete(this.backend.connect.link + "/users", reqBody )
+      axios.post("http://localhost:3001/users/email", reqBody,
+          { headers : {"Content-Type" : "application/json" }})
+          .then((resp) => {
+
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: "Mailed Users",
+              life: 3000
+            });
+
+            console.log(resp.data);
+            this.updateTableData();
+
+          }).catch( (error) => {
+        this.$toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          life: 3000
+        })
+        console.log(error);
+      })
+
+
     },
     showLogoutUsers(){
       if(this.selectedUsers === null || this.selectedUsers.length === 0){
