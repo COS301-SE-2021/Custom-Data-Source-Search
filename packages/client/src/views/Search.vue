@@ -38,6 +38,7 @@
               :match_snippets="r.match_snippets"
               :source="r.source"
               :link="r.link"
+              :backendId="r.backendId"
               @resultClicked="loadFullFile"
           />
         </div>
