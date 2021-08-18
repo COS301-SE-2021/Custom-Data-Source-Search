@@ -109,7 +109,7 @@
             return '\\' + match
           })
         },
-        queryServer() {
+        async queryServer() {
           this.firstSearch = false;
           this.searchResults = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -120,7 +120,7 @@
             const headers = {
               "Authorization": "Bearer " + backend.connect.keys.jwtToken
             };
-            axios
+            await axios
               .get(url, {headers})
               .then((resp) => {
                 this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
@@ -138,11 +138,9 @@
                     console.error(e);
                   })
               })
-              .finally(() => {
-                if (this.searchResults.length === 0) {
-                  this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-                }
-              })
+          }
+          if (this.searchResults.length === 0) {
+            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           }
         },
         handleSuccess(results, link, id) {
