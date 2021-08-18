@@ -1,11 +1,14 @@
 import fs from "fs";
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import {randomBytes} from "crypto";
+import FormData from "form-data";
+import axios from "axios";
+import fileDataSourceRepository from "./FileDataSourceRepository";
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 class FolderDataSourceRepository {
 
-    addDataSource(dataSource: FolderDataSource): [{ code: number, message: string }, { code: number, message: string }] {
+    addDataSource(dataSource: FolderDataSource): [{ code: number; message: string; uuid: string }, { code: number; message: string; }] {
         if (!fs.existsSync(dataSource.path)) {
             return [null, {
                 "code": 404,
@@ -32,7 +35,40 @@ class FolderDataSourceRepository {
         }
         return [{
             "code": 200,
-            "message": "Successfully added file datasource"
+            "message": "Successfully added file datasource",
+            "uuid": uuid
+        }, null];
+    }
+
+    async addFileInFolder(filePath: string, folderUUID: string) {
+        const uuid: string = randomBytes(16).toString("hex")
+        const [, err] = await this.postToSolr(
+            fs.readFileSync(filePath), uuid, FolderDataSourceRepository.getFileName(filePath)
+        );
+        if (err) {
+            return [null, {
+                "code": 500,
+                "message": "Could not add file to solr"
+            }];
+        }
+        try {
+            db.prepare(
+                'INSERT INTO folder_file_data (file_path, last_modified, folder_uuid, uuid) VALUES (?, ?, ?, ?);'
+            ).run(
+                filePath,
+                fs.statSync(filePath).mtime.getTime(),
+                folderUUID,
+                uuid
+            )
+        } catch (e) {
+            return [null, {
+                "code": 400,
+                "message": "File from folder datasource already exists"
+            }];
+        }
+        return [{
+            "code": 200,
+            "message": "Successfully added file from folder datasource"
         }, null];
     }
 
@@ -48,7 +84,7 @@ class FolderDataSourceRepository {
     }
 
     getAllDataSources(): [StoredFolderDataSource[], { "code": number, "message": string }] {
-        const fileDataList = db.prepare("SELECT * FROM file_data;").all()
+        const fileDataList = db.prepare("SELECT * FROM folder_data;").all()
         return [fileDataList.map(FolderDataSourceRepository.castToStoredDataSource), null];
     }
 
@@ -79,6 +115,36 @@ class FolderDataSourceRepository {
             tag1: dataSource.tag1,
             tag2: dataSource.tag2
         };
+    }
+
+    async postToSolr(file: Buffer, id: string, fileName: string) {
+        let formData = new FormData();
+        fileName = fileDataSourceRepository.makeDefaultExtension(fileName);
+        formData.append("file", file, fileName);
+        try {
+            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
+                + '&commit=true&literal.datasource_type=folder',
+                formData,
+                {
+                    headers: {
+                        ...formData.getHeaders()
+                    }
+                });
+        } catch (e) {
+            console.error(e)
+            return [null, {
+                "code": 500,
+                "message": "Could not post file from folder to solr"
+            }]
+        }
+        return [{
+            "code": 200,
+            "message": "Successfully posted to Solr"
+        }]
+    }
+
+    private static getFileName(filePath: string) {
+        return filePath.split("/").pop();
     }
 }
 

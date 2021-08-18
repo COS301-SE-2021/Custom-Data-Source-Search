@@ -42,11 +42,11 @@ class FolderDataSourceService {
         }
     }
 
-    addFolderDataSource(dataSource: FolderDataSource) {
+    async addFolderDataSource(dataSource: FolderDataSource) {
         if (dataSource.path[dataSource.path.length - 1] !== '/') {
             dataSource.path += '/';
         }
-        let [, e] = folderDataSourceRepository.addDataSource(dataSource);
+        let [result, e] = folderDataSourceRepository.addDataSource(dataSource);
         if (e) {
             return {
                 "code": e.code,
@@ -54,6 +54,9 @@ class FolderDataSourceService {
                     "message": e.message
                 }
             }
+        }
+        for (let filePath of this.getFilesInFolder(dataSource.path)) {
+            await folderDataSourceRepository.addFileInFolder(filePath, result.uuid);
         }
         return {
             "code": 200,
