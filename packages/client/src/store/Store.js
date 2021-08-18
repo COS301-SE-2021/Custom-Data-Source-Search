@@ -318,22 +318,31 @@ const store = createStore({
             masterKey = newPassKey.masterKey;
         },
         refreshJWTToken: function ({dispatch, commit, getters}, payload) {
-            axios.post(
-                "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken",
-                {
-                    email: getters.getUserInfo(payload.id).email,
-                    refresh_token: getters.getBackendRefreshToken(payload.id)
-                }
-            ).then((resp) => {
-                commit('setJWTToken', {
-                    id: payload.id,
-                    jwtToken: resp.data.jwt
+            const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
+            const email = getters.getUserInfo(payload.id).email;
+            axios
+                .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
+                .then((resp) => {
+                    commit('setJWTToken', {
+                        id: payload.id,
+                        jwtToken: resp.data.jwt
+                    })
                 })
-            }).catch(async (e) => {
-                await dispatch("backendLogin", {id: payload.id})
-
+                .catch(async (e) => {
+                    await dispatch("backendLogin", {id: payload.id})
+                    axios
+                        .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
+                        .then((resp) => {
+                            commit('setJWTToken', {
+                                id: payload.id,
+                                jwtToken: resp.data.jwt
+                            })
+                        })
+                        .catch((e) => {
+                            console.warn("refreshToken failed a second time");
+                            console.error(e);
+                        })
             });
-
         },
         backendLogin: function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);

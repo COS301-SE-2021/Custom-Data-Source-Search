@@ -121,6 +121,8 @@
               .get(url, {headers}).then((resp) => {this.handleSuccess(resp.data.searchResults)})
               .catch(async () => {
                 await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
+                console.log("here")
+                console.log(this.$store.getters.getBackendJWTToken(backend.local.id));
                 const headers = {"Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)};
                 axios.get(url, {headers}).then((resp) => {
                   this.handleSuccess(resp.data.searchResults)
