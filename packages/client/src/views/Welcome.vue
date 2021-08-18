@@ -13,7 +13,8 @@
               :userDetails="user"
               @contextmenu="onUserCardRightClick"
               @mousedown.right="updateSelectedUser(user)"
-              @show-sign-in="showSignIn"
+              @click="updateSelectedUser(user)"
+              @show-sign-in="showReEnterMasterPass"
       ></UserCard>
       <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
@@ -37,6 +38,12 @@
             :show="displaySignIn"
             @show-sign-in="showSignIn"
     />
+    <ReEnterMasterPassword
+            :show="displayMasterPwInput"
+            @action-to-Occur="signInThisUser"
+            :user="selectedUser"
+            :welcomePage="true"
+    />
   </div>
 </template>
 
@@ -48,12 +55,14 @@ import {mapGetters} from "vuex";
 import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
 import SignOutCheck from "../components/popups/SignOutCheck";
 import SignIn from "../components/popups/SignIn";
+import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
 export default {
   name: "Welcome",
-  components: {SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
+  components: {ReEnterMasterPassword, SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
     return {
+      displayMasterPwInput: false,
       displaySignIn: false,
       displayDeleteCheck: false,
       displaySignOutCheck: false,
@@ -80,6 +89,13 @@ export default {
 
   },
   methods: {
+    showReEnterMasterPass() {
+      this.displayMasterPwInput = !this.displayMasterPwInput;
+    },
+    signInThisUser(){
+      this.$router.push('Search');
+      this.$store.commit('setSignedIn', true);
+    },
     showSignIn(){
       this.displaySignIn = !this.displaySignIn
     },
