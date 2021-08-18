@@ -284,7 +284,13 @@ const store = createStore({
                 masterKey,
                 {backendKey: payload.passKey, seed: payload.seed}
             );
-            
+            console.log({
+                name: payload.name,
+                associatedEmail: payload.associatedEmail,
+                link: payload.link,
+                secretPair: encryptedPair,
+                refreshToken: payload.refreshToken
+            })
             commit('addBackend', {
                 name: payload.name,
                 associatedEmail: payload.associatedEmail,

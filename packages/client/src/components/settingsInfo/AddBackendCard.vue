@@ -74,7 +74,6 @@
             //View changes
             change() {
                 //TO DO: check that masterKey is there before adding a backend
-
                 if (!this.newBackend) {
                     this.expand = !this.expand;
                     if (this.editBackendBool) {
@@ -96,7 +95,13 @@
                     this.tempBackendInfo.secret === '' ||
                     this.tempBackendInfo.oneTimeKey === ''
                 ) {
-                    this.$toast.add({severity:'error', summary: 'Backend Could Not Be Added', detail:'All the fields have not been filled.', life: 3000});
+                    this.$toast.add(
+                        {
+                            severity:'error',
+                            summary: 'Backend Could Not Be Added',
+                            detail:'All the fields have not been filled.',
+                            life: 3000
+                        });
                 }
                 else {
                     this.connectToBackend();
@@ -113,27 +118,49 @@
             connectToBackend() {
                 //Change from commit to action
                 axios.post(
-                    this.tempBackendInfo.link + "/register",
+                    "http://" + this.tempBackendInfo.link + "/users/register",
                 {
                         email: this.tempBackendInfo.associatedEmail,
                         single_use_registration_token: this.tempBackendInfo.oneTimeKey
                     }
                 ).then((resp) => {
-                    let hmac = createHmac('sha512', this.tempBackendInfo.secret)
-                    this.$store.dispatch("addNewBackend", {
-                        name: this.tempBackendInfo.name,
-                        associatedEmail: this.tempBackendInfo.associatedEmail,
-                        link: this.tempBackendInfo.link,
-                        passKey: hmac.update(resp.data.partial_pass_key).digest('hex'),
-                        seed: hmac.update(resp.data.partial_seed).digest('hex'),
-                        refreshToken: resp.data.refresh_token
-                    });
+                    try {
+                        this.$store.dispatch("addNewBackend", {
+                            name: this.tempBackendInfo.name,
+                            associatedEmail: this.tempBackendInfo.associatedEmail,
+                            link: this.tempBackendInfo.link,
+                            passKey: this.applyHmac(resp.data.partial_pass_key, this.tempBackendInfo.secret),
+                            seed: this.applyHmac(resp.data.partial_seed, this.tempBackendInfo.secret),
+                            refreshToken: resp.data.refresh_token
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        return
+                    }
                     this.$emit('saveNewBackend');
+                    this.$toast.add(
+                            {
+                                severity: 'success',
+                                summary: "Added New Backend",
+                                detail: "Whooo! Let the searching Begin!",
+                                life: 4000
+                            }
+                        )
                 }).catch((err) => {
-                    this.$toast.add({severity: 'error', summary: 'Failed To Add Backend', detail: err.message, life:3000})
+                    this.$toast.add(
+                        {
+                            severity: 'error',
+                            summary: 'Failed To Add Backend',
+                            detail: err.response.data.message,
+                            life:6000
+                        }
+                    )
                 })
             },
-
+            applyHmac(key, secret) {
+                let hmac = createHmac('sha512', secret);
+                return hmac.update(key).digest('hex');
+            },
             cancelChanges() {
                 this.expand = true;
                 this.editBackendBool = false;
