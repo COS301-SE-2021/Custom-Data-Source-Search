@@ -13,13 +13,9 @@
 
     <AdminBackendCard v-for="(backend, i) in getUserBackend(getSignedInUserId)"
                       :backend="backend"
-
     />
-
     </div>
-
   </div>
-
 
 </template>
 

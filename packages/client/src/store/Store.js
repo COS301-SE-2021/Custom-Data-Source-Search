@@ -60,7 +60,6 @@ const store = createStore({
             return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
         },
 
-
         //Unconnected backend related getters
 
         unconnectedBackendNo: (state) => {
@@ -85,6 +84,9 @@ const store = createStore({
         //this would allow us to determine whether or not a data source can be edited/deleted by a user
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
+        },
+        getBackendJWTToken: (state) => (id) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).jwtToken;
         }
     },
 
@@ -122,6 +124,7 @@ const store = createStore({
                 return false;
             }
         },
+
         signOutUser (state, payload) {
             masterKey = null;
             state.users[payload.user.id].info.isActive = false;
@@ -252,6 +255,10 @@ const store = createStore({
                    user.id = x++;
             }
 
+        },
+        setJWTToken(state, payload) {
+            state.users[state.signedInUserId].backends
+                .find(backend => backend.id = payload.id).jwtToken = payload.jwtToken
         }
 
     },
