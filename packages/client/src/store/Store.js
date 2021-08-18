@@ -48,6 +48,9 @@ const store = createStore({
         getUserBackends: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
+        getSignedInUserBackend: (state, getters) => (id) => {
+            return getters.getUserBackends(getters.getSignedInUserId).find(b => b.id === id)
+        },
         getUserBackendNames: (state, getters) => {
           let backends = getters.getUserBackends(getters.getSignedInUserId);
           let backendsArr = [];
@@ -56,8 +59,8 @@ const store = createStore({
           }
           return backendsArr;
         },
-        getUserAdminStatus: (state) => (backendID) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === backendID).receive.admin;
+        getUserAdminStatus: (state, getters) => (backendID) => {
+            return getters.getSignedInUserBackend(backendID).receive.admin;
         },
 
         //Unconnected backend related getters
@@ -85,24 +88,24 @@ const store = createStore({
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         },
-        getBackendLink: (state) => (id) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.link;
+        getBackendLink: (state, getters) => (id) => {
+            return getters.getSignedInUserBackend(id).connect.link;
         },
-        getBackendJWTToken: (state) => (id) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.jwtToken;
+        getBackendJWTToken: (state, getters) => (id) => {
+            return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
         },
-        getBackendRefreshToken: (state) => (id) => {
-          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.keys.refreshToken;
+        getBackendRefreshToken: (state, getters) => (id) => {
+          return getters.getSignedInUserBackend(id).connect.keys.refreshToken;
         },
-        getBackendUserEmail: (state) => (id) => {
-          return state.users[state.signedInUserId].backends.find(backend => backend.local.id === id).connect.associatedEmail;
+        getBackendUserEmail: (state, getters) => (id) => {
+          return getters.getSignedInUserBackend(id).connect.associatedEmail;
         },
         getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null;
             try {
                 pairObject =  decryptJsonObject(
                     getters.getMasterKeyObject["key"],
-                    state.users[state.signedInUserId].backends.find(b => b.local.id === id).connect.keys.secretPair
+                    getters.getSignedInUserBackend(id).connect.keys.secretPair
                 );
             } catch (ignore) {}
             return pairObject;
