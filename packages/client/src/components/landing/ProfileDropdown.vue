@@ -48,7 +48,7 @@
     computed: {
     ...mapGetters ([
             'getUserInfo',
-            'getUserBackend',
+            'getUserBackends',
             'getSignedInUserId'
     ])
   },
