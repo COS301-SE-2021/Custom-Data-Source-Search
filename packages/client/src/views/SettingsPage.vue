@@ -46,6 +46,8 @@
    <ReEnterMasterPassword
            :show="displayMasterPwInput"
            @action-to-Occur="newBackend"
+           :user="noUserReq"
+           :welcome-page="false"
    />
 </template>
 
@@ -65,6 +67,7 @@
         },
         data () {
             return {
+                noUserReq: null,
                 displayMasterPwInput: false,
                 newBackendBool: false,
                 newBackendObject: {

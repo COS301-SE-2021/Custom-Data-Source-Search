@@ -42,7 +42,6 @@
         },
         methods: {
             assignData() {
-                console.log(JSON.stringify(this.user.id));
                 if (this.welcomePage) {
                     this.$store.commit('signInAUser', {masterPassword: this.masterPass, userID: this.user.id})
                 } else {
