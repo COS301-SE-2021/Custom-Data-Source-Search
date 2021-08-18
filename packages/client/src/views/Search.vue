@@ -266,4 +266,8 @@ input {
   color: #4d4d4d;
   padding-left: 10px;
 }
+
+.p-splitter{
+  border: none;
+}
 </style>

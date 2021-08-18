@@ -2,9 +2,13 @@
   <div class="page">
     <ConfirmDialog></ConfirmDialog>
     <Toast position="bottom-right"/>
-    <h2>
-      Data Sources
-    </h2>
+<!--    <h1 style="padding: 20px;">-->
+<!--      Data Sources-->
+<!--    </h1>-->
+    <div class="datasource-header">
+      <h1 class="datasource-heading">Data Sources</h1>
+      <p class="datasource-description">View and edit your data sources</p>
+    </div>
     <ScrollPanel style="width: 100%; height: 90%">
       <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
@@ -20,7 +24,7 @@
           </span>
             <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
                     style="float: right;"/>
-            <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true"
+            <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="false"
                           :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
               <div v-if="!clicked && backend===null">
                 <div class="overlay-header">
@@ -31,6 +35,7 @@
                           class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{ i }}
                   </Button>
                 </div>
+<!--                <Button class="p-button-text p-button-plain close" label="Cancel" icon="pi pi-times" @click="toggle" />-->
               </div>
               <div v-else-if="!clicked && backend!=null">
                 <div class="overlay-header">
@@ -288,15 +293,12 @@ export default {
 
 .page{
   height: 100vh;
+  padding-left: 1%;
 }
 
 td {
   border-top: 1px solid white;
   border-bottom: 1px solid white;
-}
-
-h2 {
-  margin: 30px 20px 30px 70px;
 }
 
 a {
@@ -332,5 +334,18 @@ a {
 
 .p-input-icon-left {
  margin-left: 50px;
+}
+.datasource-header{
+margin-bottom: 50px;
+}
+
+.datasource-heading {
+  text-align: center;
+  color: #ededed;
+}
+
+.datasource-description {
+  text-align: center;
+  color: #ededed;
 }
 </style>
