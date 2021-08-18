@@ -297,7 +297,7 @@
 
 
     .inline {
-        margin-left: 1em !important;
+        margin-left: 2em !important;
     }
 
     .start-stop{
