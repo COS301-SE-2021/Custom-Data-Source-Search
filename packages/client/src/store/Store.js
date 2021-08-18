@@ -123,6 +123,7 @@ const store = createStore({
             }
         },
         signOutUser (state, payload) {
+            //Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKey = null;
             state.users[payload.user.id].info.isActive = false;
             for (let backend of state.users[payload.user.id].backends) {

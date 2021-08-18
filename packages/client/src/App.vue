@@ -204,9 +204,9 @@ export default {
         this.$store.commit('initialiseStore');
     },
     methods: {
-    toggle(event) {
-      this.$refs.op.toggle(event);
-    },
+         toggle(event) {
+            this.$refs.op.toggle(event);
+        },
   }
 }
 </script>

@@ -262,7 +262,7 @@
         computed: {
             ...mapGetters ([
                 'getUserBackend',
-                'getSignedInUserId'
+                'getSignedInUserId',
              ])
         }
     }
