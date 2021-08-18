@@ -326,7 +326,6 @@ const store = createStore({
                         id: payload.id,
                         jwtToken: resp.data.jwt
                     })
-                    return true;
                 })
                 .catch(async () => {
                     await dispatch("backendLogin", {id: payload.id})
@@ -337,11 +336,9 @@ const store = createStore({
                                 id: payload.id,
                                 jwtToken: resp.data.jwt
                             })
-                            return true;
                         })
                         .catch((e) => {
                             console.error(e);
-                            return false;
                         })
                 });
         },
