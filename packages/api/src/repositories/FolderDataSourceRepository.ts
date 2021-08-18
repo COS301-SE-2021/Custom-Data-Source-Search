@@ -151,6 +151,21 @@ class FolderDataSourceRepository {
     private static getFileName(filePath: string) {
         return filePath.split("/").pop();
     }
+
+    getFolderFromFile(uuid: string) {
+        try {
+            const dataSource = db.prepare(
+                "SELECT * FROM folder_data WHERE uuid = (SELECT folder_uuid FROM folder_file_data WHERE uuid = ?)"
+            ).all(uuid)[0];
+            return [dataSource, null];
+        } catch (e) {
+            console.error(e);
+            return [null, {
+                "code": 404,
+                "message": "Datasource not found"
+            }]
+        }
+    }
 }
 
 const folderDataSourceRepository = new FolderDataSourceRepository();
