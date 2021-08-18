@@ -39,6 +39,7 @@ const store = createStore({
             return userNamesArr;
         },
         getMasterKey(state) {
+            console.log("GET MASTER KEY: " + masterKey );
             return masterKey;
         },
 
@@ -212,7 +213,7 @@ const store = createStore({
             state.signedIn = true;
         },
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { masterKey, encryptedMasterKeyObject}
+            //Payload: name, email, hasVault, passKey: { encryptedMasterKeyObject}
             let newUser = {
                 id: null,
                 info: {
@@ -243,7 +244,6 @@ const store = createStore({
 
             state.signedInUserId = state.users.length-1;
             state.signedIn = true;
-
         },
         deleteUserFromLocalList (state, payload) {
             if (payload.deleteVault) {
@@ -278,6 +278,8 @@ const store = createStore({
                 hasVault: payload.hasVault,
                 passKey: { masterKey: newPassKey.masterKey, encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject }
             });
+
+            masterKey = newPassKey.masterKey;
         },
 
         //Backend management
@@ -324,6 +326,10 @@ const store = createStore({
                 seed: '34t34329238i4'                     //get by using payload.secret with partialSecretPair.p_seed
             };
             //-----------End [2]-----------////
+
+            //Generate OTP from seed. For now, equate
+            let oneTimePin = newSecretPair.seed;
+
 
             //////_______[3]______Ask for sessionKey, refreshKeys and adminStatus from server
             //////__MOCK___//actual values to be obtained using __backendKey___
