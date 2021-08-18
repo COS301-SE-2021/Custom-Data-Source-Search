@@ -162,7 +162,7 @@ class UserRepository {
                 failedUsers.push(user);
             }
         }
-        // TODO refresh secret for jwt token
+        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
         if (failedUsers.length !== 0) {
             return [null, {
                 "code": 400,
@@ -200,6 +200,7 @@ class UserRepository {
                 "users": failedUsers
             }];
         }
+        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
         return [{
             "code": 200,
             "message": "Successfully revoked access for specified users"
@@ -216,6 +217,7 @@ class UserRepository {
                 "message": "Failed to logout all users",
             }];
         }
+        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
         return [{
             "code": 200,
             "message": "Successfully logged out all users"
@@ -232,6 +234,7 @@ class UserRepository {
                 "message": "Failed to revoke access for all users",
             }];
         }
+        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
         return [{
             "code": 200,
             "message": "Successfully revoked access for all users"
@@ -276,7 +279,7 @@ class UserRepository {
         try {
             db.prepare('DELETE FROM active_user WHERE email = ?').run(email);
             const refreshToken = randomBytes(16).toString("hex");
-            const expirationTimeSeconds = 20;
+            const expirationTimeSeconds = parseInt(process.env.LOGIN_EXPIRATION_TIME_MINUTES) * 60;
             const newDate = new Date(new Date().getTime() + expirationTimeSeconds * 1000).getTime();
             db.prepare(
                 'INSERT INTO active_user (email, refresh_token, valid_until) VALUES (?,?,?);'
