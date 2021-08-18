@@ -41,6 +41,7 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.4",
+    "@types/node-fetch": "^2.5.12",
     "@types/nodemailer": "^6.4.4",
     "@types/otplib": "^10.0.0",
     "axios": "^0.21.1",

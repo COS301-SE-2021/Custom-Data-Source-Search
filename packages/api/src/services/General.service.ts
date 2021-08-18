@@ -179,18 +179,18 @@ class GeneralService {
                 });
             }
         }
-        let [webPageResult, webPageError] = webPageDataSourceRepository.getAllDataSources();
-        if (!webPageError) {
-            for (let webPageDataSource of webPageResult) {
-                array.push({
-                    "id": webPageDataSource.uuid,
-                    "location": webPageDataSource.url,
-                    "type": "webpage",
-                    "tag1": webPageDataSource.tag1,
-                    "tag2": webPageDataSource.tag2
-                });
-            }
-        }
+        // let [webPageResult, webPageError] = webPageDataSourceRepository.getAllDataSources();
+        // if (!webPageError) {
+        //     for (let webPageDataSource of webPageResult) {
+        //         array.push({
+        //             "id": webPageDataSource.uuid,
+        //             "location": webPageDataSource.url,
+        //             "type": "webpage",
+        //             "tag1": webPageDataSource.tag1,
+        //             "tag2": webPageDataSource.tag2
+        //         });
+        //     }
+        // }
         return {
             "code": 200,
             "body": {
@@ -206,8 +206,8 @@ class GeneralService {
                 return await fileDataSourceService.removeFileDataSource(id);
             case "folder":
                 return folderDataSourceService.removeFolderDataSource(id);
-            case "webpage":
-                return webPageDataSourceService.removeWebPageDataSource(id);
+            // case "webpage":
+            //     return webPageDataSourceService.removeWebPageDataSource(id);
             default:
                 return {
                     "code": 400,
