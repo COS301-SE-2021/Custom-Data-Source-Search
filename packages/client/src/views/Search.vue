@@ -113,6 +113,9 @@
           this.firstSearch = false;
           this.searchResults = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+            if (!backend.local.active) {
+              continue;
+            }
             const url = `http://${backend.connect.link}/general/?q=${
               encodeURIComponent(this.escapeSpecialCharacters(this.query))
             }`
