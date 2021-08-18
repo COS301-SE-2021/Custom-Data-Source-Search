@@ -162,8 +162,8 @@ class UserService {
         };
     }
 
-    login(body: { email: string; pass_key: string; }) {
-        const [, validateErr] = userRepository.validateUser(body.email, body.pass_key);
+    login(body: { email: string; pass_key: string; otp: string;}) {
+        const [, validateErr] = userRepository.validateUser(body.email, body.pass_key, body.otp);
         if (validateErr) {
             return {
                 "code": validateErr.code,

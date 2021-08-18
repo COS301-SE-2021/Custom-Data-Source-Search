@@ -3,6 +3,7 @@ import {randomBytes} from "crypto";
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 import {createHmac} from 'crypto';
 import bcrypt from 'bcrypt';
+import { authenticator } from 'otplib';
 
 
 class UserRepository {
@@ -237,9 +238,21 @@ class UserRepository {
         }, null];
     }
 
-    validateUser(email: string, pass_key: string) {
+    validateUser(email: string, pass_key: string, otp: string) {
         try {
             const user = db.prepare("SELECT * FROM user WHERE email = ?").all(email)[0];
+            let isValid: boolean = false;
+            try {
+                isValid = authenticator.check(otp, user["otp_seed"]);
+            } catch (err) {
+                console.error(err);
+            }
+            if (!isValid) {
+                return [null, {
+                    "code": 403,
+                    "message": "One time pin is incorrect",
+                }];
+            }
             if (bcrypt.compareSync(pass_key, user["password_hash"])) {
                 return [{
                     "code": 200,
