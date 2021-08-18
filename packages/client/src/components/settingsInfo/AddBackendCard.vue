@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="expanded-backend-info">
-                <div><em>Name: </em></div>
+                <div><em>Name Backend: </em></div>
                 <input-text v-model="tempBackendInfo.name"/>
                 <div><em>Registration String: </em></div>
                 <input-text type="text" id="registration-string" v-model="registrationString"/>
@@ -71,12 +71,7 @@
                 default: null
             }
         },
-        mounted() {
-            let hmac = createHmac('sha512', 'secret');
-            console.log(hmac.update("this is the data").digest('hex'));
-        },
         methods: {
-
             //View changes
             change() {
                 //TO DO: check that masterKey is there before adding a backend
@@ -95,6 +90,7 @@
                 this.editBackendBool = !this.editBackendBool;
             },
             connectToBackendChecks(){
+                this.extractEncodedData(this.registrationString);
                 if (
                     this.tempBackendInfo.link === '' ||
                     this.tempBackendInfo.associatedEmail === '' ||
@@ -106,6 +102,14 @@
                 else {
                     this.connectToBackend();
                 }
+            },
+            extractEncodedData(encodedString) {
+                let encoded = encodedString.split(".");
+                this.tempBackendInfo.associatedEmail = atob(encoded[0]);
+                this.tempBackendInfo.link = atob(encoded[1]);
+                this.tempBackendInfo.oneTimeKey = atob(encoded[2]);
+                this.tempBackendInfo.secret = atob(encoded[3]);
+                console.log(JSON.stringify(this.tempBackendInfo))
             },
             connectToBackend() {
                 //Change from commit to action
@@ -127,7 +131,7 @@
                     });
                     this.$emit('saveNewBackend');
                 }).catch((err) => {
-                    this.$toast.add({severity: 'error', summary: 'Failed To Add Backend', detail: err.message})
+                    this.$toast.add({severity: 'error', summary: 'Failed To Add Backend', detail: err.message, life:3000})
                 })
             },
 
