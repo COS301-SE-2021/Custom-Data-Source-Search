@@ -1,6 +1,10 @@
 import {createStore} from 'vuex'
+import axios from "axios";
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
+const sha512 = require('js-sha512');
+const createHmac = require('hmac')
+    .bind(null, () => {return new sha512()}, 128)
 
 const store = createStore({
     state:{
@@ -284,21 +288,19 @@ const store = createStore({
 
         addNewBackend: function ({commit, getters}, payload) {
             //Payload:  name, associatedEmail, link, oneTimeKey, secret, masterPass
+            let masterKey = getters.getMasterKey;
+            if(masterKey === null) {
+                return false;
+            }
 
-            //____[1]____ >>>>>>Use link to get partial_seed and partial_backendKey from wherever it comes from
-            // let promise = new Promise((resolve , reject) => {
-            //     fetch(payload.link)
-            //         .then((res) => {
-            //             // successfully got data => ie, data returned: { p_sessionKey: String, p_seed: String } (or whatever types they are)
-            //             resolve(res);
-            //         })
-            //         .catch((err) => {
-            //             // an error occurred
-            //
-            //             reject(err);
-            //         });
-            // });
-
+            axios.post(
+                payload.link,
+                {
+                        email: payload.email,
+                        pass_key: masterKey,
+                        otp:
+                    }
+                )
 
             //For now, just mock the async function:
             ////___[1]___Mock Connection to retrieve partial_pair_______/////////
@@ -332,13 +334,6 @@ const store = createStore({
             let adminStatus = 'Editor';     //Default empty
             //if successful, continue, else fail here
             //-------------End [3]---------------////
-            let masterKey = getters.getMasterKey;
-
-            if(masterKey === null) {
-                console.log ("No master Key");
-                return false;
-            }
-
             let encryptedPair = encryptJsonObject(masterKey, newSecretPair);
 
             commit('addBackend', {
