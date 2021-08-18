@@ -1,17 +1,31 @@
 import {randomBytes} from "crypto";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
+import {createHmac} from 'crypto';
 
 
 class UserRepository {
 
-    private static formatUsers(user: any) {
+    private static formatUsersForAdmin(user: any) {
         let regStatus: string = "registered";
         if (user.password_hash === "") {
             regStatus = "unregistered"
         }
         let loggedIn: boolean = false;
-        let regKey: string = "temporary key"
+        try {
+            if (db.prepare("SELECT * FROM active_user WHERE email = ?").all(user.email)[0] !== undefined) {
+                loggedIn = true;
+            }
+        } catch (e) {
+        }
+        let regKey: string = ""
+        try {
+            let pendingUser = db.prepare("SELECT * FROM pending_user WHERE email = ?").all(user.email)[0];
+            if (pendingUser !== undefined) {
+                regKey = pendingUser["reg_key"];
+            }
+        } catch (e) {
+        }
         return {
             "first_name": user.first_name,
             "last_name": user.last_name,
@@ -24,10 +38,20 @@ class UserRepository {
         }
     }
 
+    private static formatUser(user: any) {
+        return {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "uuid": user.id,
+            "role": user.role,
+        }
+    }
+
     getAllUsers() {
         return [{
             "code": 200,
-            "results": db.prepare('SELECT * FROM user;').all().map(UserRepository.formatUsers)
+            "results": db.prepare('SELECT * FROM user;').all().map(UserRepository.formatUsersForAdmin)
         }, null];
     }
 
@@ -35,7 +59,7 @@ class UserRepository {
         let failedUsers: any[] = [];
         for (let user of users) {
             if (UserRepository.permissionInvalid(user.role)) {
-                return [null,{
+                return [null, {
                     "code": 400,
                     "message": "User permission is not of valid type"
                 }];
@@ -258,9 +282,9 @@ class UserRepository {
         }
     }
 
-    validateRefreshToken(uuid: string, refreshToken: string) {
+    validateRefreshToken(email: string, refreshToken: string): [any, { code: number; message: string; }] {
         try {
-            const user = db.prepare('SELECT * FROM user WHERE id = ?').all(uuid)[0];
+            const user = db.prepare('SELECT * FROM user WHERE email = ?').all(email)[0];
             const activeUser = db.prepare('SELECT * FROM active_user WHERE refresh_token = ?').all(refreshToken)[0];
             if (activeUser === undefined) {
                 return [null, {
@@ -275,7 +299,7 @@ class UserRepository {
                     "message": "Time out of refresh token"
                 }];
             }
-            return [user, null];
+            return [UserRepository.formatUser(user), null];
         } catch (e) {
             console.error(e);
             return [null, {
@@ -380,6 +404,22 @@ class UserRepository {
         return [null, {
             "message": "Failed to validate user"
         }];
+    }
+
+    setSeedAndPassKey(email: string, partialPassKey: string, partialSeed: string, secret: string) {
+        const fullPassKey: string = UserRepository.applyHmac(partialPassKey, secret);
+        const fullSeed: string = UserRepository.applyHmac(partialSeed, secret);
+        try {
+            db.prepare("UPDATE user SET password_hash = ? WHERE email = ?").run(fullPassKey, email);
+            db.prepare("UPDATE user SET otp_seed = ? WHERE email = ?").run(fullSeed, email);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    private static applyHmac(key: string, secret: string) {
+        let hmac = createHmac('sha512', secret);
+        return hmac.update(key).digest('hex');
     }
 }
 

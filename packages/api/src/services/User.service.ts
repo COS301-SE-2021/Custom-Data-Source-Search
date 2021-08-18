@@ -190,8 +190,8 @@ class UserService {
         };
     }
 
-    generateToken(body: { uuid: string; refresh_token: string; }) {
-        const [validateResult, validateErr] = userRepository.validateRefreshToken(body.uuid, body.refresh_token);
+    generateToken(body: { email: string; refresh_token: string; }) {
+        const [validateResult, validateErr] = userRepository.validateRefreshToken(body.email, body.refresh_token);
         if (validateErr) {
             return {
                 "code": validateErr.code,
@@ -316,7 +316,7 @@ class UserService {
         }
         const partialPassKey: string = randomBytes(16).toString("hex");
         const partialSeed: string = randomBytes(16).toString("hex");
-        // TODO save full passkey and seed after applying secret
+        userRepository.setSeedAndPassKey(body.email, partialPassKey, partialSeed, secret);
         const [refreshToken, tokenErr] = userRepository.generateRefreshToken(body.email);
         if (tokenErr) {
             return {
