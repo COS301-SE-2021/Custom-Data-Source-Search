@@ -82,9 +82,9 @@
       },
       computed: {
         ...mapGetters([
-                'unconnectedBackendNo',
-                'unconnectedBackendBool',
-                'unconnectedBackendNames'
+          'unconnectedBackendNo',
+          'unconnectedBackendBool',
+          'unconnectedBackendNames'
         ])
       },
       beforeMount() {
@@ -111,25 +111,24 @@
           this.firstSearch = false;
           this.searchResults = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
-              const headers = {
-                  "Authorization": "Bearer " + backend.connect.keys.jwtToken
-              }
-              axios
-                  .get(
-                      `http://${backend.connect.link}/general/?q=${encodeURIComponent(this.escapeSpecialCharacters(this.query))}`,
-                      {headers}
-                  )
-                  .then((resp) => {
-                      this.searchResults = resp.data.searchResults;
-                      if (this.searchResults.length === 0) {
-                          this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-                      }
-                  })
-                  .catch((err) => {
-                      if(err.response.status === 403) {
-                          this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
-                      }
-                  })
+            const url = `http://${backend.connect.link}/general/?q=${
+              encodeURIComponent(this.escapeSpecialCharacters(this.query))
+            }`
+            const headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken}
+            axios
+              .get(url, {headers}).then((resp) => {this.handleSuccess(resp.data.searchResults)})
+              .catch((e) => {
+                this.$store.dispatch("refreshJWTToken", {id: backend.local.id});
+                const headers = {"Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)}
+                axios.get(url, {headers}).then((resp) => {this.handleSuccess(resp.data.searchResults)}).
+                catch((ignore) => {})
+              })
+          }
+        },
+        handleSuccess(results) {
+          this.searchResults = this.searchResults.concat(results);
+          if (this.searchResults.length === 0) {
+            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           }
         },
         showPopup(){

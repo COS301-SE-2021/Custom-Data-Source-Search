@@ -96,8 +96,6 @@ const store = createStore({
         },
         getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null;
-            console.log(getters.getMasterKey["key"]);
-            console.log(state.users[state.signedInUserId].backends.find(b => b.local.id === id).connect.keys.secretPair)
             try {
                 pairObject =  decryptJsonObject(
                     getters.getMasterKey["key"],
@@ -338,7 +336,6 @@ const store = createStore({
         },
         backendLogin: function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
-            console.log(JSON.stringify(secretPair))
             if(secretPair === null) {
                 return;
             }
