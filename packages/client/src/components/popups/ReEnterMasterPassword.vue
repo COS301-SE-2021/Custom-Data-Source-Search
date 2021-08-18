@@ -7,7 +7,7 @@
         <div class="p-field p-grid">
             <label for="password" class="p-col-fixed" style="width:100px">Password</label>
             <div class="p-col">
-                <PasswordInputField ref="masterPassword" id="password" style="width: 100%" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
+                <PasswordInputField id="password" style="width: 100%" @keyup.enter="assignData" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
                 <br><br>
                 <div v-if="passwordIncorrect" class="error-message">
                     <span>Password Incorrect!</span>
@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="p-field p-grid" style="text-align: center">
-            <Button type="button" class="p-button-sm" label="Submit" @click="assignData()"/>
+            <Button type="submit" class="p-button-sm" label="Submit" @click="assignData"/>
         </div>
     </Dialog>
 </template>
@@ -57,9 +57,6 @@
         watch: {
             show: function () {
                 this.display = this.show;
-                // if (this.display) {
-                //     this.$refs.masterPassword.$el.focus();
-                // }
             }
         }
     }
