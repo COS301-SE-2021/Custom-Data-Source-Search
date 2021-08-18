@@ -10,7 +10,7 @@
     >
         <div class="process-request-body">
             <div class="p-dialog-content">
-                <span>It is a tedious process to insert the key. Are you sure there is no use in {{backend.name}} any longer?</span>
+                <span>It is a tedious process to insert the key. Are you sure there is no more use in {{backend.name}}?</span>
             </div>
             <div class="button-holders">
                 <Button @click="deleteBackend">Delete</Button>
