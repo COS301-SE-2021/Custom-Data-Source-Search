@@ -61,6 +61,7 @@
       this.showSignOutCheck();
     },
     switchUser() {
+      console.log(this.$store.getters.getMasterKey);
       this.$store.commit('setSignedIn', false);
       this.$router.push('/');
     }

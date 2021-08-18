@@ -78,11 +78,9 @@
         {label: 'Remove', icon: 'pi pi-trash', command: () => {
             // event.originalEvent: Browser event
             // event.item: Menuitem instance
-            console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
             this.displayDeleteCheck = !this.displayDeleteCheck;
           }},
         {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
-            console.log ("Sign out user: " + this.selectedUser.name);
             this.displaySignOutCheck = !this.displaySignOutCheck;
           }}
       ]
@@ -102,7 +100,6 @@
     },
     clearCurrentUser() {
          this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
-         console.log("Current User cleared");
     },
     cleanPopUp() {
       if (this.displayDeleteCheck) {

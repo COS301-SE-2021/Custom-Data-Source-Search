@@ -233,6 +233,9 @@ const store = createStore({
         //User management
         setSignedIn(state, payload){
             state.signedIn = payload;
+            if (!payload) {
+                masterKey = null;
+            }
         },
         setSignedInUserID(state, payload) {
             state.signedInUserId = payload.userID;
@@ -281,16 +284,11 @@ const store = createStore({
                 //Do some server side call to delete file on web
             }
 
-            for (let user of state.users) {
-                console.log ( user.info.name +" Active State Before Delete: " + user.info.isActive);
-            }
-
             //Delete local
             state.users.splice(payload.user.id, 1);
             masterKey = null;
             let x = 0;
             for (let user of state.users) {
-                    console.log("For user: " + user.info.name + " is active is: " + user.info.isActive);
                    user.info.id = x;
                    user.id = x++;
             }
