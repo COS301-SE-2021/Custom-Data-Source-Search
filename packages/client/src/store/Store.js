@@ -196,7 +196,7 @@ const store = createStore({
                 local: {
                     id: null,
                     name: '',
-                    active: null,
+                    active: true,
                 },
                 connect: {
                     associatedEmail: '',
