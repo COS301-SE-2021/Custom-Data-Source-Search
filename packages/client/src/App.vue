@@ -1,31 +1,25 @@
 <template>
     <div class="grid-app" v-if="this.$store.getters.getSignedIn">
-<!--      <div class="nav-bar-top">-->
-<!--        <button class="profile-button" @click="toggle">Hi, {{ getUserInfo(getSignedInUserId).name }}! <i class="pi pi-angle-down" aria-hidden="true"></i></button>-->
-<!--        <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">-->
-<!--          <ProfileDropdown/>-->
-<!--        </OverlayPanel>-->
-<!--      </div>-->
       <div id="grid-div-1" >
         <div id="sidebar">
+            <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+            <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+            <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
+            <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
+            <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+            <!--            <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>-->
             <div class="icon-container" @click="toggle">
                 <div class="image-ring-main" >
                     <h3 class="name-initial-main">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
                 </div>
             </div>
+        </div>
+      </div>
+        <div id="grid-div-2">
             <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'900px': '40vw'}">
                 <ProfileDropdown/>
             </OverlayPanel>
-            <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-            <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-<!--            <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>-->
-            <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
-<!--            <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>-->
-            <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-        </div>
-      </div>
-      <div id="grid-div-2">
-        <router-view/>
+            <router-view/>
       </div>
     </div>
     <router-view v-else/>
@@ -105,12 +99,12 @@ button {
   padding: 20px 10px 10px;
 }
 
-.pi-cog{
-  position: fixed;
-  bottom: 0;
-}
+/*.pi-cog{*/
+/*  position: fixed;*/
+/*  bottom: 0;*/
+/*}*/
 
-.pi-search:hover,.pi-list:hover, .pi-cog:hover, .pi-user:hover {
+.pi-search:hover,.pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
   color: #41B3B2;
 }
 
@@ -138,8 +132,8 @@ button {
 }
 
 .image-ring-main {
-    width: 90%;
-    max-height: 50%;
+    width: 40px;
+    max-height: 40%;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     background:
@@ -171,10 +165,15 @@ button {
 }
 
 .icon-container {
-    max-width: 90%;
-    padding-left: 20%;
+    position: fixed;
+    text-align: left;
+    max-width: 30px;
+    max-height: 30px;
+    padding-left: 0.7em;
+    bottom: 2em;
     cursor: pointer;
     padding-bottom: 0.8vh;
+    margin-right: 1%;
 }
 
 </style>
@@ -205,9 +204,9 @@ export default {
         this.$store.commit('initialiseStore');
     },
     methods: {
-    toggle(event) {
-      this.$refs.op.toggle(event);
-    },
+         toggle(event) {
+            this.$refs.op.toggle(event);
+        },
   }
 }
 </script>

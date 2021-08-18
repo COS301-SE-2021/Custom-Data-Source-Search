@@ -127,12 +127,27 @@ const store = createStore({
             thisUser.info.isActive = true;
         },
 
+        signInAUser: function (state, payload) {
+            //Payload: masterPassword, user { id, etc}
+            let thisUser = state.users[payload.userID];
+            let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
+            if (passCheck) {
+                state.users[payload.userID].info.isActive = true;
+                state.signedInUserId = payload.userID;
+                masterKey = passCheck;
+                return true;
+            }
+            else {
+                return false;
+            }
+        },
         signInThisUser: function (state, payload) {
             //Payload: masterPassword
             let thisUser = state.users[state.signedInUserId];
             let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
             if (passCheck) {
                 masterKey = passCheck;
+                state.users[state.signedInUserId].info.isActive = true;
                 return true;
             }
             else {
@@ -141,6 +156,7 @@ const store = createStore({
         },
 
         signOutUser (state, payload) {
+            //Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKey = null;
             state.users[payload.user.id].info.isActive = false;
             for (let backend of state.users[payload.user.id].backends) {

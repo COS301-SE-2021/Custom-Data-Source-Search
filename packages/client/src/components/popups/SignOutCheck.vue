@@ -39,6 +39,8 @@
             signOut () {
                 this.$store.commit('signOutUser', {user: this.user});
                 this.closePopUp();
+                this.$store.commit('setSignIn', false);
+                this.$router.push('/');
             }
         },
         watch:{
