@@ -38,6 +38,9 @@
                 if(this.$store.getters.getMasterKey != null) {
                     this.$emit("newBackend");
                 }
+                else {
+                    console.log ( "s;ldkfj");
+                }
                 this.display = false;
             }
         },

@@ -296,10 +296,10 @@ const store = createStore({
 
         decryptBackendSecretPair(getters, payload) {
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let pairObject = decryptJsonObject(payload.masterKey, encrypted);
-            if (!pairObject["passkey"] || !pairObject["secret"]) {
-                pairObject = null;
-            }
+            let pairObject = null;
+            try {
+                pairObject =  decryptJsonObject(payload.masterKey, encrypted);
+            } catch (ignore) {}
             return  {
                 id: payload.id,
                 email: payload.email,
@@ -351,11 +351,10 @@ function decryptMasterKey(encryptedMasterKeyObject, fedInPassword, email) {
     let masterKeyEncrypted = aes.utils.hex.toBytes(encryptedMasterKeyObject);
     let easCtr = new aes.ModeOfOperation.ctr(decryptionKey);
     let decrypted = easCtr.decrypt(masterKeyEncrypted);
-    let masterKeyObject = JSON.parse(aes.utils.utf8.fromBytes(decrypted));
-    if (!masterKeyObject["key"]) {
-        return null
-    } else {
-        return masterKeyObject["key"];
+    try {
+        return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
+    } catch (e) {
+        return null;
     }
 }
 
