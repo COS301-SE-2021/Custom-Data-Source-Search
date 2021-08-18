@@ -1,6 +1,8 @@
 <template>
     <div class="only-main-div">
         <div>
+            <span><strong>Registration successful!</strong></span>
+            <br><br>
             <span> Do you want to continue on to configure backends?</span>
             <div class="continue-back-buttons">
                 <Button @click="goToSettings" style="text-align: center; margin-left: 2%" class="p-button-lg p-button-outlined">Yes </Button>
@@ -52,5 +54,8 @@
         font-size: larger
     }
 
+    strong {
+        font-size: x-large;
+    }
 
 </style>

@@ -1,5 +1,4 @@
 import {createStore} from 'vuex'
-import axios from "axios";
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
 const sha512 = require('js-sha512');
@@ -116,12 +115,8 @@ const store = createStore({
 
         signInThisUser: function (state, payload) {
             //Payload: masterPassword
-            console.log("CameToSignInUser");
             let thisUser = state.users[state.signedInUserId];
-            console.log(JSON.stringify(thisUser));
-            console.log("This user masterKeyObject encrypted: " + JSON.stringify(thisUser.info.encryptedMasterKeyObject));
             let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
-            console.log ("PASS CHECK: " + passCheck);
             if (passCheck) {
                 masterKey = passCheck;
                 return true;
@@ -216,7 +211,7 @@ const store = createStore({
             state.signedIn = true;
         },
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { masterKey, encryptedMasterKeyObject}
+            //Payload: name, email, hasVault, passKey: { encryptedMasterKeyObject}
             let newUser = {
                 id: null,
                 info: {
@@ -247,7 +242,6 @@ const store = createStore({
 
             state.signedInUserId = state.users.length-1;
             state.signedIn = true;
-
         },
         deleteUserFromLocalList (state, payload) {
             if (payload.deleteVault) {
@@ -282,6 +276,7 @@ const store = createStore({
                 hasVault: payload.hasVault,
                 passKey: { masterKey: newPassKey.masterKey, encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject }
             });
+            masterKey = newPassKey.masterKey;
         },
 
         //Backend management
@@ -308,7 +303,7 @@ const store = createStore({
 
         decryptBackendSecretPair(getters, payload) {
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let pairObject = decryptJsonObject(payload.masterKey, encrypted)
+            let pairObject = decryptJsonObject(payload.masterKey, encrypted);
             if (!pairObject["passkey"] || !pairObject["secret"]) {
                 pairObject = null;
             }
