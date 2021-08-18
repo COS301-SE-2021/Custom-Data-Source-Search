@@ -7,7 +7,7 @@
         <div class="p-field p-grid">
             <label for="password" class="p-col-fixed" style="width:100px">Password</label>
             <div class="p-col">
-                <PasswordInputField id="password" style="width: 100%" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
+                <PasswordInputField ref="masterPassword" id="password" style="width: 100%" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
             </div>
         </div>
         <br>
@@ -43,7 +43,10 @@
         },
         watch: {
             show: function () {
-                this.display = this.show
+                this.display = this.show;
+                // if (this.display) {
+                //     this.$refs.masterPassword.$el.focus();
+                // }
             }
         }
     }
