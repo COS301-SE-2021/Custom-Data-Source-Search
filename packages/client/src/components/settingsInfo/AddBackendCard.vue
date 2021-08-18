@@ -35,9 +35,7 @@
     import InputSwitch from 'primevue/inputswitch';
     import {mapGetters} from 'vuex';
     import axios from "axios";
-    const sha512 = require('js-sha512');
-    const createHmac = require('hmac')
-        .bind(null, () => {return new sha512()}, 128)
+    import {createHmac} from 'crypto'
 
     export default {
         name: "AddBackendCard",
@@ -77,6 +75,10 @@
                 type: Number,
                 default: null
             }
+        },
+        mounted() {
+            let hmac = createHmac('sha512', 'secret');
+            console.log(hmac.update("this is the data", ).digest('hex'));
         },
         methods: {
 
@@ -119,20 +121,19 @@
                         single_use_registration_token: this.tempBackendInfo.oneTimeKey
                     }
                 ).then((resp) => {
-                    let hmac = createHmac(this.tempBackendInfo.secret)
+                    let hmac = createHmac('sha512', this.tempBackendInfo.secret)
                     this.$store.dispatch("addNewBackend", {
                         name: this.tempBackendInfo.name,
                         associatedEmail: this.tempBackendInfo.associatedEmail,
                         link: this.tempBackendInfo.link,
-                        passKey: hmac.update(resp.data.partial_pass_key, 'utf8').digest('hex'),
-                        seed: hmac.update(resp.data.partial_seed, 'utf8').digest('hex'),
+                        passKey: hmac.update(resp.data.partial_pass_key).digest('hex'),
+                        seed: hmac.update(resp.data.partial_seed).digest('hex'),
                         refreshToken: resp.data.refresh_token
                     });
                     this.$emit('saveNewBackend');
                 }).catch((err) => {
                     this.$toast.add({severity: 'error', summary: 'Failed To Add Backend', detail: err.message})
                 })
-
             },
 
             cancelChanges() {
