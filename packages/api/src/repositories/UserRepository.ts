@@ -22,7 +22,7 @@ class UserRepository {
         try {
             let pendingUser = db.prepare("SELECT * FROM pending_user WHERE email = ?").all(user.email)[0];
             if (pendingUser !== undefined) {
-                regKey = pendingUser["reg_key"];
+                regKey = pendingUser["single_use_registration_token"];
             }
         } catch (e) {
         }
@@ -66,14 +66,13 @@ class UserRepository {
             }
             try {
                 db.prepare(
-                    'INSERT INTO user (first_name, last_name, email, password_hash, role, otp_seed) VALUES (?,?,?,?,?,?);'
+                    'INSERT INTO user (first_name, last_name, email, password_hash, role) VALUES (?,?,?,?,?);'
                 ).run(
                     user.first_name,
                     user.last_name,
                     user.email,
                     "",
-                    user.role,
-                    randomBytes(16).toString("hex")
+                    user.role
                 );
             } catch (e) {
                 failedUsers.push(user);
