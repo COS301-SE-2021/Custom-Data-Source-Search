@@ -96,13 +96,9 @@
         },
         methods: {
             loadValues() {
-
-                //TO DO: Save Username and Master email, check passwords are exactly the same. Store other information for now.
-                //Do we need a way to remove a user? Probably.
                 let passFormValidation = true;
 
                 //Checks:
-                //#1: All fields required
                 this.errors = [];
 
                 if (!this.userDetails.userName) {
@@ -133,22 +129,17 @@
                     this.masterPassword = null;
                     this.masterPassCheck = null;
                 }
-
-
-                //#3: Some kind of hash of password and email must happen to unlock file [[[[[[ => TO DO <= ]]]]]]
-
                 if (this.errors.length) {
                     passFormValidation = false;
                 }
-
                 if (passFormValidation)  {
-
                         this.$store.dispatch("addNewUser", {
-                        name: this.userDetails.userName,
-                        email: this.userDetails.masterEmail,
-                        masterPassword: this.masterPassword,
-                        hasVault: this.userDetails.backupVault
+                            name: this.userDetails.userName,
+                            email: this.userDetails.masterEmail,
+                            masterPassword: this.masterPassword,
+                            hasVault: this.userDetails.backupVault
                     });
+                    console.log ("Do I get here?");
                     this.$router.push('ContinueView');
                 }
             },

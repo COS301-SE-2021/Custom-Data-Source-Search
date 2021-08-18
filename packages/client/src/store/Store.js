@@ -39,7 +39,6 @@ const store = createStore({
             return userNamesArr;
         },
         getMasterKey(state) {
-            console.log("GET MASTER KEY: " + masterKey );
             return masterKey;
         },
 
@@ -113,12 +112,8 @@ const store = createStore({
 
         signInThisUser: function (state, payload) {
             //Payload: masterPassword
-            console.log("CameToSignInUser");
             let thisUser = state.users[state.signedInUserId];
-            console.log(JSON.stringify(thisUser));
-            console.log("This user masterKeyObject encrypted: " + JSON.stringify(thisUser.info.encryptedMasterKeyObject));
             let passCheck = decryptMasterKey(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
-            console.log ("PASS CHECK: " + passCheck);
             if (passCheck) {
                 masterKey = passCheck;
                 return true;
@@ -363,7 +358,6 @@ const store = createStore({
             let masterKey = getters.getMasterKey;
 
             if(masterKey === null) {
-                console.log ("No master Key");
                 return false;
             }
 
@@ -385,7 +379,7 @@ const store = createStore({
 
         decryptBackendSecretPair(getters, payload) {
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let pairObject = decryptJsonObject(payload.masterKey, encrypted)
+            let pairObject = decryptJsonObject(payload.masterKey, encrypted);
             if (!pairObject["passkey"] || !pairObject["secret"]) {
                 pairObject = null;
             }
