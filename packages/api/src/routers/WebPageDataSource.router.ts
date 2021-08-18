@@ -34,7 +34,7 @@ webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
 /**
  * Remove a data source by it's id
  */
-webPageDataSourceRouter.delete("/", (req: Request, res: Response) => {
-    const result = webPageDataSourceService.removeWebPageDataSource(req.body.id);
+webPageDataSourceRouter.delete("/", async (req: Request, res: Response) => {
+    const result = await webPageDataSourceService.removeWebPageDataSource(req.body.id);
     res.status(result.code).send(result.body);
 });

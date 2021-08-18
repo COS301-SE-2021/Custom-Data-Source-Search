@@ -83,7 +83,7 @@ class UserRepository {
         if (failedUsers.length !== 0) {
             return [null, {
                 "code": 400,
-                "message": "Some users could not be deleted",
+                "message": "Some users could not be added",
                 "users": users
             }];
         }
