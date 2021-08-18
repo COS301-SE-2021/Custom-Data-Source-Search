@@ -1,6 +1,7 @@
 import userRepository from "../repositories/UserRepository";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import {randomBytes} from "crypto";
 
 
 class UserService {
@@ -161,8 +162,8 @@ class UserService {
         };
     }
 
-    login(body: { uuid: string; pass_key: string; }) {
-        const [, validateErr] = userRepository.validateUser(body.uuid, body.pass_key);
+    login(body: { email: string; pass_key: string; }) {
+        const [, validateErr] = userRepository.validateUser(body.email, body.pass_key);
         if (validateErr) {
             return {
                 "code": validateErr.code,
@@ -171,7 +172,7 @@ class UserService {
                 }
             };
         }
-        const [tokenResult, tokenErr] = userRepository.generateRefreshToken(body.uuid);
+        const [tokenResult, tokenErr] = userRepository.generateRefreshToken(body.email);
         if (tokenErr) {
             return {
                 "code": 500,
@@ -273,7 +274,7 @@ class UserService {
             text: registrationToken
         };
 
-        transporter.sendMail(mailOptions, function(error, info){
+        transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
             } else {
@@ -301,6 +302,38 @@ class UserService {
             encodedToken + '.' +
             encodedSecret
         );
+    }
+
+    register(body: { email: string; single_use_registration_token: string; }) {
+        const [secret, err] = userRepository.validateRegistration(body);
+        if (err) {
+            return {
+                "code": 400,
+                "body": {
+                    "message": "Invalid registration token"
+                }
+            };
+        }
+        const partialPassKey: string = randomBytes(16).toString("hex");
+        const partialSeed: string = randomBytes(16).toString("hex");
+        // TODO save full passkey and seed after applying secret
+        const [refreshToken, tokenErr] = userRepository.generateRefreshToken(body.email);
+        if (tokenErr) {
+            return {
+                "code": 500,
+                "body": {
+                    "message": "Unknown error when trying to register"
+                }
+            };
+        }
+        return {
+            "code": 200,
+            "body": {
+                "partial_pass_key": partialPassKey,
+                "partial_seed": partialSeed,
+                "refresh_token": refreshToken
+            }
+        }
     }
 }
 

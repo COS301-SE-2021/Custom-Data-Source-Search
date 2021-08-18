@@ -213,9 +213,9 @@ class UserRepository {
         }, null];
     }
 
-    validateUser(uuid: string, pass_key: string) {
+    validateUser(email: string, pass_key: string) {
         try {
-            const user = db.prepare("SELECT * FROM user WHERE id = ?").all(uuid)[0];
+            const user = db.prepare("SELECT * FROM user WHERE email = ?").all(email)[0];
             if (user["password_hash"] == pass_key) {
                 return [{
                     "code": 200,
@@ -235,17 +235,16 @@ class UserRepository {
         }
     }
 
-    generateRefreshToken(uuid: string) {
+    generateRefreshToken(email: string) {
         try {
-            const user = db.prepare('SELECT * FROM user WHERE id = ?').all(uuid)[0];
-            db.prepare('DELETE FROM active_user WHERE email = ?').run(user["email"]);
+            db.prepare('DELETE FROM active_user WHERE email = ?').run(email);
             const refreshToken = randomBytes(16).toString("hex");
             const expirationTimeSeconds = 20;
             const newDate = new Date(new Date().getTime() + expirationTimeSeconds * 1000).getTime();
             db.prepare(
                 'INSERT INTO active_user (email, refresh_token, valid_until) VALUES (?,?,?);'
             ).run(
-                user["email"],
+                email,
                 refreshToken,
                 newDate
             );
@@ -299,10 +298,11 @@ class UserRepository {
                 }
                 try {
                     db.prepare(
-                        'INSERT INTO pending_user (email, single_use_registration_token) VALUES (?,?);'
+                        'INSERT INTO pending_user (email, single_use_registration_token, secret) VALUES (?,?,?);'
                     ).run(
                         user["email"],
-                        randomBytes(16).toString("hex") + '.' + randomBytes(16).toString("hex")
+                        randomBytes(16).toString("hex"),
+                        randomBytes(16).toString("hex")
                     );
                 } catch (e) {
                     db.prepare(
@@ -360,6 +360,26 @@ class UserRepository {
             }
         }
         return result;
+    }
+
+    validateRegistration(body: { email: string; single_use_registration_token: string }) {
+        try {
+            let pendingUser = db.prepare(
+                'SELECT * FROM pending_user WHERE email = ? AND single_use_registration_token = ?'
+            ).all(
+                body.email,
+                body.single_use_registration_token
+            )[0];
+            db.prepare('DELETE FROM pending_user WHERE email = ?').run(body.email);
+            if (pendingUser !== undefined) {
+                return [pendingUser, null];
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        return [null, {
+            "message": "Failed to validate user"
+        }];
     }
 }
 

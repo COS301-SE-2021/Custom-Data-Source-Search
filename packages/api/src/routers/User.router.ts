@@ -91,3 +91,8 @@ userRouter.post("/email", (req: Request, res: Response) => {
     const result = userService.sendEncodedRegistrationKeyToUser(req.body.users);
     res.status(result.code).send(result.body);
 });
+
+userRouter.post("/register", (req: Request, res: Response) => {
+    const result = userService.register(req.body);
+    res.status(result.code).send(result.body);
+});
