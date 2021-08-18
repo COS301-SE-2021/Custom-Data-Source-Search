@@ -4,7 +4,6 @@
         <div id="sidebar">
             <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
             <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-            <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
             <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
             <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
             <!--            <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>-->
@@ -65,7 +64,7 @@ input {
   position: fixed;
   display: grid;
   grid-template-columns: 1fr 30fr;
-  grid-template-rows: 0fr;
+  grid-template-rows: 0;
   height: 100%;
 }
 
@@ -179,11 +178,11 @@ button {
 </style>
 
 <script>
-import OverlayPanel from 'primevue/overlaypanel';
-import ProfileDropdown from "@/components/landing/ProfileDropdown";
-import {mapGetters} from "vuex";
+    import OverlayPanel from 'primevue/overlaypanel';
+    import ProfileDropdown from "@/components/landing/ProfileDropdown";
+    import {mapGetters} from "vuex";
 
-export default {
+    export default {
   components: {
     OverlayPanel,
     ProfileDropdown

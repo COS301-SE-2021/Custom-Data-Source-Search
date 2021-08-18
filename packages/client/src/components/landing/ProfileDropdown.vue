@@ -13,7 +13,7 @@
 
     <div class="backends-container">
       <div class="backend"
-           v-for="(backend) in getUserBackend(getSignedInUserId)"
+           v-for="(backend) in getUserBackends(getSignedInUserId)"
            :key="backend.local.id"
       >
         <span>{{backend.local.name}}</span>
@@ -37,6 +37,7 @@
 <script>
   import {mapGetters} from "vuex";
   import SignOutCheck from "../popups/SignOutCheck";
+
   export default {
   name: "ProfileDropdown",
     components: {SignOutCheck},
@@ -60,6 +61,7 @@
       this.showSignOutCheck();
     },
     switchUser() {
+      console.log(this.$store.getters.getMasterKey);
       this.$store.commit('setSignedIn', false);
       this.$router.push('/');
     }

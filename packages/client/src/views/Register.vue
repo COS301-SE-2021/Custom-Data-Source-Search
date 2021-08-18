@@ -65,6 +65,7 @@
     import SignIn from "../components/popups/SignIn";
     import Checkbox from 'primevue/checkbox';
     import PasswordInputField from "../components/primeComponents/PasswordInputField";
+
     const zxcvbn = require('zxcvbn');
     export default {
         name: "Register",
@@ -140,7 +141,6 @@
                             masterPassword: this.masterPassword,
                             hasVault: this.userDetails.backupVault
                     });
-                    console.log ("Do I get here?");
                     let frustrated = true;
                     if (frustrated) {
                         this.$router.push({name: 'ContinueView'});

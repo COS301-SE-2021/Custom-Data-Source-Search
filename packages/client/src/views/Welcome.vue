@@ -48,16 +48,17 @@
 </template>
 
 <script>
-import UserCard from "@/components/users/UserCard";
-import AddUserCard from "@/components/users/AddUserCard";
-const electron = require('@electron/remote');
-import {mapGetters} from "vuex";
-import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
-import SignOutCheck from "../components/popups/SignOutCheck";
-import SignIn from "../components/popups/SignIn";
-import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
+  import UserCard from "@/components/users/UserCard";
+  import AddUserCard from "@/components/users/AddUserCard";
+  import {mapGetters} from "vuex";
+  import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+  import SignOutCheck from "../components/popups/SignOutCheck";
+  import SignIn from "../components/popups/SignIn";
+  import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
-export default {
+  const electron = require('@electron/remote');
+
+  export default {
   name: "Welcome",
   components: {ReEnterMasterPassword, SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
@@ -77,11 +78,9 @@ export default {
         {label: 'Remove', icon: 'pi pi-trash', command: () => {
             // event.originalEvent: Browser event
             // event.item: Menuitem instance
-            console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
             this.displayDeleteCheck = !this.displayDeleteCheck;
           }},
         {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
-            console.log ("Sign out user: " + this.selectedUser.name);
             this.displaySignOutCheck = !this.displaySignOutCheck;
           }}
       ]
@@ -100,8 +99,7 @@ export default {
       this.displaySignIn = !this.displaySignIn
     },
     clearCurrentUser() {
-         this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
-         console.log("Current User cleared");
+         this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
     },
     cleanPopUp() {
       if (this.displayDeleteCheck) {
