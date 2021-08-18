@@ -287,67 +287,23 @@ const store = createStore({
         //Backend management
 
         addNewBackend: function ({commit, getters}, payload) {
-            //Payload:  name, associatedEmail, link, oneTimeKey, secret, masterPass
+            //Payload:  name, associatedEmail, link, oneTimeKey, secret
             let masterKey = getters.getMasterKey;
             if(masterKey === null) {
                 return false;
             }
-
-            axios.post(
-                payload.link,
-                {
-                        email: payload.email,
-                        pass_key: masterKey,
-                        otp:
-                    }
-                )
-
-            //For now, just mock the async function:
-            ////___[1]___Mock Connection to retrieve partial_pair_______/////////
-            let partialSecretPair = null;
-            let followLinkSuccess = true;
-            if (followLinkSuccess) {
-                partialSecretPair = {
-                    p_backendKey: 'slkj4ewodf9jlwk4j09fdw4jslef49',
-                    p_seed: '3984729829r83'
-                }
-            }
-            else {
-                console.log ("OneTimeKey did not work");
-                return false;
-            }
-            //////______End [1]_______//////
-
-
-            /////_____[2]_____Get full secret pair using secret:
-            /// Some kind of hash should be used, mocking for now:
-            let newSecretPair = {
-                backendKey:  'slkj39osdijf3w49usjdiwe',    //get by using payload.secret with partialSecretPair.p_backendKey
-                seed: '34t34329238i4'                     //get by using payload.secret with partialSecretPair.p_seed
-            };
-            //-----------End [2]-----------////
-
-            //////_______[3]______Ask for sessionKey, refreshKeys and adminStatus from server
-            //////__MOCK___//actual values to be obtained using __backendKey___
-            let sessionKey = '23948uwodifjn3j498hd';
-            let refreshKey = 'w34ior89o3i';
-            let adminStatus = 'Editor';     //Default empty
-            //if successful, continue, else fail here
-            //-------------End [3]---------------////
-            let encryptedPair = encryptJsonObject(masterKey, newSecretPair);
-
+            let encryptedPair = encryptJsonObject(
+                masterKey,
+                {backendKey: payload.passKey, seed: payload.seed}
+            );
             commit('addBackend', {
                 name: payload.name,
                 associatedEmail: payload.associatedEmail,
                 link: payload.link,
                 secretPair: encryptedPair,
-                sessionKey: sessionKey,
-                refreshKey: refreshKey,
-                admin: adminStatus
+                refreshToken: payload.refresh_token
             });
-
             return true;
-
         },
 
         decryptBackendSecretPair(getters, payload) {
