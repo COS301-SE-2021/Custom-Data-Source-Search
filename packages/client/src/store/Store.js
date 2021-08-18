@@ -342,7 +342,7 @@ const store = createStore({
                 return false;
             }
 
-            let encryptedPair = encryptBackendSecretPair(masterKey, newSecretPair);
+            let encryptedPair = encryptJsonObject(masterKey, newSecretPair);
 
             commit('addBackend', {
                 name: payload.name,
@@ -360,10 +360,7 @@ const store = createStore({
 
         decryptBackendSecretPair(getters, payload) {
             let encrypted = getters.getBackendEncryptedData({id: payload.id, email: payload.email});
-            let encryptedSecretPair = aes.utils.hex.toBytes(encrypted.secretPair);
-            let aesCtr = new aes.ModeOfOperation.ctr(payload.masterKey);
-            let stringPair = aesCtr.decrypt(encryptedSecretPair);
-            let pairObject = stringPair.toJSON();
+            let pairObject = decryptJsonObject(payload.masterKey, encrypted)
             if (!pairObject["passkey"] || !pairObject["secret"]) {
                 pairObject = null;
             }
@@ -383,8 +380,6 @@ store.subscribe((mutation, state) => {
 });
 
 function generateMasterKey(masterPassword, email) {
-    //Payload: masterPassword, email
-
     console.log ("Generating masterKey");
 
     let encryptionKey = pbkdf2.pbkdf2Sync(
@@ -399,7 +394,6 @@ function generateMasterKey(masterPassword, email) {
     let masterKey = new Uint8Array(256 / 8);
     window.crypto.getRandomValues(masterKey);
 
-
     // Encrypt this random key
     let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey);
     let masterKeyObject = aes.utils.utf8.toBytes(JSON.stringify({"key": masterKey}));
@@ -413,7 +407,6 @@ function generateMasterKey(masterPassword, email) {
 }
 
 function decryptMasterKey(encryptedMasterKey, fedInPassword, email) {
-    //Parameters: encryptedmasterKey,
     let decryptionKey = pbkdf2.pbkdf2Sync(
         fedInPassword,
         email,
@@ -431,10 +424,17 @@ function decryptMasterKey(encryptedMasterKey, fedInPassword, email) {
     return masterKeyObject;
 }
 
-function  encryptBackendSecretPair(masterKey, secretPair) {
+function encryptJsonObject(masterKey, jsonObject) {
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
-    let encryptedSecretPair = aesCtr.encrypt(aes.utils.hex.toBytes(secretPair));
-    return aes.utils.hex.fromBytes(encryptedSecretPair);
+    let encryptedJsonObject = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(jsonObject)));
+    return aes.utils.hex.fromBytes(encryptedJsonObject);
+}
+
+function decryptJsonObject(masterKey, jsonObject) {
+    let encryptedJsonObject = aes.utils.hex.toBytes(jsonObject);
+    let aesCtr = new aes.ModeOfOperation.ctr(masterKey);
+    let decrypted = aesCtr.decrypt(encryptedJsonObject);
+    return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }
 
 let masterKey = null;
