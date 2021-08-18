@@ -8,15 +8,20 @@
 <!--      </div>-->
       <div id="grid-div-1" >
         <div id="sidebar">
-          <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>
-          <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>
-          <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
-          <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
-            <ProfileDropdown/>
-          </OverlayPanel>
+            <div class="icon-container" @click="toggle">
+                <div class="image-ring-main" >
+                    <h3 class="name-initial-main">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
+                </div>
+            </div>
+            <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'900px': '40vw'}">
+                <ProfileDropdown/>
+            </OverlayPanel>
+            <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+            <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+<!--            <router-link title="Welcome" class="icon" to="/"><em class="pi pi-user" style="font-size:1.5rem"  /></router-link>-->
+            <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
+<!--            <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>-->
+            <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
         </div>
       </div>
       <div id="grid-div-2">
@@ -85,12 +90,6 @@ input {
   grid-row-start: 2;
 }
 
-/*.nav-bar-top{*/
-/*  grid-column-start: 1;*/
-/*  grid-column-end: end;*/
-/*  background-color: #1e1e1e;*/
-/*}*/
-
 .icon {
   padding: 10px;
 }
@@ -137,6 +136,47 @@ button {
   cursor: pointer;
   bottom: 5%;
 }
+
+.image-ring-main {
+    width: 90%;
+    max-height: 50%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    background:
+            linear-gradient(#232323, #1a1a1a) padding-box,
+            linear-gradient(to right bottom, rgba(128, 128, 128, 0.7), rgba(168, 168, 168, 0.71)) border-box;
+    border-radius: 50em;
+    border: 2.8px solid transparent;
+}
+
+.image-ring-main:hover {
+    background:
+            linear-gradient(#232323, #1a1a1a) padding-box,
+            linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
+
+}
+
+.name-initial-main {
+    color: grey;
+    font-size: 20px;
+    font-weight: normal;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-container {
+    max-width: 90%;
+    padding-left: 20%;
+    cursor: pointer;
+    padding-bottom: 0.8vh;
+}
+
 </style>
 
 <script>
