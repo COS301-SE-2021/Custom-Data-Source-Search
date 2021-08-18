@@ -22,7 +22,6 @@
               ></em>
             </CustomTooltip>
           </div>
-          <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
           <ReEnterMasterPassword
                   :show="displayMasterPwInput"
                   @action-to-Occur="showAskMasterPw"
@@ -59,7 +58,6 @@
 
   <script>
     import axios from "axios";
-    import SignIn from "@/components/popups/SignIn";
     import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
     import CustomTooltip from "../components/primeComponents/CustomTooltip";
@@ -96,7 +94,14 @@
       },
       methods: {
         showAskMasterPw() {
-            this.displayMasterPwInput = !this.displayMasterPwInput;
+          if(this.$store.getters.getMasterKey != null) {
+            if (this.$store.getters.unconnectedBackendBool) {
+              this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
+            }
+            return;
+          } else {
+            this.displayMasterPwInput = true;
+          }
         },
         escapeSpecialCharacters(query) {
           return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
@@ -155,7 +160,6 @@
         IconSimpleExpandMore,
         CustomTooltip,
         SearchResultCard,
-        SignIn
       }
     }
   </script>
