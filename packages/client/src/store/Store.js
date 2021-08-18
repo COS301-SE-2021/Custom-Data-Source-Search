@@ -293,7 +293,6 @@ const store = createStore({
             }
         },
         setRefreshToken(state, payload) {
-            console.log(JSON.stringify(state.users[state.signedInUserId].backends))
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.keys.refreshToken = payload.refreshToken;
         },
@@ -330,7 +329,6 @@ const store = createStore({
                     return true;
                 })
                 .catch(async () => {
-                    console.log("refresh jwtFailed")
                     await dispatch("backendLogin", {id: payload.id})
                     await axios
                         .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
@@ -342,7 +340,6 @@ const store = createStore({
                             return true;
                         })
                         .catch((e) => {
-                            console.warn("refreshToken failed a second time");
                             console.error(e);
                             return false;
                         })
@@ -356,19 +353,20 @@ const store = createStore({
             await axios.post(
                 "http://" + getters.getBackendLink(payload.id) + "/users/login",
                 {
-                    email: getters.getUserInfo(payload.id).email,
-                    pass_key: secretPair.backendKey,
-                    otp: authenticator.generate(secretPair.seed)
-                }
-            ).then((resp) => {
-                commit('setRefreshToken', {
-                    id: payload.id,
-                    refreshToken: resp.data.refresh_token
+                        email: getters.getUserInfo(payload.id).email,
+                        pass_key: secretPair.backendKey,
+                        otp: authenticator.generate(secretPair.seed)
+                    }
+                )
+                .then((resp) => {
+                    commit('setRefreshToken', {
+                        id: payload.id,
+                        refreshToken: resp.data.refresh_token
+                    })
                 })
-            }).catch((err) => {
-                console.log("Error in Backend Login")
-                console.error(err)
-            })
+                .catch((err) => {
+                    console.error(err)
+                })
         },
         //Backend management
         addNewBackend: function ({commit, getters}, payload) {
