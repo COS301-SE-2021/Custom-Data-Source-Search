@@ -1,4 +1,4 @@
-import {WebPageDataSource} from "../models/WebPageDataSource.interface";
+import {StoredWebPageDataSource, WebPageDataSource} from "../models/WebPageDataSource.interface";
 import {randomBytes} from "crypto";
 import FormData from "form-data";
 import axios from "axios";
@@ -63,111 +63,63 @@ class WebPageDataSourceRepository {
         }]
     }
 
-    // This code is for updating file datasources based on last modified time, need something else for webpages
-    // async updateDatasources() {
-    //     this.readFile();
-    //     for (let storedDatasrouce of this.webPageDataSourceArray) {
-    //         let lastModified: Date = fs.statSync(storedDatasrouce.path + storedDatasrouce.filename).mtime;
-    //         if (new Date(storedDatasrouce.lastModified).getTime() !== lastModified.getTime()) {
-    //             let index: number = this.fileDataSourceArray.indexOf(storedDatasrouce);
-    //             storedDatasrouce.lastModified = lastModified;
-    //             this.fileDataSourceArray[index] = storedDatasrouce;
-    //             fs.writeFileSync('./store/webPageDataStore.json', JSON.stringify(this.fileDataSourceArray));
-    //             try {
-    //                 await this.postToSolr(fs.readFileSync(storedDatasrouce.path + storedDatasrouce.filename), storedDatasrouce.uuid, storedDatasrouce.filename);
-    //             } catch (e) {
-    //                 console.log("Error posting file to solr");
-    //             }
-    //         }
-    //     }
-    // }
     // TODO FROM HERE
-    // getDataSource(uuid: string): [StoredWebPageDataSource, { "code": number, "message": string }] {
-    //     this.readFile();
-    //     let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
-    //     if (index !== -1) {
-    //         return [this.webPageDataSourceArray[index], null];
-    //     }
-    //     return [null, {
-    //         "code": 404,
-    //         "message": "Datasource not found"
-    //     }]
-    // }
+    getDataSource(uuid: string): [StoredWebPageDataSource, { "code": number, "message": string }] {
+        const dataSource = db.prepare("SELECT * FROM webpage_data WHERE uuid = ?;").get(uuid)
+        if (dataSource !== undefined) {
+            return [dataSource, null];
+        }
+        return [null, {
+            "code": 404,
+            "message": "Datasource not found"
+        }]
+    }
 
-    // getAllDataSources(): [StoredWebPageDataSource[], { "code": number, "message": string }] {
-    //     this.readFile();
-    //     return [this.webPageDataSourceArray, null];
-    // }
-    //
-    // updateDataSource(uuid: string, dataSource: WebPageDataSource) {
-    //     let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
-    //     if (index !== -1) {
-    //         this.webPageDataSourceArray[index].url = dataSource.url;
-    //         return [{
-    //             "code": 200,
-    //             "message": "Successfully updated datasource"
-    //         }, null]
-    //     }
-    //     return [null, {
-    //         "code": 404,
-    //         "message": "Datasource not found"
-    //     }]
-    // }
+    getAllDataSources(): [StoredWebPageDataSource[], { "code": number, "message": string }] {
+        const webpageDataList = db.prepare("SELECT * FROM webpage_data;").all()
+        return [webpageDataList, null];
+    }
 
-    // deleteDataSource(uuid: string) {
-    //     this.readFile();
-    //     let index: number = this.webPageDataSourceArray.findIndex(x => x.uuid === uuid);
-    //     if (index !== -1) {
-    //         this.webPageDataSourceArray.splice(index, 1);
-    //         fs.writeFileSync('./store/webPageDataStore.json', JSON.stringify(this.webPageDataSourceArray));
-    //         // Solr code to remove document
-    //         // const [,err] = await this.deleteFromSolr(uuid);
-    //         // if (err) {
-    //         //     return [null, {
-    //         //         "code": 500,
-    //         //         "message": "Could not delete document from solr"
-    //         //     }]
-    //         // }
-    //         return [{
-    //             "code": 204,
-    //             "message": "Successfully deleted Webpage datasource"
-    //         }, null]
-    //     }
-    //     return [null, {
-    //         "code": 404,
-    //         "message": "Webpage datasource not found"
-    //     }]
-    // }
+    async deleteDataSource(uuid: string) {
+        const [,err] = await this.deleteFromSolr(uuid);
+        if (err) {
+            return [null, err];
+        }
+        try {
+            db.prepare("DELETE FROM webpage_data WHERE uuid = ?").run(uuid);
+        } catch (e) {
+            console.error(e)
+            return [null, {
+                "code": 404,
+                "message": "Webpage datasource not found"
+            }];
+        }
+        return [{
+            "code": 204,
+            "message": "Successfully deleted webpage datasource"
+        }, null];
+    }
 
-    // function that removes document from solr
-    // async deleteFromSolr(uuid: string) {
-    //     try {
-    //         await axios.post('http://localhost:8983/solr/files/update?commit=true',
-    //             {
-    //                 "delete": {
-    //                     "query": "id:" + uuid
-    //                 }
-    //             }
-    //         );
-    //         return [{
-    //             "code": 204,
-    //             "message": "Successfully removed document from Solr"
-    //         }, null];
-    //     } catch (e) {
-    //         return [null, {
-    //             "code": 500,
-    //             "message": "Could not delete document from solr"
-    //         }]
-    //     }
-    // }
-
-    // readFile() {
-    //     try {
-    //         this.webPageDataSourceArray = JSON.parse(fs.readFileSync('./store/webPageDataStore.json', 'utf-8'));
-    //     } catch (err) {
-    //         this.webPageDataSourceArray = [];
-    //     }
-    // }
+    async deleteFromSolr(uuid: string) {
+        try {
+            await axios.post('http://localhost:8983/solr/files/update?commit=true',
+                {
+                    "delete": {
+                        "query": "id:" + uuid
+                    }
+                }
+            );
+            return [{
+                "code": 204,
+                "message": "Successfully removed document from Solr"
+            }, null];
+        } catch (e) {
+            return [null, {
+                "code": 500,
+                "message": "Could not delete document from solr"
+            }]
+        }
+    }
 }
 
 const webPageDataSourceRepository = new WebPageDataSourceRepository();

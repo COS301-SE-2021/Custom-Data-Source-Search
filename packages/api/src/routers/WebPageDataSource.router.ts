@@ -6,24 +6,23 @@ export const webPageDataSourceRouter = express.Router();
 /**
  * Return all folder Data Sources
  */
-// webPageDataSourceRouter.get("/", (req: Request, res: Response) => {
-//     const result = webPageDataSourceService.getAllWebPageDataSources();
-//     res.status(result.code).send(result.body);
-// });
+webPageDataSourceRouter.get("/", (req: Request, res: Response) => {
+    const result = webPageDataSourceService.getAllWebPageDataSources();
+    res.status(result.code).send(result.body);
+});
 
 /**
  * Return a single webpage Data Source specified by the id
  */
-// webPageDataSourceRouter.get("/:id", (req: Request, res: Response) => {
-//     const result = webPageDataSourceService.getWebPageDataSource(req.params.id);
-//     res.status(result.code).send(result.body);
-// });
+webPageDataSourceRouter.get("/:id", (req: Request, res: Response) => {
+    const result = webPageDataSourceService.getWebPageDataSource(req.params.id);
+    res.status(result.code).send(result.body);
+});
 
 /**
  * Add a data source by it's url
  */
 webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
-    console.log(Buffer.from("what is this"))
     const [, err] = await webPageDataSourceService.addWebPageDataSource(req.body);
     if (err) {
         res.status(err.code).send({'message': err.message});
@@ -35,7 +34,7 @@ webPageDataSourceRouter.post("/", async (req: Request, res: Response) => {
 /**
  * Remove a data source by it's id
  */
-// webPageDataSourceRouter.delete("/", (req: Request, res: Response) => {
-//     const result = webPageDataSourceService.removeWebPageDataSource(req.body.id);
-//     res.status(result.code).send(result.body);
-// });
+webPageDataSourceRouter.delete("/", async (req: Request, res: Response) => {
+    const result = await webPageDataSourceService.removeWebPageDataSource(req.body.id);
+    res.status(result.code).send(result.body);
+});

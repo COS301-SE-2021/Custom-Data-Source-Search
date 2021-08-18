@@ -5,58 +5,58 @@ import fetch from 'node-fetch';
 
 class WebPageDataSourceService {
 
-    // getAllWebPageDataSources() {
-    //     let [result, err] = webPageDataSourceRepository.getAllDataSources();
-    //     if (err) {
-    //         return {
-    //             "code": 500,
-    //             "body": {
-    //                 "message": "Internal error"
-    //             }
-    //         }
-    //     }
-    //     return {
-    //         "code": 200,
-    //         "body": result
-    //     };
-    // }
-    //
-    // getWebPageDataSource(uuid: string) {
-    //     let [result, err] = webPageDataSourceRepository.getDataSource(uuid);
-    //     if (err) {
-    //         return {
-    //             "code": err.code,
-    //             "body": {
-    //                 "message": err.message
-    //             }
-    //         }
-    //     }
-    //     return {
-    //         "code": 200,
-    //         "body": {
-    //             "message": "Success",
-    //             "data": result
-    //         }
-    //     }
-    // }
-    //
-    // removeWebPageDataSource(uuid: string) {
-    //     let [result, err] = webPageDataSourceRepository.deleteDataSource(uuid);
-    //     if (err) {
-    //         return {
-    //             "code": err.code,
-    //             "body": {
-    //                 "message": err.message
-    //             }
-    //         }
-    //     }
-    //     return {
-    //         "code": 204,
-    //         "body": {
-    //             "message": result.message
-    //         }
-    //     }
-    // }
+    getAllWebPageDataSources() {
+        let [result, err] = webPageDataSourceRepository.getAllDataSources();
+        if (err) {
+            return {
+                "code": 500,
+                "body": {
+                    "message": "Internal error"
+                }
+            }
+        }
+        return {
+            "code": 200,
+            "body": result
+        };
+    }
+
+    getWebPageDataSource(uuid: string) {
+        let [result, err] = webPageDataSourceRepository.getDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success",
+                "data": result
+            }
+        }
+    }
+
+    async removeWebPageDataSource(uuid: string) {
+        let [result, err] = await webPageDataSourceRepository.deleteDataSource(uuid);
+        if (err) {
+            return {
+                "code": err.code,
+                "body": {
+                    "message": err.message
+                }
+            }
+        }
+        return {
+            "code": 204,
+            "body": {
+                "message": result.message
+            }
+        }
+    }
 
     async addWebPageDataSource(dataSource: WebPageDataSource) {
         let page;
