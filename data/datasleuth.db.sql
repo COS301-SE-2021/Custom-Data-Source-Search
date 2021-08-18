@@ -16,16 +16,16 @@ CREATE TABLE IF NOT EXISTS "folder_file_data" (
 	"last_modified"	NUMERIC NOT NULL,
 	"folder_uuid"	TEXT NOT NULL UNIQUE,
 	"uuid"	TEXT NOT NULL UNIQUE,
-	FOREIGN KEY("folder_uuid") REFERENCES "folder_data"("uuid"),
-	PRIMARY KEY("uuid")
+	PRIMARY KEY("uuid"),
+	FOREIGN KEY("folder_uuid") REFERENCES "folder_data"("uuid")
 );
 DROP TABLE IF EXISTS "active_user";
 CREATE TABLE IF NOT EXISTS "active_user" (
 	"email"	TEXT NOT NULL UNIQUE,
 	"refresh_token"	TEXT NOT NULL UNIQUE,
 	"valid_until"	TEXT NOT NULL,
-	FOREIGN KEY("email") REFERENCES "user"("email"),
-	PRIMARY KEY("refresh_token")
+	PRIMARY KEY("refresh_token"),
+	FOREIGN KEY("email") REFERENCES "user"("email")
 );
 DROP TABLE IF EXISTS "file_data";
 CREATE TABLE IF NOT EXISTS "file_data" (
@@ -51,7 +51,8 @@ DROP TABLE IF EXISTS "pending_user";
 CREATE TABLE IF NOT EXISTS "pending_user" (
 	"email"	TEXT NOT NULL UNIQUE,
 	"single_use_registration_token"	TEXT NOT NULL,
-	FOREIGN KEY("email") REFERENCES "user"("email"),
-	PRIMARY KEY("email")
+	"secret"	TEXT,
+	PRIMARY KEY("email"),
+	FOREIGN KEY("email") REFERENCES "user"("email")
 );
 COMMIT;
