@@ -2,6 +2,7 @@ import {randomBytes} from "crypto";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 import {createHmac} from 'crypto';
+import bcrypt from 'bcrypt';
 
 
 class UserRepository {
@@ -239,7 +240,7 @@ class UserRepository {
     validateUser(email: string, pass_key: string) {
         try {
             const user = db.prepare("SELECT * FROM user WHERE email = ?").all(email)[0];
-            if (user["password_hash"] == pass_key) {
+            if (bcrypt.compareSync(pass_key, user["password_hash"])) {
                 return [{
                     "code": 200,
                     "message": "Success"
@@ -408,8 +409,9 @@ class UserRepository {
     setSeedAndPassKey(email: string, partialPassKey: string, partialSeed: string, secret: string) {
         const fullPassKey: string = UserRepository.applyHmac(partialPassKey, secret);
         const fullSeed: string = UserRepository.applyHmac(partialSeed, secret);
+        const hash = bcrypt.hashSync(fullPassKey, 10);
         try {
-            db.prepare("UPDATE user SET password_hash = ? WHERE email = ?").run(fullPassKey, email);
+            db.prepare("UPDATE user SET password_hash = ? WHERE email = ?").run(hash, email);
             db.prepare("UPDATE user SET otp_seed = ? WHERE email = ?").run(fullSeed, email);
         } catch (e) {
             console.error(e);
