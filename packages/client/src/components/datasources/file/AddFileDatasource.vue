@@ -143,9 +143,9 @@ export default {
           }
         }
         else if(this.filepaths && this.filepaths[0]){
-          let formData = new FormData();
           let fileStream;
           for(let i =0; i<this.filepaths.length; i++){
+            let formData = new FormData();
             fileStream = fs.readFileSync(this.filepaths[i]);
             formData.set('file', fileStream);
             formData.set('tag1', this.tag1);
