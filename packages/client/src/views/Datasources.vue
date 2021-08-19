@@ -286,7 +286,7 @@ export default {
           //Loop through all items to delete
           let source;
           for(source in this.selectedSources){
-            const url = `http://${source.link}/general/datasources`;
+            const url = `http://${this.selectedSources[source].link}/general/datasources`;
             console.log(url);
             axios
                 .delete(url, {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
