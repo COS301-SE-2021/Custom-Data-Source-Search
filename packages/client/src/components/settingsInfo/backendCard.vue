@@ -290,7 +290,6 @@
         max-height: 30px;
         text-align: center;
         margin-right: 2%;
-        margin-bottom: 2%;
         margin-top: 1%;
         max-width: fit-content;
     }
