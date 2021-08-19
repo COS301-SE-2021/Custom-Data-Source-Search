@@ -28,7 +28,6 @@ export default {
   data(){
     return{
       displayAdminPopup : false
-
     }
   },
   components: {BackendCard, AdminBackendCard},

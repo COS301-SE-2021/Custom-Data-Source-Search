@@ -200,9 +200,9 @@ export default {
 
             for(let userData of this.selectedUsers) {
               usersString += "Backend: " + this.backend.connect.link;
-              usersString += " ,Email: " + userData.email;
-              usersString += " ,Name: " + userData.first_name + " " + userData.last_name;
-              usersString += " ,Registration Key: " + userData.regKey + "\n";
+              usersString += ", Email: " + userData.email;
+              usersString += ", Name: " + userData.first_name + " " + userData.last_name;
+              usersString += ", Registration Key: " + userData.regKey + "\n";
 
             }
 
@@ -219,6 +219,8 @@ export default {
   },
   props: {
     backendID : Number,
+    link: String,
+    jwtCache: String,
   },
   computed: {
     ...mapGetters([
@@ -233,7 +235,7 @@ export default {
 
       //FOR TESTING LOCALLY, MUST CHANGE TO ACTUAL URL
 
-      axios.get("http://localhost:3001/users")
+      axios.get(`http://${this.link}/users`)
           .then((resp) => {
 
             this.tableData = resp.data.data;
@@ -267,7 +269,7 @@ export default {
       //FOR TESTING LOCALLY, MUST CHANGE TO ACTUAL URL
 
       //axios.post(this.backend.connect.link + "/users", reqBody ).then(
-      axios.post("http://localhost:3001/users", reqBody,
+      axios.post(`http://${this.link}/users`, reqBody,
           { headers : {"Content-Type" : "application/json" }} )
           .then((resp) => {
 
@@ -302,7 +304,7 @@ export default {
       let reqBody = JSON.stringify(reqObj);
 
     //  axios.delete(this.backend.connect.link + "/users", reqBody )
-      axios.delete("http://localhost:3001/users",
+      axios.delete(`http://${this.link}/users`,
           {data : reqBody, headers : {"Content-Type" : "application/json" }})
           .then((resp) => {
 
@@ -338,7 +340,7 @@ export default {
       let reqBody = JSON.stringify(reqObj);
 
     //  axios.post(this.backend.connect.link + "/users/role", reqBody)
-      axios.post("http://localhost:3001/users/role", reqBody,
+      axios.post(`http://${this.link}/users/role`, reqBody,
           { headers : {"Content-Type" : "application/json" }} )
           .then((resp) => {
 
@@ -382,7 +384,7 @@ export default {
 
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/global/revoke")
+        axios.post(`http://${this.link}/users/global/revoke`)
             .then( resp => {
 
               this.$toast.add({
@@ -415,7 +417,7 @@ export default {
         let reqBody = JSON.stringify(reqObj);
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/revoke", reqBody,
+        axios.post(`http://${this.link}/users/revoke`, reqBody,
             { headers : {"Content-Type" : "application/json" }} )
             .then( resp => {
 
@@ -453,7 +455,7 @@ export default {
 
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/global/logout")
+        axios.post(`http://${this.link}/users/global/logout`)
             .then( resp => {
 
               this.$toast.add({
@@ -486,7 +488,7 @@ export default {
         let reqBody = JSON.stringify(reqObj);
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/logout", reqBody,
+        axios.post(`http://${this.link}/users/logout`, reqBody,
             { headers : {"Content-Type" : "application/json" }} )
             .then( resp => {
 
@@ -522,9 +524,9 @@ export default {
 
       for(let userData of this.selectedUsers) {
         usersString += "Backend: " + this.backend.connect.link;
-        usersString += " ,Email: " + userData.email;
-        usersString += " ,Name: " + userData.first_name + " " + userData.last_name;
-        usersString += " ,Registration Key: " + userData.regKey + "\n";
+        usersString += ", Email: " + userData.email;
+        usersString += ", Name: " + userData.first_name + " " + userData.last_name;
+        usersString += ", Registration Key: " + userData.regKey + "\n";
 
       }
 
@@ -588,7 +590,7 @@ export default {
       let reqBody = JSON.stringify(reqObj);
 
       //  axios.delete(this.backend.connect.link + "/users", reqBody )
-      axios.post("http://localhost:3001/users/registrationkey", reqBody,
+      axios.post(`http://${this.link}/users/registrationkey`, reqBody,
           { headers : {"Content-Type" : "application/json" }})
           .then((resp) => {
 
@@ -622,7 +624,7 @@ export default {
       let reqBody = JSON.stringify(reqObj);
 
       //  axios.delete(this.backend.connect.link + "/users", reqBody )
-      axios.post("http://localhost:3001/users/email", reqBody,
+      axios.post(`http://${this.link}/users/email`, reqBody,
           { headers : {"Content-Type" : "application/json" }})
           .then((resp) => {
 
