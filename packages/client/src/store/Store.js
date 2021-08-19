@@ -88,6 +88,10 @@ const store = createStore({
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         },
+        getBackendLinkUsingName: (state) => (backendName) => {
+            console.log(backendName)
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).connect.link;
+        },
         getBackendLink: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.link;
         },
