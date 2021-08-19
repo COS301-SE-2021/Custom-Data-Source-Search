@@ -237,17 +237,21 @@ button {
     },
     methods: {
         showAskMasterPw() {
-            if(this.$store.getters.getMasterKeyObject != null) {
+            console.log (JSON.stringify(this.$store.getters.getMasterKeyObject));
+            if(this.$store.getters.getMasterKeyObject === null) {
+                this.openMasterPwInput();
+            } else {
                 if (this.$store.getters.unconnectedBackendBool) {
                     this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
                 }
-            } else {
-                this.displayMasterPwInput = true;
             }
         },
          toggle(event) {
             this.$refs.op.toggle(event);
         },
+        openMasterPwInput() {
+                this.displayMasterPwInput = !this.displayMasterPwInput;
+        }
   }
 }
 </script>
