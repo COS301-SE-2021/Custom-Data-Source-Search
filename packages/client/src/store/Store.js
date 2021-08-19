@@ -64,7 +64,6 @@ const store = createStore({
         },
 
         //Unconnected backend related getters
-
         unconnectedBackendNo: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.connect.keys.jwtToken === null).length;
         },
@@ -89,7 +88,6 @@ const store = createStore({
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         },
         getBackendLinkUsingName: (state) => (backendName) => {
-            console.log(backendName)
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).connect.link;
         },
         getBackendLink: (state, getters) => (id) => {
@@ -205,6 +203,7 @@ const store = createStore({
                 connect: {
                     associatedEmail: '',
                     link: '',
+                    needsLogin: false,
                     keys: {
                         secretPair: null,
                         jwtToken: null,
@@ -276,6 +275,7 @@ const store = createStore({
                     connect: {
                         associatedEmail: payload.email,
                         link: 'localhost:3001',
+                        needsLogin: false,
                         keys: {
                             secretPair: null,
                             jwtToken: 'Local',
@@ -311,7 +311,6 @@ const store = createStore({
             if (payload.deleteVault) {
                 //Do some server side call to delete file on web
             }
-
             //Delete local
             state.users.splice(payload.user.id, 1);
             masterKeyObject = null;
@@ -320,6 +319,9 @@ const store = createStore({
                    user.info.id = x;
                    user.id = x++;
             }
+        },
+        setBackendAsNotLoggedIn(state, getters, payload) {
+            getters.getSignedInUserBackend(payload.id).connect.needsLogin = true;
         },
         setRefreshToken(state, payload) {
             state.users[state.signedInUserId].backends
@@ -391,6 +393,9 @@ const store = createStore({
                     })
                 })
                 .catch((err) => {
+                    commit('setBackendAsNotLoggedIn', {
+                        id: payload.id
+                    })
                     console.error(err)
                 })
         },
