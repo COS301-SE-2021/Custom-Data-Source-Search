@@ -44,8 +44,10 @@
                 <div class="overlay-buttons">
                   <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain"
                           id="text-button" @click="clicked=!clicked; type='File'"/>
-                  <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain"
+                  <Button v-if="backend==='Local'" label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain"
                           id="folder-button" @click="clicked=!clicked; type='Folder'"/>
+                  <Button v-else label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain"
+                          id="folder-button-disabled" @click="clicked=!clicked; type='Folder'" disabled="disabled"/>
                   <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain"
                           id="web-button" @click="clicked=!clicked; type='Webpage'"/>
                 </div>
@@ -248,7 +250,7 @@ export default {
         r.backend = name;
       }
       this.sources = this.sources.concat(results);
-      
+
       if(this.sources.length === 0){
         this.$toast.add({severity: 'warn', summary: 'No sources', detail: "Try adding data sources", life: 3000})
       }
@@ -284,6 +286,8 @@ export default {
           //Loop through all items to delete
           let source;
           for(source in this.selectedSources){
+            const url = `http://${source.link}/general/datasources`;
+            console.log(url);
             axios
                 .delete("http://localhost:3001/general/datasources", {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
                 .then(() => {
