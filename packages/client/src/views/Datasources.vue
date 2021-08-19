@@ -289,7 +289,7 @@ export default {
             const url = `http://${source.link}/general/datasources`;
             console.log(url);
             axios
-                .delete("http://localhost:3001/general/datasources", {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
+                .delete(url, {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
                 .then(() => {
                   this.$toast.add({
                     severity: 'success',
