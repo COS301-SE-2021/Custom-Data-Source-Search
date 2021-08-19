@@ -26,6 +26,7 @@
               :source="r.source"
               :link="r.link"
               :backendId="r.backendId"
+              :backend_name="r.name"
               @resultClicked="loadFullFile"
           />
         </div>
@@ -101,7 +102,7 @@
             await axios
               .get(url, {headers})
               .then((resp) => {
-                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
+                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
               })
               .catch(async () => {
                 await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
@@ -110,7 +111,7 @@
                 };
                 await axios.get(url, {headers})
                   .then((resp) => {
-                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
+                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
                   })
                   .catch((e) => {
                     console.error(e);
@@ -121,10 +122,11 @@
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           }
         },
-        handleSuccess(results, link, id) {
+        handleSuccess(results, link, id, name) {
           for(let r of results) {
             r.link = link;
-            r.backendId = id
+            r.backendId = id;
+            r.name = name;
           }
           this.searchResults = this.searchResults.concat(results);
         },
