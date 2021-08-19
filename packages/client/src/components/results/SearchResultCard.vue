@@ -63,7 +63,7 @@ export default {
     return {
       unexpanded : true,
       snippetsOnDisplay: [],
-      numberOfResultsToDisplay: 2
+      numberOfResultsToDisplay: 1
     }
   },
   props: {
@@ -72,7 +72,9 @@ export default {
     source: String,
     datasource_name: String,
     datasource_icon: String,
-    match_snippets: Array
+    match_snippets: Array,
+    link: String,
+    backendId: Number,
   },
   methods: {
     openFile(source) {
@@ -134,9 +136,27 @@ export default {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
     goToLineFetchFileIfRequired(lineNumber) {
-      axios.get(`http://localhost:3001/general/fullfile?type=${this.type}&id=${this.id}`).then((resp) => {
-        this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
-      })
+      const url = `http://${this.link}/general/fullfile?type=${this.type}&id=${this.id}`;
+      const headers = {
+        "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendId)
+      };
+      axios
+        .get(url, {headers})
+        .then((resp) => {
+          this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
+        })
+        .catch(async () => {
+          await this.$store.dispatch("refreshJWTToken", {id: this.backendId})
+          const headers = {
+            "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendId)
+          };
+          await axios
+            .get(url, {headers})
+            .then((resp) => {
+              this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
+            })
+            .catch()
+        })
     },
     toggleNumSnippetsToShow() {
       if (this.numberOfResultsToDisplay === 1) {

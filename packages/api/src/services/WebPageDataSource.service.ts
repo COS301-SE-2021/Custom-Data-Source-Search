@@ -1,8 +1,7 @@
 import {WebPageDataSource} from "../models/WebPageDataSource.interface";
-import {WebStringOccurrence} from "../models/response/searchWebPageResponse.interface";
 import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
-
-const fetch = require("node-fetch");
+import fetch from 'node-fetch';
+import fileDataSourceService from "./FileDataSource.service";
 
 class WebPageDataSourceService {
 
@@ -41,8 +40,8 @@ class WebPageDataSourceService {
         }
     }
 
-    removeWebPageDataSource(uuid: string) {
-        let [result, err] = webPageDataSourceRepository.deleteDataSource(uuid);
+    async removeWebPageDataSource(uuid: string) {
+        let [result, err] = await webPageDataSourceRepository.deleteDataSource(uuid);
         if (err) {
             return {
                 "code": err.code,
@@ -70,7 +69,7 @@ class WebPageDataSourceService {
             }];
         }
         if (page.status == 200) {
-            let [, e] = await webPageDataSourceRepository.addDataSource(dataSource);
+            let [, e] = await webPageDataSourceRepository.addDataSource(dataSource, await page.text());
             if (e) {
                 return [null, e]
             }
@@ -86,33 +85,9 @@ class WebPageDataSourceService {
         }
     }
 
-    async readWebPage(url: string): Promise<string> {
-        let text: string;
-        try {
-            let page = await fetch(url);
-            text = await page.text();
-            return text;
-        } catch {
-            return "";
-        }
-    }
-
-    searchWebPage(pageContents: string, searchString: string): WebStringOccurrence[] {
-        if (searchString === "" || pageContents === "") {
-            return [];
-        }
-        //let stringWithStandardLineBreaks = pageContents.replace(/(\r\n|\n|\r)/gm, "\n");
-        let stringWithStandardLineBreaks = pageContents
-        let matches: WebStringOccurrence[] = [];
-        let numOccurrence = 0;
-        for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
-            //let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
-            matches.push({
-                snippet: '...' + pageContents.substring(index - 12, index + searchString.length + 13) + '...'
-            });
-            numOccurrence++;
-        }
-        return matches;
+    getSearchSnippet(snippet: string) {
+        snippet = '<div>' + fileDataSourceService.escapeAndHighlight(snippet) + '</div>';
+        return snippet;
     }
 }
 

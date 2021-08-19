@@ -13,7 +13,7 @@
 
     <div class="backends-container">
       <div class="backend"
-           v-for="(backend) in getUserBackend(getSignedInUserId)"
+           v-for="(backend) in getUserBackends(getSignedInUserId)"
            :key="backend.local.id"
       >
         <span>{{backend.local.name}}</span>
@@ -23,31 +23,47 @@
     </div>
 
     <div class="footer-buttons">
-      <Button icon="pi pi-users" label="Switch User" class="p-button-text p-button-plain switch-user" @click="signOut"/>
+      <Button icon="pi pi-users" label="Switch User" class="p-button-text p-button-plain switch-user" @click="switchUser"/>
       <Button icon="pi pi-sign-out" label="Sign Out" class="p-button-text p-button-plain sign-out" @click="signOut"/>
     </div>
   </div>
+  <SignOutCheck
+          :show="displaySignOutCheck"
+          @display-popup="showSignOutCheck"
+          :user="getUserInfo(getSignedInUserId)"
+  />
 </template>
 
 <script>
   import {mapGetters} from "vuex";
+  import SignOutCheck from "../popups/SignOutCheck";
+
   export default {
   name: "ProfileDropdown",
-  data(){
+    components: {SignOutCheck},
+    data(){
     return{
+      displaySignOutCheck: false
     }
   },
     computed: {
     ...mapGetters ([
             'getUserInfo',
-            'getUserBackend',
+            'getUserBackends',
             'getSignedInUserId'
     ])
   },
   methods:{
+    showSignOutCheck() {
+      this.displaySignOutCheck = !this.displaySignOutCheck;
+    },
     signOut(){
-      this.$store.commit("setSignedIn", false);
-      this.$router.push({path: '/'});
+      this.showSignOutCheck();
+    },
+    switchUser() {
+      console.log(this.$store.getters.getMasterKey);
+      this.$store.commit('setSignedIn', false);
+      this.$router.push('/');
     }
   }
 }

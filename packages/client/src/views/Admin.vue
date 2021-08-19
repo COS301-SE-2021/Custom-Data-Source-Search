@@ -11,15 +11,11 @@
 
     <div class="admin-select">
 
-    <AdminBackendCard v-for="(backend, i) in getUserBackend(getSignedInUserId)"
+    <AdminBackendCard v-for="(backend, i) in getUserBackends(getSignedInUserId)"
                       :backend="backend"
-
     />
-
     </div>
-
   </div>
-
 
 </template>
 
@@ -39,7 +35,7 @@ export default {
   computed: {
     ...mapGetters([
       'getUserInfo',
-      'getUserBackend',
+      'getUserBackends',
       'getSignedInUserId',
       'getUserAdminStatus'
     ])
