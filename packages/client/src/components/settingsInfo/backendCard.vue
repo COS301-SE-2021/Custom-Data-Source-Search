@@ -4,8 +4,8 @@
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
-                    <em v-if="receive.connected"  :style="connectedStyle" class="pi pi-circle-on" />
-                    <em v-if="!receive.connected" class="pi pi-circle-off" />
+                    <em v-if="!connect.needsLogin"  :style="connectedStyle" class="pi pi-circle-on" />
+                    <em v-if="connect.needsLogin" class="pi pi-circle-off" />
                     <span> {{local.name}} </span>
                     <span v-if="receive.admin" style="float: right; padding-top: 3px">{{receive.admin}}</span>
                 </div>
@@ -118,7 +118,8 @@
           connect: {
               associatedEmail: String,
               link: String,
-              passKey: String
+              passKey: String,
+              needsLogin: Boolean
           },
           receive: {
               admin: Boolean,

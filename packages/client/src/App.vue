@@ -241,7 +241,7 @@ button {
                 this.openMasterPwInput();
             } else {
                 if (this.$store.getters.unconnectedBackendBool) {
-                    this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
+                    console.log("Error in credentials");
                 }
             }
         },

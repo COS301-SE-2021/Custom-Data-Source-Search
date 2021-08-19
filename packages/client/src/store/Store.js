@@ -199,6 +199,7 @@ const store = createStore({
                     id: null,
                     name: '',
                     active: true,
+                    color: '#41D6C5'
                 },
                 connect: {
                     associatedEmail: '',
