@@ -40,7 +40,7 @@
         </div>
       <div class="info-div start-stop">
           <Button class="p-button-text start-backend p-button-plain inline"  style="float: left" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
-          <Button class="p-button-text stop-backend p-button-plain inline" style="float: left; padding-left: 5em" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
+          <Button class="p-button-text stop-backend p-button-plain inline" style="float: left; margin-left: 5em" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
       </div>
     </div>
    <ReEnterMasterPassword
