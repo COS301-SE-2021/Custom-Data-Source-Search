@@ -172,7 +172,7 @@ export default {
         'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
       types: [
-        'File', 'Folder', 'Webpage'
+        'file', 'folder', 'webpage'
       ],
       backends: [],
       colours: [
