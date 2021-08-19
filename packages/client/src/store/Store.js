@@ -280,7 +280,7 @@ const store = createStore({
                     connect: {
                         associatedEmail: payload.email,
                         link: 'localhost:3001',
-                        needsLogin: true,
+                        needsLogin: false,
                         keys: {
                             secretPair: null,
                             jwtToken: null,

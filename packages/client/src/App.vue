@@ -242,6 +242,7 @@ button {
             } else {
                 if (this.$store.getters.unconnectedBackendBool) {
                     console.log("Error in credentials");
+                    console.log(JSON.stringify(this.$store.getters.getMasterKeyObject));
                 }
             }
         },
