@@ -203,7 +203,7 @@ export default {
     },
     updateSources(){
       //Update list of sources upon addition of new source.
-      this.loading = false;
+      this.loading = true;
       this.sources = [];
       // axios.get("http://localhost:3001/general/datasources").then(
       //     resp => {
@@ -224,7 +224,7 @@ export default {
         axios
           .get(url, {headers})
           .then((resp) => {
-            this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id);
+            this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name);
           })
           .catch(async () => {
             await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
@@ -241,16 +241,19 @@ export default {
           })
       }
     },
-    handleSuccess(results, link, id){
+    handleSuccess(results, link, id, name){
       for(let r of results){
         r.link = link;
         r.backendId = id;
+        r.backend = name;
       }
       this.sources = this.sources.concat(results);
+      
       if(this.sources.length === 0){
         this.$toast.add({severity: 'warn', summary: 'No sources', detail: "Try adding data sources", life: 3000})
       }
       this.loading = false;
+      console.log(this.sources)
     },
     deleteSourceStatus(source){
       if(source === "Local"){
