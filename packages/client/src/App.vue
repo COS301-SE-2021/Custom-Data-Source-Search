@@ -129,12 +129,16 @@ button {
   content: "";
   width: 20px;
   height: 20px;
-  transform: rotate(-45deg);
+  //transform: rotate(-45deg);
   background: #262626;
   position: absolute;
   z-index: -1;
-  top: 350px;
+  top: 0;
   left: 20px;
+}
+
+#overlay_panel{
+  margin-left: 1%;
 }
 
 #profile{
@@ -237,12 +241,12 @@ button {
     },
     methods: {
         showAskMasterPw() {
-            console.log (JSON.stringify(this.$store.getters.getMasterKeyObject));
             if(this.$store.getters.getMasterKeyObject === null) {
                 this.openMasterPwInput();
             } else {
                 if (this.$store.getters.unconnectedBackendBool) {
-                    this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
+                    console.log("Error in credentials");
+                    console.log(JSON.stringify(this.$store.getters.getMasterKeyObject));
                 }
             }
         },
