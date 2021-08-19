@@ -129,12 +129,16 @@ button {
   content: "";
   width: 20px;
   height: 20px;
-  transform: rotate(-45deg);
+  //transform: rotate(-45deg);
   background: #262626;
   position: absolute;
   z-index: -1;
-  top: 350px;
+  top: 0;
   left: 20px;
+}
+
+#overlay_panel{
+  margin-left: 1%;
 }
 
 #profile{
