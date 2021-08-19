@@ -324,8 +324,9 @@ const store = createStore({
                    user.id = x++;
             }
         },
-        setBackendAsNotLoggedIn(state, getters, payload) {
-            getters.getSignedInUserBackend(payload.id).connect.needsLogin = true;
+        setBackendLoginStatus(state, payload) {
+            state.users[state.signedInUserId].backends
+                .find(backend => backend.local.id === payload.id).connect.needsLogin = payload.needsLogin;
         },
         setRefreshToken(state, payload) {
             state.users[state.signedInUserId].backends
@@ -380,6 +381,10 @@ const store = createStore({
         backendLogin: async function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
             if(secretPair === null) {
+                commit('setBackendLoginStatus', {
+                    id: payload.id,
+                    needsLogin: false
+                })
                 return;
             }
             await axios.post(
@@ -391,15 +396,16 @@ const store = createStore({
                     }
                 )
                 .then((resp) => {
+                    commit('setBackendLoginStatus', {
+                        id: payload.id,
+                        needsLogin: true
+                    })
                     commit('setRefreshToken', {
                         id: payload.id,
                         refreshToken: resp.data.refresh_token
                     })
                 })
                 .catch((err) => {
-                    commit('setBackendAsNotLoggedIn', {
-                        id: payload.id
-                    })
                     console.error(err)
                 })
         },
