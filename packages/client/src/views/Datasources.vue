@@ -306,8 +306,8 @@ export default {
                     life: 3000
                   })
                 })
-            this.selectedSources = null;
           }
+          this.selectedSources = null;
           console.log(this.sources)
         },
         reject: () => {
