@@ -144,10 +144,7 @@
                             masterPassword: this.masterPassword,
                             hasVault: this.userDetails.backupVault
                     });
-                    let frustrated = false;
-                    if (frustrated) {
-                        this.$router.push({name: 'ContinueView'});
-                    };
+                    this.$router.push({name: 'ContinueView'});
                 }
             },
             showSignIn(){
