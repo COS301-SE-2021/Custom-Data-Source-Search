@@ -18,7 +18,7 @@
                 <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
             </div>
             <div>
-                <backend-card
+                <AddBackendCard
                         v-if="newBackendBool"
                         :new-backend="newBackendBool"
                         :local="newBackendObject.local"
@@ -28,7 +28,7 @@
                         :user-index="getSignedInUserId"
                 />
                 <backend-card
-                        v-for="(backend) in getUserBackend(getSignedInUserId)"
+                        v-for="(backend) in getUserBackends(getSignedInUserId)"
                         :user-index="getSignedInUserId"
                         :backend-index="backend.local.id"
                         :local = backend.local
@@ -39,24 +39,36 @@
             </div>
         </div>
       <div class="info-div start-stop">
-          <Button class="p-button-text start-backend p-button-plain inline" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
-          <Button class="p-button-text stop-backend p-button-plain inline" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
+          <Button class="p-button-text start-backend p-button-plain inline"  style="float: left" label="Start Local Backend" icon="pi pi-play" @click="startLocalBackend" />
+          <Button class="p-button-text stop-backend p-button-plain inline" style="float: left; padding-left: 5em" label="Stop Local Backend" icon="pi pi-times" @click="stopLocalBackend" />
       </div>
     </div>
+   <ReEnterMasterPassword
+           :show="displayMasterPwInput"
+           @action-to-Occur="newBackend"
+           :user="noUserReq"
+           :welcome-page="false"
+   />
 </template>
 
 <script>
     import BackendCard from "../components/settingsInfo/backendCard";
     import UserInfoCard from "../components/settingsInfo/userInfoCard";
     import {mapGetters} from "vuex";
+    import AddBackendCard from "../components/settingsInfo/AddBackendCard";
+    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
     export default {
         components: {
+            ReEnterMasterPassword,
+            AddBackendCard,
             UserInfoCard,
             BackendCard
         },
         data () {
             return {
+                noUserReq: null,
+                displayMasterPwInput: false,
                 newBackendBool: false,
                 newBackendObject: {
                     local: {
@@ -64,8 +76,12 @@
                         active: false,
                     },
                     connect: {
+                        keys: {
+                            secretPair: null,
+                            sessionKey: null,
+                            refreshKey: null
+                        },
                         link: '',
-                        passKey: '',
                         associatedEmail: ''
                     },
                     receive: {
@@ -82,9 +98,16 @@
             }
         },
         methods: {
+            showMasterPwInput(){
+                this.displayMasterPwInput = !this.displayMasterPwInput;
+             },
             newBackend() {
-                this.newBackendBool = !this.newBackendBool;
-                console.log ("New backend bool value: " + this.newBackendBool);
+                if (this.$store.getters.getMasterKeyObject != null) {
+                    this.newBackendBool = !this.newBackendBool;
+                }
+                else {
+                    this.showMasterPwInput();
+                }
             },
             saveNewBackend() {
                 this.newBackendBool = false;
@@ -241,7 +264,7 @@
         },
         computed: {
             ...mapGetters ([
-                'getUserBackend',
+                'getUserBackends',
                 'getSignedInUserId',
              ])
         }
@@ -275,12 +298,20 @@
         max-width: fit-content;
     }
 
+
+    .inline {
+        margin-left: 2em !important;
+    }
+
     .start-stop{
-      max-width: 600px;
+        width: 600px;
+        position: fixed;
+        bottom: 0;
+        text-align: left;
     }
 
     .inline{
-      float: left;
-      margin-left: 10%;
+        float: left;
+        margin-left: 10%;
     }
 </style>

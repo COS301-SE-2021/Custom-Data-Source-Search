@@ -2,18 +2,23 @@
     <div class="grid-app" v-if="this.$store.getters.getSignedIn">
       <div id="grid-div-1" >
         <div id="sidebar">
-          <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>
-          <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
-          <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-          <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'960px': '50vw'}">
-            <ProfileDropdown/>
-          </OverlayPanel>
+            <router-link title="Search" class="icon" to="/search"><i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+            <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+            <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
+            <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
+            <!--            <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>-->
+            <div class="icon-container" title="User" @click="toggle">
+                <div class="image-ring-main" >
+                    <h3 class="name-initial-main">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
+                </div>
+            </div>
         </div>
       </div>
-      <div id="grid-div-2">
-        <router-view/>
+        <div id="grid-div-2">
+            <OverlayPanel ref="op" appendTo="body" :showCloseIcon="false" id="overlay_panel" style="width: 350px" :breakpoints="{'900px': '40vw'}">
+                <ProfileDropdown/>
+            </OverlayPanel>
+            <router-view/>
       </div>
     </div>
     <router-view v-else/>
@@ -59,7 +64,7 @@ input {
   position: fixed;
   display: grid;
   grid-template-columns: 1fr 30fr;
-  grid-template-rows: 0fr;
+  grid-template-rows: 0;
   height: 100%;
 }
 
@@ -78,12 +83,6 @@ input {
   grid-row-start: 2;
 }
 
-/*.nav-bar-top{*/
-/*  grid-column-start: 1;*/
-/*  grid-column-end: end;*/
-/*  background-color: #1e1e1e;*/
-/*}*/
-
 .icon {
   padding: 10px;
 }
@@ -99,10 +98,10 @@ button {
   padding: 20px 10px 10px;
 }
 
-.pi-cog{
-  position: fixed;
-  bottom: 0;
-}
+/*.pi-cog{*/
+/*  position: fixed;*/
+/*  bottom: 0;*/
+/*}*/
 
 .pi-search:hover,.pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
   color: #41B3B2;
@@ -130,14 +129,60 @@ button {
   cursor: pointer;
   bottom: 5%;
 }
+
+.image-ring-main {
+    width: 40px;
+    max-height: 40%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    background:
+            linear-gradient(#232323, #1a1a1a) padding-box,
+            linear-gradient(to right bottom, rgba(128, 128, 128, 0.7), rgba(168, 168, 168, 0.71)) border-box;
+    border-radius: 50em;
+    border: 2.8px solid transparent;
+}
+
+.image-ring-main:hover {
+    background:
+            linear-gradient(#232323, #1a1a1a) padding-box,
+            linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
+
+}
+
+.name-initial-main {
+    color: grey;
+    font-size: 20px;
+    font-weight: normal;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-container {
+    position: fixed;
+    text-align: left;
+    max-width: 30px;
+    max-height: 30px;
+    padding-left: 0.7em;
+    bottom: 2em;
+    cursor: pointer;
+    padding-bottom: 0.8vh;
+    margin-right: 1%;
+}
+
 </style>
 
 <script>
-import OverlayPanel from 'primevue/overlaypanel';
-import ProfileDropdown from "@/components/landing/ProfileDropdown";
-import {mapGetters} from "vuex";
+    import OverlayPanel from 'primevue/overlaypanel';
+    import ProfileDropdown from "@/components/landing/ProfileDropdown";
+    import {mapGetters} from "vuex";
 
-export default {
+    export default {
   components: {
     OverlayPanel,
     ProfileDropdown
@@ -150,7 +195,7 @@ export default {
     computed: {
         ...mapGetters ([
             'getUserInfo',
-            'getUserBackend',
+            'getUserBackends',
             'getSignedInUserId'
         ])
     },
@@ -158,9 +203,9 @@ export default {
         this.$store.commit('initialiseStore');
     },
     methods: {
-    toggle(event) {
-      this.$refs.op.toggle(event);
-    },
+         toggle(event) {
+            this.$refs.op.toggle(event);
+        },
   }
 }
 </script>

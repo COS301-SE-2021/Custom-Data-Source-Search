@@ -13,7 +13,8 @@
               :userDetails="user"
               @contextmenu="onUserCardRightClick"
               @mousedown.right="updateSelectedUser(user)"
-              @show-sign-in="showSignIn"
+              @click="updateSelectedUser(user)"
+              @show-sign-in="showReEnterMasterPass"
       ></UserCard>
       <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
@@ -37,23 +38,32 @@
             :show="displaySignIn"
             @show-sign-in="showSignIn"
     />
+    <ReEnterMasterPassword
+            :show="displayMasterPwInput"
+            @action-to-Occur="signInThisUser"
+            :user="selectedUser"
+            :welcomePage="true"
+    />
   </div>
 </template>
 
 <script>
-import UserCard from "@/components/users/UserCard";
-import AddUserCard from "@/components/users/AddUserCard";
-const electron = require('@electron/remote');
-import {mapGetters} from "vuex";
-import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
-import SignOutCheck from "../components/popups/SignOutCheck";
-import SignIn from "../components/popups/SignIn";
+  import UserCard from "@/components/users/UserCard";
+  import AddUserCard from "@/components/users/AddUserCard";
+  import {mapGetters} from "vuex";
+  import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+  import SignOutCheck from "../components/popups/SignOutCheck";
+  import SignIn from "../components/popups/SignIn";
+  import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
-export default {
+  const electron = require('@electron/remote');
+
+  export default {
   name: "Welcome",
-  components: {SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
+  components: {ReEnterMasterPassword, SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
   data () {
     return {
+      displayMasterPwInput: false,
       displaySignIn: false,
       displayDeleteCheck: false,
       displaySignOutCheck: false,
@@ -68,11 +78,9 @@ export default {
         {label: 'Remove', icon: 'pi pi-trash', command: () => {
             // event.originalEvent: Browser event
             // event.item: Menuitem instance
-            console.log ("Bring up the ARE YOU SURE? popup for: " + this.selectedUser.name);
             this.displayDeleteCheck = !this.displayDeleteCheck;
           }},
         {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
-            console.log ("Sign out user: " + this.selectedUser.name);
             this.displaySignOutCheck = !this.displaySignOutCheck;
           }}
       ]
@@ -80,12 +88,18 @@ export default {
 
   },
   methods: {
+    showReEnterMasterPass() {
+      this.displayMasterPwInput = !this.displayMasterPwInput;
+    },
+    signInThisUser(){
+      this.$router.push('Search');
+      this.$store.commit('setSignedIn', true);
+    },
     showSignIn(){
       this.displaySignIn = !this.displaySignIn
     },
     clearCurrentUser() {
-         this.$store.commit('setSignedInUserID', {userID: 0, signedIn: true});
-         console.log("Current User cleared");
+         this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
     },
     cleanPopUp() {
       if (this.displayDeleteCheck) {
