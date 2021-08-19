@@ -44,7 +44,7 @@
         <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <Button @click="generateRegistrationKeys" :disabled="!isUserSelected" label="Generate Registration Keys" icon="pi pi-key" class="p-button-info p-button-custom-med" />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
-        <SplitButton :disabled="!isUserSelected" :model="copyOptions" @click="mailUsers" label="Email" icon="pi pi-inbox" class="p-button-info p-button-custom-med" />
+        <SplitButton :disabled="!isUserSelected" :model="copyOptions" @click="mailUsers" label="Email" icon="pi pi-inbox" class="p-button-success p-button-custom-med" />
 
       </template>
       </Toolbar>
@@ -317,6 +317,8 @@ export default {
 
             console.log(resp.data);
             this.updateTableData();
+            this.selectedUsers = [];
+            this.isUserSelected = false;
 
           }).catch( (error) => {
         this.$toast.add({
