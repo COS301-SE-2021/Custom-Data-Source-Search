@@ -64,12 +64,11 @@ const store = createStore({
         },
 
         //Unconnected backend related getters
-
         unconnectedBackendNo: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false).length;
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true).length;
         },
         unconnectedBackendObjects: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.receive.connected === false);
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true);
         },
         unconnectedBackendNames: (state, getters) => {
             let unconnectedBackends = getters.unconnectedBackendObjects;
@@ -88,8 +87,14 @@ const store = createStore({
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
         },
+        getBackendLinkUsingName: (state) => (backendName) => {
+            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).connect.link;
+        },
         getBackendLink: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.link;
+        },
+        getBackendLinkViaName: (state, getters) => (name) => {
+            return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.name === name).connect.link;
         },
         getBackendJWTToken: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
@@ -197,10 +202,12 @@ const store = createStore({
                     id: null,
                     name: '',
                     active: true,
+                    color: '#41D6C5'
                 },
                 connect: {
                     associatedEmail: '',
                     link: '',
+                    needsLogin: false,
                     keys: {
                         secretPair: null,
                         jwtToken: null,
@@ -268,10 +275,12 @@ const store = createStore({
                         id: 0,
                         name: 'Local',
                         active: true,
+                        color: '#41D6C5'
                     },
                     connect: {
                         associatedEmail: payload.email,
                         link: 'localhost:3001',
+                        needsLogin: false,
                         keys: {
                             secretPair: null,
                             jwtToken: null,
@@ -307,7 +316,6 @@ const store = createStore({
             if (payload.deleteVault) {
                 //Do some server side call to delete file on web
             }
-
             //Delete local
             state.users.splice(payload.user.id, 1);
             masterKeyObject = null;
@@ -316,6 +324,10 @@ const store = createStore({
                    user.info.id = x;
                    user.id = x++;
             }
+        },
+        setBackendLoginStatus(state, payload) {
+            state.users[state.signedInUserId].backends
+                .find(backend => backend.local.id === payload.id).connect.needsLogin = payload.needsLogin;
         },
         setRefreshToken(state, payload) {
             state.users[state.signedInUserId].backends
@@ -370,6 +382,10 @@ const store = createStore({
         backendLogin: async function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
             if(secretPair === null) {
+                commit('setBackendLoginStatus', {
+                    id: payload.id,
+                    needsLogin: true
+                })
                 return;
             }
             await axios.post(
@@ -381,6 +397,10 @@ const store = createStore({
                     }
                 )
                 .then((resp) => {
+                    commit('setBackendLoginStatus', {
+                        id: payload.id,
+                        needsLogin: false
+                    })
                     commit('setRefreshToken', {
                         id: payload.id,
                         refreshToken: resp.data.refresh_token

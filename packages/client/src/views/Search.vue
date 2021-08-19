@@ -12,20 +12,7 @@
                 <i @click="queryServer" class="pi pi-search" aria-hidden="true"/>
                 <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
             </span>
-            <CustomTooltip :text="unconnectedBackendNames">
-              <em
-                  v-if="unconnectedBackendBool"
-                  id="expiration-indicator"
-                  class="pi pi-info-circle p-text-secondary"
-                  @click="showAskMasterPw"
-                  v-badge.custom-warning="unconnectedBackendNo"
-              ></em>
-            </CustomTooltip>
           </div>
-          <ReEnterMasterPassword
-                  :show="displayMasterPwInput"
-                  @action-to-Occur="showAskMasterPw"
-          />
         </div>
         <div class="search-results container">
           <search-result-card
@@ -39,6 +26,7 @@
               :source="r.source"
               :link="r.link"
               :backendId="r.backendId"
+              :backend_name="r.name"
               @resultClicked="loadFullFile"
           />
         </div>
@@ -62,15 +50,13 @@
     import axios from "axios";
     import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
-    import CustomTooltip from "../components/primeComponents/CustomTooltip";
     import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
     import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
-    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
+
     export default {
       name: "SearchBar",
       data() {
         return {
-          displayMasterPwInput: false,
           fullFileLineNumbers: [],
           currentLineNumber: -1,
           fullFileData: "",
@@ -95,15 +81,6 @@
         }
       },
       methods: {
-        showAskMasterPw() {
-          if(this.$store.getters.getMasterKeyObject != null) {
-            if (this.$store.getters.unconnectedBackendBool) {
-              this.$toast.add({severity: 'info', summary: 'Server-side Error', detail: "Please contact your server owner to resolve the issue."});
-            }
-          } else {
-            this.displayMasterPwInput = true;
-          }
-        },
         escapeSpecialCharacters(query) {
           return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
             return '\\' + match
@@ -125,7 +102,7 @@
             await axios
               .get(url, {headers})
               .then((resp) => {
-                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
+                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
               })
               .catch(async () => {
                 await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
@@ -134,7 +111,7 @@
                 };
                 await axios.get(url, {headers})
                   .then((resp) => {
-                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id)
+                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
                   })
                   .catch((e) => {
                     console.error(e);
@@ -145,10 +122,11 @@
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
           }
         },
-        handleSuccess(results, link, id) {
+        handleSuccess(results, link, id, name) {
           for(let r of results) {
             r.link = link;
-            r.backendId = id
+            r.backendId = id;
+            r.name = name;
           }
           this.searchResults = this.searchResults.concat(results);
         },
@@ -182,10 +160,8 @@
         }
       },
       components: {
-        ReEnterMasterPassword,
         IconSimpleExpandLess,
         IconSimpleExpandMore,
-        CustomTooltip,
         SearchResultCard,
       }
     }
@@ -281,16 +257,6 @@ input {
 .clickable:hover {
   background-color: #4d4d4d;
   border-radius: 4px;
-}
-
-#expiration-indicator {
-  font-size: 2rem;
-  color: #d69b2c;
-  position: relative;
-  display: inline-block;
-  margin-left: 0.4rem;
-  margin-top : auto;
-  margin-bottom : 0.3rem;
 }
 
 .file-container {

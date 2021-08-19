@@ -102,6 +102,12 @@ class UserRepository {
         let failedUsers: any[] = [];
         for (let user of users) {
             try {
+                db.prepare(
+                    "DELETE FROM active_user WHERE email = (SELECT email FROM user WHERE id = ?)"
+                ).run(parseInt(user.uuid));
+                db.prepare(
+                    "DELETE FROM pending_user WHERE email = (SELECT email FROM user WHERE id = ?)"
+                ).run(parseInt(user.uuid));
                 db.prepare("DELETE FROM user WHERE id = ?").run(parseInt(user.uuid));
             } catch (e) {
                 failedUsers.push(user);

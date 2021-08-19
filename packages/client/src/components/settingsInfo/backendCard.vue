@@ -4,8 +4,8 @@
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
-                    <em v-if="receive.connected"  :style="connectedStyle" class="pi pi-circle-on" />
-                    <em v-if="!receive.connected" class="pi pi-circle-off" />
+                    <em v-if="!connect.needsLogin"  :style="connectedStyle" class="pi pi-circle-on" />
+                    <em v-if="connect.needsLogin" class="pi pi-circle-off" />
                     <span> {{local.name}} </span>
                     <span v-if="receive.admin" style="float: right; padding-top: 3px">{{receive.admin}}</span>
                 </div>
@@ -13,13 +13,13 @@
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="local.active"/>
                 </div>
             </div>
-                <div class="expanded-backend-info" v-if="expand">
+                <div class="expanded-backend-info" v-if="expand" :style="localBackendStyle" >
                 <div><em>Email: </em></div>
                 <div> {{ connect.associatedEmail }} </div>
                 <div><em>Link: </em></div>
                 <div> {{connect.link}} </div>
                 <div></div>
-                <div>
+                <div v-if="!localBackendBool" >
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
                     <Button @click="showBackendDeleteCheck" style="float: right" class="p-button p-button-outlined">Delete </Button>
                 </div>
@@ -61,6 +61,7 @@
         },
         data () {
             return {
+                localBackendBool: false,
                 displayBackendDeleteCheck: false,
                 tempNameNo: 0,
                 checked: false,
@@ -87,6 +88,11 @@
             ]),
             connectedStyle () {
                 return 'color: ' + this.local.color;
+            },
+            localBackendStyle () {
+                if (this.localBackendBool) {
+                    return "grid-row-gap: 10px"
+                }
             }
         },
         props: {
@@ -112,7 +118,8 @@
           connect: {
               associatedEmail: String,
               link: String,
-              passKey: String
+              passKey: String,
+              needsLogin: Boolean
           },
           receive: {
               admin: Boolean,
@@ -223,6 +230,10 @@
                 if (!this.newBackend) {
                     this.tempBackendInfo.name = this.local.name;
                 }
+                if (this.local.name === 'Local') {
+                    this.localBackendBool = true;
+                }
+
                 this.tempBackendInfo.id = this.local.id;
                 this.tempBackendInfo.active = this.local.active;
 
@@ -280,7 +291,6 @@
         max-height: 30px;
         text-align: center;
         margin-right: 2%;
-        margin-bottom: 2%;
         margin-top: 1%;
         max-width: fit-content;
     }

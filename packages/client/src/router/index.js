@@ -67,13 +67,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/BackendManager.vue'),
-    props: castToNumber
+    props: extractFromRoute
   }
 ];
 
-function castToNumber(route) {
+function extractFromRoute(route) {
   return {
     backendID: Number(route.params.backendID),
+    link: route.params.link
   };
 }
 

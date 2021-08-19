@@ -12,6 +12,20 @@
                     <h3 class="name-initial-main">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
                 </div>
             </div>
+            <div class="unconnected-backend-warning">
+                <CustomTooltip :text="unconnectedBackendNames">
+                    <em
+                            v-if="unconnectedBackendBool"
+                            id="expiration-indicator"
+                            class="pi pi-info-circle p-text-secondary"
+                            @click="showAskMasterPw"
+                    ></em>
+                </CustomTooltip>
+            </div>
+            <ReEnterMasterPassword
+                    :show="displayMasterPwInput"
+                    @action-to-Occur="showAskMasterPw"
+            />
         </div>
       </div>
         <div id="grid-div-2">
@@ -93,7 +107,7 @@ button {
   padding: 10px;
 }
 
-.pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
+.pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .unconnected-backend-warning{
   color: grey;
   padding: 20px 10px 10px;
 }
@@ -115,12 +129,16 @@ button {
   content: "";
   width: 20px;
   height: 20px;
-  transform: rotate(-45deg);
+  //transform: rotate(-45deg);
   background: #262626;
   position: absolute;
   z-index: -1;
-  top: 350px;
+  top: 0;
   left: 20px;
+}
+
+#overlay_panel{
+  margin-left: 1%;
 }
 
 #profile{
@@ -175,37 +193,69 @@ button {
     margin-right: 1%;
 }
 
+
+#expiration-indicator {
+    font-size: 2rem;
+    color: #d69b2c;
+    position: relative;
+    display: inline-block;
+    margin-left: 0.4rem;
+    margin-top : auto;
+    margin-bottom : 0.3rem;
+}
+
 </style>
 
 <script>
     import OverlayPanel from 'primevue/overlaypanel';
     import ProfileDropdown from "@/components/landing/ProfileDropdown";
     import {mapGetters} from "vuex";
+    import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
+    import CustomTooltip from "./components/primeComponents/CustomTooltip";
 
     export default {
   components: {
-    OverlayPanel,
-    ProfileDropdown
+      CustomTooltip,
+      ReEnterMasterPassword,
+      OverlayPanel,
+      ProfileDropdown
   },
   data() {
     return {
       name: "Data Sleuth",
+      displayMasterPwInput: false,
     }
   },
     computed: {
         ...mapGetters ([
             'getUserInfo',
             'getUserBackends',
-            'getSignedInUserId'
+            'getSignedInUserId',
+            'unconnectedBackendNames',
+            'unconnectedBackendBool',
+            'unconnectedBackendNo'
         ])
     },
     beforeCreate() {
         this.$store.commit('initialiseStore');
     },
     methods: {
+        showAskMasterPw() {
+            if(this.$store.getters.getMasterKeyObject === null) {
+                this.openMasterPwInput();
+            } else {
+                if (this.$store.getters.unconnectedBackendBool) {
+                    console.log("Error in credentials");
+                    console.log(JSON.stringify(this.$store.getters.getMasterKeyObject));
+                }
+            }
+        },
          toggle(event) {
             this.$refs.op.toggle(event);
         },
+        openMasterPwInput() {
+                this.displayMasterPwInput = !this.displayMasterPwInput;
+        }
   }
 }
 </script>

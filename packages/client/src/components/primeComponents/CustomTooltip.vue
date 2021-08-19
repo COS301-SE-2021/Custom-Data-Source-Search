@@ -13,6 +13,7 @@
 
 <script>
     import {mapGetters} from 'vuex';
+
     export default {
         name: 'CustomTooltip',
         props: {
@@ -46,9 +47,9 @@
 
         width: fit-content;
         padding: 1.5vh;
-        top: 100%;
-        left: 110%;
-        margin-left: -60px;
+        top: -50%;
+        left: 120%;
+        /*margin-left: -40px;*/
 
         opacity: 0;
         transition: opacity 0.2s;
