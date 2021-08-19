@@ -90,7 +90,7 @@
             for (let i = 0; i < this.path.length; i++) {
               let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
               axios
-                  .post("http://localhost:3001/folderdatasources", respObject)
+                  .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/folderdatasources`, respObject)
                   .then((resp) => {
                     this.$toast.add({
                       severity: 'success',

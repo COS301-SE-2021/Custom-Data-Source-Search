@@ -32,7 +32,7 @@
                 </div>
                 <div class="overlay-buttons">
                   <Button v-for="i in backends" :key="i.id" label="Backend"
-                          class="button p-button-raised p-button-text p-button-plain" @click="backend='{{i}}'">{{ i }}
+                          class="button p-button-raised p-button-text p-button-plain" @click="backend = i">{{ i }}
                   </Button>
                 </div>
 <!--                <Button class="p-button-text p-button-plain close" label="Cancel" icon="pi pi-times" @click="toggle" />-->
@@ -190,8 +190,7 @@ export default {
   },
   productService: null,
   mounted() {
-    this.backends = this.$store.getters.getUserBackendNames;
-    this.backends.push("Local");
+    this.backends = this.$store.getters.getUserBackendNames
 
     axios.get("http://localhost:3001/general/datasources").then(
         resp => {
@@ -257,7 +256,9 @@ export default {
           let source;
           for(source in this.selectedSources){
             axios
-                .delete("http://localhost:3001/general/datasources", {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
+                .delete("http://localhost:3001/general/datasources",
+                  {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}}
+                )
                 .then(() => {
                   this.$toast.add({
                     severity: 'success',
