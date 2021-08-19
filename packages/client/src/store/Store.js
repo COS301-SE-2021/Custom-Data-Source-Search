@@ -93,6 +93,9 @@ const store = createStore({
         getBackendLink: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.link;
         },
+        getBackendLinkViaName: (state, getters) => (name) => {
+            return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.name === name).connect.link;
+        },
         getBackendJWTToken: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
         },
