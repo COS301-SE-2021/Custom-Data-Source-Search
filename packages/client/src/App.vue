@@ -237,7 +237,6 @@ button {
     },
     methods: {
         showAskMasterPw() {
-            console.log (JSON.stringify(this.$store.getters.getMasterKeyObject));
             if(this.$store.getters.getMasterKeyObject === null) {
                 this.openMasterPwInput();
             } else {

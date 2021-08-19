@@ -65,10 +65,10 @@ const store = createStore({
 
         //Unconnected backend related getters
         unconnectedBackendNo: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.keys.jwtToken === null).length;
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true).length;
         },
         unconnectedBackendObjects: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.keys.jwtToken === null);
+            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true);
         },
         unconnectedBackendNames: (state, getters) => {
             let unconnectedBackends = getters.unconnectedBackendObjects;
@@ -278,7 +278,7 @@ const store = createStore({
                         needsLogin: false,
                         keys: {
                             secretPair: null,
-                            jwtToken: 'Local',
+                            jwtToken: null,
                             refreshToken: null
                         }
                     },
