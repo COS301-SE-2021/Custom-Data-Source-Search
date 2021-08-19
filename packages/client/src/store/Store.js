@@ -275,11 +275,12 @@ const store = createStore({
                         id: 0,
                         name: 'Local',
                         active: true,
+                        color: '#41D6C5'
                     },
                     connect: {
                         associatedEmail: payload.email,
                         link: 'localhost:3001',
-                        needsLogin: false,
+                        needsLogin: true,
                         keys: {
                             secretPair: null,
                             jwtToken: null,

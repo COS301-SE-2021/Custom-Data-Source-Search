@@ -9,7 +9,7 @@
       <h1 class="datasource-heading">Data Sources</h1>
       <p class="datasource-description">View and edit your data sources</p>
     </div>
-    <ScrollPanel style="width: 100%; height: 90%">
+    <ScrollPanel style="width: 100%; height: 90%; z-index: 2">
       <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                  :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources"
@@ -147,13 +147,13 @@
 
 <script>
 
-import axios from "axios";
-import {FilterMatchMode} from 'primevue/api';
-import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
-import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
-import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
+  import axios from "axios";
+  import {FilterMatchMode} from 'primevue/api';
+  import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
+  import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
+  import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
 
-export default {
+  export default {
   data() {
     return {
       message: "No sources have been selected.",
