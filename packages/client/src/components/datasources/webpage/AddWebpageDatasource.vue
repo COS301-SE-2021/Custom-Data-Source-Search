@@ -24,7 +24,6 @@
         props:{
           backend: String,
           colour: String,
-
         },
         data() {
             return {
@@ -38,7 +37,7 @@
             submitSource() {
               let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
                 axios
-                    .post("http://localhost:3001/webpagedatasources", respObject)
+                    .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`, respObject)
                     .then(resp => {
                         this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                         this.$emit('addWebpage')

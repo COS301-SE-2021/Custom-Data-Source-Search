@@ -430,7 +430,6 @@ export default {
 
               console.log(resp.data);
               this.updateTableData();
-
             }).catch( (error) => {
           this.$toast.add({
             severity: 'error',
