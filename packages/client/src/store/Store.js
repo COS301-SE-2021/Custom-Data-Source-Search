@@ -384,7 +384,7 @@ const store = createStore({
             if(secretPair === null) {
                 commit('setBackendLoginStatus', {
                     id: payload.id,
-                    needsLogin: false
+                    needsLogin: true
                 })
                 return;
             }
@@ -399,7 +399,7 @@ const store = createStore({
                 .then((resp) => {
                     commit('setBackendLoginStatus', {
                         id: payload.id,
-                        needsLogin: true
+                        needsLogin: false
                     })
                     commit('setRefreshToken', {
                         id: payload.id,
