@@ -127,7 +127,7 @@ class FolderDataSourceRepository {
         fileName = fileDataSourceRepository.makeDefaultExtension(fileName);
         formData.append("file", file, fileName);
         try {
-            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
+            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update/extract?literal.id=' + id
                 + '&commit=true&literal.datasource_type=folder',
                 formData,
                 {
