@@ -22,13 +22,18 @@ const aes = require('aes-js');
  */
 
 const store = createStore({
-    state:{
+
+    state: {
         signedInUserId: null,
         signedIn : null,
         users: []
     },
-    getters:{
-        //User information related getters
+
+    getters: {
+    /*
+    User information related getters
+    ================================
+     */
         getNewAppStatus (state) {
             return state.users.length === 0;
         },
@@ -58,7 +63,10 @@ const store = createStore({
         getMasterKeyObject(state) {
             return masterKeyObject;
         },
-        //Signed in User's backends related getters
+    /*
+    Signed in User's backends related getters
+    =========================================
+    */
         getUserBackends: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
@@ -76,8 +84,10 @@ const store = createStore({
         getUserAdminStatus: (state, getters) => (backendID) => {
             return getters.getSignedInUserBackend(backendID).receive.admin;
         },
-
-        //Unconnected backend related getters
+    /*
+    Unconnected backend related getters
+    ===================================
+     */
         unconnectedBackendNo: (state) => {
             return state.users[state.signedInUserId].backends
                 .filter(backend => backend.connect.needsLogin === true).length;
@@ -96,9 +106,6 @@ const store = createStore({
         unconnectedBackendBool: (state, getters) => {
             return getters.unconnectedBackendNo !== 0;
         },
-        //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
-        //should return true or false
-        //this would allow us to determine whether or not a data source can be edited/deleted by a user
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends
                 .find(backend => backend.local.name === backendName).receive.admin;
@@ -134,9 +141,10 @@ const store = createStore({
             return pairObject;
         }
     },
-    //synchronous changes to the store
+
+    // Synchronous changes to the store
     mutations: {
-        //Initialise Store from local storage
+        // Initialise Store from local storage
         initialiseStore(state) {
             // Check if the ID exists
             if(localStorage.getItem('store')) {
@@ -146,14 +154,14 @@ const store = createStore({
                 );
             }
         },
-        //Signed-in user backend related mutations
-        //Action will call this specific mutation after password validation checks out
+        // Signed-in user backend related mutations
+        // Action will call this specific mutation after password validation checks out
         signInUser: function (state, payload) {
             let thisUser = state.users[state.signedInUserId];
             thisUser.info.isActive = true;
         },
         signInAUser: function (state, payload) {
-            //Payload: masterPassword, user { id, etc}
+            // Payload: masterPassword, user { id, etc}
             let thisUser = state.users[payload.userID];
             let passCheck = decryptMasterKeyObject(
                 thisUser.info.encryptedMasterKeyObject,
@@ -360,6 +368,7 @@ const store = createStore({
                 .find(backend => backend.local.id === payload.id).connect.keys.jwtToken = payload.jwtToken
         }
     },
+
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
         //User management
@@ -481,17 +490,14 @@ function generateMasterKey(masterPassword, email) {
         256 / 8,
         'sha512'
     );
-
-    // Generate random key to be encrypted by master key
+    // Generate Random Key K
     let masterKey = new Uint8Array(256 / 8);
     window.crypto.getRandomValues(masterKey);
-
-    // Encrypt this random key
+    // Encrypt K
     let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey);
     let masterKeyObject = aes.utils.utf8.toBytes(JSON.stringify({"key": aes.utils.hex.fromBytes(masterKey)}));
     let newEncryptedMasterKeyObject = aesCtr.encrypt(masterKeyObject);
-
-    // Return Encrypted key
+    //
     return {
         masterKey: masterKey,
         encryptedMasterKeyObject: aes.utils.hex.fromBytes(newEncryptedMasterKeyObject)

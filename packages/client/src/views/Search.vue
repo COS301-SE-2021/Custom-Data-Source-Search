@@ -104,33 +104,19 @@ export default {
         const url = `http://${backend.connect.link}/general/?q=${
             encodeURIComponent(this.escapeSpecialCharacters(this.query))
         }`
-        const headers = {
-          "Authorization": "Bearer " + backend.connect.keys.jwtToken
-        };
+        let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
         await axios
             .get(url, {headers})
             .then((resp) => {
-              this.handleSuccess(
-                  resp.data.searchResults,
-                  backend.connect.link,
-                  backend.local.id,
-                  backend.local.name
-              )
+              this.handleSuccess(resp.data.searchResults, backend)
             })
             .catch(async () => {
               await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
-              const headers = {
-                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
-              };
+              headers = {"Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)};
               await axios
                   .get(url, {headers})
                   .then((resp) => {
-                    this.handleSuccess(
-                        resp.data.searchResults,
-                        backend.connect.link,
-                        backend.local.id,
-                        backend.local.name
-                    )
+                    this.handleSuccess(resp.data.searchResults, backend)
                   })
                   .catch((e) => {
                     console.error(e);
@@ -141,11 +127,11 @@ export default {
         this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
       }
     },
-    handleSuccess(results, link, id, name) {
+    handleSuccess(results, backend) {
       for (let r of results) {
-        r.link = link;
-        r.backendId = id;
-        r.name = name;
+        r.link = backend.link;
+        r.backendId = backend.id;
+        r.name = backend.name;
       }
       this.searchResults = this.searchResults.concat(results);
     },
