@@ -1,10 +1,7 @@
 <template>
   <div class="management-page">
-
     <h1 class="backend-name">{{backend.local.name}}</h1>
-
     <div class="admin-table-container">
-
       <DataTable
           class="p-datatable-sm table"
           @rowSelect="onRowSelect"
@@ -16,13 +13,9 @@
           :selection="selectedUsers"
           :scrollable="true"
           scrollHeight="70vh">
-
         <template #header>
-
           <div class="p-datatable-header"> Users</div>
-
         </template>
-
         <Column selectionMode="multiple" headerStyle="width: 1em"></Column>
         <Column field="first_name" header="Name"></Column>
         <Column field="last_name" header="Last Name"></Column>
@@ -31,11 +24,8 @@
         <Column field="regStatus" header="Registration Status"></Column>
         <Column field="loggedIn" header="Logged In"></Column>
         <Column field="regKey" header="Registration Key"></Column>
-
       </DataTable>
-
     </div>
-
     <div class="backend-toolbar-container">
     <Toolbar class="backend-toolbar">
       <template #left>
@@ -112,16 +102,11 @@
 
         </div>
 
-
-
         </div>
-
         <template #footer>
           <Button label="Cancel" icon="pi pi-times" @click="hideAddUsers" class="p-button-text" />
           <Button label="Add" icon="pi pi-check" @click="addUsers" autofocus />
         </template>
-
-
       </Dialog>
 
       <Dialog header="Confirmation" v-model:visible="displayGlobalLogoutConfirmation" :style="{width: '32em'}" :modal="true">
@@ -362,6 +347,7 @@ export default {
 
       let reqBody = JSON.stringify(reqObj);
 
+
     //  axios.post(this.backend.connect.link + "/users/role", reqBody)
       axios.post(`http://${this.link}/users/role`, reqBody,
           { headers : {"Content-Type" : "application/json" }} )
@@ -398,8 +384,6 @@ export default {
 
     },
     revokeKeys(isGlobal){
-
-
 
 
       if(isGlobal){
@@ -508,6 +492,14 @@ export default {
         let reqObj = { users: usersArr };
 
         let reqBody = JSON.stringify(reqObj);
+
+        /**
+         * @type {import('../store/Store.js').Backend} Backend
+         */
+
+        this.$store.commit("editBackend", {
+
+        })
 
         // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
         axios.post(`http://${this.link}/users/logout`, reqBody,

@@ -5,6 +5,22 @@ import {authenticator} from 'otplib';
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
 
+/**
+ * @typedef {
+ *          {
+ *              id: number,
+ *              name: string,
+ *              active: boolean,
+ *              userIndex: number,
+ *              backendIndex: number,
+ *              associatedEmail: string,
+ *              link: string,
+ *              passKey: string,
+ *              admin: string
+ *          }
+ * } Backend
+ */
+
 const store = createStore({
     state:{
         signedInUserId: null,
@@ -181,6 +197,12 @@ const store = createStore({
                 backend.connect.keys.refreshToken = null;
             }
         },
+        /**
+         * Edit a backend in the local store
+         *
+         * @param state
+         * @param {Backend} payload
+         */
         editBackend(state, payload) {
             let backend = state.users[payload.userIndex].backends[payload.backendIndex];
             // Local
@@ -193,13 +215,14 @@ const store = createStore({
             backend.connect.passKey = payload.passKey;
             // Receive
             backend.receive.admin = payload.admin;
+            //
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
                 state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
         addBackend(state, payload){
-            //Payload: name, associatedEmail, link, secretPair, refreshToken
+            // Payload: name, associatedEmail, link, secretPair, refreshToken
             let newBackend = {
                 local: {
                     id: null,
@@ -222,14 +245,14 @@ const store = createStore({
                     connected: false
                 }
             };
-
+            // Local
             newBackend.local.name = payload.name;
-
+            // Connect
             newBackend.connect.associatedEmail = payload.associatedEmail;
             newBackend.connect.link = payload.link;
             newBackend.connect.keys.secretPair = payload.secretPair;
             newBackend.connect.keys.refreshToken = payload.refreshToken;
-
+            //
             state.users[state.signedInUserId].backends.push(newBackend);
             state.signedIn = true;
             let l = state.users[state.signedInUserId].backends.length;
@@ -296,22 +319,18 @@ const store = createStore({
                     }
                 }]
             };
-
             newUser.info.name = payload.name;
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
             newUser.info.encryptedMasterKeyObject = payload.passKey.encryptedMasterKeyObject;
-
             state.users.push(newUser);
-
             let x = 0;
             for (let user of state.users) {
                 user.id = x;
                 user.info.id = x;
                 x++;
             }
-
             state.signedInUserId = state.users.length-1;
             state.signedIn = true;
         },
@@ -357,6 +376,18 @@ const store = createStore({
                 }
             });
         },
+        /**
+         * A function that attempts to refresh the JWT token of the specified backend. Returns true on success.
+         *
+         * If the refresh token has expired the backendLogin function will be called to get a new refresh token (if
+         * this is possible) and a second attempt at refreshing the JWT token will be made.
+         *
+         * @param dispatch
+         * @param commit
+         * @param getters
+         * @param {{id: number}} payload
+         * @returns {Promise<void>}
+         */
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
             const email = getters.getBackendUserEmail(payload.id);

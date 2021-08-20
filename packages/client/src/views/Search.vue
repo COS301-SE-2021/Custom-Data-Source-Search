@@ -5,7 +5,11 @@
       <SplitterPanel :minSize="20" :size="40">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
-            <img alt="" height="150" src="../assets/search_logo.png">
+            <img
+                alt=""
+                height="150"
+                src="../assets/search_logo.png"
+            >
           </div>
           <div class="search-div">
             <span class="p-input-icon-right">
@@ -55,6 +59,7 @@ import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
 export default {
   name: "SearchBar",
+
   data() {
     return {
       fullFileLineNumbers: [],
@@ -68,6 +73,7 @@ export default {
       firstSearch: true,
     }
   },
+
   computed: {
     ...mapGetters([
       'unconnectedBackendNo',
@@ -75,11 +81,13 @@ export default {
       'unconnectedBackendNames'
     ])
   },
+
   beforeMount() {
     if (this.$store.getters.getNewAppStatus) {
       this.$router.push('/');
     }
   },
+
   methods: {
     escapeSpecialCharacters(query) {
       return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
@@ -174,6 +182,7 @@ export default {
       this.goToFullFileLine(this.fullFileLineNumbers[index]);
     }
   },
+
   components: {
     IconSimpleExpandLess,
     IconSimpleExpandMore,
