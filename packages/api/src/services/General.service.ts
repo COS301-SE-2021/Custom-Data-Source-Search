@@ -9,10 +9,6 @@ import webPageDataSourceService from "./WebPageDataSource.service";
 
 class GeneralService {
 
-    constructor() {
-        console.log("general Service Created");
-    }
-
     async getResults(searchString: string) {
 
         const [results, error] = await this.searchAllDataSources(searchString);

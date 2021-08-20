@@ -1,10 +1,8 @@
-import folderDataSourceService from "../services/FolderDataSource.service";
-import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
-import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
-import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
+import folderDataSourceService from "../../services/FolderDataSource.service";
+import folderDataSourceRepository from "../../repositories/FolderDataSourceRepository";
+import {FolderDataSource, StoredFolderDataSource} from "../../models/FolderDataSource.interface";
+import fileDataSourceRepository from "../../repositories/FileDataSourceRepository";
 import fs from "fs";
-
-const service = folderDataSourceService;
 
 describe("Folder data source service: getAllFolderDataSources function", () => {
     it("Should return same object in the body that was returned by repository if no error occurred", () => {
@@ -19,7 +17,7 @@ describe("Folder data source service: getAllFolderDataSources function", () => {
             return [object, null];
         });
         //when
-        let result = service.getAllFolderDataSources();
+        let result = folderDataSourceService.getAllFolderDataSources();
         //then
         expect(result).not.toEqual({});
         expect(result.code).toEqual(200);
@@ -31,7 +29,7 @@ describe("Folder data source service: getAllFolderDataSources function", () => {
             return [[], null];
         });
         //when
-        let result = service.getAllFolderDataSources();
+        let result = folderDataSourceService.getAllFolderDataSources();
         //then
         expect(result).not.toEqual({});
         expect(result.code).toEqual(200);
@@ -47,7 +45,7 @@ describe("Folder data source service: getAllFolderDataSources function", () => {
             return [null, error];
         });
         //when
-        let result = service.getAllFolderDataSources();
+        let result = folderDataSourceService.getAllFolderDataSources();
         //then
         expect(result).not.toEqual({});
         expect(result.code).toEqual(500);
@@ -69,7 +67,7 @@ describe("Folder data source service: getFolderDataSource function", () => {
             return [object, null];
         });
         //when
-        let result = service.getFolderDataSource("testUUID");
+        let result = folderDataSourceService.getFolderDataSource("testUUID");
         //then
         expect(result).not.toEqual({});
         expect(result.code).toEqual(200);
@@ -86,7 +84,7 @@ describe("Folder data source service: getFolderDataSource function", () => {
             return [null, error];
         });
         //when
-        let result = service.getFolderDataSource("testUUID");
+        let result = folderDataSourceService.getFolderDataSource("testUUID");
         //then
         expect(result).not.toEqual({});
         expect(result.code).toEqual(404);
@@ -206,7 +204,7 @@ describe("Folder data source service: removeFolderDataSource function", () => {
         });
         const id: string = "someTestUUID";
         //when
-        const result = await service.removeFolderDataSource(id);
+        const result = await folderDataSourceService.removeFolderDataSource(id);
         //then
         expect(result.code).toEqual(204);
         expect(result.body.message).toEqual("Successfully deleted folder datasource");
@@ -221,7 +219,7 @@ describe("Folder data source service: removeFolderDataSource function", () => {
         });
         const id: string = "someTestUUID";
         //when
-        const result = await service.removeFolderDataSource(id);
+        const result = await folderDataSourceService.removeFolderDataSource(id);
         //then
         expect(result.code).toEqual(404);
         expect(result.body.message).toEqual("Folder datasource not found");
@@ -259,7 +257,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = service.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path)
         //then
         expect(results).toEqual([]);
     });
@@ -290,7 +288,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = service.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path)
         //then
         expect(results).toEqual([]);
     });
@@ -325,7 +323,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = service.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path)
         //then
         expect(results).toEqual([]);
     });
@@ -360,7 +358,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = service.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path)
         //then
         expect(results).toEqual(["fileThatShouldBeInResults.txt"]);
     });
@@ -378,7 +376,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = service.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path)
         //then
         expect(results).toEqual([
             "testFile1.txt",
