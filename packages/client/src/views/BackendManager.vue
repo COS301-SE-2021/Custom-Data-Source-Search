@@ -5,7 +5,17 @@
 
     <div class="admin-table-container">
 
-      <DataTable class="p-datatable-sm table"  @rowSelect="onRowSelect" @rowUnselect="onRowUnselect" @rowSelectAll="onRowSelectAll" @rowUnselectAll="onRowUnselectAll" :rowHover="true" :value="tableData"  v-model:selection="selectedUsers" :scrollable="true" scrollHeight="70vh">
+      <DataTable
+          class="p-datatable-sm table"
+          @rowSelect="onRowSelect"
+          @rowUnselect="onRowUnselect"
+          @rowSelectAll="onRowSelectAll"
+          @rowUnselectAll="onRowUnselectAll"
+          :rowHover="true"
+          :value="tableData"
+          :selection="selectedUsers"
+          :scrollable="true"
+          scrollHeight="70vh">
 
         <template #header>
 
@@ -30,8 +40,19 @@
     <Toolbar class="backend-toolbar">
       <template #left>
         <span class="p-buttonset">
-        <Button @click="showAddUsers" label="Add User" icon="pi pi-user-plus" class="p-button p-button-success p-mr-2 p-button-custom-med"  />
-          <Button :disabled="!isUserSelected" @click="deleteUsers" label="Remove User" icon="pi pi-user-minus" class="p-button-danger p-mr-2  p-button-custom-med"  />
+        <Button
+            @click="showAddUsers"
+            label="Add User"
+            icon="pi pi-user-plus"
+            class="p-button p-button-success p-mr-2 p-button-custom-med"
+        />
+          <Button
+              :disabled="!isUserSelected"
+              @click="deleteUsers"
+              label="Remove User"
+              icon="pi pi-user-minus"
+              class="p-button-danger p-mr-2  p-button-custom-med"
+          />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <Button :disabled="!isUserSelected" @click="changeUserRoles" label="Change Roles" icon="pi pi-sort" class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />

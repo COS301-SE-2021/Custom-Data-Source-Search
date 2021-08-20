@@ -42,8 +42,6 @@ const store = createStore({
         getMasterKeyObject(state) {
             return masterKeyObject;
         },
-
-
         //Signed in User's backends related getters
         getUserBackends: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
@@ -65,7 +63,8 @@ const store = createStore({
 
         //Unconnected backend related getters
         unconnectedBackendNo: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true).length;
+            return state.users[state.signedInUserId].backends
+                .filter(backend => backend.connect.needsLogin === true).length;
         },
         unconnectedBackendObjects: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true);
@@ -85,16 +84,19 @@ const store = createStore({
         //should return true or false
         //this would allow us to determine whether or not a data source can be edited/deleted by a user
         getBackendAdminStatus: (state) => (backendName) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
+            return state.users[state.signedInUserId].backends
+                .find(backend => backend.local.name === backendName).receive.admin;
         },
         getBackendLinkUsingName: (state) => (backendName) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).connect.link;
+            return state.users[state.signedInUserId].backends
+                .find(backend => backend.local.name === backendName).connect.link;
         },
         getBackendLink: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.link;
         },
         getBackendLinkViaName: (state, getters) => (name) => {
-            return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.name === name).connect.link;
+            return getters.getUserBackends(getters.getSignedInUserId)
+                .find(b => b.local.name === name).connect.link;
         },
         getBackendJWTToken: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
@@ -116,11 +118,9 @@ const store = createStore({
             return pairObject;
         }
     },
-
     //synchronous changes to the store
     mutations: {
         //Initialise Store from local storage
-
         initialiseStore(state) {
             // Check if the ID exists
             if(localStorage.getItem('store')) {
@@ -130,9 +130,7 @@ const store = createStore({
                 );
             }
         },
-
         //Signed-in user backend related mutations
-
         //Action will call this specific mutation after password validation checks out
         signInUser: function (state, payload) {
             let thisUser = state.users[state.signedInUserId];
@@ -141,7 +139,11 @@ const store = createStore({
         signInAUser: function (state, payload) {
             //Payload: masterPassword, user { id, etc}
             let thisUser = state.users[payload.userID];
-            let passCheck = decryptMasterKeyObject(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
+            let passCheck = decryptMasterKeyObject(
+                thisUser.info.encryptedMasterKeyObject,
+                payload.masterPassword,
+                thisUser.info.email
+            );
             if (passCheck) {
                 state.users[payload.userID].info.isActive = true;
                 state.signedInUserId = payload.userID;
@@ -155,7 +157,11 @@ const store = createStore({
         signInThisUser: function (state, payload) {
             //Payload: masterPassword
             let thisUser = state.users[state.signedInUserId];
-            let passCheck = decryptMasterKeyObject(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
+            let passCheck = decryptMasterKeyObject(
+                thisUser.info.encryptedMasterKeyObject,
+                payload.masterPassword,
+                thisUser.info.email
+            );
             if (passCheck) {
                 masterKeyObject = passCheck;
                 state.users[state.signedInUserId].info.isActive = true;
@@ -165,9 +171,8 @@ const store = createStore({
                 return false;
             }
         },
-
         signOutUser (state, payload) {
-            //Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
+            // Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKeyObject = null;
             state.users[payload.user.id].info.isActive = false;
             state.signedIn = false;
@@ -176,20 +181,18 @@ const store = createStore({
                 backend.connect.keys.refreshToken = null;
             }
         },
-
         editBackend(state, payload) {
             let backend = state.users[payload.userIndex].backends[payload.backendIndex];
+            // Local
             backend.local.id = payload.id;
             backend.local.name = payload.name;
             backend.local.active = payload.active;
-
+            // Connect
             backend.connect.associatedEmail = payload.associatedEmail;
             backend.connect.link = payload.link;
-
             backend.connect.passKey = payload.passKey;
-
+            // Receive
             backend.receive.admin = payload.admin;
-
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
                 state.users[state.signedInUserId].backends[x].local.id = x;
@@ -338,7 +341,6 @@ const store = createStore({
                 .find(backend => backend.local.id === payload.id).connect.keys.jwtToken = payload.jwtToken
         }
     },
-
     //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
         //User management
@@ -349,9 +351,11 @@ const store = createStore({
                 name: payload.name,
                 email: payload.email,
                 hasVault: payload.hasVault,
-                passKey: { masterKey: newPassKey.masterKey, encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject }
+                passKey: {
+                    masterKey: newPassKey.masterKey,
+                    encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject
+                }
             });
-            masterKeyObject = {key: newPassKey.masterKey}
         },
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";

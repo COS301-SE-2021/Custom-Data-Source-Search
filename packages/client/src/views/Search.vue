@@ -2,40 +2,40 @@
   <div class="grid-content">
     <Toast position="bottom-right"/>
     <Splitter style="background:var(--surface-200);">
-      <SplitterPanel :size="40" :minSize="20">
+      <SplitterPanel :minSize="20" :size="40">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
-            <img  src="../assets/search_logo.png" height="150" alt="">
+            <img alt="" height="150" src="../assets/search_logo.png">
           </div>
           <div class="search-div">
             <span class="p-input-icon-right">
-                <i @click="queryServer" class="pi pi-search" aria-hidden="true"/>
-                <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
+                <i aria-hidden="true" class="pi pi-search" @click="queryServer"/>
+                <InputText v-model="query" placeholder="Sleuth..." size="70" v-on:keyup.enter="queryServer"/>
             </span>
           </div>
         </div>
         <div class="search-results container">
           <search-result-card
               v-for="(r,i) in searchResults"
-              :key="i"
               :id="r.id"
-              :datasource_icon="r.datasource_icon"
-              :datasource_name="r.datasource_name"
-              :type="r.type"
-              :match_snippets="r.match_snippets"
-              :source="r.source"
-              :link="r.link"
+              :key="i"
               :backendId="r.backendId"
               :backend_name="r.name"
+              :datasource_icon="r.datasource_icon"
+              :datasource_name="r.datasource_name"
+              :link="r.link"
+              :match_snippets="r.match_snippets"
+              :source="r.source"
+              :type="r.type"
               @resultClicked="loadFullFile"
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel class="container" :size="60" :minSize="30">
-        <p id="divider_usage_message" v-if='fullFileData === ""'>to adjust size of panel drag divider left or right</p>
+      <SplitterPanel :minSize="30" :size="60" class="container">
+        <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
         <div v-else class="next-prev">
-          <icon-simple-expand-more @click="goToNext" class="clickable"/>
-          <icon-simple-expand-less @click="goToPrev" class="clickable"/>
+          <icon-simple-expand-more class="clickable" @click="goToNext"/>
+          <icon-simple-expand-less class="clickable" @click="goToPrev"/>
         </div>
         <div class="file-container">
           <div id="full_file" v-html="fullFileData">
@@ -46,126 +46,141 @@
   </div>
 </template>
 
-  <script>
-    import axios from "axios";
-    import {mapGetters} from 'vuex';
-    import SearchResultCard from "@/components/results/SearchResultCard";
-    import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
-    import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+<script>
+import axios from "axios";
+import {mapGetters} from 'vuex';
+import SearchResultCard from "@/components/results/SearchResultCard";
+import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
-    export default {
-      name: "SearchBar",
-      data() {
-        return {
-          fullFileLineNumbers: [],
-          currentLineNumber: -1,
-          fullFileData: "",
-          displaySignIn: false,
-          notDeleted: true,
-          query: "",
-          searchResults: [],
-          name: "Search",
-          firstSearch: true,
+export default {
+  name: "SearchBar",
+  data() {
+    return {
+      fullFileLineNumbers: [],
+      currentLineNumber: -1,
+      fullFileData: "",
+      displaySignIn: false,
+      notDeleted: true,
+      query: "",
+      searchResults: [],
+      name: "Search",
+      firstSearch: true,
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'unconnectedBackendNo',
+      'unconnectedBackendBool',
+      'unconnectedBackendNames'
+    ])
+  },
+  beforeMount() {
+    if (this.$store.getters.getNewAppStatus) {
+      this.$router.push('/');
+    }
+  },
+  methods: {
+    escapeSpecialCharacters(query) {
+      return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
+        return '\\' + match
+      })
+    },
+    async queryServer() {
+      this.firstSearch = false;
+      this.searchResults = [];
+      for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+        if (!backend.local.active) {
+          continue;
         }
-      },
-      computed: {
-        ...mapGetters([
-          'unconnectedBackendNo',
-          'unconnectedBackendBool',
-          'unconnectedBackendNames'
-        ])
-      },
-      beforeMount() {
-        if (this.$store.getters.getNewAppStatus) {
-          this.$router.push('/');
-        }
-      },
-      methods: {
-        escapeSpecialCharacters(query) {
-          return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
-            return '\\' + match
-          })
-        },
-        async queryServer() {
-          this.firstSearch = false;
-          this.searchResults = [];
-          for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
-            if (!backend.local.active) {
-              continue;
-            }
-            const url = `http://${backend.connect.link}/general/?q=${
-              encodeURIComponent(this.escapeSpecialCharacters(this.query))
-            }`
-            const headers = {
-              "Authorization": "Bearer " + backend.connect.keys.jwtToken
-            };
-            await axios
-              .get(url, {headers})
-              .then((resp) => {
-                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
-              })
-              .catch(async () => {
-                await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
-                const headers = {
-                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
-                };
-                await axios.get(url, {headers})
+        const url = `http://${backend.connect.link}/general/?q=${
+            encodeURIComponent(this.escapeSpecialCharacters(this.query))
+        }`
+        const headers = {
+          "Authorization": "Bearer " + backend.connect.keys.jwtToken
+        };
+        await axios
+            .get(url, {headers})
+            .then((resp) => {
+              this.handleSuccess(
+                  resp.data.searchResults,
+                  backend.connect.link,
+                  backend.local.id,
+                  backend.local.name
+              )
+            })
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
+              };
+              await axios
+                  .get(url, {headers})
                   .then((resp) => {
-                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
+                    this.handleSuccess(
+                        resp.data.searchResults,
+                        backend.connect.link,
+                        backend.local.id,
+                        backend.local.name
+                    )
                   })
                   .catch((e) => {
                     console.error(e);
                   })
-              })
-          }
-          if (this.searchResults.length === 0) {
-            this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-          }
-        },
-        handleSuccess(results, link, id, name) {
-          for(let r of results) {
-            r.link = link;
-            r.backendId = id;
-            r.name = name;
-          }
-          this.searchResults = this.searchResults.concat(results);
-        },
-        showPopup(){
-          this.displaySignIn = !this.displaySignIn
-        },
-        loadFullFile(fileData, lineNumber, lineNumbers) {
-          this.fullFileData = fileData;
-          this.fullFileLineNumbers = lineNumbers;
-          this.$nextTick().then(() => {
-            this.goToFullFileLine(lineNumber);
-          })
-        },
-        goToFullFileLine(lineNumber) {
-          this.currentLineNumber = lineNumber;
-          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
-        },
-        goToPrev() {
-          let index = Math.max(
-              0,
-              this.fullFileLineNumbers.findIndex((item) => {return this.currentLineNumber === item}) - 1
-          );
-          this.goToFullFileLine(this.fullFileLineNumbers[index]);
-        },
-        goToNext() {
-          let index = Math.min(
-              this.fullFileLineNumbers.length - 1,
-              this.fullFileLineNumbers.findIndex((item) => {return this.currentLineNumber === item}) + 1
-          );
-          this.goToFullFileLine(this.fullFileLineNumbers[index]);
-        }
-      },
-      components: {
-        IconSimpleExpandLess,
-        IconSimpleExpandMore,
-        SearchResultCard,
+            })
       }
+      if (this.searchResults.length === 0) {
+        this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+      }
+    },
+    handleSuccess(results, link, id, name) {
+      for (let r of results) {
+        r.link = link;
+        r.backendId = id;
+        r.name = name;
+      }
+      this.searchResults = this.searchResults.concat(results);
+    },
+    showPopup() {
+      this.displaySignIn = !this.displaySignIn
+    },
+    loadFullFile(fileData, lineNumber, lineNumbers) {
+      this.fullFileData = fileData;
+      this.fullFileLineNumbers = lineNumbers;
+      this.$nextTick().then(() => {
+        this.goToFullFileLine(lineNumber);
+      })
+    },
+    goToFullFileLine(lineNumber) {
+      this.currentLineNumber = lineNumber;
+      this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
+    },
+    goToPrev() {
+      let index = Math.max(
+          0,
+          this.fullFileLineNumbers.findIndex((item) => {
+            return this.currentLineNumber === item
+          }) - 1
+      );
+      this.goToFullFileLine(this.fullFileLineNumbers[index]);
+    },
+    goToNext() {
+      let index = Math.min(
+          this.fullFileLineNumbers.length - 1,
+          this.fullFileLineNumbers.findIndex((item) => {
+            return this.currentLineNumber === item
+          }) + 1
+      );
+      this.goToFullFileLine(this.fullFileLineNumbers[index]);
     }
-  </script>
+  },
+  components: {
+    IconSimpleExpandLess,
+    IconSimpleExpandMore,
+    SearchResultCard,
+  }
+}
+</script>
 
 <style scoped>
 @import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
@@ -213,9 +228,9 @@ input {
 }
 
 .search-div {
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 30px;
   max-height: 100px;
 }
@@ -225,11 +240,11 @@ input {
   font-style: italic;
 }
 
-.pi{
+.pi {
   cursor: pointer;
 }
 
-.pi-search{
+.pi-search {
   padding: 0;
 }
 
@@ -274,7 +289,7 @@ input {
   padding-left: 10px;
 }
 
-.p-splitter{
+.p-splitter {
   border: none;
 }
 </style>
