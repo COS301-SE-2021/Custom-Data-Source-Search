@@ -21,10 +21,10 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 [Demo 3](https://www.overleaf.com/project/60b8d575257b726a64a95d6f)
 
 ### DataSleuth Architecture
-[Demo 2](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing)
+[Demo 3](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing)
 
 ### User Manual
-[Demo 3](https://drive.google.com/file/d/1b7Flo5I0afwYaBiwrtsYHtrMIZMsxuBr/view?usp=sharing)
+[Demo 3](https://drive.google.com/file/d/15qfaPfwN1VBexmwYZtuFoDyl0aQnipy1/view?usp=sharing)
 
 ### Technical Installation Manual
 [Demo 3](https://www.overleaf.com/read/gdzcfjcbttpx)
