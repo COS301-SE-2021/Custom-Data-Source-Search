@@ -18,6 +18,7 @@ The project is still in the early phases of development.
 See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/wiki/The-DataSleuth-Story) for more information on the design of the DataSleuth system; the workflow of the team behind it; and the story of how it all got where it is now. 
 
 ### SRS
+[Demo 1](https://drive.google.com/file/d/1MwdbPOdbiG9-Ide3L_upt0Pc2YZa4peu/view?usp=sharing) <br>
 [Demo 3](https://www.overleaf.com/project/60b8d575257b726a64a95d6f)
 
 ### DataSleuth Architecture
