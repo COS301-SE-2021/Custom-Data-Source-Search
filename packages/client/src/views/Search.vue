@@ -52,6 +52,12 @@ import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 export default {
   name: "SearchBar",
 
+  components: {
+    IconSimpleExpandLess,
+    IconSimpleExpandMore,
+    SearchResultCard,
+  },
+
   data() {
     return {
       fullFileLineNumbers: [],
@@ -199,12 +205,6 @@ export default {
       );
       this.goToFullFileLine(this.fullFileLineNumbers[index]);
     }
-  },
-
-  components: {
-    IconSimpleExpandLess,
-    IconSimpleExpandMore,
-    SearchResultCard,
   }
 }
 </script>
