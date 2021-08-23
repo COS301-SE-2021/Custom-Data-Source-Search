@@ -180,7 +180,7 @@ export default {
     },
 
     /**
-     * Go to the previous line with a search result of the file in display panel.
+     * In display panel, go to the previous line a search result.
      */
     goToPrev() {
       let index = Math.max(
@@ -193,7 +193,7 @@ export default {
     },
 
     /**
-     * Go to the next line with a search result of the file in display panel.
+     * In the display panel, go to the next line with a search result.
      */
     goToNext() {
       let index = Math.min(
