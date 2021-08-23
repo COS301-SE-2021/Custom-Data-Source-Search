@@ -1,13 +1,13 @@
 <template>
   <div class="result-card">
     <div class="title-card">
-      <small>{{backend_name}}</small>
+      <small>{{ backend_name }}</small>
       <div class="card-icon">
         <div v-html="whitelistEscape(datasource_icon)"></div>
       </div>
       <div>
         <div
-            class="datasource_name" v-if="datasource_name !== undefined"
+            v-if="datasource_name !== undefined" class="datasource_name"
             @click=openFile(source)
             @mousedown.right="openFileUsing(source)"
         >
@@ -17,32 +17,32 @@
             @click=openFile(source)
             @mousedown.right="openFileUsing(source)"
         >
-          {{source}}
+          {{ source }}
         </small>
       </div>
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
-        v-for="(match_snippet, i) in snippetsOnDisplay"
-        :key="i"
-        :line_number="match_snippet.line_number"
-        :snippet="whitelistEscape(match_snippet.snippet)"
-        @click="goToLineFetchFileIfRequired(match_snippet.line_number)"
-        @mousedown.right="toggleNumSnippetsToShow"
+          v-for="(match_snippet, i) in snippetsOnDisplay"
+          :key="i"
+          :line_number="match_snippet.line_number"
+          :snippet="whitelistEscape(match_snippet.snippet)"
+          @click="goToLineFetchFileIfRequired(match_snippet.line_number)"
+          @mousedown.right="toggleNumSnippetsToShow"
       />
     </div>
-    <div class="expand_icon_div" v-if="match_snippets.length > 1">
+    <div v-if="match_snippets.length > 1" class="expand_icon_div">
       <icon-simple-expand-more
-          @click="showMore"
-          width="25"
-          height="25"
           v-if="thereAreMore()"
+          height="25"
+          width="25"
+          @click="showMore"
       />
       <icon-simple-expand-less
-          @click="showOne"
-          width="25"
-          height="25"
           v-else
+          height="25"
+          width="25"
+          @click="showOne"
       />
     </div>
   </div>
@@ -57,14 +57,13 @@ import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
 export default {
   name: "SearchResultCard",
-  components: {IconSimpleExpandLess, IconSimpleExpandMore, SearchResultCardMatchSnippet},
-  data() {
-    return {
-      unexpanded : true,
-      snippetsOnDisplay: [],
-      numberOfResultsToDisplay: 1
-    }
+
+  components: {
+    IconSimpleExpandLess,
+    IconSimpleExpandMore,
+    SearchResultCardMatchSnippet
   },
+
   props: {
     id: String,
     type: String,
@@ -76,22 +75,56 @@ export default {
     backendId: Number,
     backend_name: String,
   },
+
+  data() {
+    return {
+      unexpanded: true,
+      snippetsOnDisplay: [],
+      numberOfResultsToDisplay: 1
+    }
+  },
+
   methods: {
+
+    /**
+     * Open file at given path using default software set by OS.
+     *
+     * @param {string }source
+     */
     openFile(source) {
       shell.openPath(source)
     },
+
+    /**
+     * Let OS show file at given path in folder.
+     *
+     * @param {string} source
+     */
     openFileUsing(source) {
       shell.showItemInFolder(source)
     },
+
+    /**
+     * Escape all tokens not in whitelist defined by regex. Check resulting html tags to ensure all are closed.
+     *
+     * Note that escaping does not escape "&" so the server is allowed to send in pre escaped html.
+     *
+     * NEVER ALLOW any type of closing tags in the valid_word regex snippet! This would render the function unsafe!
+     *
+     * @param {string} content suspect html
+     * @returns {string} sanitised html
+     */
     whitelistEscape(content) {
       if (content === undefined) {
         return ""
       }
-      let valid_word = "[\\w\\s\\-:;,#.]+";
-      let valid_attribute_types = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
-      let valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
-
-      let valid_attribute = `(?:\\s(?:${valid_attribute_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
+      // Parts Of Regex
+      const valid_word = "[\\w\\s\\-:;,#.]+"; // WARNING: NO closing tags allowed in here! ' " > are all ILLEGAL here.
+      const valid_att_types = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
+      const valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
+      // Full Regex
+      const valid_attribute = `(?:\\s(?:${valid_att_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
+      //
       let whitelist_production_line = []
       for (let i = 0; i < valid_html_tags.length; i++) {
         whitelist_production_line.push(`<${valid_html_tags[i]}${valid_attribute}>|<\/${valid_html_tags[i]}>`)
@@ -106,6 +139,14 @@ export default {
         return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
       }
     },
+
+    /**
+     *
+     *
+     * @param content
+     * @param matches
+     * @returns {string}
+     */
     escapeAllExceptMatches(content, matches) {
       let processedString = "";
       for (let i = 0; i < matches.length; i++) {
@@ -141,22 +182,22 @@ export default {
         "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendId)
       };
       axios
-        .get(url, {headers})
-        .then((resp) => {
-          this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
-        })
-        .catch(async () => {
-          await this.$store.dispatch("refreshJWTToken", {id: this.backendId})
-          const headers = {
-            "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendId)
-          };
-          await axios
-            .get(url, {headers})
-            .then((resp) => {
-              this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
-            })
-            .catch()
-        })
+          .get(url, {headers})
+          .then((resp) => {
+            this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
+          })
+          .catch(async () => {
+            await this.$store.dispatch("refreshJWTToken", {id: this.backendId})
+            const headers = {
+              "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendId)
+            };
+            await axios
+                .get(url, {headers})
+                .then((resp) => {
+                  this.$emit("resultClicked", resp.data.data, lineNumber, this.extractLineNumbers(this.match_snippets))
+                })
+                .catch()
+          })
     },
     toggleNumSnippetsToShow() {
       if (this.numberOfResultsToDisplay === 1) {
