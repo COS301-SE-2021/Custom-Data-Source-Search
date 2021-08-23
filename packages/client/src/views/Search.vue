@@ -13,8 +13,8 @@
           </div>
           <div class="search-div">
             <span class="p-input-icon-right">
-                <i aria-hidden="true" class="pi pi-search" @click="queryServer"/>
-                <InputText v-model="query" placeholder="Sleuth..." size="70" v-on:keyup.enter="queryServer"/>
+                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(this.query)"/>
+                <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends"/>
             </span>
           </div>
         </div>
@@ -57,7 +57,6 @@ export default {
       fullFileLineNumbers: [],
       currentLineNumber: -1,
       fullFileData: "",
-      displaySignIn: false,
       notDeleted: true,
       query: "",
       searchResults: [],
@@ -81,12 +80,27 @@ export default {
   },
 
   methods: {
+    /**
+     * Escapes characters that Solr will interpret as instructions, allowing the user to search for these characters.
+     *
+     * @param {string} query string that might contain special control characters
+     * @returns {string} string with any special control characters escaped
+     */
     escapeSpecialCharacters(query) {
       return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
         return '\\' + match
       })
     },
-    async queryServer() {
+
+    /**
+     * Queries each active backend of the current user, saves search results to the searchResults array in data.
+     *
+     * If a query to a backend fails due to an expired JWToken the function will refresh the token and retry the query.
+     *
+     * @param {string} query what the backend should search verbatim
+     * @returns {Promise<void>}
+     */
+    async queryBackends(query) {
       this.firstSearch = false;
       this.searchResults = [];
       for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -94,7 +108,7 @@ export default {
           continue;
         }
         const url = `http://${backend.connect.link}/general/?q=${
-            encodeURIComponent(this.escapeSpecialCharacters(this.query))
+            encodeURIComponent(this.escapeSpecialCharacters(query))
         }`
         let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
         await axios
@@ -119,6 +133,7 @@ export default {
         this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
       }
     },
+    // queryServer helper
     handleSuccess(results, backend) {
       for (let r of results) {
         r.link = backend.connect.link;
@@ -126,9 +141,6 @@ export default {
         r.backendId = backend.local.id;
       }
       this.searchResults = this.searchResults.concat(results);
-    },
-    showPopup() {
-      this.displaySignIn = !this.displaySignIn
     },
     loadFullFile(fileData, lineNumber, lineNumbers) {
       this.fullFileData = fileData;
