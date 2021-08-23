@@ -129,9 +129,9 @@ export default {
     },
     handleSuccess(results, backend) {
       for (let r of results) {
-        r.link = backend.link;
-        r.backendId = backend.id;
-        r.name = backend.name;
+        r.link = backend.connect.link;
+        r.name = backend.local.name;
+        r.backendId = backend.local.id;
       }
       this.searchResults = this.searchResults.concat(results);
     },

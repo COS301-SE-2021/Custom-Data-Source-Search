@@ -7,17 +7,17 @@ const aes = require('aes-js');
 
 /**
  * @typedef {
- *          {
- *              id: number,
- *              name: string,
- *              active: boolean,
- *              userIndex: number,
- *              backendIndex: number,
- *              associatedEmail: string,
- *              link: string,
- *              passKey: string,
- *              admin: string
- *          }
+ *              {
+ *                  id: number,
+ *                  name: string,
+ *                  active: boolean,
+ *                  userIndex: number,
+ *                  backendIndex: number,
+ *                  associatedEmail: string,
+ *                  link: string,
+ *                  passKey: string,
+ *                  admin: string
+ *              }
  * } Backend
  */
 
