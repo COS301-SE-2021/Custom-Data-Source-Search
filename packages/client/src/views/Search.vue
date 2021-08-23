@@ -81,18 +81,6 @@ export default {
 
   methods: {
     /**
-     * Escapes characters that Solr will interpret as instructions, allowing the user to search for these characters.
-     *
-     * @param {string} query string that might contain special control characters
-     * @returns {string} string with any special control characters escaped
-     */
-    escapeSpecialCharacters(query) {
-      return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
-        return '\\' + match
-      })
-    },
-
-    /**
      * Queries each active backend of the current user, saves search results to the searchResults array in data.
      *
      * If a query to a backend fails due to an expired JWToken the function will refresh the token and retry the query.
@@ -133,7 +121,25 @@ export default {
         this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
       }
     },
-    // queryServer helper
+
+    /**
+     * Escapes characters that Solr will interpret as instructions, allowing the user to search for these characters.
+     *
+     * @param {string} query string that might contain special control characters
+     * @returns {string} string with any special control characters escaped
+     */
+    escapeSpecialCharacters(query) {
+      return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
+        return '\\' + match
+      })
+    },
+
+    /**
+     * Append relevant backend data to each search result before concatenating these with the existing list in data.
+     *
+     * @param results search results as returned by backend
+     * @param backend backend info from store
+     */
     handleSuccess(results, backend) {
       for (let r of results) {
         r.link = backend.connect.link;
