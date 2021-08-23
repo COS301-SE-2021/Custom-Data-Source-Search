@@ -108,7 +108,8 @@ export default {
      * Escape all tokens not in whitelist defined by validAttribute regex.
      * Check resulting html tags to ensure all are closed.
      *
-     * NEVER ALLOW any type of closing tags in the valid_word regex snippet! This would render the function unsafe!
+     * Security Note: NEVER allow any type of closing tags in the validWord regex snippet.
+     * This would render the function unsafe.
      *
      * @param {string} content suspect html
      * @returns {string} sanitised html
@@ -188,7 +189,7 @@ export default {
     },
 
     /**
-     * Extracts the tag name from some closing or opening html tag.
+     * Extracts the tag name from some closing or opening html tag string.
      *
      * @param {string} tag html tag
      * @returns {string}
@@ -196,7 +197,6 @@ export default {
     extractTagName(tag) {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
-
 
     goToLineFetchFileIfRequired(lineNumber) {
       const url = `http://${this.link}/general/fullfile?type=${this.type}&id=${this.id}`;
