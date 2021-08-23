@@ -13,7 +13,7 @@
           </div>
           <div class="search-div">
             <span class="p-input-icon-right">
-                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(this.query)"/>
+                <i aria-hidden="true" class="pi pi-search" @click="queryBackends"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends"/>
             </span>
           </div>
@@ -87,14 +87,13 @@ export default {
 
   methods: {
     /**
-     * Queries each active backend of the current user, saves search results to the searchResults array in data.
+     * Queries each active backend of the user for this.query then saves search results to this.searchResults.
      *
      * If a query to a backend fails due to an expired JWToken the function will refresh the token and retry the query.
      *
-     * @param {string} query what the backend should search verbatim
      * @returns {Promise<void>}
      */
-    async queryBackends(query) {
+    async queryBackends() {
       this.firstSearch = false;
       this.searchResults = [];
       for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -102,7 +101,7 @@ export default {
           continue;
         }
         const url = `http://${backend.connect.link}/general/?q=${
-            encodeURIComponent(this.escapeSpecialCharacters(query))
+            encodeURIComponent(this.escapeSpecialCharacters(this.query))
         }`
         let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
         await axios
