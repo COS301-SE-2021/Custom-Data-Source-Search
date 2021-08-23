@@ -13,8 +13,8 @@
           </div>
           <div class="search-div">
             <span class="p-input-icon-right">
-                <i aria-hidden="true" class="pi pi-search" @click="queryBackends"/>
-                <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends"/>
+                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
           </div>
         </div>
@@ -91,9 +91,12 @@ export default {
      *
      * If a query to a backend fails due to an expired JWToken the function will refresh the token and retry the query.
      *
+     * On no results returned from any backend a warning toast will be raised.
+     *
+     * @param {string} q the string to query verbatim
      * @returns {Promise<void>}
      */
-    async queryBackends() {
+    async queryBackends(q) {
       this.firstSearch = false;
       this.searchResults = [];
       for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -101,7 +104,7 @@ export default {
           continue;
         }
         const url = `http://${backend.connect.link}/general/?q=${
-            encodeURIComponent(this.escapeSpecialCharacters(this.query))
+            encodeURIComponent(this.escapeSpecialCharacters(q))
         }`
         let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
         await axios
@@ -180,7 +183,7 @@ export default {
     },
 
     /**
-     * In display panel, go to the previous line a search result.
+     * In the display panel, go to the previous line with a search result.
      */
     goToPrev() {
       let index = Math.max(

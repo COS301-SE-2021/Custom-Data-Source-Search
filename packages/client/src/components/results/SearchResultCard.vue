@@ -4,13 +4,12 @@
       <small>{{backend_name}}</small>
       <div class="card-icon">
         <div v-html="whitelistEscape(datasource_icon)"></div>
-        <!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->
       </div>
       <div>
         <div
+            class="datasource_name" v-if="datasource_name !== undefined"
             @click=openFile(source)
             @mousedown.right="openFileUsing(source)"
-            class="datasource_name" v-if="datasource_name !== undefined"
         >
           {{ datasource_name }}
         </div>
