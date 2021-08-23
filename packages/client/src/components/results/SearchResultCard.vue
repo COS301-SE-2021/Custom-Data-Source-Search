@@ -105,9 +105,8 @@ export default {
     },
 
     /**
-     * Escape all tokens not in whitelist defined by regex. Check resulting html tags to ensure all are closed.
-     *
-     * Note that escaping does not escape "&" so the server is allowed to send in pre escaped html.
+     * Escape all tokens not in whitelist defined by validAttribute regex.
+     * Check resulting html tags to ensure all are closed.
      *
      * NEVER ALLOW any type of closing tags in the valid_word regex snippet! This would render the function unsafe!
      *
@@ -119,15 +118,15 @@ export default {
         return ""
       }
       // Parts Of Regex
-      const valid_word = "[\\w\\s\\-:;,#.]+"; // WARNING: NO closing tags allowed in here! ' " > are all ILLEGAL here.
-      const valid_att_types = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
-      const valid_html_tags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
+      const validWord = "[\\w\\s\\-:;,#.]+"; // WARNING: NO closing tags allowed in here! {', ", >} are ILLEGAL here.
+      const validAttributeTypes = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
+      const validHtmlTags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
       // Full Regex
-      const valid_attribute = `(?:\\s(?:${valid_att_types.join("|")})=(?:"(?:${valid_word})"|'(?:${valid_word})'))*`;
+      const validAttribute = `(?:\\s(?:${validAttributeTypes.join("|")})=(?:"(?:${validWord})"|'(?:${validWord})'))*`;
       //
       let whitelist_production_line = []
-      for (let i = 0; i < valid_html_tags.length; i++) {
-        whitelist_production_line.push(`<${valid_html_tags[i]}${valid_attribute}>|<\/${valid_html_tags[i]}>`)
+      for (let i = 0; i < validHtmlTags.length; i++) {
+        whitelist_production_line.push(`<${validHtmlTags[i]}${validAttribute}>|<\/${validHtmlTags[i]}>`)
       }
       let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
       let matches = content.match(whitelistRegex)
@@ -141,28 +140,42 @@ export default {
     },
 
     /**
+     * Escape all content except the ordered list of legal tokens.
      *
-     *
-     * @param content
-     * @param matches
-     * @returns {string}
+     * @param {string} content html that might be unsafe
+     * @param {[string]} legalTokens exhaustive ordered list of legal tokens that actually exist in the content
+     * @returns {string} content with only legal tokens not escaped
      */
-    escapeAllExceptMatches(content, matches) {
+    escapeAllExceptMatches(content, legalTokens) {
       let processedString = "";
-      for (let i = 0; i < matches.length; i++) {
-        let start_index_of_whitelisted_section = content.search(matches[i]);
-        processedString += this.escapeHtml(content.substr(0, start_index_of_whitelisted_section)) + matches[i];
-        content = content.substr(start_index_of_whitelisted_section + matches[i].length);
+      for (let i = 0; i < legalTokens.length; i++) {
+        let start_index_of_whitelisted_section = content.search(legalTokens[i]);
+        processedString += this.escapeHtml(content.substr(0, start_index_of_whitelisted_section)) + legalTokens[i];
+        content = content.substr(start_index_of_whitelisted_section + legalTokens[i].length);
       }
       return processedString;
     },
+
+    /**
+     * Html escape function only to be used where we are guaranteed to have no preceding half-created html tags.
+     *
+     * @param string
+     * @returns {*}
+     */
     escapeHtml(string) {
       return string.replace(/</g, "&lt;")
     },
-    confirmThatAllOpenedTagsAreClosed(matches) {
+
+    /**
+     * Stack based check to confirm that all html tags that are opened are closed.
+     *
+     * @param {[string]} tags ordered list of tags from some html string
+     * @returns {boolean} true if all tags were closed, false otherwise
+     */
+    confirmThatAllOpenedTagsAreClosed(tags) {
       let stack = []
-      for (let i = 0; i < matches.length; i++) {
-        let tag = matches[i]
+      for (let i = 0; i < tags.length; i++) {
+        let tag = tags[i]
         if (tag.substr(0, 2) === "</") {
           if (stack.length === 0 || stack.pop() !== this.extractTagName(tag)) {
             return false;
@@ -173,9 +186,18 @@ export default {
       }
       return stack.length === 0;
     },
+
+    /**
+     * Extracts the tag name from some closing or opening html tag.
+     *
+     * @param {string} tag html tag
+     * @returns {string}
+     */
     extractTagName(tag) {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
+
+
     goToLineFetchFileIfRequired(lineNumber) {
       const url = `http://${this.link}/general/fullfile?type=${this.type}&id=${this.id}`;
       const headers = {
