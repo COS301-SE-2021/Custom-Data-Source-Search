@@ -1,7 +1,7 @@
 <template>
   <div class="result-card">
     <div class="title-card">
-      <small>{{ backend_name }}</small>
+      <small>{{backend_name}}</small>
       <div class="card-icon">
         <div v-html="whitelistEscape(datasource_icon)"></div>
         <!--      <div><icon-expand-more :width="25" :height="25" ></icon-expand-more></div>-->

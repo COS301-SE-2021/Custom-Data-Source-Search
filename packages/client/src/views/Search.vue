@@ -21,16 +21,8 @@
         <div class="search-results container">
           <search-result-card
               v-for="(r,i) in searchResults"
-              :id="r.id"
               :key="i"
-              :backendId="r.backendId"
-              :backend_name="r.name"
-              :datasource_icon="r.datasource_icon"
-              :datasource_name="r.datasource_name"
-              :link="r.link"
-              :match_snippets="r.match_snippets"
-              :source="r.source"
-              :type="r.type"
+              :="r"
               @resultClicked="loadFullFile"
           />
         </div>
@@ -282,9 +274,5 @@ input {
 #divider_usage_message {
   color: #4d4d4d;
   padding-left: 10px;
-}
-
-.p-splitter {
-  border: none;
 }
 </style>
