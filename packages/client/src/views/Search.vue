@@ -148,6 +148,14 @@ export default {
       }
       this.searchResults = this.searchResults.concat(results);
     },
+
+    /**
+     * Load given file data into the display panel, and go to the given file line.
+     *
+     * @param {html} fileData
+     * @param {number} lineNumber line number or result to go to
+     * @param {[number]} lineNumbers line numbers of all results found in file
+     */
     loadFullFile(fileData, lineNumber, lineNumbers) {
       this.fullFileData = fileData;
       this.fullFileLineNumbers = lineNumbers;
@@ -155,10 +163,20 @@ export default {
         this.goToFullFileLine(lineNumber);
       })
     },
+
+    /**
+     * Scroll given line (in display panel) into view.
+     *
+     * @param lineNumber
+     */
     goToFullFileLine(lineNumber) {
       this.currentLineNumber = lineNumber;
       this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
     },
+
+    /**
+     * Go to the previous line with a search result of the file in display panel.
+     */
     goToPrev() {
       let index = Math.max(
           0,
@@ -168,6 +186,10 @@ export default {
       );
       this.goToFullFileLine(this.fullFileLineNumbers[index]);
     },
+
+    /**
+     * Go to the next line with a search result of the file in display panel.
+     */
     goToNext() {
       let index = Math.min(
           this.fullFileLineNumbers.length - 1,
@@ -189,13 +211,6 @@ export default {
 
 <style scoped>
 @import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
-
-.header {
-  padding: 30px;
-  border: solid;
-  border: rgba(37, 37, 37, 0.91);
-  text-align: center;
-}
 
 .search-bar {
   min-height: 100px;
