@@ -11,7 +11,8 @@
                  :value="tableData"
                  :selection="selectedUsers"
                  :scrollable="true"
-                 scrollHeight="70vh">
+                 scrollHeight="70vh"
+      >
         <template #header>
           <div class="p-datatable-header"> Users</div>
         </template>
@@ -32,49 +33,57 @@
           <Button @click="showAddUsersDialog"
                   label="Add User"
                   icon="pi pi-user-plus"
-                  class="p-button p-button-success p-mr-2 p-button-custom-med" />
+                  class="p-button p-button-success p-mr-2 p-button-custom-med"
+          />
           <Button :disabled="!isUserSelected"
                   @click="deleteUsers"
                   label="Remove User"
                   icon="pi pi-user-minus"
                   class="p-button-danger p-mr-2
-                  p-button-custom-med" />
+                  p-button-custom-med"
+          />
         </span>
         <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <Button :disabled="!isUserSelected"
                 @click="changeUserRoles"
                 label="Change Roles"
                 icon="pi pi-sort"
-                class="p-button-info p-mr-2 permissions-button p-button-custom-med"  />
+                class="p-button-info p-mr-2 permissions-button p-button-custom-med"
+        />
         <Dropdown class="toolbar-dropdown"
                   :disabled="!isUserSelected"
                   v-model="selectedRole"
                   :options="roleOptions"
-                  placeholder="Select a Role" />
+                  placeholder="Select a Role"
+        />
         <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <span class="p-buttonset">
           <Button  @click="showLogoutUsersDialog"
                   label="Logout"
                   icon="pi pi-lock"
-                  class="p-button-warning p-button-custom-med" />
+                  class="p-button-warning p-button-custom-med"
+          />
           <Button @click="showRevokeUserKeysDialog"
                   label="Revoke Keys"
                   icon="pi pi-ban"
-                  class="p-button-danger p-button-custom-med" />
+                  class="p-button-danger p-button-custom-med"
+          />
         </span>
         <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <Button @click="generateRegistrationKeys"
                 :disabled="!isUserSelected"
                 label="Generate Registration Keys"
                 icon="pi pi-key"
-                class="p-button-info p-button-custom-med" />
+                class="p-button-info p-button-custom-med"
+        />
         <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
         <SplitButton :disabled="!isUserSelected"
                      :model="copyOptions"
                      @click="mailUsers"
                      label="Email"
                      icon="pi pi-inbox"
-                     class="p-button-info p-button-custom-med" />
+                     class="p-button-info p-button-custom-med"
+        />
       </template>
     </Toolbar>
 
@@ -176,6 +185,7 @@
 <script>
 import {mapGetters} from "vuex";
 import axios from "axios";
+
 export default {
   name: "BackendManager.vue",
   props: {
