@@ -124,7 +124,7 @@ class FolderDataSourceRepository {
 
     async postToSolr(file: Buffer, id: string, fileName: string) {
         let formData = new FormData();
-        fileName = fileDataSourceRepository.makeDefaultExtension(fileName);
+        fileName = fileDataSourceRepository.removeExtension(fileName);
         formData.append("file", file, fileName);
         try {
             await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update/extract?literal.id=' + id
