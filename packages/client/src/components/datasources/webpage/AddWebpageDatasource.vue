@@ -40,14 +40,26 @@
               if(this.dataSourceURI!==""){
                 let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
                 axios
-                    .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`, respObject)
+                    .post(
+                        `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
+                        respObject
+                    )
                     .then(resp => {
-                      this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: resp.data.message,
+                        life: 3000
+                      })
                       this.$emit('addWebpage')
                       this.$emit("submitted")
                     })
                     .catch(() => {
-                      this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Webpage.', life: 3000})
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Could Not Add Webpage.',
+                        life: 3000})
                     })
               }
               else{
@@ -74,7 +86,7 @@ input {
 
 .p-inputtext:enabled:focus {
   border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
 }
 
 #input{
