@@ -104,26 +104,35 @@ export default {
       shell.showItemInFolder(source)
     },
 
+    /**
+     * Emit the snippetClicked event for the parent view to handle
+     *
+     * @param {number} lineNumber
+     */
     emitSnippetClicked(lineNumber) {
       this.$emit('snippetClicked', this.link, this.type, this.id, this.backendId, lineNumber, this.lineNumbers)
     },
 
+    /**
+     * If only one snippet is being shown, show three more, else show only one.
+     */
     toggleNumSnippetsToShow() {
       if (this.numberOfResultsToDisplay === 1) {
-        this.showMore()
+        this.numberOfResultsToDisplay += 3;
       } else {
-        this.showOne()
+        this.numberOfResultsToDisplay = 1;
       }
     },
+
+    /**
+     * Returns true if the view is currently displaying less match snippets than actually exist.
+     *
+     * @return {boolean}
+     */
     thereAreMore() {
       return this.numberOfResultsToDisplay < this.match_snippets.length;
     },
-    showMore() {
-      this.numberOfResultsToDisplay += 3;
-    },
-    showOne() {
-      this.numberOfResultsToDisplay = 1;
-    },
+
     updateDisplaySnippets(newNumber) {
       this.snippetsOnDisplay = []
       for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {

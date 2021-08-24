@@ -342,7 +342,6 @@ export default {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
 
-
     /**
      * Load given file data into the display panel, and go to the given file line.
      *
