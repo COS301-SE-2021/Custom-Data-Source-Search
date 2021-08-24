@@ -53,11 +53,11 @@
                   placeholder="Select a Role" />
         <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
         <span class="p-buttonset">
-          <Button  @click="showLogoutUsers"
+          <Button  @click="showLogoutUsersDialog"
                   label="Logout"
                   icon="pi pi-lock"
                   class="p-button-warning p-button-custom-med" />
-          <Button @click="showRevokeUserKeys"
+          <Button @click="showRevokeUserKeysDialog"
                   label="Revoke Keys"
                   icon="pi pi-ban"
                   class="p-button-danger p-button-custom-med" />
@@ -333,13 +333,6 @@ export default {
       })
 
     },
-    showRevokeUserKeys(){
-      if(this.selectedUsers === null || this.selectedUsers.length === 0){
-        this.displayGlobalRevokeConfirmation = true;
-      } else {
-        this.displayRevokeConfirmation = true;
-      }
-    },
     revokeKeys(isGlobal){
 
       if(isGlobal){
@@ -390,9 +383,6 @@ export default {
       }
     },
     logOutUsers(isGlobal){
-
-
-
       if(isGlobal){
 
 
@@ -595,11 +585,18 @@ export default {
     closeRevokeConfirmation(){
       this.displayRevokeConfirmation = false;
     },
-    showLogoutUsers(){
+    showLogoutUsersDialog(){
       if(this.selectedUsers === null || this.selectedUsers.length === 0){
         this.displayGlobalLogoutConfirmation = true;
       } else {
         this.displayLogoutConfirmation = true;
+      }
+    },
+    showRevokeUserKeysDialog(){
+      if(this.selectedUsers === null || this.selectedUsers.length === 0){
+        this.displayGlobalRevokeConfirmation = true;
+      } else {
+        this.displayRevokeConfirmation = true;
       }
     }
   }
