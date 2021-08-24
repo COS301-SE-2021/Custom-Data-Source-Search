@@ -2,11 +2,9 @@
 
   <div class="user-container p-ripple" v-ripple @click="signIn">
     <div class="image-container">
-
       <div class="image-ring " v-bind:class="{ active: userDetails.isActive }">
         <h3 class="name-initial"> {{ userDetails.name.charAt(0).toUpperCase() }}</h3>
       </div>
-
     </div>
     <h1 class="name-field"> {{ userDetails.name }} </h1>
     <h2 class="email-field"> {{userDetails.email }}</h2>
@@ -16,6 +14,7 @@
 
 <script>
 import CustomTooltip from "../primeComponents/CustomTooltip";
+
 export default {
   name: "UserCard",
   components: {CustomTooltip},
@@ -53,12 +52,9 @@ export default {
   border-style: solid;
   border-width: 2px;
   border-color: rgba(158,41,34,0);
-
   padding-top: 2vw;
-
   background-color: #2c2c2c;
   box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-
 }
 
 .user-container:hover{
@@ -86,8 +82,6 @@ export default {
   margin: auto;
   width: 4.6vw;
   height: 4.6vw;
-
-
 }
 
 .image-ring {
@@ -101,7 +95,6 @@ export default {
 }
 
 .active {
-
   background:
       linear-gradient(#2d2d2d, #2d2d2d) padding-box,
       linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
@@ -110,7 +103,6 @@ export default {
 }
 
 .name-initial {
-
   color: #f3f3f3;
   font-size: 2.3vw;
   margin: auto;

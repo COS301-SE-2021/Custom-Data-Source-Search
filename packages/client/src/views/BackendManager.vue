@@ -70,7 +70,7 @@
           />
         </span>
         <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true" />
-        <Button @click="generateRegistrationKeys"
+        <Button @click="generateSelectedUserRegistrationKeys"
                 :disabled="!isUserSelected"
                 label="Generate Registration Keys"
                 icon="pi pi-key"
@@ -217,11 +217,12 @@ export default {
           icon: 'pi pi-copy',
           command: () => {
             let usersString = "";
+
             for (let userData of this.selectedUsers) {
               usersString += "Backend: " + this.backend.connect.link;
-              usersString += " ,Email: " + userData.email;
-              usersString += " ,Name: " + userData.first_name + " " + userData.last_name;
-              usersString += " ,Registration Key: " + userData.regKey + "\n";
+              usersString += ",Email: " + userData.email;
+              usersString += ",Name: " + userData.first_name + " " + userData.last_name;
+              usersString += ",Registration Key: " + userData.regKey + "\n";
             }
             navigator.clipboard.writeText(usersString);
             this.$toast.add({
