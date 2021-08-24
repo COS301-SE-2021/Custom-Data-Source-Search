@@ -34,12 +34,15 @@ const store = createStore({
         getNewAppStatus (state) {
             return state.users.length === 0;
         },
+
         getSignedIn(state){
             return state.signedIn;
         },
+
         getUserInfo: (state) => (id) => {
             return state.users.find(user => user.id === id).info;
         },
+
         getArrUserInfo(state) {
             let users = [];
             for (let x = 0; x < state.users.length; x++) {
@@ -47,9 +50,11 @@ const store = createStore({
             }
             return users;
         },
+
         getSignedInUserId(state){
             return state.signedInUserId;
         },
+
         getUserMasterEmailsArr(state) {
             let userNamesArr = [];
             for (let user of state.users) {
@@ -57,9 +62,11 @@ const store = createStore({
             }
             return userNamesArr;
         },
+
         getMasterKeyObject(state) {
             return masterKeyObject;
         },
+
     /*
     Signed in User's backends related getters
     =========================================
@@ -67,9 +74,11 @@ const store = createStore({
         getUserBackends: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
+
         getSignedInUserBackend: (state, getters) => (id) => {
             return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.id === id)
         },
+
         getUserBackendNames: (state, getters) => {
           let backends = getters.getUserBackends(getters.getSignedInUserId);
           let backendsArr = [];
@@ -78,9 +87,11 @@ const store = createStore({
           }
           return backendsArr;
         },
+
         getUserAdminStatus: (state, getters) => (backendID) => {
             return getters.getSignedInUserBackend(backendID).receive.admin;
         },
+
     /*
     Unconnected backend related getters
     ===================================
@@ -89,9 +100,11 @@ const store = createStore({
             return state.users[state.signedInUserId].backends
                 .filter(backend => backend.connect.needsLogin === true).length;
         },
+
         unconnectedBackendObjects: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true);
         },
+
         unconnectedBackendNames: (state, getters) => {
             let unconnectedBackends = getters.unconnectedBackendObjects;
             let unconnectedBackendNamesArr = [];
@@ -100,33 +113,42 @@ const store = createStore({
             }
             return unconnectedBackendNamesArr;
         },
+
         unconnectedBackendBool: (state, getters) => {
             return getters.unconnectedBackendNo !== 0;
         },
+
         getBackendAdminStatus: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends
                 .find(backend => backend.local.name === backendName).receive.admin;
         },
+
         getBackendLinkUsingName: (state) => (backendName) => {
             return state.users[state.signedInUserId].backends
                 .find(backend => backend.local.name === backendName).connect.link;
         },
+
         getBackendLink: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.link;
         },
+
         getBackendLinkViaName: (state, getters) => (name) => {
             return getters.getUserBackends(getters.getSignedInUserId)
                 .find(b => b.local.name === name).connect.link;
         },
+
         getBackendJWTToken: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
         },
+
         getBackendRefreshToken: (state, getters) => (id) => {
           return getters.getSignedInUserBackend(id).connect.keys.refreshToken;
         },
+
         getBackendUserEmail: (state, getters) => (id) => {
           return getters.getSignedInUserBackend(id).connect.associatedEmail;
         },
+
         getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null;
             try {
@@ -139,24 +161,38 @@ const store = createStore({
         }
     },
 
-    // Synchronous changes to the store
     mutations: {
-        // Initialise Store from local storage
+        /**
+         * Initialize store from local storage.
+         */
         initialiseStore(state) {
-            // Check if the ID exists
             if(localStorage.getItem('store')) {
-                // Replace the state object with the stored item
                 this.replaceState(
                     Object.assign(state, JSON.parse(localStorage.getItem('store')))
                 );
             }
         },
-        // Signed-in user backend related mutations
-        // Action will call this specific mutation after password validation checks out
-        signInUser: function (state, payload) {
-            let thisUser = state.users[state.signedInUserId];
-            thisUser.info.isActive = true;
+
+    /*
+    Signed-in user backend related mutations
+    ========================================
+     */
+        /**
+         * Set signed in user's "isActive" boolean to true
+         */
+        signInUser: function (state) {
+            state.users[state.signedInUserId].info.isActive = true;
         },
+
+        /**
+         * Attempt to decrypt masterKeyObject of a specified user. Return true on success.
+         *
+         * Save decrypted masterKeyObject to global variable that will not be persisted on close of app.
+         *
+         * @param state
+         * @param {{userID: number, masterPassword: string}} payload
+         * @return {boolean}
+         */
         signInAUser: function (state, payload) {
             // Payload: masterPassword, user { id, etc}
             let thisUser = state.users[payload.userID];
@@ -175,6 +211,7 @@ const store = createStore({
                 return false;
             }
         },
+
         signInThisUser: function (state, payload) {
             //Payload: masterPassword
             let thisUser = state.users[state.signedInUserId];
@@ -192,6 +229,7 @@ const store = createStore({
                 return false;
             }
         },
+
         signOutUser (state, payload) {
             // Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKeyObject = null;
@@ -202,6 +240,7 @@ const store = createStore({
                 backend.connect.keys.refreshToken = null;
             }
         },
+
         /**
          * Edit a backend in the local store
          *
@@ -226,6 +265,7 @@ const store = createStore({
                 state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
+
         addBackend(state, payload){
             // Payload: name, associatedEmail, link, secretPair, refreshToken
             let newBackend = {
@@ -265,6 +305,7 @@ const store = createStore({
                 state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
+
         deleteBackend(state, payload) {
             state.users[state.signedInUserId].backends.splice(payload,1);
             let l = state.users[state.signedInUserId].backends.length;
@@ -273,13 +314,17 @@ const store = createStore({
             }
         },
 
-        //User management
+    /*
+    User management
+    ===============
+     */
         setSignedIn(state, payload){
             state.signedIn = payload;
             if (!payload) {
                 masterKeyObject = null;
             }
         },
+
         setSignedInUserID(state, payload) {
             state.signedInUserId = payload.userID;
             if ( payload.userID != null ){
@@ -289,6 +334,7 @@ const store = createStore({
                 state.signedIn = null;
             }
         },
+
         addUserToLocalList(state, payload) {
             //Payload: name, email, hasVault, passKey: { encryptedMasterKeyObject}
             let newUser = {
@@ -339,6 +385,7 @@ const store = createStore({
             state.signedInUserId = state.users.length-1;
             state.signedIn = true;
         },
+
         deleteUserFromLocalList (state, payload) {
             if (payload.deleteVault) {
                 //Do some server side call to delete file on web
@@ -352,23 +399,32 @@ const store = createStore({
                    user.id = x++;
             }
         },
+
+    /*
+    User Backend Token Management
+    =============================
+     */
         setBackendLoginStatus(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.needsLogin = payload.needsLogin;
         },
+
         setRefreshToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.keys.refreshToken = payload.refreshToken;
         },
+
         setJWTToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.keys.jwtToken = payload.jwtToken
         }
     },
 
-    //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
-        //User management
+    /*
+    User management
+    ===============
+     */
         addNewUser: function ({commit}, payload) {
             //Payload: name, email, masterPassword, hasVault
             let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
@@ -382,6 +438,11 @@ const store = createStore({
                 }
             });
         },
+
+    /*
+    User Backend Token Management
+    =============================
+         */
         /**
          * A function that attempts to refresh the JWT token of the specified backend. Returns true on success.
          *
@@ -451,7 +512,6 @@ const store = createStore({
                     console.error(err)
                 })
         },
-        //Backend management
         addNewBackend: function ({commit, getters}, payload) {
             //Payload: name, associatedEmail, link, passKey, seed, refreshToken
             let masterKeyObject = getters.getMasterKeyObject;
@@ -473,12 +533,14 @@ const store = createStore({
     }
 });
 
-// Subscribe to store updates
 store.subscribe((mutation, state) => {
-    // Store the state object as a JSON string
     localStorage.setItem('store', JSON.stringify(state));
 });
 
+/*
+Helper Cryptography Functions
+=============================
+ */
 function generateMasterKey(masterPassword, email) {
     let encryptionKey = pbkdf2.pbkdf2Sync(
         masterPassword,
@@ -532,6 +594,7 @@ function decryptJsonObject(masterKey, jsonObject) {
     return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }
 
+// masterKeyObject is stored like this to ensure it is thrown away upon closing of app.
 let masterKeyObject = null;
 
 export default store;
