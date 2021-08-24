@@ -132,7 +132,7 @@
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" @click="closeGlobalLogoutConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="logOutUsers(true)" class="p-button-text" autofocus />
+          <Button label="Yes" icon="pi pi-check" @click="logOutUsersGlobally()" class="p-button-text" autofocus />
         </template>
       </Dialog>
       <Dialog header="Confirmation" v-model:visible="displayLogoutConfirmation" :style="{width: '32em'}" :modal="true">
@@ -142,7 +142,7 @@
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" @click="closeLogoutConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="logOutUsers(false)" class="p-button-text" autofocus />
+          <Button label="Yes" icon="pi pi-check" @click="logOutSelectedUsers()" class="p-button-text" autofocus />
         </template>
       </Dialog>
       <Dialog header="Confirmation"
@@ -155,7 +155,7 @@
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" @click="closeGlobalRevokeConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="revokeKeys(true)" class="p-button-text" autofocus />
+          <Button label="Yes" icon="pi pi-check" @click="revokeKeysGlobally()" class="p-button-text" autofocus />
         </template>
       </Dialog>
       <Dialog header="Confirmation" v-model:visible="displayRevokeConfirmation" :style="{width: '32em'}" :modal="true">
@@ -165,7 +165,7 @@
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" @click="closeRevokeConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="revokeKeys(false)" class="p-button-text" autofocus />
+          <Button label="Yes" icon="pi pi-check" @click="revokeSelectedUserKeys()" class="p-button-text" autofocus />
         </template>
       </Dialog>
     </div>
@@ -201,7 +201,6 @@ export default {
       addUserEmail: "",
       addUserRole: "",
       roleOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
-
       copyOptions: [
         {
           label: 'Copy',
@@ -331,22 +330,18 @@ export default {
             })
             console.log(error);
       })
-
     },
-    revokeKeys(isGlobal){
-
-      if(isGlobal){
-
-        axios.post("http://localhost:3001/users/global/revoke")
-             .then( resp => {
-               this.$toast.add({
-                 severity: 'success',
-                 summary: 'Success',
-                 detail: "Revoked All User Keys",
-                 life: 3000
-               });
-               this.updateTableData();})
-            .catch( (error) => {
+    revokeKeysGlobally(){
+      axios.post("http://localhost:3001/users/global/revoke")
+           .then( resp => {
+             this.$toast.add({
+               severity: 'success',
+               summary: 'Success',
+               detail: "Revoked All User Keys",
+               life: 3000
+             });
+             this.updateTableData();})
+           .catch( (error) => {
               this.$toast.add({
                 severity: 'error',
                 summary: 'Error',
@@ -355,132 +350,85 @@ export default {
               })
               console.log(error);
         })
-      }else {
-
-        let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
-        let reqObj = { users: usersArr };
-        let reqBody = JSON.stringify(reqObj);
-
-        axios.post("http://localhost:3001/users/revoke", reqBody,
-            { headers : {"Content-Type" : "application/json" }} )
-             .then( resp => {
-               this.$toast.add({
-                 severity: 'success',
-                 summary: 'Success',
-                 detail: "Revoked User Keys",
-                 life: 3000
-               });
-               this.updateTableData();})
-             .catch( (error) => {
-               this.$toast.add({
-                 severity: 'error',
-                 summary: 'Error',
-                 detail: error.response.data.message,
-                 life: 3000
-               })
-               console.log(error);
-             })
-      }
     },
-    logOutUsers(isGlobal){
-      if(isGlobal){
-
-
-
-        // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/global/logout")
-            .then( resp => {
-
-              this.$toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: "Logged All Users Out",
-                life: 3000
-              });
-
-              console.log(resp.data);
-              this.updateTableData();
-
-            }).catch( (error) => {
-          this.$toast.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.response.data.message,
-            life: 3000
-          })
-          console.log(error);
-        })
-
-
-      }else {
-
-        let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
-
-        let reqObj = { users: usersArr };
-
-        let reqBody = JSON.stringify(reqObj);
-
-        // axios.post(this.backend.connect.link + "/users/revoke", reqBody)
-        axios.post("http://localhost:3001/users/logout", reqBody,
-            { headers : {"Content-Type" : "application/json" }} )
-            .then( resp => {
-
-              this.$toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: "Logged Users Out",
-                life: 3000
-              });
-
-              console.log(resp.data);
-              this.updateTableData();
-
-            }).catch( (error) => {
-          this.$toast.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.response.data.message,
-            life: 3000
-          })
-          console.log(error);
-        })
-
-
-      }
-
-
-    },
-    //Copy backend url and user name, email, registration key to clipboard
-    copyUsers(){
-
-      let usersString = "";
-
-      for(let userData of this.selectedUsers) {
-        usersString += "Backend: " + this.backend.connect.link;
-        usersString += " ,Email: " + userData.email;
-        usersString += " ,Name: " + userData.first_name + " " + userData.last_name;
-        usersString += " ,Registration Key: " + userData.regKey + "\n";
-
-      }
-
-      navigator.clipboard.writeText(usersString);
-
-      this.$toast.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: this.selectedUsers.length + " Users Copied to Clipboard",
-        life: 3000});
-
-    },
-    generateRegistrationKeys(){
-
+    revokeSelectedUserKeys() {
       let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
-
       let reqObj = { users: usersArr };
-
       let reqBody = JSON.stringify(reqObj);
 
-      //  axios.delete(this.backend.connect.link + "/users", reqBody )
+      axios.post("http://localhost:3001/users/revoke", reqBody,
+          { headers : {"Content-Type" : "application/json" }} )
+           .then( resp => {
+             this.$toast.add({
+               severity: 'success',
+               summary: 'Success',
+               detail: "Revoked User Keys",
+               life: 3000
+             });
+             this.updateTableData();})
+           .catch( (error) => {
+             this.$toast.add({
+               severity: 'error',
+               summary: 'Error',
+               detail: error.response.data.message,
+               life: 3000
+             })
+             console.log(error);
+          })
+    },
+    logOutUsersGlobally(){
+      axios.post("http://localhost:3001/users/global/logout")
+           .then( resp => {
+             this.$toast.add({
+               severity: 'success',
+               summary: 'Success',
+               detail: "Logged All Users Out",
+               life: 3000
+             });
+             console.log(resp.data);
+             this.updateTableData();})
+           .catch( (error) => {
+             this.$toast.add({
+               severity: 'error',
+               summary: 'Error',
+               detail: error.response.data.message,
+               life: 3000
+             })
+             console.log(error);
+        })
+      }
+    },
+    logOutSelectedUsers() {
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+      let reqObj = { users: usersArr };
+      let reqBody = JSON.stringify(reqObj);
+
+      axios.post("http://localhost:3001/users/logout", reqBody,
+          { headers : {"Content-Type" : "application/json" }} )
+           .then( resp => {
+             this.$toast.add({
+               severity: 'success',
+               summary: 'Success',
+               detail: "Logged Users Out",
+               life: 3000
+             });
+             console.log(resp.data);
+             this.updateTableData();})
+           .catch( (error) => {
+             this.$toast.add({
+               severity: 'error',
+               summary: 'Error',
+               detail: error.response.data.message,
+               life: 3000
+        })
+        console.log(error);
+      })
+    },
+    generateSelectedUserRegistrationKeys(){
+      let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
+      let reqObj = { users: usersArr };
+      let reqBody = JSON.stringify(reqObj);
+
       axios.post("http://localhost:3001/users/registrationkey", reqBody,
           { headers : {"Content-Type" : "application/json" }})
           .then((resp) => {
@@ -507,39 +455,30 @@ export default {
 
     },
     mailUsers(){
-
       let usersArr = this.selectedUsers.map(function(a) {return { uuid : a.uuid};});
-
       let reqObj = { users: usersArr };
-
       let reqBody = JSON.stringify(reqObj);
 
-      //  axios.delete(this.backend.connect.link + "/users", reqBody )
       axios.post("http://localhost:3001/users/email", reqBody,
           { headers : {"Content-Type" : "application/json" }})
-          .then((resp) => {
-
-            this.$toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: "Mailed Users",
-              life: 3000
-            });
-
-            console.log(resp.data);
-            this.updateTableData();
-
-          }).catch( (error) => {
-        this.$toast.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.response.data.message,
-          life: 3000
-        })
-        console.log(error);
-      })
-
-
+           .then((resp) => {
+             this.$toast.add({
+               severity: 'success',
+               summary: 'Success',
+               detail: "Mailed Users",
+               life: 3000
+             });
+             console.log(resp.data);
+             this.updateTableData();})
+           .catch( (error) => {
+             this.$toast.add({
+               severity: 'error',
+               summary: 'Error',
+               detail: error.response.data.message,
+               life: 3000
+             })
+             console.log(error);
+           })
     },
   /*
   Selection Event Handlers
@@ -563,16 +502,16 @@ export default {
       console.log("Unselected all Rows");
       this.isUserSelected = false;
     },
+  /*
+  Dialog Display Toggles
+  ======================
+   */
     showAddUsers(){
       this.showAddUserDialog = true;
     },
     hideAddUsers(){
       this.showAddUserDialog = false;
     },
-  /*
-  Dialog Display Toggles
-  ======================
-   */
     closeGlobalLogoutConfirmation(){
       this.displayGlobalLogoutConfirmation = false;
     },
@@ -599,7 +538,6 @@ export default {
         this.displayRevokeConfirmation = true;
       }
     }
-  }
 }
 </script>
 
