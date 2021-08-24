@@ -15,11 +15,13 @@
 </template>
 
 <script>
-  import DatasourcesTable from "../components/datasources/DatasourcesTable";
-  export default{
-    name: "Datasources",
-    components: {DatasourcesTable}
-  }
+import DatasourcesTable from "../components/datasources/DatasourcesTable";
+
+export default{
+  name: "Datasources",
+  
+  components: {DatasourcesTable}
+}
 </script>
 
 <style scoped lang="scss">
