@@ -1,26 +1,48 @@
 <template>
-  <ScrollPanel style="height: 50vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
-    <span>Select one or more Files to add to data sources</span><br/>
-    <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
-    <span>Selected Files</span>
+  <ScrollPanel>
+    <span>
+      Select one or more Files to add to data sources
+    </span>
+    <br/>
+    <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="selectFiles()"/>
+    <br/>
+    <span>
+      Selected Files
+    </span>
     <div class="selected-files">
-      <ScrollPanel style="width: 100%; height: 70px">
-        <span class="selection-list" v-if="filename.length!==0" v-for="i in filename" :key="i.id">{{i}}</span>
-        <span v-else class="selection-list">No files selected.</span>
+      <ScrollPanel style="width: 100%; height: 10vh">
+        <ul v-if="filenames.length!==0">
+          <li
+              v-for="file in filenames"
+              :key="file.id"
+          >
+            {{file}}
+          </li>
+        </ul>
+        <span v-else class="selection-list">
+          No files selected.
+        </span>
       </ScrollPanel>
     </div>
     <div>
-      <span>Add optional tags</span><br/>
+      <span>
+        Add optional tags
+      </span>
+      <br/>
       <span class="p-float-label">
-        <InputText id="tag1" type="text" v-model="tag1"/>
-        <label for="tag1">Tag 1</label>
+        <InputText id="tag1" v-model="tag1" type="text"/>
+        <label for="tag1">
+          Tag 1
+        </label>
       </span>
       <span class="p-float-label">
-        <InputText id="tag2" type="text" v-model="tag2"/>
-        <label for="tag2">Tag 2</label>
+        <InputText id="tag2" v-model="tag2" type="text"/>
+        <label for="tag2">
+          Tag 2
+        </label>
       </span>
     </div>
-    <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource()"/>
+    <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSelectedFiles()"/>
   </ScrollPanel>
 </template>
 
@@ -31,7 +53,6 @@ export default {
   name: "AddFileDatasource",
   props:{
     backend: String,
-    colour: String
   },
   data() {
     return {
@@ -39,12 +60,12 @@ export default {
       tag1: null,
       tag2: null,
       type: 'file',
-      filename: [],
-      path: []
+      filenames: [],
+      paths: []
     }
   },
   methods: {
-    addDataSource() {
+    selectFiles() {
       electron.dialog.showOpenDialog({
         title: 'Select Files to Add as Data Sources',
         buttonLabel: "Select",
@@ -63,18 +84,22 @@ export default {
                 str = files.filePaths[i]
                 str = str.replaceAll("\\", "/")
                 p = str.split("/")
-                this.filename.push(p.pop())
-                this.path.push(p.join("/"))
+                this.filenames.push(p.pop())
+                this.paths.push(p.join("/"))
               }
             }
           })
     },
-    submitSource(){
-      if(this.filename.length!==0){
-        for (let i = 0; i < this.filename.length; i++) {
-          let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+
+    submitSelectedFiles(){
+      if(this.filenames.length!==0){
+        for (let i = 0; i < this.filenames.length; i++) {
+          let respObject = {"filename": this.filenames[i], "path": this.paths[i], "tag1": this.tag1, "tag2": this.tag2}
           axios
-              .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`, respObject)
+              .post(
+                  `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
+                  respObject
+              )
               .then((resp) => {
                 this.$toast.add({
                   severity: 'success',
@@ -109,7 +134,6 @@ export default {
 </script>
 
 <style scoped>
-
 div {
   padding: 0 15px 15px 0;
 }
@@ -146,5 +170,12 @@ input {
 .selection-list{
   display: block;
   margin-bottom: 2px;
+}
+
+.p-scrollpanel{
+  height: 50vh;
+  bottom: 2em;
+  padding-bottom: 1vh;
+  align-content: center;
 }
 </style>

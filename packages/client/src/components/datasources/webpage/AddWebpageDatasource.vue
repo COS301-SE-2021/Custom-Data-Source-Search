@@ -1,20 +1,29 @@
 <template>
-  <ScrollPanel style="height: 50vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
+  <ScrollPanel>
     <div>
-      <span>Enter the URL of desired webpage</span>
-      <InputText id="input" placeholder="Add WebPage URL..." v-model="dataSourceURI"/>
+      <span>
+        Enter the URL of desired webpage
+      </span>
+      <InputText id="input" v-model="dataSourceURI" placeholder="Add WebPage URL..."/>
       <div>
-        <span>Add optional tags</span><br/>
+        <span>
+          Add optional tags
+        </span>
+        <br/>
         <span class="p-float-label">
-        <InputText id="tag1" type="text" v-model="tag1"/>
-        <label for="tag1">Tag 1</label>
-      </span>
+          <InputText id="tag1" v-model="tag1"  type="text"/>
+          <label for="tag1">
+            Tag 1
+          </label>
+        </span>
         <span class="p-float-label">
-        <InputText id="tag2" type="text" v-model="tag2"/>
-        <label for="tag2">Tag 2</label>
-      </span>
+          <InputText id="tag2" v-model="tag2"  type="text"/>
+          <label for="tag2">
+            Tag 2
+          </label>
+        </span>
       </div>
-      <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource" />
+      <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitWebpage"/>
     </div>
   </ScrollPanel>
 </template>
@@ -25,7 +34,6 @@
     name: "AddDataURI",
     props:{
       backend: String,
-      colour: String,
     },
     data() {
       return {
@@ -36,10 +44,7 @@
       }
     },
     methods: {
-      /**
-       * Submits a data object to the relevant backend.
-       */
-      submitSource() {
+      submitWebpage() {
         if(this.dataSourceURI!==""){
           let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
           axios
@@ -104,5 +109,12 @@ input {
 
 .p-float-label{
   margin-top: 15px;
+}
+
+.p-scrollpanel{
+  height: 50vh;
+  bottom: 2em;
+  padding-bottom: 1vh;
+  align-content: center;
 }
 </style>
