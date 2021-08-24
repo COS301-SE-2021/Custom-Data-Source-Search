@@ -77,6 +77,16 @@ export default {
     lineNumbers: Array
   },
 
+  watch: {
+    numberOfResultsToDisplay(newNumber, oldNumber) {
+      this.updateDisplaySnippets(newNumber, oldNumber)
+    }
+  },
+
+  mounted() {
+    this.snippetsOnDisplay.push(this.match_snippets[0])
+  },
+
   data() {
     return {
       unexpanded: true,
@@ -114,7 +124,7 @@ export default {
     },
 
     /**
-     * If only one snippet is being shown, show three more, else show only one.
+     * If only one snippet is being shown, show (at most) three more, else show only one.
      */
     toggleNumSnippetsToShow() {
       if (this.numberOfResultsToDisplay === 1) {
@@ -133,6 +143,11 @@ export default {
       return this.numberOfResultsToDisplay < this.match_snippets.length;
     },
 
+    /**
+     * Add up to three result snippets to this.snippetsOnDisplay.
+     *
+     * @param newNumber
+     */
     updateDisplaySnippets(newNumber) {
       this.snippetsOnDisplay = []
       for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
@@ -141,14 +156,6 @@ export default {
     },
 
   },
-  watch: {
-    numberOfResultsToDisplay(newNumber, oldNumber) {
-      this.updateDisplaySnippets(newNumber, oldNumber)
-    }
-  },
-  mounted() {
-    this.snippetsOnDisplay.push(this.match_snippets[0])
-  }
 }
 </script>
 
