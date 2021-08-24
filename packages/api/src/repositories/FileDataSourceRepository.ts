@@ -16,7 +16,7 @@ class FileDataSourceRepository {
      * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
      */
     async addDataSource(dataSource: FileDataSource): Promise<[
-        {code: number, message: string },
+        { code: number, message: string },
         { code: number, message: string }
     ]> {
         const uuid: string = randomBytes(16).toString("hex")
@@ -75,8 +75,12 @@ class FileDataSourceRepository {
         fileName = this.removeExtension(fileName);
         formData.append("file", file, fileName);
         try {
-            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update/extract?literal.id=' + id
-                + '&commit=true&literal.datasource_type=file',
+            await axios.post(
+                'http://localhost:' +
+                process.env.SOLR_PORT +
+                '/solr/files/update/extract?literal.id=' +
+                id +
+                '&commit=true&literal.datasource_type=file',
                 formData,
                 {
                     headers: {
@@ -111,7 +115,9 @@ class FileDataSourceRepository {
                         fileData.uuid,
                         fileData.file_path.split("/").pop()
                     );
-                    db.prepare("UPDATE file_data SET last_modified = ? WHERE uuid = ?").run(lastModified, fileData.uuid)
+                    db.prepare(
+                        "UPDATE file_data SET last_modified = ? WHERE uuid = ?"
+                    ).run(lastModified, fileData.uuid)
                 } catch (e) {
                     console.log("Error posting file to solr");
                 }
@@ -120,7 +126,7 @@ class FileDataSourceRepository {
     }
 
     /**
-     * Retrieve a datasource stored in db by it's uuid
+     * Retrieve a file datasource stored in db by it's uuid
      *
      * @param {string} uuid
      * @return {[StoredFileDataSource, { code: number, message: string }]}
@@ -137,7 +143,7 @@ class FileDataSourceRepository {
     }
 
     /**
-     * Format datasource from db to a StoredFileDatasource
+     * Format file datasource from db to a StoredFileDatasource
      *
      * @param {any} dataSource
      * @return {StoredFileDataSource}
@@ -155,7 +161,7 @@ class FileDataSourceRepository {
     }
 
     /**
-     * Return all stored datasources
+     * Return all stored file datasources
      *
      * @return {[StoredFileDataSource[], { "code": number, "message": string }]}
      */
@@ -165,7 +171,7 @@ class FileDataSourceRepository {
     }
 
     /**
-     * Delete a datasource from db by it's uuid
+     * Delete a file datasource from db by it's uuid
      * @async
      *
      * @param {string} uuid
