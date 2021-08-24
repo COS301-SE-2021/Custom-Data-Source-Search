@@ -30,8 +30,8 @@
       <SplitterPanel :minSize="30" :size="60" class="container">
         <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
         <div v-else class="next-prev">
-          <icon-simple-expand-more class="clickable" @click="goToNext"/>
-          <icon-simple-expand-less class="clickable" @click="goToPrev"/>
+          <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
+          <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
         </div>
         <div class="file-container">
           <div id="full_file" v-html="fullFileData">
@@ -132,13 +132,13 @@ export default {
           continue;
         }
         const url = `http://${backend.connect.link}/general/?q=${
-            encodeURIComponent(this.escapeSpecialCharacters(q))
+            encodeURIComponent(this.escapeSolrControlCharacters(q))
         }`
         let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
         await axios
             .get(url, {headers})
             .then((resp) => {
-              this.handleSuccess(resp.data.searchResults, backend)
+              this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
             })
             .catch(async () => {
               await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
@@ -146,7 +146,7 @@ export default {
               await axios
                   .get(url, {headers})
                   .then((resp) => {
-                    this.handleSuccess(resp.data.searchResults, backend)
+                    this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
                   })
                   .catch((e) => {
                     console.error(e);
@@ -159,24 +159,22 @@ export default {
     },
 
     /**
-     * Escapes characters that Solr will interpret as instructions, allowing the user to search for these characters.
-     *
-     * @param {string} query string that might contain special control characters
+     * @param {string} query string that might contain special solr control characters
      * @returns {string} string with any special control characters escaped
      */
-    escapeSpecialCharacters(query) {
+    escapeSolrControlCharacters(query) {
       return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
         return '\\' + match
       })
     },
 
     /**
-     * For each search result object: whitelist escape any html; add backend data; then concat these to searchResults.
+     * For each search result object do: whitelistEscape any html; add backend data; then concat these to searchResults.
      *
      * @param {[SearchResult]} results search results as returned by backend
      * @param backend backend info from store
      */
-    handleSuccess(results, backend) {
+    augmentAndSaveSearchResults(results, backend) {
       for (let r of results) {
         for (let match_snippet of r.match_snippets) {
           match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -191,10 +189,8 @@ export default {
     },
 
     /**
-     * Map the match_snippets array to an array of their line numbers.
-     *
      * @param {[MatchSnippet]} match_snippets
-     * @return {[number]}
+     * @return {[number]} line numbers of match_snippets
      */
     extractLineNumbers(match_snippets) {
       let lineNumbers = [];
@@ -219,7 +215,7 @@ export default {
      */
     goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers) {
       if (this.fullFileId === id) {
-        this.goToFullFileLine(lineNumber);
+        this.scrollFullFileLineIntoView(lineNumber);
         return;
       }
       const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
@@ -229,7 +225,7 @@ export default {
       axios
           .get(url, {headers})
           .then((resp) => {
-            this.loadFullFile(resp.data.data, lineNumber, lineNumbers)
+            this.displayFullFileAtLineNumber(resp.data.data, lineNumber, lineNumbers)
           })
           .catch(async () => {
             await this.$store.dispatch("refreshJWTToken", {id: backendId})
@@ -239,7 +235,7 @@ export default {
             await axios
                 .get(url, {headers})
                 .then((resp) => {
-                  this.loadFullFile(resp.data.data, lineNumber, lineNumbers);
+                  this.displayFullFileAtLineNumber(resp.data.data, lineNumber, lineNumbers);
                 })
                 .catch()
           })
@@ -274,7 +270,7 @@ export default {
       let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
       let matches = content.match(whitelistRegex)
       if (matches === null) {
-        return this.escapeHtml(content)
+        return this.escapeLessThanChar(content)
       } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
         return this.escapeAllExceptMatches(content, matches);
       } else {
@@ -293,7 +289,7 @@ export default {
       let processedString = "";
       for (let i = 0; i < legalTokens.length; i++) {
         let start_index_of_whitelisted_section = content.search(legalTokens[i]);
-        processedString += this.escapeHtml(
+        processedString += this.escapeLessThanChar(
             content.substr(0, start_index_of_whitelisted_section)
         ) + legalTokens[i];
         content = content.substr(start_index_of_whitelisted_section + legalTokens[i].length);
@@ -307,13 +303,11 @@ export default {
      * @param string html string that can be rendered by a browser
      * @returns {string} "html" string that is "dead" to a browser
      */
-    escapeHtml(string) {
+    escapeLessThanChar(string) {
       return string.replace(/</g, "&lt;")
     },
 
     /**
-     * Stack based check to confirm that all html tags that are opened are closed.
-     *
      * @param {[string]} tags ordered list of tags from some html string
      * @returns {boolean} true if all tags were closed, false otherwise
      */
@@ -322,75 +316,63 @@ export default {
       for (let i = 0; i < tags.length; i++) {
         let tag = tags[i]
         if (tag.substr(0, 2) === "</") {
-          if (stack.length === 0 || stack.pop() !== this.extractTagName(tag)) {
+          if (stack.length === 0 || stack.pop() !== this.extractHtmlTagName(tag)) {
             return false;
           }
         } else {
-          stack.push(this.extractTagName(tag))
+          stack.push(this.extractHtmlTagName(tag))
         }
       }
       return stack.length === 0;
     },
 
     /**
-     * Extracts the tag name from some closing or opening html tag string.
-     *
      * @param {string} tag html tag
      * @returns {string}
      */
-    extractTagName(tag) {
+    extractHtmlTagName(tag) {
       return tag.match(/[A-Za-z0-9]+/)[0];
     },
 
     /**
-     * Load given file data into the display panel, and go to the given file line.
-     *
-     * @param {html} fileData
-     * @param {number} lineNumber line number or result to go to
+     * @param {html} fileData the html file to display
+     * @param {number} lineNumber line number of result to go to
      * @param {[number]} lineNumbers line numbers of all results found in file
      */
-    loadFullFile(fileData, lineNumber, lineNumbers) {
+    displayFullFileAtLineNumber(fileData, lineNumber, lineNumbers) {
       this.fullFileData = fileData;
       this.fullFileLineNumbers = lineNumbers;
       this.$nextTick().then(() => {
-        this.goToFullFileLine(lineNumber);
+        this.scrollFullFileLineIntoView(lineNumber);
       })
     },
 
     /**
-     * Scroll given line (in display panel) into view.
-     *
      * @param lineNumber
      */
-    goToFullFileLine(lineNumber) {
+    scrollFullFileLineIntoView(lineNumber) {
       this.currentLineNumber = lineNumber;
       this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
     },
 
-    /**
-     * In the display panel, go to the previous line with a search result.
-     */
-    goToPrev() {
+    scrollToPrevResult() {
       let index = Math.max(
           0,
           this.fullFileLineNumbers.findIndex((item) => {
             return this.currentLineNumber === item
           }) - 1
       );
-      this.goToFullFileLine(this.fullFileLineNumbers[index]);
+      this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
     },
 
-    /**
-     * In the display panel, go to the next line with a search result.
-     */
-    goToNext() {
+    scrollToNextResult() {
       let index = Math.min(
           this.fullFileLineNumbers.length - 1,
           this.fullFileLineNumbers.findIndex((item) => {
             return this.currentLineNumber === item
           }) + 1
       );
-      this.goToFullFileLine(this.fullFileLineNumbers[index]);
+      this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
     }
   }
 };
