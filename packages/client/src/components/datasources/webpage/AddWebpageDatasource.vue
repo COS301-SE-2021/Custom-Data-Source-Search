@@ -36,6 +36,9 @@
       }
     },
     methods: {
+      /**
+       * Submits a data object to the relevant backend.
+       */
       submitSource() {
         if(this.dataSourceURI!==""){
           let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
@@ -76,7 +79,6 @@
 </script>
 
 <style scoped>
-
 input {
   font-size: 15px;
   font-style: italic;
