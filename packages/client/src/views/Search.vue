@@ -69,6 +69,13 @@ import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
  * @property {[number]} lineNumbers
  */
 
+/**
+ * @typedef {Object} Backend
+ * @property {Object} local
+ * @property {Object} connect
+ * @property {Object}
+ */
+
 export default {
   name: "SearchBar",
 
@@ -164,7 +171,7 @@ export default {
     },
 
     /**
-     * For each search result object whitelist escape html and add backend data; concat these to this.searchResults.
+     * For each search result object: whitelist escape any html; add backend data; then concat these to searchResults.
      *
      * @param {[SearchResult]} results search results as returned by backend
      * @param backend backend info from store
@@ -181,6 +188,20 @@ export default {
         r.backendId = backend.local.id;
       }
       this.searchResults = this.searchResults.concat(results);
+    },
+
+    /**
+     * Map the match_snippets array to an array of their line numbers.
+     *
+     * @param {[MatchSnippet]} match_snippets
+     * @return {[number]}
+     */
+    extractLineNumbers(match_snippets) {
+      let lineNumbers = [];
+      for (let i = 0; i < match_snippets.length; i++) {
+        lineNumbers.push(match_snippets[i].line_number);
+      }
+      return lineNumbers;
     },
 
     /**
@@ -211,9 +232,9 @@ export default {
             this.loadFullFile(resp.data.data, lineNumber, lineNumbers)
           })
           .catch(async () => {
-            await this.$store.dispatch("refreshJWTToken", {id: this.backendId})
+            await this.$store.dispatch("refreshJWTToken", {id: backendId})
             const headers = {
-              "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendId)
+              "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
             };
             await axios
                 .get(url, {headers})
@@ -223,13 +244,6 @@ export default {
                 .catch()
           })
       this.fullFileId = id;
-    },
-    extractLineNumbers(match_snippets) {
-      let lineNumbers = [];
-      for (let i = 0; i < match_snippets.length; i++) {
-        lineNumbers.push(match_snippets[i].line_number);
-      }
-      return lineNumbers;
     },
 
     /**
