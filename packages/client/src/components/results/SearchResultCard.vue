@@ -128,10 +128,24 @@ export default {
      */
     toggleNumSnippetsToShow() {
       if (this.numberOfResultsToDisplay === 1) {
-        this.numberOfResultsToDisplay += 3;
+        this.showMore();
       } else {
-        this.numberOfResultsToDisplay = 1;
+        this.showOne();
       }
+    },
+
+    /**
+     * Show only one result snippet.
+     */
+    showOne() {
+      this.numberOfResultsToDisplay = 1;
+    },
+
+    /**
+     * Show (up to) three more results snippets.
+     */
+    showMore() {
+      this.numberOfResultsToDisplay += 3;
     },
 
     /**
