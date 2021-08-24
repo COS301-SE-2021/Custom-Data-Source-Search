@@ -5,7 +5,7 @@
     <span>Selected Folders</span>
     <div class="selected-folders">
       <ScrollPanel style="width: 100%; height: 50px">
-        <span class="selection-list" v-if="path.length!==0" v-for="i in path" :key="i.id">{{i}}</span>
+        <span class="selection-list" v-if="selectedFolders.length!==0" v-for="i in path" :key="i.id">{{i}}</span>
         <span v-else class="selection-list">No folders selected.</span>
       </ScrollPanel>
     </div>
@@ -50,7 +50,7 @@
               tag1: null,
               tag2: null,
               type: 'folder',
-              path: [],
+              selectedFolders: [],
               depth: 0,
               ignore: '# Files/folders to be ignored are accepted in a .gitignore format # \n \n'  +
                   'node_modules/ \n' +
@@ -67,51 +67,51 @@
 
                 properties: ['openDirectory', 'multiSelections'] })
                   .then(dirs => {
-
-                    //Check that files were successfully selected
                     if(dirs.filePaths && dirs.filePaths[0]) {
-
                       let str;
                       let temp;
-                      //for every folder selected
                       for (let i = 0; i < dirs.filePaths.length; i++) {
-
                         str = (dirs.filePaths[i])
-
-                        //Force use of / in URI's across all platforms
                         temp = str.replaceAll("\\", "/")
-                        this.path.push(temp)
-
+                        this.selectedFolders.push(temp)
                       }
                     }
-                    console.log(this.path)
                   })
             },
           submitSource() {
-              console.log(this.ignore)
-            for (let i = 0; i < this.path.length; i++) {
-              let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
-              const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
-              axios
-                  .post(url, respObject)
-                  .then((resp) => {
-                    this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: resp.data.message,
-                      life: 3000
+            if(this.selectedFolders.length!==0){
+              for (let i = 0; i < this.selectedFolders.length; i++) {
+                let respObject = {"path": this.selectedFolders[i], "tag1": this.tag1, "tag2": this.tag2}
+                const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
+                axios
+                    .post(url, respObject)
+                    .then((resp) => {
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: resp.data.message,
+                        life: 3000
+                      })
+                      this.$emit('addFolder')
+                      this.$emit("submitted")
                     })
-                    this.$emit('addFolder')
-                    this.$emit("submitted")
-                  })
-                  .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
+                    .catch((error) => {
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response.data.message,
+                        life: 3000
+                      })
                     })
-                  })
+              }
+            }
+            else{
+              this.$toast.add({
+                severity: 'error',
+                summary: 'No folders selected',
+                detail: 'Try selecting some folders to add',
+                life: 3000
+              })
             }
           }
         }

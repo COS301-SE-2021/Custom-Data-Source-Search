@@ -37,17 +37,27 @@
         },
         methods: {
             submitSource() {
-              let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
+              if(this.dataSourceURI!==""){
+                let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
                 axios
                     .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`, respObject)
                     .then(resp => {
-                        this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
-                        this.$emit('addWebpage')
-                        this.$emit("submitted")
+                      this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
+                      this.$emit('addWebpage')
+                      this.$emit("submitted")
                     })
                     .catch(() => {
-                        this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Webpage.', life: 3000})
+                      this.$toast.add({severity: 'error', summary: 'Error', detail: 'Could Not Add Webpage.', life: 3000})
                     })
+              }
+              else{
+                this.$toast.add({
+                  severity: 'error',
+                  summary: 'No URL entered',
+                  detail: 'Enter the URL of the webpage you would like to add',
+                  life: 3000
+                })
+              }
             }
         }
     }

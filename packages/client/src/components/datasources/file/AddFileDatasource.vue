@@ -51,26 +51,17 @@ export default {
         filters: [
           {
             name: 'All Files',
-            extensions: ['*'] //Will need to expand in the future.
+            extensions: ['*']
           }],
 
         properties: ['openFile', 'multiSelections']
       })
           .then(files => {
-
-            //Check that files were successfully selected
             if (files.filePaths && files.filePaths[0]) {
-
               let p, str;
-
-              //for every file selected
               for (let i = 0; i < files.filePaths.length; i++) {
-
                 str = files.filePaths[i]
-
-                //Force use of / in URI's across all platforms
                 str = str.replaceAll("\\", "/")
-
                 p = str.split("/")
                 this.filename.push(p.pop())
                 this.path.push(p.join("/"))
@@ -79,28 +70,38 @@ export default {
           })
     },
     submitSource(){
-      for (let i = 0; i < this.filename.length; i++) {
-        let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
-        axios
-            .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`, respObject)
-            .then((resp) => {
-              this.$toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: resp.data.message,
-                life: 3000
+      if(this.filename.length!==0){
+        for (let i = 0; i < this.filename.length; i++) {
+          let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+          axios
+              .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`, respObject)
+              .then((resp) => {
+                this.$toast.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: resp.data.message,
+                  life: 3000
+                })
+                this.$emit('addFile')
+                this.$emit("submitted")
               })
-              this.$emit('addFile')
-              this.$emit("submitted")
-            })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response.data.message,
-                life: 3000
+              .catch((error) => {
+                this.$toast.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: error.response.data.message,
+                  life: 3000
+                })
               })
-            })
+        }
+      }
+      else{
+        this.$toast.add({
+          severity: 'error',
+          summary: 'No files selected',
+          detail: 'Try selecting some files to add',
+          life: 3000
+        })
       }
     }
   }
