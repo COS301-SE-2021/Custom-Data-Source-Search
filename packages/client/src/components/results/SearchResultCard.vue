@@ -33,16 +33,16 @@
     </div>
     <div v-if="match_snippets.length > 1" class="expand_icon_div">
       <icon-simple-expand-more
-          v-if="thereAreMore"
+          v-if="notDisplayingAllAvailableSnippets"
           height="25"
           width="25"
-          @click="showMore"
+          @click="showThreeMoreSnippets"
       />
       <icon-simple-expand-less
           v-else
           height="25"
           width="25"
-          @click="showOne"
+          @click="showOneSnippet"
       />
     </div>
   </div>
@@ -96,17 +96,13 @@ export default {
 
   methods: {
     /**
-     * Open file at given path using default software set by OS.
-     *
-     * @param {string }source
+     * @param {string} source
      */
     openFile(source) {
       shell.openPath(source)
     },
 
     /**
-     * Let OS show file at given path in folder.
-     *
      * @param {string} source
      */
     openFileUsing(source) {
@@ -114,52 +110,40 @@ export default {
     },
 
     /**
-     * Emit the snippetClicked event for the parent view to handle
-     *
      * @param {number} lineNumber
      */
     emitSnippetClicked(lineNumber) {
       this.$emit('snippetClicked', this.link, this.type, this.id, this.backendId, lineNumber, this.lineNumbers)
     },
 
-    /**
-     * If only one snippet is being shown, show (at most) three more, else show only one.
-     */
     toggleNumSnippetsToShow() {
       if (this.numberOfResultsToDisplay === 1) {
-        this.showMore();
+        this.showThreeMoreSnippets();
       } else {
-        this.showOne();
+        this.showOneSnippet();
       }
     },
 
-    /**
-     * Show only one result snippet.
-     */
-    showOne() {
+    showOneSnippet() {
       this.numberOfResultsToDisplay = 1;
     },
 
     /**
      * Show (up to) three more result snippets.
      */
-    showMore() {
+    showThreeMoreSnippets() {
       this.numberOfResultsToDisplay += 3;
     },
 
     /**
-     * Returns true if the view is currently displaying less match snippets than actually exist.
-     *
      * @return {boolean}
      */
-    thereAreMore() {
+    notDisplayingAllAvailableSnippets() {
       return this.numberOfResultsToDisplay < this.match_snippets.length;
     },
 
     /**
-     * Add up to three result snippets to this.snippetsOnDisplay.
-     *
-     * @param newNumber
+     * @param newNumber upper bound of result snippets to display
      */
     updateDisplaySnippets(newNumber) {
       this.snippetsOnDisplay = []

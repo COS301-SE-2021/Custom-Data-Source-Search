@@ -63,7 +63,7 @@ const store = createStore({
             return userNamesArr;
         },
 
-        getMasterKeyObject(state) {
+        getMasterKeyObject() {
             return masterKeyObject;
         },
 
@@ -188,7 +188,7 @@ const store = createStore({
          * Attempt to decrypt masterKeyObject of a specified user. Return true on success.
          *
          * Save decrypted masterKeyObject to global variable that will not be persisted on close of app.
-         *
+
          * @param state
          * @param {{userID: number, masterPassword: string}} payload
          * @return {boolean}
@@ -212,30 +212,28 @@ const store = createStore({
             }
         },
 
+        /**
+         * Call signInAUser with the currently signed in user id
+         *
+         * @param state
+         * @param payload
+         */
         signInThisUser: function (state, payload) {
-            //Payload: masterPassword
-            let thisUser = state.users[state.signedInUserId];
-            let passCheck = decryptMasterKeyObject(
-                thisUser.info.encryptedMasterKeyObject,
-                payload.masterPassword,
-                thisUser.info.email
-            );
-            if (passCheck) {
-                masterKeyObject = passCheck;
-                state.users[state.signedInUserId].info.isActive = true;
-                return true;
-            }
-            else {
-                return false;
-            }
+            payload.userID = state.signedInUserId;
+            this.signInAUser(state, payload);
         },
 
+        /**
+         * Sign out the specified user; delete all their decrypted keys from store.
+         *
+         * @param state
+         * @param {{userID: number}} payload
+         */
         signOutUser (state, payload) {
-            // Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKeyObject = null;
-            state.users[payload.user.id].info.isActive = false;
+            state.users[payload.userID].info.isActive = false;
             state.signedIn = false;
-            for (let backend of state.users[payload.user.id].backends) {
+            for (let backend of state.users[payload.userID].backends) {
                 backend.connect.keys.sessionKey = null;
                 backend.connect.keys.refreshToken = null;
             }
@@ -265,6 +263,7 @@ const store = createStore({
                 state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
+
 
         addBackend(state, payload){
             // Payload: name, associatedEmail, link, secretPair, refreshToken
