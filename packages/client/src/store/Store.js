@@ -625,7 +625,7 @@ function generateMasterKey(masterPassword, email) {
 }
 
 /**
- * Decrypt the masterKyObject in store, return key object on success, return null on failure.
+ * Decrypt the masterKeyObject sent in, return key object on success, return null on failure.
  *
  * @param encryptedMasterKeyObject
  * @param fedInPassword
