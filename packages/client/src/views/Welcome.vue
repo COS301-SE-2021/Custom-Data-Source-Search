@@ -2,7 +2,7 @@
   <div class="page">
     <Toast position="bottom-left"/>
     <div class="heading-and-info">
-      <h1 class="header">Who's Sleuthing ?</h1>
+      <h1 class="header">Who's Sleuthing?</h1>
       <p class="description"> Select the user you would like to sign in as</p>
     </div>
     <div class="user-select">
@@ -18,8 +18,8 @@
       ></UserCard>
       <ContextMenu ref="deleteOption" :model="items"></ContextMenu>
       <AddUserCard></AddUserCard>
+      <span style="font-style: italic">Tip: {{tips[randomId]}}</span>
     </div>
-
     <DeleteUserAreYouSure
             :show="displayDeleteCheck"
             @display-popup="showPopup"
@@ -74,6 +74,7 @@
       selectedUser: null,
       deleteVaultFedIn: null,
       firstQuestionFedIn: true,
+      randomId: null,
       items: [
         {label: 'Remove', icon: 'pi pi-trash', command: () => {
             // event.originalEvent: Browser event
@@ -83,6 +84,11 @@
         {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
             this.displaySignOutCheck = !this.displaySignOutCheck;
           }}
+      ],
+      tips: [
+        "Want to fuzzy search? Place ~ at the end of your search!",
+        "Click on a search result to view the file contents in DataSleuth",
+        "Dividers can be dragged left and right to resize panels"
       ]
     }
 
@@ -118,6 +124,9 @@
     },
     onUserCardRightClick(event) {
       this.$refs.deleteOption.show(event);
+    },
+    getRandomNumber(min,max){
+      return Math.floor(Math.random()*(max-min+1)+min);
     },
     // startLocalBackend(){
     //   console.log("Starting Backend");
@@ -271,6 +280,7 @@
   },
   mounted () {
     this.isSignedIn = this.$store.getters.getSignedIn;
+    this.randomId = this.getRandomNumber(0, this.tips.length-1);
   },
   computed: {
     ...mapGetters([
@@ -289,6 +299,9 @@
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: 1fr 3fr 1fr;
+  background-image: url('../assets/backgrounds/Background_resize_vector.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .heading-and-info {
