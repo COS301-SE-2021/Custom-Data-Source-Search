@@ -19,7 +19,7 @@ import DatasourcesTable from "../components/datasources/DatasourcesTable";
 
 export default{
   name: "Datasources",
-  
+
   components: {DatasourcesTable}
 }
 </script>
