@@ -1,5 +1,4 @@
 <template>
-  <ScrollPanel>
     <div>
       <span>
         Enter the URL of desired webpage
@@ -25,62 +24,65 @@
       </div>
       <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitWebpage"/>
     </div>
-  </ScrollPanel>
 </template>
 
 <script>
-  import axios from 'axios'
-  export default {
-    name: "AddDataURI",
-    props:{
-      backend: String,
-    },
-    data() {
-      return {
-        dataSourceURI: "",
-        tag1: null,
-        tag2: null,
-        type: 'webpage'
-      }
-    },
-    methods: {
-      submitWebpage() {
-        if(this.dataSourceURI!==""){
-          let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
-          axios
-              .post(
-                  `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
-                  respObject
-              )
-              .then(resp => {
-                this.$toast.add({
-                  severity: 'success',
-                  summary: 'Success',
-                  detail: resp.data.message,
-                  life: 3000
+import axios from 'axios'
+
+export default {
+  name: "AddDataURI",
+
+  props:{
+    backend: String,
+  },
+
+  data() {
+    return {
+      dataSourceURI: "",
+      tag1: null,
+      tag2: null,
+      type: 'webpage'
+    }
+  },
+
+  methods: {
+    submitWebpage() {
+      if(this.dataSourceURI!==""){
+        let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
+        axios
+            .post(
+                `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
+                respObject
+            )
+            .then(resp => {
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: resp.data.message,
+                life: 3000
                 })
-                this.$emit('addWebpage')
-                this.$emit("submitted")
-              })
-              .catch(() => {
-                this.$toast.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: 'Could Not Add Webpage.',
-                  life: 3000})
-              })
-        }
-        else{
-          this.$toast.add({
-            severity: 'error',
-            summary: 'No URL entered',
-            detail: 'Enter the URL of the webpage you would like to add',
-            life: 3000
-          })
-        }
+              this.$emit('addWebpage')
+              this.$emit("submitted")
+            })
+            .catch(() => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Could Not Add Webpage.',
+                life: 3000})
+            })
+      }
+      else{
+        this.$toast.add({
+          severity: 'error',
+          summary: 'No URL entered',
+          detail: 'Enter the URL of the webpage you would like to add',
+          life: 3000
+        })
       }
     }
   }
+}
 </script>
 
 <style scoped>
@@ -96,12 +98,6 @@ input {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
 }
 
-#input{
-  min-width: 100%;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-
 .p-button-rounded{
   float: right;
   margin: 7px;
@@ -111,10 +107,9 @@ input {
   margin-top: 15px;
 }
 
-.p-scrollpanel{
-  height: 50vh;
-  bottom: 2em;
-  padding-bottom: 1vh;
-  align-content: center;
+#input{
+  min-width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 </style>

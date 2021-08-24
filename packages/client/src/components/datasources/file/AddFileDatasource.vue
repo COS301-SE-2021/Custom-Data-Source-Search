@@ -48,12 +48,16 @@
 
 <script>
 import axios from 'axios';
+
 const electron = require('@electron/remote');
+
 export default {
   name: "AddFileDatasource",
+
   props:{
     backend: String,
   },
+
   data() {
     return {
       dataSourceURI: "",
@@ -64,6 +68,7 @@ export default {
       paths: []
     }
   },
+
   methods: {
     selectFiles() {
       electron.dialog.showOpenDialog({
