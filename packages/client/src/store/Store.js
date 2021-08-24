@@ -6,19 +6,16 @@ const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
 
 /**
- * @typedef {
- *              {
- *                  id: number,
- *                  name: string,
- *                  active: boolean,
- *                  userIndex: number,
- *                  backendIndex: number,
- *                  associatedEmail: string,
- *                  link: string,
- *                  passKey: string,
- *                  admin: string
- *              }
- * } Backend
+ * @typedef {Object} Backend
+ * @property {number} id
+ * @property {string} name
+ * @property {boolean} active
+ * @property {number} userIndex
+ * @property {number} backendIndex
+ * @property {string} associatedEmail
+ * @property {string} link
+ * @property {Object} passKey
+ * @property {string} admin
  */
 
 const store = createStore({
