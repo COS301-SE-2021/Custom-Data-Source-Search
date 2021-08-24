@@ -217,7 +217,6 @@ export default {
           icon: 'pi pi-copy',
           command: () => {
             let usersString = "";
-
             for (let userData of this.selectedUsers) {
               usersString += "Backend: " + this.backend.connect.link;
               usersString += ",Email: " + userData.email;
@@ -600,11 +599,6 @@ export default {
   bottom: 3vh;
   align-self: center;
   margin: 0 0 2.5em;
-}
-
-.operation-button {
-  margin-right: 0.16em;
-  margin-left: 0.16em
 }
 
 .permissions-button {
