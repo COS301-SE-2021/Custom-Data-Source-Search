@@ -100,15 +100,15 @@ export default {
       electron.dialog.showOpenDialog({
         title: 'Select Folders to Add as Data Sources',
         buttonLabel: "Select",
-        properties: ['openDirectory', 'multiSelections'] })
+        properties: ['openDirectory', 'multiSelections']})
           .then(dirs => {
             if(dirs.filePaths && dirs.filePaths[0]) {
               let str;
               let temp;
               for (let i = 0; i < dirs.filePaths.length; i++) {
-                str = (dirs.filePaths[i])
-                temp = str.replaceAll("\\", "/")
-                this.selectedFolders.push(temp)
+                str = (dirs.filePaths[i]);
+                temp = str.replaceAll("\\","/");
+                this.selectedFolders.push(temp);
               }
             }
           })
@@ -117,7 +117,7 @@ export default {
     submitSelectedFolders() {
       if(this.selectedFolders.length!==0){
         for (let i = 0; i < this.selectedFolders.length; i++) {
-          let respObject = {"path": this.selectedFolders[i], "tag1": this.tag1, "tag2": this.tag2}
+          let respObject = {"path": this.selectedFolders[i], "tag1": this.tag1, "tag2": this.tag2};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
           axios
               .post(url, respObject)
@@ -127,9 +127,9 @@ export default {
                   summary: 'Success',
                   detail: resp.data.message,
                   life: 3000
-                })
-                this.$emit('addFolder')
-                this.$emit("submitted")
+                });
+                this.$emit('addFolder');
+                this.$emit("submitted");
               })
               .catch((error) => {
                 this.$toast.add({
@@ -137,7 +137,7 @@ export default {
                   summary: 'Error',
                   detail: error.response.data.message,
                   life: 3000
-                })
+                });
               })
         }
         this.selectedFolders = [];
@@ -148,7 +148,7 @@ export default {
           summary: 'No folders selected',
           detail: 'Try selecting some folders to add',
           life: 3000
-        })
+        });
       }
     }
   }

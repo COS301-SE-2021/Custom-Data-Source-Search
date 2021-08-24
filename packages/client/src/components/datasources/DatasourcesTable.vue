@@ -325,7 +325,7 @@ export default {
               await axios
                   .get(url, {headers})
                   .then((resp) => {
-                    this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name)
+                    this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name);
                   })
                   .catch((e) => {
                     console.error(e);
@@ -351,7 +351,7 @@ export default {
       this.sources = this.sources.concat(results);
 
       if(this.sources.length === 0){
-        this.$toast.add({severity: 'warn', summary: 'No sources', detail: "Try adding data sources", life: 3000})
+        this.$toast.add({severity: 'warn', summary: 'No sources', detail: "Try adding data sources", life: 3000});
       }
       this.loading = false;
     },
@@ -382,10 +382,10 @@ export default {
         return;
       }
       else if(this.selectedSources.length===1){
-        this.message="Are you sure you want to delete this data source?"
+        this.message="Are you sure you want to delete this data source?";
       }
       else if(this.selectedSources.length>1){
-        this.message="Are you sure you want to delete these data sources?"
+        this.message="Are you sure you want to delete these data sources?";
       }
       this.$confirm.require({
         message: this.message,
@@ -405,8 +405,9 @@ export default {
                     severity: 'success',
                     summary: 'Deleted',
                     detail: "Source deleted",
-                    life: 3000});
-                  this.updateSources()
+                    life: 3000
+                  });
+                  this.updateSources();
                 })
                 .catch(() => {
                   this.$toast.add({
@@ -414,7 +415,7 @@ export default {
                     summary: 'Error',
                     detail: "Could not delete source",
                     life: 3000
-                  })
+                  });
                 })
           }
           this.selectedSources = null;

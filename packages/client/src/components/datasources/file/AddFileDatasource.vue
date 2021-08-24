@@ -79,18 +79,17 @@ export default {
             name: 'All Files',
             extensions: ['*']
           }],
-
         properties: ['openFile', 'multiSelections']
       })
           .then(files => {
             if (files.filePaths && files.filePaths[0]) {
               let p, str;
               for (let i = 0; i < files.filePaths.length; i++) {
-                str = files.filePaths[i]
-                str = str.replaceAll("\\", "/")
-                p = str.split("/")
-                this.filenames.push(p.pop())
-                this.paths.push(p.join("/"))
+                str = files.filePaths[i];
+                str = str.replaceAll("\\", "/");
+                p = str.split("/");
+                this.filenames.push(p.pop());
+                this.paths.push(p.join("/"));
               }
             }
           })
@@ -99,7 +98,7 @@ export default {
     submitSelectedFiles(){
       if(this.filenames.length!==0){
         for (let i = 0; i < this.filenames.length; i++) {
-          let respObject = {"filename": this.filenames[i], "path": this.paths[i], "tag1": this.tag1, "tag2": this.tag2}
+          let respObject = {"filename": this.filenames[i], "path": this.paths[i], "tag1": this.tag1, "tag2": this.tag2};
           axios
               .post(
                   `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
@@ -111,9 +110,9 @@ export default {
                   summary: 'Success',
                   detail: resp.data.message,
                   life: 3000
-                })
-                this.$emit('addFile')
-                this.$emit("submitted")
+                });
+                this.$emit('addFile');
+                this.$emit("submitted");
               })
               .catch((error) => {
                 this.$toast.add({
@@ -121,7 +120,7 @@ export default {
                   summary: 'Error',
                   detail: error.response.data.message,
                   life: 3000
-                })
+                });
               })
         }
       }
@@ -131,7 +130,7 @@ export default {
           summary: 'No files selected',
           detail: 'Try selecting some files to add',
           life: 3000
-        })
+        });
       }
     }
   }

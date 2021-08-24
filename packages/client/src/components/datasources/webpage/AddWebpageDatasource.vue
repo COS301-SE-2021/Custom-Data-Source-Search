@@ -48,7 +48,7 @@ export default {
   methods: {
     submitWebpage() {
       if(this.dataSourceURI!==""){
-        let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2}
+        let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
         axios
             .post(
                 `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
@@ -60,16 +60,17 @@ export default {
                 summary: 'Success',
                 detail: resp.data.message,
                 life: 3000
-                })
-              this.$emit('addWebpage')
-              this.$emit("submitted")
+                });
+              this.$emit('addWebpage');
+              this.$emit("submitted");
             })
             .catch(() => {
               this.$toast.add({
                 severity: 'error',
                 summary: 'Error',
                 detail: 'Could Not Add Webpage.',
-                life: 3000})
+                life: 3000
+              });
             })
       }
       else{
@@ -78,7 +79,7 @@ export default {
           summary: 'No URL entered',
           detail: 'Enter the URL of the webpage you would like to add',
           life: 3000
-        })
+        });
       }
     }
   }

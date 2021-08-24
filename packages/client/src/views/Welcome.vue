@@ -1,4 +1,4 @@
-<template >
+<template>
   <div class="page">
     <Toast position="bottom-left"/>
     <div class="heading-and-info">
@@ -61,8 +61,6 @@ import SignOutCheck from "../components/popups/SignOutCheck";
 import SignIn from "../components/popups/SignIn";
 import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 import {mapGetters} from "vuex";
-
-const electron = require('@electron/remote');
 
 export default {
   name: "Welcome",
