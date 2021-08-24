@@ -1,5 +1,5 @@
 <template>
-  <ScrollPanel style="width: 100%; height: 80vh; bottom: 2em; padding-bottom: 0.8vh;">
+  <ScrollPanel style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
     <DataTable :value="sources" :paginator="true" :rows="10"
                paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                :rowsPerPageOptions="[10,20,50]" :selection="selectedSources" :row-hover="true" responsiveLayout="scroll"
@@ -13,7 +13,7 @@
             <InputText v-model="filters2['global'].value" placeholder="Keyword Search"/>
           </span>
           <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
-                  style="float: right;"/>
+                  style="float: right; margin-right: 2vw;"/>
           <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="false"
                         :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
             <div v-if="!clicked && backend===null">
@@ -334,6 +334,7 @@ a {
 .p-input-icon-left {
   margin-left: 50px;
 }
+
 .p-inputtext {
   background-color: #242424;
 }
