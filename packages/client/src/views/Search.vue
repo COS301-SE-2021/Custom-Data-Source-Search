@@ -23,7 +23,7 @@
               v-for="(r,i) in searchResults"
               :key="i"
               :="r"
-              @resultClicked="loadFullFile"
+              @snippetClicked="goToLineFetchFileIfRequired"
           />
         </div>
       </SplitterPanel>
@@ -48,6 +48,26 @@ import {mapGetters} from 'vuex';
 import SearchResultCard from "@/components/results/SearchResultCard";
 import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
 import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+
+/**
+ * @typedef {Object} MatchSnippet
+ * @property {string} snippet
+ * @property {number} line_number
+ */
+
+/**
+ * @typedef {Object} SearchResult
+ * @property {string} id
+ * @property {string} type
+ * @property {string} source
+ * @property {string} datasource_name
+ * @property {string} datasource_icon
+ * @property {[MatchSnippet]} match_snippets
+ * @property {string} link
+ * @property {string} name
+ * @property {number} backendId
+ * @property {[number]} lineNumbers
+ */
 
 export default {
   name: "SearchBar",
@@ -143,19 +163,152 @@ export default {
     },
 
     /**
-     * Append relevant backend data to each search result before concatenating these with the existing list in data.
+     * For each search result object whitelist escape html and add backend data; concat these to this.searchResults.
      *
-     * @param results search results as returned by backend
+     * @param {[SearchResult]} results search results as returned by backend
      * @param backend backend info from store
      */
     handleSuccess(results, backend) {
       for (let r of results) {
+        for (let match_snippet of r.match_snippets) {
+          match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
+        }
+        r.datasource_icon = this.whitelistEscape(r.datasource_icon);
+        r.lineNumbers = this.extractLineNumbers(r.match_snippets)
         r.link = backend.connect.link;
         r.name = backend.local.name;
         r.backendId = backend.local.id;
       }
       this.searchResults = this.searchResults.concat(results);
     },
+
+    goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers) {
+      const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
+      const headers = {
+        "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
+      };
+      axios
+          .get(url, {headers})
+          .then((resp) => {
+            this.loadFullFile(resp.data.data, lineNumber, lineNumbers)
+          })
+          .catch(async () => {
+            await this.$store.dispatch("refreshJWTToken", {id: this.backendId})
+            const headers = {
+              "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendId)
+            };
+            await axios
+                .get(url, {headers})
+                .then((resp) => {
+                  this.loadFullFile(resp.data.data, lineNumber, lineNumbers)
+                })
+                .catch()
+          })
+    },
+    extractLineNumbers(match_snippets) {
+      let lineNumbers = [];
+      for (let i = 0; i < match_snippets.length; i++) {
+        lineNumbers.push(match_snippets[i].line_number);
+      }
+      return lineNumbers;
+    },
+
+    /**
+     * Escape all tokens not in whitelist defined by validAttribute regex.
+     * Check resulting html tags to ensure all are closed.
+     *
+     * Security Note: NEVER allow any type of closing tags in the validWord regex snippet.
+     * This would render the function unsafe.
+     *
+     * @param {string} content suspect html
+     * @returns {string} sanitised html
+     */
+    whitelistEscape(content) {
+      if (content === undefined) {
+        return ""
+      }
+      // Parts Of Regex
+      const validWord = "[\\w\\s\\-:;,#.]+"; // WARNING: NO closing tags allowed in here! {', ", >} are ILLEGAL here.
+      const validAttributeTypes = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
+      const validHtmlTags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
+      // Full Regex
+      const validAttribute = `(?:\\s(?:${validAttributeTypes.join("|")})=(?:"(?:${validWord})"|'(?:${validWord})'))*`;
+      //
+      let whitelist_production_line = []
+      for (let i = 0; i < validHtmlTags.length; i++) {
+        whitelist_production_line.push(`<${validHtmlTags[i]}${validAttribute}>|<\/${validHtmlTags[i]}>`)
+      }
+      let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g")
+      let matches = content.match(whitelistRegex)
+      if (matches === null) {
+        return this.escapeHtml(content)
+      } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
+        return this.escapeAllExceptMatches(content, matches);
+      } else {
+        return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
+      }
+    },
+
+    /**
+     * Escape all content except the ordered list of legal tokens.
+     *
+     * @param {string} content html that might be unsafe
+     * @param {[string]} legalTokens exhaustive ordered list of legal tokens that actually exist in the content
+     * @returns {string} content with only legal tokens not escaped
+     */
+    escapeAllExceptMatches(content, legalTokens) {
+      let processedString = "";
+      for (let i = 0; i < legalTokens.length; i++) {
+        let start_index_of_whitelisted_section = content.search(legalTokens[i]);
+        processedString += this.escapeHtml(
+            content.substr(0, start_index_of_whitelisted_section)
+        ) + legalTokens[i];
+        content = content.substr(start_index_of_whitelisted_section + legalTokens[i].length);
+      }
+      return processedString;
+    },
+
+    /**
+     * Html escape function only to be used where we are guaranteed to have no preceding half-created html tags.
+     *
+     * @param string html string that can be rendered by a browser
+     * @returns {string} "html" string that is "dead" to a browser
+     */
+    escapeHtml(string) {
+      return string.replace(/</g, "&lt;")
+    },
+
+    /**
+     * Stack based check to confirm that all html tags that are opened are closed.
+     *
+     * @param {[string]} tags ordered list of tags from some html string
+     * @returns {boolean} true if all tags were closed, false otherwise
+     */
+    confirmThatAllOpenedTagsAreClosed(tags) {
+      let stack = []
+      for (let i = 0; i < tags.length; i++) {
+        let tag = tags[i]
+        if (tag.substr(0, 2) === "</") {
+          if (stack.length === 0 || stack.pop() !== this.extractTagName(tag)) {
+            return false;
+          }
+        } else {
+          stack.push(this.extractTagName(tag))
+        }
+      }
+      return stack.length === 0;
+    },
+
+    /**
+     * Extracts the tag name from some closing or opening html tag string.
+     *
+     * @param {string} tag html tag
+     * @returns {string}
+     */
+    extractTagName(tag) {
+      return tag.match(/[A-Za-z0-9]+/)[0];
+    },
+
 
     /**
      * Load given file data into the display panel, and go to the given file line.
@@ -208,7 +361,7 @@ export default {
       this.goToFullFileLine(this.fullFileLineNumbers[index]);
     }
   }
-}
+};
 </script>
 
 <style scoped>
