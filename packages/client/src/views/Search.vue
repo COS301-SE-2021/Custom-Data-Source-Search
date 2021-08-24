@@ -243,8 +243,8 @@ export default {
     },
 
     /**
-     * Escape all tokens not in whitelist defined by validAttribute regex.
-     * Check resulting html tags to ensure all are closed.
+     * Escape all tokens not in the whitelist defined by our whitelistRegex.
+     * Check resulting html tags to ensure all of them are correctly closed. If not, return warning html.
      *
      * Security Note: NEVER allow any type of closing tags in the validWord regex snippet.
      * This would render the function unsafe.
