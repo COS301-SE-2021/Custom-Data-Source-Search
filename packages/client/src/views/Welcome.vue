@@ -22,10 +22,10 @@
       />
       <ContextMenu ref="deleteOption" :model="items"/>
       <add-user-card/>
-      <span style="font-style: italic">
-        Tip: {{tips[randomId]}}
-      </span>
     </div>
+    <span id="tips-span">
+      Tip: {{tips[randomId]}}
+    </span>
     <delete-user-are-you-sure
         :show="displayDeleteCheck"
         :user="selectedUser"
@@ -54,13 +54,13 @@
 </template>
 
 <script>
-import UserCard from "@/components/users/UserCard";
-import AddUserCard from "@/components/users/AddUserCard";
-import {mapGetters} from "vuex";
+import UserCard from "../components/users/UserCard";
+import AddUserCard from "../components/users/AddUserCard";
 import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
 import SignOutCheck from "../components/popups/SignOutCheck";
 import SignIn from "../components/popups/SignIn";
 import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
+import {mapGetters} from "vuex";
 
 const electron = require('@electron/remote');
 
@@ -124,7 +124,7 @@ export default {
     showSignIn(){
       this.displaySignIn = !this.displaySignIn
     },
-    
+
     clearCurrentUser() {
          this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
     },
@@ -172,7 +172,7 @@ export default {
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
-  grid-template-rows: 1fr 3fr 1fr;
+  grid-template-rows: 1fr 3fr 1fr 2fr;
   background-image: url('../assets/backgrounds/Background_resize_vector.svg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -201,5 +201,16 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   padding-top: 3vw;
+}
+
+#tips-span{
+  font-style: italic;
+  grid-row-start: 3;
+  grid-column-start: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 2vh;
 }
 </style>
