@@ -83,6 +83,7 @@ export default {
       fullFileLineNumbers: [],
       currentLineNumber: -1,
       fullFileData: "",
+      fullFileId: "",
       notDeleted: true,
       query: "",
       searchResults: [],
@@ -182,7 +183,24 @@ export default {
       this.searchResults = this.searchResults.concat(results);
     },
 
+    /**
+     * Go to target line in full file, load full file from backend if not already loaded.
+     *
+     * If first attempt to load file from backend fails due to an expired JWToken, the token will be refreshed and
+     * the call to the backend will be repeated.
+     *
+     * @param {string} link uri of source server
+     * @param {string} type service to use at server
+     * @param {string} id uuid of result document
+     * @param {number} backendId id of backend in user store
+     * @param {number} lineNumber line number of the result snippet the user has clicked on
+     * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
+     */
     goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers) {
+      if (this.fullFileId === id) {
+        this.goToFullFileLine(lineNumber);
+        return;
+      }
       const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
       const headers = {
         "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
@@ -200,10 +218,11 @@ export default {
             await axios
                 .get(url, {headers})
                 .then((resp) => {
-                  this.loadFullFile(resp.data.data, lineNumber, lineNumbers)
+                  this.loadFullFile(resp.data.data, lineNumber, lineNumbers);
                 })
                 .catch()
           })
+      this.fullFileId = id;
     },
     extractLineNumbers(match_snippets) {
       let lineNumbers = [];
