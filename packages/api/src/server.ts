@@ -11,6 +11,7 @@ import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 import fileDataSourceRepository from "./repositories/FileDataSourceRepository";
 import {userRouter} from "./routers/User.router";
+import {randomBytes} from "crypto";
 
 dotenv.config({path: __dirname + `/../../../.env`});
 console.log(__dirname);
@@ -40,7 +41,7 @@ app.use("/webpagedatasources", webPageDataSourceRouter);
 app.use("/folderdatasources", folderDataSourceRouter);
 app.use("/users", userRouter);
 
-app.listen(PORT , () => {
+const server = app.listen(PORT , () => {
     console.log("Server Started");
     console.log(`Listening on port ${PORT}`);
 });
@@ -54,3 +55,12 @@ setTimeout(() => {
         }
     }, 10000);
 }, 500);
+
+setTimeout(() => {
+    process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+    setInterval(async () => {
+        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+    }, 60000 * 5);
+}, 500);
+
+export default server;

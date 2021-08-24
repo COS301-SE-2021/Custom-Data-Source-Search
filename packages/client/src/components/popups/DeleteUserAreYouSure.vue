@@ -91,14 +91,6 @@
                 }
             },
             deleteUser () {
-                console.log("Deleting User" + this.user.name + " Still in progress");
-                console.log("Delete vault? ");
-                if (this.deleteVault === 'deleteVault') {
-                    console.log("Yes");
-                }
-                else {
-                    console.log ("No");
-                }
                 this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
                 this.$emit("clearCurrentUser");
                 this.closePopUp();

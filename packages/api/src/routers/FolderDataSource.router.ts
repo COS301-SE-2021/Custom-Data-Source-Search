@@ -32,15 +32,15 @@ folderDataSourceRouter.get("/:id", (req: Request, res: Response) => {
 /**
  * Add a data source by it's path
  */
-folderDataSourceRouter.post("/", (req: Request, res: Response) => {
-    const result = folderDataSourceService.addFolderDataSource(req.body);
+folderDataSourceRouter.post("/", async (req: Request, res: Response) => {
+    const result = await folderDataSourceService.addFolderDataSource(req.body);
     res.status(result.code).send(result.body);
 });
 
 /**
  * Remove a data source by it's id
  */
-folderDataSourceRouter.delete("/", (req: Request, res: Response) => {
-    const result = folderDataSourceService.removeFolderDataSource(req.body.id);
+folderDataSourceRouter.delete("/", async (req: Request, res: Response) => {
+    const result = await folderDataSourceService.removeFolderDataSource(req.body.id);
     res.status(result.code).send(result.body);
 });

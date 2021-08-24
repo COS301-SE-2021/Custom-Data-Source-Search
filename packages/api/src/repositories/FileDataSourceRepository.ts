@@ -6,7 +6,6 @@ import FormData from "form-data";
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 
-
 class FileDataSourceRepository {
 
     async addDataSource(dataSource: FileDataSource): Promise<[{ code: number, message: string }, { code: number, message: string }]> {
@@ -51,7 +50,7 @@ class FileDataSourceRepository {
         fileName = this.makeDefaultExtension(fileName);
         formData.append("file", file, fileName);
         try {
-            await axios.post('http://localhost:8983/solr/files/update/extract?literal.id=' + id
+            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update/extract?literal.id=' + id
                 + '&commit=true&literal.datasource_type=file',
                 formData,
                 {
@@ -141,7 +140,7 @@ class FileDataSourceRepository {
 
     async deleteFromSolr(uuid: string) {
         try {
-            await axios.post('http://localhost:8983/solr/files/update?commit=true',
+            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update?commit=true',
                 {
                     "delete": {
                         "query": "id:" + uuid

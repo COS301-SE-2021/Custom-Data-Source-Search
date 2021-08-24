@@ -87,30 +87,18 @@
                     })
             },
           submitSource() {
-            console.log(this.ignore)
-            if(this.path.length>0){
-                for (let i = 0; i < this.path.length; i++) {
-                let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
-                  let postURL;
-                  //Checking whether the backend is local or remote
-                  //The same request body is sent for the time being (i.e. path and tags)
-                  if(this.backend === 'Local'){
-                    postURL = "http://localhost:3001/folderdatasources"
-                  }
-                  else{
-                    postURL = this.$store.getters.getUserBackendURL(this.backend)
-                  }
-                axios
-                    .post(postURL, respObject)
-                    .then((resp) => {
-                      this.$toast.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: resp.data.message,
-                        life: 3000
-                      })
-                      this.$emit('addFolder')
-                      this.$emit("submitted")
+              console.log(this.ignore)
+            for (let i = 0; i < this.path.length; i++) {
+              let respObject = {"path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
+              const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
+              axios
+                  .post(url, respObject)
+                  .then((resp) => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: resp.data.message,
+                      life: 3000
                     })
                     .catch((error) => {
                       this.$toast.add({

@@ -25,6 +25,10 @@
                     <div id="checkboxBox">
                         <checkbox id="checkBox" name="checkbox" v-model="userDetails.backupVault" :binary="true"/>
                         <label for="checkBox">Enable remote access to account?</label>
+                        <br>
+                        <span style="font-size: small; margin-top: 30px">
+                            Remote access enables the user to log into their account on the web browser version of DataSleuth.
+                        </span>
                     </div>
                     <br>
                     <br>
@@ -64,6 +68,7 @@
     import SignIn from "../components/popups/SignIn";
     import Checkbox from 'primevue/checkbox';
     import PasswordInputField from "../components/primeComponents/PasswordInputField";
+
     const zxcvbn = require('zxcvbn');
     export default {
         name: "Register",
@@ -96,13 +101,9 @@
         },
         methods: {
             loadValues() {
-
-                //TO DO: Save Username and Master email, check passwords are exactly the same. Store other information for now.
-                //Do we need a way to remove a user? Probably.
                 let passFormValidation = true;
 
                 //Checks:
-                //#1: All fields required
                 this.errors = [];
 
                 if (!this.userDetails.userName) {
@@ -133,42 +134,23 @@
                     this.masterPassword = null;
                     this.masterPassCheck = null;
                 }
-
-
-                //#3: Some kind of hash of password and email must happen to unlock file [[[[[[ => TO DO <= ]]]]]]
-
                 if (this.errors.length) {
                     passFormValidation = false;
                 }
-
                 if (passFormValidation)  {
-
-                    //NB!!! HASH METHOD NEEDS TO CHANGE! TEMPORARY!!!
-                    this.userDetails.hashToStore = this.hashStrings(this.masterPassword);
-                    this.$store.commit("addUserToLocalList", {
-                        name: this.userDetails.userName,
-                        email: this.userDetails.masterEmail,
-                        hash: this.userDetails.hashToStore,
-                        hasVault: this.userDetails.backupVault
+                        this.$store.dispatch("addNewUser", {
+                            name: this.userDetails.userName,
+                            email: this.userDetails.masterEmail,
+                            masterPassword: this.masterPassword,
+                            hasVault: this.userDetails.backupVault
                     });
-                    this.$router.push('ContinueView');
+                    this.$router.push({name: 'ContinueView'});
                 }
-            },
-            checkUsers() {
-
-            },
-            hashStrings (s) {
-                let h = 0, l = s.length, i = 0;
-                if ( l > 0 )
-                    while (i < l)
-                        h = (h << 5) - h + s.charCodeAt(i++) | 0;
-                return h;
             },
             showSignIn(){
                 this.displaySignIn = !this.displaySignIn
             },
             continue() {
-                console.log ("The idea is that here another little box appears");
                 this.notContinue = false;
             },
             back() {
@@ -242,7 +224,6 @@
     #checkboxBox {
         text-align: left;
     }
-
 
     label {
         padding-bottom: 4%;

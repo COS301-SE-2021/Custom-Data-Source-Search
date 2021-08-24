@@ -1,5 +1,5 @@
 <template>
-  <div class="backend-container p-ripple" v-if="backend.receive.admin" v-ripple @click="showBackendManager">
+  <div class="backend-container p-ripple" v-ripple @click="showBackendManager">
     <div class="backend-header">
 
       <div class="color-circle" :style="backendColourStyle" ></div>
@@ -48,7 +48,15 @@ export default {
   },
   methods: {
     showBackendManager(){
-      this.$router.push({name: 'BackendManager', params: { backendID : this.backend.local.id} });
+      this.$router.push(
+        {
+          name: 'BackendManager',
+          params: {
+            backendID : this.backend.local.id,
+            link: this.backend.connect.link,
+            jwtCache: this.backend.connect.keys.jwtCache
+          }
+      });
     }
   }
 }

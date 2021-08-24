@@ -24,7 +24,6 @@
         props:{
           backend: String,
           colour: String,
-
         },
         data() {
             return {
@@ -41,14 +40,9 @@
                 let postURL;
                 //Checking whether backend is local or remote and setting the url to use
                 //in the post depending on that
-                if(this.backend === 'Local'){
-                  postURL = "http://localhost:3001/webpagedatasources"
-                }
-                else{
-                  postURL = this.$store.getters.getUserBackendURL(this.backend)
-                }
+                postURL = this.$store.getters.getUserBackendURL(this.backend)
                 axios
-                    .post(postURL, respObject)
+                    .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`, respObject)
                     .then(resp => {
                       this.$toast.add({severity: 'success', summary: 'Success', detail: resp.data.message, life: 3000})
                       this.$emit('addWebpage')

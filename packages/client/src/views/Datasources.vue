@@ -2,10 +2,14 @@
   <div class="page">
     <ConfirmDialog></ConfirmDialog>
     <Toast position="bottom-right"/>
-    <h2>
-      Data Sources
-    </h2>
-    <ScrollPanel style="width: 100%; height: 90%">
+<!--    <h1 style="padding: 20px;">-->
+<!--      Data Sources-->
+<!--    </h1>-->
+    <div class="datasource-header">
+      <h1 class="datasource-heading">Data Sources</h1>
+      <p class="datasource-description">View and edit your data sources</p>
+    </div>
+    <ScrollPanel style="width: 100%; height: 90%; z-index: 2">
       <DataTable :value="sources" :paginator="true" :rows="10"
                  paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                  :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources"
@@ -20,7 +24,7 @@
           </span>
             <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
                     style="float: right;"/>
-            <OverlayPanel ref="op" :showCloseIcon="false" :dismissable="true"
+            <OverlayPanel ref="op" :showCloseIcon="true" :dismissable="false"
                           :breakpoints="{'960px': '75vw', '640px': '100vw'}" :style="{width: '450px'}">
               <div v-if="!clicked && backend===null">
                 <div class="overlay-header">
@@ -31,6 +35,7 @@
                           class="button p-button-raised p-button-text p-button-plain" @click="backend=i">{{ i }}
                   </Button>
                 </div>
+<!--                <Button class="p-button-text p-button-plain close" label="Cancel" icon="pi pi-times" @click="toggle" />-->
               </div>
               <div v-else-if="!clicked && backend!=null">
                 <div class="overlay-header">
@@ -39,8 +44,10 @@
                 <div class="overlay-buttons">
                   <Button label="Document" icon="pi pi-book" class="button p-button-raised p-button-text p-button-plain"
                           id="text-button" @click="clicked=!clicked; type='File'"/>
-                  <Button label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain"
+                  <Button v-if="backend==='Local'" label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain"
                           id="folder-button" @click="clicked=!clicked; type='Folder'"/>
+                  <Button v-else label="Folder" icon="pi pi-folder" class="button p-button-raised p-button-text p-button-plain"
+                          id="folder-button-disabled" @click="clicked=!clicked; type='Folder'" disabled="disabled"/>
                   <Button label="Webpage" icon="pi pi-globe" class="button p-button-raised p-button-text p-button-plain"
                           id="web-button" @click="clicked=!clicked; type='Webpage'"/>
                 </div>
@@ -140,13 +147,13 @@
 
 <script>
 
-import axios from "axios";
-import {FilterMatchMode} from 'primevue/api';
-import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
-import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
-import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
+  import axios from "axios";
+  import {FilterMatchMode} from 'primevue/api';
+  import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
+  import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
+  import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
 
-export default {
+  export default {
   data() {
     return {
       message: "No sources have been selected.",
@@ -165,7 +172,7 @@ export default {
         'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
       },
       types: [
-        'File', 'Folder', 'Webpage'
+        'file', 'folder', 'webpage'
       ],
       backends: [],
       colours: [
@@ -182,25 +189,13 @@ export default {
     if (this.$store.getters.getNewAppStatus) {
       this.$router.push('/');
     }
+    this.backends = this.$store.getters.getUserBackendNames;
+    this.updateSources();
   },
   productService: null,
-  mounted() {
-    this.backends = this.$store.getters.getUserBackendNames;
-    this.backends.push("Local");
-
-    axios.get("http://localhost:3001/general/datasources").then(
-        resp => {
-          console.log(resp.data);
-          this.sources = resp.data.data;
-          let i;
-          for (i = 0; i < this.sources.length; i++) {
-            this.sources[i]["backend"] = "Local"
-          }
-          this.loading = false
-        }
-    )
-    console.log(this.backends)
-  },
+  // mounted() {
+  //   this.updateSources();
+  // },
   methods: {
 
     toggle(event) {
@@ -211,18 +206,56 @@ export default {
     updateSources(){
       //Update list of sources upon addition of new source.
       this.loading = true;
+      this.sources = [];
+      // axios.get("http://localhost:3001/general/datasources").then(
+      //     resp => {
+      //       console.log(resp.data);
+      //       this.sources = resp.data.data;
+      //       let i;
+      //       for (i = 0; i < this.sources.length; i++) {
+      //         this.sources[i]["backend"] = "Local"
+      //       }
+      //       this.loading = false
+      //     }
+      // )
+      for(let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+        const url = `http://${backend.connect.link}/general/datasources`;
+        const headers = {
+          "Authorization": "Bearer " + backend.connect.keys.jwtToken
+        };
+        axios
+          .get(url, {headers})
+          .then((resp) => {
+            this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name);
+          })
+          .catch(async () => {
+            await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
+            const headers = {
+              "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
+            };
+            await axios.get(url, {headers})
+              .then((resp) => {
+                this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id)
+              })
+              .catch((e) => {
+                console.error(e);
+              })
+          })
+      }
+    },
+    handleSuccess(results, link, id, name){
+      for(let r of results){
+        r.link = link;
+        r.backendId = id;
+        r.backend = name;
+      }
+      this.sources = this.sources.concat(results);
 
-      axios.get("http://localhost:3001/general/datasources").then(
-          resp => {
-            console.log(resp.data);
-            this.sources = resp.data.data;
-            let i;
-            for (i = 0; i < this.sources.length; i++) {
-              this.sources[i]["backend"] = "Local"
-            }
-            this.loading = false
-          }
-      )
+      if(this.sources.length === 0){
+        this.$toast.add({severity: 'warn', summary: 'No sources', detail: "Try adding data sources", life: 3000})
+      }
+      this.loading = false;
+      console.log(this.sources)
     },
     deleteSourceStatus(source){
       if(source === "Local"){
@@ -233,7 +266,6 @@ export default {
       }
     },
     deleteSource(){
-      console.log(this.selectedSources)
       if(this.selectedSources===null){
         this.$toast.add({severity:'info', summary: 'No Sources Selected', detail:'Please select sources to delete', life: 3000});
         return;
@@ -254,8 +286,10 @@ export default {
           //Loop through all items to delete
           let source;
           for(source in this.selectedSources){
+            const url = `http://${this.selectedSources[source].link}/general/datasources`;
+            console.log(url);
             axios
-                .delete("http://localhost:3001/general/datasources", {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
+                .delete(url, {"data": {"type": this.selectedSources[source].type, "id": this.selectedSources[source].id}})
                 .then(() => {
                   this.$toast.add({
                     severity: 'success',
@@ -273,6 +307,7 @@ export default {
                   })
                 })
           }
+          this.selectedSources = null;
           console.log(this.sources)
         },
         reject: () => {
@@ -288,15 +323,12 @@ export default {
 
 .page{
   height: 100vh;
+  padding-left: 1%;
 }
 
 td {
   border-top: 1px solid white;
   border-bottom: 1px solid white;
-}
-
-h2 {
-  margin: 30px 20px 30px 70px;
 }
 
 a {
@@ -332,5 +364,18 @@ a {
 
 .p-input-icon-left {
  margin-left: 50px;
+}
+.datasource-header{
+margin-bottom: 50px;
+}
+
+.datasource-heading {
+  text-align: center;
+  color: #ededed;
+}
+
+.datasource-description {
+  text-align: center;
+  color: #ededed;
 }
 </style>

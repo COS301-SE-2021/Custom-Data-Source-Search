@@ -4,59 +4,65 @@
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer" @click="change">
-                    <em v-if="receive.connected"  :style="connectedStyle" class="pi pi-circle-on" />
-                    <em v-if="!receive.connected" class="pi pi-circle-off" />
+                    <em v-if="!connect.needsLogin"  :style="connectedStyle" class="pi pi-circle-on" />
+                    <em v-if="connect.needsLogin" class="pi pi-circle-off" />
                     <span> {{local.name}} </span>
-                    <span v-if="receive.admin" style="float: right; padding-top: 3px">ADMIN</span>
+                    <span v-if="receive.admin" style="float: right; padding-top: 3px">{{receive.admin}}</span>
                 </div>
                 <div>
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="local.active"/>
                 </div>
             </div>
-                <div class="expanded-backend-info" v-if="expand">
+                <div class="expanded-backend-info" v-if="expand" :style="localBackendStyle" >
                 <div><em>Email: </em></div>
                 <div> {{ connect.associatedEmail }} </div>
                 <div><em>Link: </em></div>
                 <div> {{connect.link}} </div>
-                <div><em>Pass Key: </em></div>
-                <div> {{connect.passKey}} </div>
                 <div></div>
-                <div>
+                <div v-if="!localBackendBool" >
                     <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
-                    <Button @click="deleteBackend" style="float: right" class="p-button p-button-outlined">Delete </Button>
+                    <Button @click="showBackendDeleteCheck" style="float: right" class="p-button p-button-outlined">Delete </Button>
                 </div>
             </div>
-            <form @submit="saveChanges" class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
+            <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><em>Name: </em></div>
-                <input-text v-model="tempBackendInfo.name"/>
+                <input-text v-model="tempBackendInfo.name" @keyup.enter="saveChanges"/>
                 <div><em>Email: </em></div>
-                <input-text v-model="tempBackendInfo.associatedEmail"/>
+                <div>{{tempBackendInfo.associatedEmail}}</div>
                 <div><em>Link: </em></div>
-                <input-text v-model="tempBackendInfo.link"/>
-                <div><em>Pass Key: </em></div>
-                <input-text v-model="tempBackendInfo.passKey"/>
+                <div>{{tempBackendInfo.link}}</div>
                 <div></div>
                 <div>
-                    <Button @click="connectToBackend" style="float: right" class="p-button p-button-outlined" v-if="newBackend">Connect</Button>
                     <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions</Button>
-                    <Button type="submit" style="float: right" class="p-button p-button-outlined" v-if="!newBackend">Connect</Button>
+                    <Button type="button" style="float: right" @click="saveChanges" class="p-button p-button-outlined">Save</Button>
                     <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+    <BackendDeleteCheck
+            :show="displayBackendDeleteCheck"
+            @display-popup="showBackendDeleteCheck"
+            :backend="local"
+            @delete-backend="deleteBackend"
+    />
 </template>
 
 <script>
     import InputSwitch from 'primevue/inputswitch';
     import {mapGetters} from 'vuex';
+    import BackendDeleteCheck from "../popups/BackendDeleteCheck";
+
     export default {
         name: "backendCard",
         components: {
+            BackendDeleteCheck,
           InputSwitch
         },
         data () {
             return {
+                localBackendBool: false,
+                displayBackendDeleteCheck: false,
                 tempNameNo: 0,
                 checked: false,
                 editBackendBool: false,
@@ -82,6 +88,11 @@
             ]),
             connectedStyle () {
                 return 'color: ' + this.local.color;
+            },
+            localBackendStyle () {
+                if (this.localBackendBool) {
+                    return "grid-row-gap: 10px"
+                }
             }
         },
         props: {
@@ -107,7 +118,8 @@
           connect: {
               associatedEmail: String,
               link: String,
-              passKey: String
+              passKey: String,
+              needsLogin: Boolean
           },
           receive: {
               admin: Boolean,
@@ -124,6 +136,10 @@
         },
 
         methods: {
+
+            showBackendDeleteCheck() {
+                this.displayBackendDeleteCheck = !this.displayBackendDeleteCheck;
+            },
 
             //View changes
             change() {
@@ -153,7 +169,6 @@
                         link: this.tempBackendInfo.link,
                         passKey: this.tempBackendInfo.passKey,
                         associatedEmail: this.tempBackendInfo.associatedEmail,
-                        admin: this.tempBackendInfo.admin,
                         active: this.tempBackendInfo.active,
                     });
 
@@ -215,12 +230,16 @@
                 if (!this.newBackend) {
                     this.tempBackendInfo.name = this.local.name;
                 }
+                if (this.local.name === 'Local') {
+                    this.localBackendBool = true;
+                }
+
                 this.tempBackendInfo.id = this.local.id;
                 this.tempBackendInfo.active = this.local.active;
 
                 this.tempBackendInfo.associatedEmail = this.connect.associatedEmail;
                 this.tempBackendInfo.link = this.connect.link;
-                this.tempBackendInfo.passKey = this.connect.passKey;
+                this.tempBackendInfo.sessionKey = this.connect.keys.sessionKey;
 
                this.tempBackendInfo.admin = this.receive.admin;
                this.newBackendT = this.newBackend;
@@ -241,14 +260,14 @@
 
     .expanded-backend-info {
         border-radius: 5px;
-        margin-top: 4px;
+        margin-top: 1em;
         padding-top: 4px;
         padding-left: 4px;
         padding-bottom: 4px;
         display: grid;
         grid-template-columns: 1fr 3fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
-        row-gap: 2px;
+        grid-template-rows: 1fr 1fr 1fr;
+        align-content: baseline;
     }
 
     .expanded-backend-info div {
@@ -264,6 +283,7 @@
 
     input {
         margin-right: 2%;
+        margin-bottom: 1em;
     }
 
     Button {
@@ -271,7 +291,6 @@
         max-height: 30px;
         text-align: center;
         margin-right: 2%;
-        margin-bottom: 2%;
         margin-top: 1%;
         max-width: fit-content;
     }
@@ -286,7 +305,7 @@
         padding-left: 4px;
         background-color: rgba(189, 189, 189, 0.05);
         display: grid;
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 5fr 1fr;
     }
 
 

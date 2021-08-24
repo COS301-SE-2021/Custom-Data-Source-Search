@@ -12,17 +12,7 @@
                 <i @click="queryServer" class="pi pi-search" aria-hidden="true"/>
                 <InputText size="70" v-model="query" v-on:keyup.enter="queryServer" placeholder="Sleuth..."/>
             </span>
-            <CustomTooltip :text="unconnectedBackendNames">
-              <em
-                  v-if="unconnectedBackendBool"
-                  id="expiration-indicator"
-                  class="pi pi-info-circle p-text-secondary"
-                  @click="showPopup"
-                  v-badge.custom-warning="unconnectedBackendNo"
-              ></em>
-            </CustomTooltip>
           </div>
-          <SignIn :show="displaySignIn" @display-popup="showPopup"></SignIn>
         </div>
         <div class="search-results container">
           <search-result-card
@@ -34,6 +24,9 @@
               :type="r.type"
               :match_snippets="r.match_snippets"
               :source="r.source"
+              :link="r.link"
+              :backendId="r.backendId"
+              :backend_name="r.name"
               @resultClicked="loadFullFile"
           />
         </div>
@@ -55,12 +48,11 @@
 
   <script>
     import axios from "axios";
-    import SignIn from "@/components/popups/SignIn";
     import {mapGetters} from 'vuex';
     import SearchResultCard from "@/components/results/SearchResultCard";
-    import CustomTooltip from "../components/primeComponents/CustomTooltip";
     import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
     import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+
     export default {
       name: "SearchBar",
       data() {
@@ -78,9 +70,9 @@
       },
       computed: {
         ...mapGetters([
-                'unconnectedBackendNo',
-                'unconnectedBackendBool',
-                'unconnectedBackendNames'
+          'unconnectedBackendNo',
+          'unconnectedBackendBool',
+          'unconnectedBackendNames'
         ])
       },
       beforeMount() {
@@ -94,25 +86,52 @@
             return '\\' + match
           })
         },
-        queryServer() {
+        async queryServer() {
           this.firstSearch = false;
           this.searchResults = [];
-          axios
-                  .get("http://localhost:3001/general/?q=" + encodeURIComponent(this.escapeSpecialCharacters(this.query)))
+          for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+            if (!backend.local.active) {
+              continue;
+            }
+            const url = `http://${backend.connect.link}/general/?q=${
+              encodeURIComponent(this.escapeSpecialCharacters(this.query))
+            }`
+            const headers = {
+              "Authorization": "Bearer " + backend.connect.keys.jwtToken
+            };
+            await axios
+              .get(url, {headers})
+              .then((resp) => {
+                this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
+              })
+              .catch(async () => {
+                await this.$store.dispatch("refreshJWTToken", {id: backend.local.id})
+                const headers = {
+                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
+                };
+                await axios.get(url, {headers})
                   .then((resp) => {
-                    this.searchResults = resp.data.searchResults;
-                    if (this.searchResults.length === 0) {
-                      this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-                    }
-                  }).catch(() => {
+                    this.handleSuccess(resp.data.searchResults, backend.connect.link, backend.local.id, backend.local.name)
+                  })
+                  .catch((e) => {
+                    console.error(e);
+                  })
+              })
+          }
+          if (this.searchResults.length === 0) {
             this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-          })
+          }
+        },
+        handleSuccess(results, link, id, name) {
+          for(let r of results) {
+            r.link = link;
+            r.backendId = id;
+            r.name = name;
+          }
+          this.searchResults = this.searchResults.concat(results);
         },
         showPopup(){
           this.displaySignIn = !this.displaySignIn
-        },
-        getIdOfCurrentFullFile() {
-          return this.fullFileID;
         },
         loadFullFile(fileData, lineNumber, lineNumbers) {
           this.fullFileData = fileData;
@@ -123,7 +142,7 @@
         },
         goToFullFileLine(lineNumber) {
           this.currentLineNumber = lineNumber;
-          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView({behavior: "smooth"});
+          this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
         },
         goToPrev() {
           let index = Math.max(
@@ -143,9 +162,7 @@
       components: {
         IconSimpleExpandLess,
         IconSimpleExpandMore,
-        CustomTooltip,
         SearchResultCard,
-        SignIn
       }
     }
   </script>
@@ -242,16 +259,6 @@ input {
   border-radius: 4px;
 }
 
-#expiration-indicator {
-  font-size: 2rem;
-  color: #d69b2c;
-  position: relative;
-  display: inline-block;
-  margin-left: 0.4rem;
-  margin-top : auto;
-  margin-bottom : 0.3rem;
-}
-
 .file-container {
   height: 100vh;
 }
@@ -265,5 +272,9 @@ input {
 #divider_usage_message {
   color: #4d4d4d;
   padding-left: 10px;
+}
+
+.p-splitter{
+  border: none;
 }
 </style>

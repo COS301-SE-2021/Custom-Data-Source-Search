@@ -152,7 +152,7 @@ export default {
             formData.set('tag2', this.tag2);
 
             axios
-              .post(this.$store.getters.getUserBackendURL(this.backend), formData, {
+              .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`, formData, {
                 headers: {'Content-Type': 'multipart/form-data'}
               })
               .then((resp) =>{
