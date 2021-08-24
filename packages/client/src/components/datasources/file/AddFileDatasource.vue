@@ -1,25 +1,27 @@
 <template>
-  <span>Select one or more Files to add to data sources</span><br/>
-  <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
-  <span>Selected Files</span>
-  <div class="selected-files">
-    <ScrollPanel style="width: 100%; height: 70px">
-      <span class="selection-list" v-if="filename.length!==0" v-for="i in filename" :key="i.id">{{i}}</span>
-      <span v-else class="selection-list">No files selected.</span>
-    </ScrollPanel>
-  </div>
-  <div>
-    <span>Add optional tags</span><br/>
-    <span class="p-float-label">
+  <ScrollPanel style="height: 50vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
+    <span>Select one or more Files to add to data sources</span><br/>
+    <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
+    <span>Selected Files</span>
+    <div class="selected-files">
+      <ScrollPanel style="width: 100%; height: 70px">
+        <span class="selection-list" v-if="filename.length!==0" v-for="i in filename" :key="i.id">{{i}}</span>
+        <span v-else class="selection-list">No files selected.</span>
+      </ScrollPanel>
+    </div>
+    <div>
+      <span>Add optional tags</span><br/>
+      <span class="p-float-label">
         <InputText id="tag1" type="text" v-model="tag1"/>
         <label for="tag1">Tag 1</label>
       </span>
-    <span class="p-float-label">
+      <span class="p-float-label">
         <InputText id="tag2" type="text" v-model="tag2"/>
         <label for="tag2">Tag 2</label>
       </span>
-  </div>
-  <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource()"/>
+    </div>
+    <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource()"/>
+  </ScrollPanel>
 </template>
 
 <script>

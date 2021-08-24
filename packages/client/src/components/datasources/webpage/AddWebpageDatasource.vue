@@ -1,4 +1,5 @@
 <template>
+  <ScrollPanel style="height: 50vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
     <div>
       <span>Enter the URL of desired webpage</span>
       <InputText id="input" placeholder="Add WebPage URL..." v-model="dataSourceURI"/>
@@ -15,6 +16,7 @@
       </div>
       <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource" />
     </div>
+  </ScrollPanel>
 </template>
 
 <script>

@@ -2,15 +2,15 @@
   <ScrollPanel style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
     <DataTable :value="sources" :paginator="true" :rows="10"
                paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-               :rowsPerPageOptions="[10,20,50]" :selection="selectedSources" :row-hover="true" responsiveLayout="scroll"
+               :rowsPerPageOptions="[10,20,50]" v-model:selection="selectedSources" :row-hover="true" responsiveLayout="scroll"
                currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-               dataKey="id" :filters="filters2" filterDisplay="row" :loading="loading"
+               dataKey="id" v-model:filters="filters" filterDisplay="row" :loading="loading"
                :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']">
       <template #header>
         <div class="p-d-flex p-jc-end">
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
-            <InputText v-model="filters2['global'].value" placeholder="Keyword Search"/>
+            <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
           </span>
           <Button label="Add Data Source" icon="pi pi-plus" class="p-button-text" @click="toggle"
                   style="float: right; margin-right: 2vw;"/>
@@ -136,9 +136,9 @@
 <script>
 import axios from "axios";
 import {FilterMatchMode} from 'primevue/api';
-import AddFileDatasource from "@/components/datasources/file/AddFileDatasource";
-import AddFolderDatasource from "@/components/datasources/folder/AddFolderDatasource";
-import AddWebpageDatasource from "@/components/datasources/webpage/AddWebpageDatasource";
+import AddFileDatasource from "./file/AddFileDatasource";
+import AddFolderDatasource from "./folder/AddFolderDatasource";
+import AddWebpageDatasource from "./webpage/AddWebpageDatasource";
 
 export default {
   name: "DatasourcesTable",
@@ -151,7 +151,7 @@ export default {
       loading: false,
       backend: null,
       selectedSources: null,
-      filters2: {
+      filters: {
         'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
         'backend': {value: null, matchMode: FilterMatchMode.IN},
@@ -163,9 +163,6 @@ export default {
         'file', 'folder', 'webpage'
       ],
       backends: [],
-      colours: [
-        'success', 'secondary', 'info', 'warning', 'help', 'danger'
-      ]
     }
   },
   components: {
@@ -181,9 +178,6 @@ export default {
     this.updateSources();
   },
   productService: null,
-  // mounted() {
-  //   this.updateSources();
-  // },
   methods: {
 
     toggle(event) {
@@ -192,20 +186,8 @@ export default {
       this.backend = null;
     },
     updateSources(){
-      //Update list of sources upon addition of new source.
       this.loading = true;
       this.sources = [];
-      // axios.get("http://localhost:3001/general/datasources").then(
-      //     resp => {
-      //       console.log(resp.data);
-      //       this.sources = resp.data.data;
-      //       let i;
-      //       for (i = 0; i < this.sources.length; i++) {
-      //         this.sources[i]["backend"] = "Local"
-      //       }
-      //       this.loading = false
-      //     }
-      // )
       for(let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
         const url = `http://${backend.connect.link}/general/datasources`;
         const headers = {
@@ -271,7 +253,6 @@ export default {
         acceptClass: "p-button-danger",
         rejectClass: "p-button-text p-button-plain",
         accept: () => {
-          //Loop through all items to delete
           let source;
           for(source in this.selectedSources){
             const url = `http://${this.selectedSources[source].link}/general/datasources`;
@@ -297,9 +278,6 @@ export default {
           }
           this.selectedSources = null;
           console.log(this.sources)
-        },
-        reject: () => {
-          //callback to execute when user rejects the action
         }
       })
     }

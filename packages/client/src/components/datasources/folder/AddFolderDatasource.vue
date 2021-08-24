@@ -1,24 +1,25 @@
 <template>
-  <span>Select one or more Folders to add as Data Sources</span><br/>
-      <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
-  <span>Selected Folders</span>
-  <div class="selected-folders">
-    <ScrollPanel style="width: 100%; height: 50px">
-      <span class="selection-list" v-if="path.length!==0" v-for="i in path" :key="i.id">{{i}}</span>
-      <span v-else class="selection-list">No folders selected.</span>
-    </ScrollPanel>
-  </div>
-  <br/>
-  <div class="depth-selector">
-    <label for="stacked">Specify depth of folders to search</label>
-    <div class="depth-input">
-      <InputNumber inputStyle="width: 9.3rem; background-color: #242424;" id="stacked" v-model="depth" showButtons mode="decimal" :min="0"/>
+  <ScrollPanel style="height: 50vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
+    <span>Select one or more Folders to add as Data Sources</span><br/>
+    <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="addDataSource()"/><br/>
+    <span>Selected Folders</span>
+    <div class="selected-folders">
+      <ScrollPanel style="width: 100%; height: 50px">
+        <span class="selection-list" v-if="path.length!==0" v-for="i in path" :key="i.id">{{i}}</span>
+        <span v-else class="selection-list">No folders selected.</span>
+      </ScrollPanel>
     </div>
-  </div>
-  <div class="file-ignore">
-    <span>Specify which files/sub-folders to ignore</span>
-    <Textarea v-model="ignore" rows="5" cols="40"></Textarea>
-  </div>
+    <br/>
+    <div class="depth-selector">
+      <label for="stacked">Specify depth of folders to search</label>
+      <div class="depth-input">
+        <InputNumber inputStyle="width: 9.3rem; background-color: #242424;" id="stacked" v-model="depth" showButtons mode="decimal" :min="0"/>
+      </div>
+    </div>
+    <div class="file-ignore">
+      <span>Specify which files/sub-folders to ignore</span>
+      <Textarea v-model="ignore" rows="5" cols="40"></Textarea>
+    </div>
     <div>
       <span>Add optional tags</span><br/>
       <span class="p-float-label">
@@ -30,7 +31,8 @@
         <label for="tag2">Tag 2</label>
       </span>
     </div>
-  <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource"/>
+    <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSource"/>
+  </ScrollPanel>
 </template>
 
 <script>
