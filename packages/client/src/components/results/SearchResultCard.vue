@@ -33,7 +33,7 @@
     </div>
     <div v-if="match_snippets.length > 1" class="expand_icon_div">
       <icon-simple-expand-more
-          v-if="thereAreMore()"
+          v-if="thereAreMore"
           height="25"
           width="25"
           @click="showMore"
@@ -51,7 +51,6 @@
 <script>
 import {shell} from "electron";
 import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
-import axios from "axios";
 import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
 import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
@@ -142,7 +141,7 @@ export default {
     },
 
     /**
-     * Show (up to) three more results snippets.
+     * Show (up to) three more result snippets.
      */
     showMore() {
       this.numberOfResultsToDisplay += 3;
@@ -167,7 +166,7 @@ export default {
       for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
         this.snippetsOnDisplay.push(this.match_snippets[i])
       }
-    },
+    }
 
   },
 }
