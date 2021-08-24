@@ -162,9 +162,6 @@ const store = createStore({
     },
 
     mutations: {
-        /**
-         * Initialize store from local storage.
-         */
         initialiseStore(state) {
             if(localStorage.getItem('store')) {
                 this.replaceState(
@@ -177,9 +174,6 @@ const store = createStore({
     Signed-in user backend related mutations
     ========================================
      */
-        /**
-         * Set signed in user's "isActive" boolean to true
-         */
         signInUser: function (state) {
             state.users[state.signedInUserId].info.isActive = true;
         },
@@ -188,7 +182,7 @@ const store = createStore({
          * Attempt to decrypt masterKeyObject of a specified user. Return true on success.
          *
          * Save decrypted masterKeyObject to global variable that will not be persisted on close of app.
-
+         *
          * @param state
          * @param {{userID: number, masterPassword: string}} payload
          * @return {boolean}
@@ -217,10 +211,11 @@ const store = createStore({
          *
          * @param state
          * @param payload
+         * @return {boolean}
          */
         signInThisUser: function (state, payload) {
             payload.userID = state.signedInUserId;
-            this.signInAUser(state, payload);
+            return this.signInAUser(state, payload);
         },
 
         /**
@@ -240,8 +235,6 @@ const store = createStore({
         },
 
         /**
-         * Edit a backend in the local store
-         *
          * @param state
          * @param {Backend} payload
          */
@@ -265,6 +258,16 @@ const store = createStore({
         },
 
 
+        /**
+         * @param state
+         * @param {{
+         *      name: string,
+         *      associatedEmail: string,
+         *      link: string,
+         *      secretPair: Object,
+         *      refreshToken: string
+         *  }} payload
+         */
         addBackend(state, payload){
             // Payload: name, associatedEmail, link, secretPair, refreshToken
             let newBackend = {
@@ -317,13 +320,21 @@ const store = createStore({
     User management
     ===============
      */
-        setSignedIn(state, payload){
-            state.signedIn = payload;
-            if (!payload) {
+        /**
+         * @param state
+         * @param {boolean} signedIn
+         */
+        setSignedIn(state, signedIn){
+            state.signedIn = signedIn;
+            if (!signedIn) {
                 masterKeyObject = null;
             }
         },
 
+        /**
+         * @param state
+         * @param {{userID: number, signedIn: boolean}} payload
+         */
         setSignedInUserID(state, payload) {
             state.signedInUserId = payload.userID;
             if ( payload.userID != null ){
@@ -334,8 +345,11 @@ const store = createStore({
             }
         },
 
+        /**
+         * @param state
+         * @param {{name: string, email: string, hasVault: boolean, passKey: Object}} payload
+         */
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { encryptedMasterKeyObject}
             let newUser = {
                 id: null,
                 info: {
@@ -385,6 +399,10 @@ const store = createStore({
             state.signedIn = true;
         },
 
+        /**
+         * @param state
+         * @param {{deleteVault: boolean, user: Object}} payload
+         */
         deleteUserFromLocalList (state, payload) {
             if (payload.deleteVault) {
                 //Do some server side call to delete file on web
@@ -403,16 +421,28 @@ const store = createStore({
     User Backend Token Management
     =============================
      */
+        /**
+         * @param state
+         * @param {{id: number, needsLogin: boolean}} payload
+         */
         setBackendLoginStatus(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.needsLogin = payload.needsLogin;
         },
 
+        /**
+         * @param state
+         * @param {{id: number, refreshToken: string}} payload
+         */
         setRefreshToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.keys.refreshToken = payload.refreshToken;
         },
 
+        /**
+         * @param state
+         * @param {{id: number, jwtToken: string}} payload
+         */
         setJWTToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.keys.jwtToken = payload.jwtToken
@@ -424,6 +454,10 @@ const store = createStore({
     User management
     ===============
      */
+        /**
+         * @param commit
+         * @param {{masterPassword: string, email: string, name: string, hasVault: boolean}} payload
+         */
         addNewUser: function ({commit}, payload) {
             //Payload: name, email, masterPassword, hasVault
             let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
@@ -480,6 +514,13 @@ const store = createStore({
                         })
                 });
         },
+
+        /**
+         * @param commit
+         * @param getters
+         * @param {{id: number}} payload
+         * @return {Promise<void>}
+         */
         backendLogin: async function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
             if(secretPair === null) {
@@ -511,8 +552,20 @@ const store = createStore({
                     console.error(err)
                 })
         },
+
+        /**
+         * @param commit
+         * @param getters
+         * @param {{
+         *      seed: string,
+         *      name: string,
+         *      associatedEmail: string,
+         *      link: string,
+         *      refreshToken: string,
+         *      passKey: string
+         * }} payload
+         */
         addNewBackend: function ({commit, getters}, payload) {
-            //Payload: name, associatedEmail, link, passKey, seed, refreshToken
             let masterKeyObject = getters.getMasterKeyObject;
             if(masterKeyObject === null) {
                 return;
@@ -540,6 +593,15 @@ store.subscribe((mutation, state) => {
 Helper Cryptography Functions
 =============================
  */
+/**
+ * Randomly generate a master key and encrypt it using a key generated from the given master password and email.
+ *
+ * Return both the encrypted and unencrypted versions of this key.
+ *
+ * @param masterPassword
+ * @param email
+ * @return {{masterKey: Uint8Array, encryptedMasterKeyObject: string}}
+ */
 function generateMasterKey(masterPassword, email) {
     let encryptionKey = pbkdf2.pbkdf2Sync(
         masterPassword,
@@ -562,6 +624,14 @@ function generateMasterKey(masterPassword, email) {
     };
 }
 
+/**
+ * Decrypt the masterKyObject in store, return key object on success, return null on failure.
+ *
+ * @param encryptedMasterKeyObject
+ * @param fedInPassword
+ * @param email
+ * @return {null|Object}
+ */
 function decryptMasterKeyObject(encryptedMasterKeyObject, fedInPassword, email) {
     let decryptionKey = pbkdf2.pbkdf2Sync(
         fedInPassword,
@@ -580,12 +650,22 @@ function decryptMasterKeyObject(encryptedMasterKeyObject, fedInPassword, email) 
     }
 }
 
+/**
+ * @param masterKey
+ * @param jsonObject
+ * @return {string}
+ */
 function encryptJsonObject(masterKey, jsonObject) {
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
     let encryptedJsonObject = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(jsonObject)));
     return aes.utils.hex.fromBytes(encryptedJsonObject);
 }
 
+/**
+ * @param masterKey
+ * @param jsonObject
+ * @return {Object|error}
+ */
 function decryptJsonObject(masterKey, jsonObject) {
     let encryptedJsonObject = aes.utils.hex.toBytes(jsonObject);
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
