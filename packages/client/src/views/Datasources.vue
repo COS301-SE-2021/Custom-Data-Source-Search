@@ -1,18 +1,20 @@
 <template>
   <div class="page">
-    <ConfirmDialog></ConfirmDialog>
+    <ConfirmDialog/>
     <Toast position="bottom-right"/>
     <div class="datasource-header">
-      <h1 class="datasource-heading">Data Sources</h1>
-      <p class="datasource-description">View and edit your data sources</p>
+      <h1 class="datasource-heading">
+        Data Sources
+      </h1>
+      <p class="datasource-description">
+        View and edit your data sources
+      </p>
     </div>
-    <DatasourcesTable/>
+    <datasources-table/>
   </div>
-
 </template>
 
 <script>
-
   import DatasourcesTable from "../components/datasources/DatasourcesTable";
   export default{
     name: "Datasources",
@@ -21,14 +23,13 @@
 </script>
 
 <style scoped lang="scss">
-
 .page{
   height: 100vh;
   padding-left: 1%;
 }
 
 .datasource-header{
-margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 .datasource-heading {
