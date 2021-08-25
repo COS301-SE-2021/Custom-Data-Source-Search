@@ -16,7 +16,10 @@ class WebPageDataSourceRepository {
      * @param {string} page
      * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
      */
-    async addDataSource(dataSource: WebPageDataSource, page: string): Promise<[{ code: number, message: string }, { code: number, message: string }]> {
+    async addDataSource(dataSource: WebPageDataSource, page: string): Promise<[
+        { code: number, message: string },
+        { code: number, message: string }
+    ]> {
         const uuid: string = randomBytes(16).toString("hex")
         try {
             db.prepare(
@@ -60,8 +63,11 @@ class WebPageDataSourceRepository {
             let content: any = Buffer.from(page);
             let formData = new FormData();
             formData.append("file", content, url);
-            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update/extract?literal.id=' + id
-                + '&commit=true&literal.datasource_type=webpage',
+            await axios.post('http://localhost:' +
+                process.env.SOLR_PORT +
+                '/solr/files/update/extract?literal.id=' +
+                id +
+                '&commit=true&literal.datasource_type=webpage',
                 formData,
                 {
                     headers: {

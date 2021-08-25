@@ -354,7 +354,9 @@ class UserRepository {
                     db.prepare(
                         'UPDATE pending_user SET single_use_registration_token = ? WHERE email = ?'
                     ).run(
-                        randomBytes(16).toString("hex") + '.' + randomBytes(16).toString("hex"),
+                        randomBytes(16).toString("hex") +
+                        '.' +
+                        randomBytes(16).toString("hex"),
                         user["email"]
                     );
                 }
