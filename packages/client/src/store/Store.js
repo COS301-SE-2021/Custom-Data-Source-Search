@@ -3,7 +3,6 @@ import axios from "axios";
 import {authenticator} from 'otplib';
 import {pbkdf2Sync, createHash} from 'crypto'
 
-const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
 
 /**
@@ -585,9 +584,7 @@ Helper Cryptography Functions
 =============================
  */
 /**
- * Randomly generate a master key and encrypt it using a key generated from the given master password and email.
- *
- * Return both the encrypted and unencrypted versions of this key.
+ * Derive a master key from master password, email and pepper.
  *
  * @param masterPassword
  * @param email
