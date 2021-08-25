@@ -89,7 +89,11 @@ class FolderDataSourceService {
         let results: string[] = [];
         let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
         fileNames.forEach((file) => {
-            if (file.indexOf(".") !== -1 && file.indexOf(".ini") == -1 && !separateFiles.some(x => x.filename === file)) {
+            if (
+                file.indexOf(".") !== -1 &&
+                file.indexOf(".ini") == -1 &&
+                !separateFiles.some(x => x.filename === file)
+            ) {
                 results.push(file);
             }
         });
