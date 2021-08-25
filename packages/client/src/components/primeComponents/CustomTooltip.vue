@@ -1,12 +1,10 @@
 <template>
     <div class="tooltip-box">
-        <slot />
-        <div
-                class="tooltip"
-        >
-      <div class="text" v-for="text in unconnectedBackendNames">
-         <span>{{ text }}</span>
-      </div>
+        <slot/>
+        <div class="tooltip">
+          <div class="text" v-for="text in unconnectedBackendNames">
+             <span>{{ text }}</span>
+          </div>
         </div>
     </div>
 </template>
@@ -71,8 +69,7 @@
 
     .text {
       font-size: 15px;
-        height: fit-content;
-        padding-top: 2px;
+      padding-top: 2px;
       float: left;
     }
 </style>
