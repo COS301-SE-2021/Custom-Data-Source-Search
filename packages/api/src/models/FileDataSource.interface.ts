@@ -13,7 +13,3 @@ export interface StoredFileDataSource {
     tag1: string;
     tag2: string;
 }
-
-export interface FileDataSourceList {
-    [key: number]: StoredFileDataSource;
-}
