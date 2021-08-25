@@ -8,7 +8,7 @@ import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 import fileDataSourceRepository from "./repositories/FileDataSourceRepository";
 import {userRouter} from "./routers/User.router";
-import {randomBytes} from "crypto";
+import {generateUUID} from "./general/generalFunctions";
 
 dotenv.config({path: __dirname + `/../../../.env`});
 console.log(__dirname);
@@ -43,12 +43,9 @@ setTimeout(() => {
             console.log("Error encountered.");
         }
     }, 10000);
-}, 500);
-
-setTimeout(() => {
-    process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+    process.env.JWT_SECRET_KEY = generateUUID();
     setInterval(async () => {
-        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+        process.env.JWT_SECRET_KEY = generateUUID();
     }, 60000 * 5);
 }, 500);
 

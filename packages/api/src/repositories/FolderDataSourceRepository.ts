@@ -1,9 +1,9 @@
 import fs from "fs";
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
-import {randomBytes} from "crypto";
 import FormData from "form-data";
 import axios from "axios";
 import fileDataSourceRepository from "./FileDataSourceRepository";
+import {generateUUID} from "../general/generalFunctions";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
@@ -25,7 +25,7 @@ class FolderDataSourceRepository {
                 "message": "Directory does not exist"
             }];
         }
-        const uuid: string = randomBytes(16).toString("hex")
+        const uuid: string = generateUUID()
         try {
             db.prepare(
                 'INSERT INTO folder_data (folder_name, path, uuid, tag1, tag2, dot_ignore) VALUES (?, ?, ?, ?, ?, ?);'
@@ -59,7 +59,7 @@ class FolderDataSourceRepository {
      * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
      */
     async addFileInFolder(filePath: string, folderUUID: string) {
-        const uuid: string = randomBytes(16).toString("hex")
+        const uuid: string = generateUUID()
         const [, err] = await this.postToSolr(
             fs.readFileSync(filePath), uuid, FolderDataSourceRepository.getFileName(filePath)
         );

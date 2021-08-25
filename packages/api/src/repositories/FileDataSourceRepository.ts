@@ -1,8 +1,8 @@
 import {StoredFileDataSource, FileDataSource} from "../models/FileDataSource.interface";
-import {randomBytes} from "crypto";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
+import {generateUUID} from "../general/generalFunctions";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
@@ -19,7 +19,7 @@ class FileDataSourceRepository {
         { code: number, message: string },
         { code: number, message: string }
     ]> {
-        const uuid: string = randomBytes(16).toString("hex")
+        const uuid: string = generateUUID()
         try {
             db.prepare(
                 'INSERT INTO file_data VALUES (?, ?, ?, ?, ?);'

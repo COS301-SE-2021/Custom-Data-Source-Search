@@ -1,7 +1,7 @@
 import {StoredWebPageDataSource, WebPageDataSource} from "../models/WebPageDataSource.interface";
-import {randomBytes} from "crypto";
 import FormData from "form-data";
 import axios from "axios";
+import {generateUUID} from "../general/generalFunctions";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
@@ -20,7 +20,7 @@ class WebPageDataSourceRepository {
         { code: number, message: string },
         { code: number, message: string }
     ]> {
-        const uuid: string = randomBytes(16).toString("hex")
+        const uuid: string = generateUUID()
         try {
             db.prepare(
                 'INSERT INTO webpage_data (uuid, url, tag1, tag2) VALUES (?,?,?,?);'
