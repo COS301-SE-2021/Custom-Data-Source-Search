@@ -1,6 +1,6 @@
 <template>
     <Dialog header="Enter Master Password" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup'); masterPass = null">
-      Regain access to your disconnected backends
+      Continue sleuthin' all your favourite backends
       <div class="p-field p-grid">
         <label for="password" class="p-col-fixed" style="width:100px">Password</label>
         <div class="p-col">
@@ -39,7 +39,8 @@
             assignData() {
                 if (this.welcomePage) {
                     this.$store.commit('signInAUser', {masterPassword: this.masterPass, userID: this.user.id})
-                } else {
+                }
+                else {
                     this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
                 }
                 if(this.$store.getters.getMasterKeyObject != null) {
