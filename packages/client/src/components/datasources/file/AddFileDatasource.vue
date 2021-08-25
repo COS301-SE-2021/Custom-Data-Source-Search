@@ -80,7 +80,7 @@ export default {
       for (let i = 0; i < this.filename.length; i++) {
         let respObject = {"filename": this.filename[i], "path": this.path[i], "tag1": this.tag1, "tag2": this.tag2}
         axios
-            .post("http://localhost:3001/filedatasources", respObject)
+            .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`, respObject)
             .then((resp) => {
               this.$toast.add({
                 severity: 'success',

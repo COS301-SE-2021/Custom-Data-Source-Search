@@ -1,8 +1,8 @@
-import fileDataSourceService from "../services/FileDataSource.service";
-import {StringOccurrence} from "../models/response/searchFileResponse.interface";
+import fileDataSourceService from "../../services/FileDataSource.service";
+import {StringOccurrence} from "../../models/response/searchFileResponse.interface";
 import fs from "fs";
-import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
-import {FileDataSource} from "../models/FileDataSource.interface";
+import fileDataSourceRepository from "../../repositories/FileDataSourceRepository";
+import {FileDataSource} from "../../models/FileDataSource.interface";
 
 const service = fileDataSourceService;
 

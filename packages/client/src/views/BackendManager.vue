@@ -460,7 +460,6 @@ export default {
       axios.post("http://localhost:3001/users/registrationkey", reqBody,
           {headers: {"Content-Type": "application/json"}})
           .then((resp) => {
-
             this.$toast.add({
               severity: 'success',
               summary: 'Success',

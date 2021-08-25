@@ -37,7 +37,7 @@
                 this.display = false;
             },
             signOut () {
-                this.$store.commit('signOutUser', {user: this.user});
+                this.$store.commit('signOutUser', {userID: this.user.id});
                 this.closePopUp();
                 this.$router.push('/');
             }

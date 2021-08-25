@@ -1,4 +1,4 @@
-import FileReadingError from "../errors/FileReadingError";
+import FileReadingError from "../../errors/FileReadingError";
 
 describe('FileReadingError object' , () => {
     it('Should construct error object according to the passed in parameters', () => {
