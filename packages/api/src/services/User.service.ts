@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import {randomBytes} from "crypto";
 
-
 class UserService {
 
     getAllUsers() {
