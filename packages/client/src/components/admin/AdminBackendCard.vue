@@ -48,7 +48,15 @@ export default {
   },
   methods: {
     showBackendManager(){
-      this.$router.push({name: 'BackendManager', params: { backendID : this.backend.local.id} });
+      this.$router.push(
+        {
+          name: 'BackendManager',
+          params: {
+            backendID : this.backend.local.id,
+            link: this.backend.connect.link,
+            jwtCache: this.backend.connect.keys.jwtCache
+          }
+      });
     }
   }
 }

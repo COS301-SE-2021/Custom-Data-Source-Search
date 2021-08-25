@@ -30,7 +30,7 @@ app.use("/webpagedatasources", webPageDataSourceRouter);
 app.use("/folderdatasources", folderDataSourceRouter);
 app.use("/users", userRouter);
 
-app.listen(PORT , () => {
+const server = app.listen(PORT , () => {
     console.log("Server Started");
     console.log(`Listening on port ${PORT}`);
 });
@@ -51,3 +51,5 @@ setTimeout(() => {
         process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
     }, 60000 * 5);
 }, 500);
+
+export default server;

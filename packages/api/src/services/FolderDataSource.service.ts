@@ -53,9 +53,11 @@ class FolderDataSourceService {
                 }
             }
         }
-        for (let fileName of this.getFilesInFolder(dataSource.path)) {
-            await folderDataSourceRepository.addFileInFolder(dataSource.path + fileName, result.uuid);
-        }
+        try {
+            for (let fileName of this.getFilesInFolder(dataSource.path)) {
+                await folderDataSourceRepository.addFileInFolder(dataSource.path + fileName, result.uuid);
+            }
+        } catch (e) {}
         return {
             "code": 200,
             "body": {

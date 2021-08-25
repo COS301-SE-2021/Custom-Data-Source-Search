@@ -125,7 +125,8 @@ class FileDataSourceService {
         try {
             let response: any = await axios.get(
                 'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=' + searchString
-                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
+                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false' +
+                '&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
             );
             let result: FileOccurrence[] = [];
             for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
@@ -177,7 +178,11 @@ class FileDataSourceService {
         let stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
         let matches: StringOccurrence[] = [];
         let numOccurrence: number = 0;
-        for (let index = stringWithStandardLineBreaks.indexOf(searchString); index >= 0; index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)) {
+        for (
+            let index = stringWithStandardLineBreaks.indexOf(searchString);
+            index >= 0;
+            index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)
+        ) {
             let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
             matches.push({
                 lineNumber: lineNum,
@@ -190,7 +195,11 @@ class FileDataSourceService {
 
     getLineNumber(index: number, fullString: string): number {
         let lineNum = 1;
-        for (let index2 = fullString.indexOf('\n'); (index2 < index && index2 >= 0); index2 = fullString.indexOf("\n", index2 + 1)) {
+        for (
+            let index2 = fullString.indexOf('\n');
+            (index2 < index && index2 >= 0);
+            index2 = fullString.indexOf("\n", index2 + 1)
+        ) {
             lineNum++;
         }
         return lineNum;
