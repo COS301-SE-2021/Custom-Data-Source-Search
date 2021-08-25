@@ -1,6 +1,3 @@
-/**
- * Require External Modules
- */
 import express from "express"
 import * as dotenv from "dotenv";
 import cors from "cors";
@@ -16,22 +13,14 @@ import {randomBytes} from "crypto";
 dotenv.config({path: __dirname + `/../../../.env`});
 console.log(__dirname);
 
-
-/**
- * App Variables
- */
 if (!process.env.PORT) {
     console.log("Can't find .env");
     process.exit(1);
 }
 
 const PORT: number = parseInt(process.env.PORT as string, 10);
-
 const app = express();
 
-/**
- * App Configuration
- */
 app.use(helmet());
 app.use(cors());
 app.use(express.json());

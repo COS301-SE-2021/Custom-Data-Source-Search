@@ -5,23 +5,44 @@ import {authenticator} from 'otplib';
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
 
+/**
+ * @typedef {Object} Backend
+ * @property {number} id
+ * @property {string} name
+ * @property {boolean} active
+ * @property {number} userIndex
+ * @property {number} backendIndex
+ * @property {string} associatedEmail
+ * @property {string} link
+ * @property {Object} passKey
+ * @property {string} admin
+ */
+
 const store = createStore({
-    state:{
+
+    state: {
         signedInUserId: null,
         signedIn : null,
         users: []
     },
-    getters:{
-        //User information related getters
+
+    getters: {
+    /*
+    User information related getters
+    ================================
+     */
         getNewAppStatus (state) {
             return state.users.length === 0;
         },
+
         getSignedIn(state){
             return state.signedIn;
         },
+
         getUserInfo: (state) => (id) => {
             return state.users.find(user => user.id === id).info;
         },
+
         getArrUserInfo(state) {
             let users = [];
             for (let x = 0; x < state.users.length; x++) {
@@ -29,9 +50,11 @@ const store = createStore({
             }
             return users;
         },
+
         getSignedInUserId(state){
             return state.signedInUserId;
         },
+
         getUserMasterEmailsArr(state) {
             let userNamesArr = [];
             for (let user of state.users) {
@@ -39,18 +62,23 @@ const store = createStore({
             }
             return userNamesArr;
         },
-        getMasterKeyObject(state) {
+
+        getMasterKeyObject() {
             return masterKeyObject;
         },
 
-
-        //Signed in User's backends related getters
+    /*
+    Signed in User's backends related getters
+    =========================================
+    */
         getUserBackends: (state) => (id) => {
             return state.users.find(user => user.id === id).backends;
         },
+
         getSignedInUserBackend: (state, getters) => (id) => {
             return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.id === id)
         },
+
         getUserBackendNames: (state, getters) => {
           let backends = getters.getUserBackends(getters.getSignedInUserId);
           let backendsArr = [];
@@ -59,17 +87,24 @@ const store = createStore({
           }
           return backendsArr;
         },
+
         getUserAdminStatus: (state, getters) => (backendID) => {
             return getters.getSignedInUserBackend(backendID).receive.admin;
         },
 
-        //Unconnected backend related getters
+    /*
+    Unconnected backend related getters
+    ===================================
+     */
         unconnectedBackendNo: (state) => {
-            return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true).length;
+            return state.users[state.signedInUserId].backends
+                .filter(backend => backend.connect.needsLogin === true).length;
         },
+
         unconnectedBackendObjects: (state) => {
             return state.users[state.signedInUserId].backends.filter(backend => backend.connect.needsLogin === true);
         },
+
         unconnectedBackendNames: (state, getters) => {
             let unconnectedBackends = getters.unconnectedBackendObjects;
             let unconnectedBackendNamesArr = [];
@@ -78,33 +113,42 @@ const store = createStore({
             }
             return unconnectedBackendNamesArr;
         },
+
         unconnectedBackendBool: (state, getters) => {
             return getters.unconnectedBackendNo !== 0;
         },
-        //idea: get the user backends -> find the backend which matches the name -> get the property isAdmin from that result
-        //should return true or false
-        //this would allow us to determine whether or not a data source can be edited/deleted by a user
+
         getBackendAdminStatus: (state) => (backendName) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).receive.admin;
+            return state.users[state.signedInUserId].backends
+                .find(backend => backend.local.name === backendName).receive.admin;
         },
+
         getBackendLinkUsingName: (state) => (backendName) => {
-            return state.users[state.signedInUserId].backends.find(backend => backend.local.name === backendName).connect.link;
+            return state.users[state.signedInUserId].backends
+                .find(backend => backend.local.name === backendName).connect.link;
         },
+
         getBackendLink: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.link;
         },
+
         getBackendLinkViaName: (state, getters) => (name) => {
-            return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.name === name).connect.link;
+            return getters.getUserBackends(getters.getSignedInUserId)
+                .find(b => b.local.name === name).connect.link;
         },
+
         getBackendJWTToken: (state, getters) => (id) => {
             return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
         },
+
         getBackendRefreshToken: (state, getters) => (id) => {
           return getters.getSignedInUserBackend(id).connect.keys.refreshToken;
         },
+
         getBackendUserEmail: (state, getters) => (id) => {
           return getters.getSignedInUserBackend(id).connect.associatedEmail;
         },
+
         getBackendSecretPair: (state, getters) => (id) => {
             let pairObject = null;
             try {
@@ -117,31 +161,39 @@ const store = createStore({
         }
     },
 
-    //synchronous changes to the store
     mutations: {
-        //Initialise Store from local storage
-
         initialiseStore(state) {
-            // Check if the ID exists
             if(localStorage.getItem('store')) {
-                // Replace the state object with the stored item
                 this.replaceState(
                     Object.assign(state, JSON.parse(localStorage.getItem('store')))
                 );
             }
         },
 
-        //Signed-in user backend related mutations
-
-        //Action will call this specific mutation after password validation checks out
-        signInUser: function (state, payload) {
-            let thisUser = state.users[state.signedInUserId];
-            thisUser.info.isActive = true;
+    /*
+    Signed-in user backend related mutations
+    ========================================
+     */
+        signInUser: function (state) {
+            state.users[state.signedInUserId].info.isActive = true;
         },
+
+        /**
+         * Attempt to decrypt masterKeyObject of a specified user. Return true on success.
+         *
+         * Save decrypted masterKeyObject to global variable that will not be persisted on close of app.
+         *
+         * @param state
+         * @param {{userID: number, masterPassword: string}} payload
+         * @return {boolean}
+         */
         signInAUser: function (state, payload) {
-            //Payload: masterPassword, user { id, etc}
             let thisUser = state.users[payload.userID];
-            let passCheck = decryptMasterKeyObject(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
+            let passCheck = decryptMasterKeyObject(
+                thisUser.info.encryptedMasterKeyObject,
+                payload.masterPassword,
+                thisUser.info.email
+            );
             if (passCheck) {
                 state.users[payload.userID].info.isActive = true;
                 state.signedInUserId = payload.userID;
@@ -152,51 +204,70 @@ const store = createStore({
                 return false;
             }
         },
+
+        /**
+         * Call signInAUser with the currently signed in user id
+         *
+         * @param state
+         * @param payload
+         */
         signInThisUser: function (state, payload) {
-            //Payload: masterPassword
-            let thisUser = state.users[state.signedInUserId];
-            let passCheck = decryptMasterKeyObject(thisUser.info.encryptedMasterKeyObject, payload.masterPassword, thisUser.info.email);
-            if (passCheck) {
-                masterKeyObject = passCheck;
-                state.users[state.signedInUserId].info.isActive = true;
-                return true;
-            }
-            else {
-                return false;
-            }
+            payload.userID = state.signedInUserId;
+            this.commit("signInAUser", payload);
         },
 
+        /**
+         * Sign out the specified user; delete all their decrypted keys from store.
+         *
+         * @param state
+         * @param {{userID: number}} payload
+         */
         signOutUser (state, payload) {
-            //Payload: user { id, name, email, isActive, hasVault, encryptedMasterKey }
             masterKeyObject = null;
-            state.users[payload.user.id].info.isActive = false;
+            state.users[payload.userID].info.isActive = false;
             state.signedIn = false;
-            for (let backend of state.users[payload.user.id].backends) {
+            for (let backend of state.users[payload.userID].backends) {
                 backend.connect.keys.sessionKey = null;
                 backend.connect.keys.refreshToken = null;
             }
         },
 
+        /**
+         * @param state
+         * @param {Backend} payload
+         */
         editBackend(state, payload) {
             let backend = state.users[payload.userIndex].backends[payload.backendIndex];
+            // Local
             backend.local.id = payload.id;
             backend.local.name = payload.name;
             backend.local.active = payload.active;
-
+            // Connect
             backend.connect.associatedEmail = payload.associatedEmail;
             backend.connect.link = payload.link;
-
             backend.connect.passKey = payload.passKey;
-
+            // Receive
             backend.receive.admin = payload.admin;
-
+            //
             let l = state.users[state.signedInUserId].backends.length;
             for(let x = 0; x < l; x++) {
                 state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
+
+
+        /**
+         * @param state
+         * @param {{
+         *      name: string,
+         *      associatedEmail: string,
+         *      link: string,
+         *      secretPair: Object,
+         *      refreshToken: string
+         *  }} payload
+         */
         addBackend(state, payload){
-            //Payload: name, associatedEmail, link, secretPair, refreshToken
+            // Payload: name, associatedEmail, link, secretPair, refreshToken
             let newBackend = {
                 local: {
                     id: null,
@@ -219,14 +290,14 @@ const store = createStore({
                     connected: false
                 }
             };
-
+            // Local
             newBackend.local.name = payload.name;
-
+            // Connect
             newBackend.connect.associatedEmail = payload.associatedEmail;
             newBackend.connect.link = payload.link;
             newBackend.connect.keys.secretPair = payload.secretPair;
             newBackend.connect.keys.refreshToken = payload.refreshToken;
-
+            //
             state.users[state.signedInUserId].backends.push(newBackend);
             state.signedIn = true;
             let l = state.users[state.signedInUserId].backends.length;
@@ -234,6 +305,7 @@ const store = createStore({
                 state.users[state.signedInUserId].backends[x].local.id = x;
             }
         },
+
         deleteBackend(state, payload) {
             state.users[state.signedInUserId].backends.splice(payload,1);
             let l = state.users[state.signedInUserId].backends.length;
@@ -242,13 +314,25 @@ const store = createStore({
             }
         },
 
-        //User management
-        setSignedIn(state, payload){
-            state.signedIn = payload;
-            if (!payload) {
+    /*
+    User management
+    ===============
+     */
+        /**
+         * @param state
+         * @param {boolean} signedIn
+         */
+        setSignedIn(state, signedIn){
+            state.signedIn = signedIn;
+            if (!signedIn) {
                 masterKeyObject = null;
             }
         },
+
+        /**
+         * @param state
+         * @param {{userID: number, signedIn: boolean}} payload
+         */
         setSignedInUserID(state, payload) {
             state.signedInUserId = payload.userID;
             if ( payload.userID != null ){
@@ -258,8 +342,12 @@ const store = createStore({
                 state.signedIn = null;
             }
         },
+
+        /**
+         * @param state
+         * @param {{name: string, email: string, hasVault: boolean, passKey: Object}} payload
+         */
         addUserToLocalList(state, payload) {
-            //Payload: name, email, hasVault, passKey: { encryptedMasterKeyObject}
             let newUser = {
                 id: null,
                 info: {
@@ -293,25 +381,26 @@ const store = createStore({
                     }
                 }]
             };
-
             newUser.info.name = payload.name;
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
             newUser.info.encryptedMasterKeyObject = payload.passKey.encryptedMasterKeyObject;
-
             state.users.push(newUser);
-
             let x = 0;
             for (let user of state.users) {
                 user.id = x;
                 user.info.id = x;
                 x++;
             }
-
             state.signedInUserId = state.users.length-1;
             state.signedIn = true;
         },
+
+        /**
+         * @param state
+         * @param {{deleteVault: boolean, user: Object}} payload
+         */
         deleteUserFromLocalList (state, payload) {
             if (payload.deleteVault) {
                 //Do some server side call to delete file on web
@@ -325,23 +414,48 @@ const store = createStore({
                    user.id = x++;
             }
         },
+
+    /*
+    User Backend Token Management
+    =============================
+     */
+        /**
+         * @param state
+         * @param {{id: number, needsLogin: boolean}} payload
+         */
         setBackendLoginStatus(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.needsLogin = payload.needsLogin;
         },
+
+        /**
+         * @param state
+         * @param {{id: number, refreshToken: string}} payload
+         */
         setRefreshToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.keys.refreshToken = payload.refreshToken;
         },
+
+        /**
+         * @param state
+         * @param {{id: number, jwtToken: string}} payload
+         */
         setJWTToken(state, payload) {
             state.users[state.signedInUserId].backends
                 .find(backend => backend.local.id === payload.id).connect.keys.jwtToken = payload.jwtToken
         }
     },
 
-    //asynchronous actions that will result in mutations on the state being called -> once asynch. op. is done, you call the mutation to update the store
     actions : {
-        //User management
+    /*
+    User management
+    ===============
+     */
+        /**
+         * @param commit
+         * @param {{masterPassword: string, email: string, name: string, hasVault: boolean}} payload
+         */
         addNewUser: function ({commit}, payload) {
             //Payload: name, email, masterPassword, hasVault
             let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
@@ -349,10 +463,29 @@ const store = createStore({
                 name: payload.name,
                 email: payload.email,
                 hasVault: payload.hasVault,
-                passKey: { masterKey: newPassKey.masterKey, encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject }
+                passKey: {
+                    masterKey: newPassKey.masterKey,
+                    encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject
+                }
             });
-            masterKeyObject = {key: newPassKey.masterKey}
         },
+
+    /*
+    User Backend Token Management
+    =============================
+         */
+        /**
+         * A function that attempts to refresh the JWT token of the specified backend. Returns true on success.
+         *
+         * If the refresh token has expired the backendLogin function will be called to get a new refresh token (if
+         * this is possible) and a second attempt at refreshing the JWT token will be made.
+         *
+         * @param dispatch
+         * @param commit
+         * @param getters
+         * @param {{id: number}} payload
+         * @returns {Promise<void>}
+         */
         refreshJWTToken: async function ({dispatch, commit, getters}, payload) {
             const url = "http://" + getters.getBackendLink(payload.id) + "/users/generatetoken";
             const email = getters.getBackendUserEmail(payload.id);
@@ -379,6 +512,13 @@ const store = createStore({
                         })
                 });
         },
+
+        /**
+         * @param commit
+         * @param getters
+         * @param {{id: number}} payload
+         * @return {Promise<void>}
+         */
         backendLogin: async function ({commit, getters}, payload) {
             let secretPair = getters.getBackendSecretPair(payload.id);
             if(secretPair === null) {
@@ -410,9 +550,20 @@ const store = createStore({
                     console.error(err)
                 })
         },
-        //Backend management
+
+        /**
+         * @param commit
+         * @param getters
+         * @param {{
+         *      seed: string,
+         *      name: string,
+         *      associatedEmail: string,
+         *      link: string,
+         *      refreshToken: string,
+         *      passKey: string
+         * }} payload
+         */
         addNewBackend: function ({commit, getters}, payload) {
-            //Payload: name, associatedEmail, link, passKey, seed, refreshToken
             let masterKeyObject = getters.getMasterKeyObject;
             if(masterKeyObject === null) {
                 return;
@@ -432,12 +583,23 @@ const store = createStore({
     }
 });
 
-// Subscribe to store updates
 store.subscribe((mutation, state) => {
-    // Store the state object as a JSON string
     localStorage.setItem('store', JSON.stringify(state));
 });
 
+/*
+Helper Cryptography Functions
+=============================
+ */
+/**
+ * Randomly generate a master key and encrypt it using a key generated from the given master password and email.
+ *
+ * Return both the encrypted and unencrypted versions of this key.
+ *
+ * @param masterPassword
+ * @param email
+ * @return {{masterKey: Uint8Array, encryptedMasterKeyObject: string}}
+ */
 function generateMasterKey(masterPassword, email) {
     let encryptionKey = pbkdf2.pbkdf2Sync(
         masterPassword,
@@ -446,23 +608,28 @@ function generateMasterKey(masterPassword, email) {
         256 / 8,
         'sha512'
     );
-
-    // Generate random key to be encrypted by master key
+    // Generate Random Key K
     let masterKey = new Uint8Array(256 / 8);
     window.crypto.getRandomValues(masterKey);
-
-    // Encrypt this random key
+    // Encrypt K
     let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey);
     let masterKeyObject = aes.utils.utf8.toBytes(JSON.stringify({"key": aes.utils.hex.fromBytes(masterKey)}));
     let newEncryptedMasterKeyObject = aesCtr.encrypt(masterKeyObject);
-
-    // Return Encrypted key
+    //
     return {
         masterKey: masterKey,
         encryptedMasterKeyObject: aes.utils.hex.fromBytes(newEncryptedMasterKeyObject)
     };
 }
 
+/**
+ * Decrypt the masterKeyObject sent in, return key object on success, return null on failure.
+ *
+ * @param encryptedMasterKeyObject
+ * @param fedInPassword
+ * @param email
+ * @return {null|Object}
+ */
 function decryptMasterKeyObject(encryptedMasterKeyObject, fedInPassword, email) {
     let decryptionKey = pbkdf2.pbkdf2Sync(
         fedInPassword,
@@ -481,12 +648,22 @@ function decryptMasterKeyObject(encryptedMasterKeyObject, fedInPassword, email) 
     }
 }
 
+/**
+ * @param masterKey
+ * @param jsonObject
+ * @return {string}
+ */
 function encryptJsonObject(masterKey, jsonObject) {
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
     let encryptedJsonObject = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(jsonObject)));
     return aes.utils.hex.fromBytes(encryptedJsonObject);
 }
 
+/**
+ * @param masterKey
+ * @param jsonObject
+ * @return {Object|error}
+ */
 function decryptJsonObject(masterKey, jsonObject) {
     let encryptedJsonObject = aes.utils.hex.toBytes(jsonObject);
     let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
@@ -494,6 +671,7 @@ function decryptJsonObject(masterKey, jsonObject) {
     return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }
 
+// masterKeyObject is stored like this to ensure it is thrown away upon closing of app.
 let masterKeyObject = null;
 
 export default store;

@@ -4,11 +4,21 @@ import {randomBytes} from "crypto";
 import FormData from "form-data";
 import axios from "axios";
 import fileDataSourceRepository from "./FileDataSourceRepository";
+
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 class FolderDataSourceRepository {
 
-    addDataSource(dataSource: FolderDataSource): [{ code: number; message: string; uuid: string }, { code: number; message: string; }] {
+    /**
+     * Store a new folder datasource in db
+     *
+     * @param {FolderDataSource} dataSource
+     * @return {[{ code: number; message: string; uuid: string }, { code: number; message: string; }]}
+     */
+    addDataSource(dataSource: FolderDataSource): [
+        { code: number; message: string; uuid: string },
+        { code: number; message: string; }
+    ] {
         if (!fs.existsSync(dataSource.path)) {
             return [null, {
                 "code": 404,
@@ -40,6 +50,14 @@ class FolderDataSourceRepository {
         }, null];
     }
 
+    /**
+     * Add a file contained in a folder to db and post it's contents to solr
+     * @async
+     *
+     * @param {string} filePath Complete path to file
+     * @param {string} folderUUID uuid of corresponding folder that file is contained in
+     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     */
     async addFileInFolder(filePath: string, folderUUID: string) {
         const uuid: string = randomBytes(16).toString("hex")
         const [, err] = await this.postToSolr(
@@ -73,6 +91,12 @@ class FolderDataSourceRepository {
         }, null];
     }
 
+    /**
+     * Retrieve a folder datasource stored in db by it's uuid
+     *
+     * @param {string} uuid
+     * @return {[StoredFolderDataSource, { code: number, message: string }]}
+     */
     getDataSource(uuid: string): [StoredFolderDataSource, { "code": number, "message": string }] {
         const dataSource = db.prepare("SELECT * FROM folder_data WHERE uuid = ?").get(uuid)
         if (dataSource !== undefined) {
@@ -84,11 +108,23 @@ class FolderDataSourceRepository {
         }]
     }
 
+    /**
+     * Return all stored folder datasources
+     *
+     * @return {[StoredFolderDataSource[], { "code": number, "message": string }]}
+     */
     getAllDataSources(): [StoredFolderDataSource[], { "code": number, "message": string }] {
         const fileDataList = db.prepare("SELECT * FROM folder_data;").all()
         return [fileDataList.map(FolderDataSourceRepository.castToStoredDataSource), null];
     }
 
+    /**
+     * Delete a folder datasource from db by it's uuid
+     * @async
+     *
+     * @param {string} uuid
+     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     */
     async deleteDataSource(uuid: string) {
         try {
             for (let folderFile of db.prepare("SELECT * FROM folder_file_data WHERE folder_uuid = ?;").all(uuid)) {
@@ -109,11 +145,23 @@ class FolderDataSourceRepository {
         }, null];
     }
 
+    /**
+     * Return deepest folder specified in a path
+     *
+     * @param {string} path
+     * @return {string}
+     */
     private static getFolderName(path: string) {
         return path.substr(0, path.length - 1).split("/").pop();
     }
 
-    private static castToStoredDataSource(dataSource: any) {
+    /**
+     * Format folder datasource from db to a StoredFolderDatasource
+     *
+     * @param {any} dataSource
+     * @return {StoredFolderDataSource}
+     */
+    private static castToStoredDataSource(dataSource: any): StoredFolderDataSource {
         return {
             uuid: dataSource.uuid,
             path: dataSource.path,
@@ -122,13 +170,26 @@ class FolderDataSourceRepository {
         };
     }
 
+    /**
+     * Post contents of a file to solr
+     * @async
+     *
+     * @param {Buffer} file Content of file
+     * @param {string} id Id of datasource as stored in db
+     * @param {string} fileName
+     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     */
     async postToSolr(file: Buffer, id: string, fileName: string) {
         let formData = new FormData();
-        fileName = fileDataSourceRepository.makeDefaultExtension(fileName);
+        fileName = fileDataSourceRepository.removeExtension(fileName);
         formData.append("file", file, fileName);
         try {
-            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update/extract?literal.id=' + id
-                + '&commit=true&literal.datasource_type=folder',
+            await axios.post(
+                'http://localhost:' +
+                process.env.SOLR_PORT +
+                '/solr/files/update/extract?literal.id=' +
+                id +
+                '&commit=true&literal.datasource_type=folder',
                 formData,
                 {
                     headers: {
@@ -148,10 +209,22 @@ class FolderDataSourceRepository {
         }]
     }
 
+    /**
+     * Return file name from path
+     *
+     * @param {string} filePath
+     * @return {string}
+     */
     private static getFileName(filePath: string) {
         return filePath.split("/").pop();
     }
 
+    /**
+     * Return folder datasource which is associated with the file in the folder
+     *
+     * @param {string} uuid
+     * @return {string}
+     */
     getFolderFromFile(uuid: string) {
         try {
             const dataSource = db.prepare(

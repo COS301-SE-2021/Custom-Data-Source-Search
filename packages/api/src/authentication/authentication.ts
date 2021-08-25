@@ -1,6 +1,11 @@
 import {Request, Response} from "express";
 import jwt from "jsonwebtoken";
 
+/**
+ * Middleware that authenticates user based on their JWT token
+ *
+ * @param {string} role Role to compare user role against
+ */
 export function authUser(role: string) {
     return (req: Request, res: Response, next: Function) => {
         if (process.env.LOCAL_BACKEND === "true") {
@@ -26,11 +31,24 @@ export function authUser(role: string) {
     }
 }
 
-function permissionSufficient(actualRole: string, requiredRole: string) {
+/**
+ * Test whether permission for user role is greater than that of required role
+ *
+ * @param {string} actualRole Actual user role
+ * @param {string} requiredRole Role to compare against
+ * @return {boolean}
+ */
+function permissionSufficient(actualRole: string, requiredRole: string): boolean {
     return (roleToInt(actualRole) >= roleToInt(requiredRole));
 }
 
-function roleToInt(role: string) {
+/**
+ * Converts a role to an integer to make comparisons easier
+ *
+ * @param {string} role Role to convert to integer
+ * @return {int}
+ */
+function roleToInt(role: string): number {
     switch (role) {
         case "viewer":
             return 0;
