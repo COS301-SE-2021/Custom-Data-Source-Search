@@ -182,7 +182,7 @@ export default {
         r.datasource_icon = this.whitelistEscape(r.datasource_icon);
         r.lineNumbers = this.extractLineNumbers(r.match_snippets)
         r.link = backend.connect.link;
-        r.name = backend.local.name;
+        r.backend_name = backend.local.name;
         r.backendId = backend.local.id;
       }
       this.searchResults = this.searchResults.concat(results);
