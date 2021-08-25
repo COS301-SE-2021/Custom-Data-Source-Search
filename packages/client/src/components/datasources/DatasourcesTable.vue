@@ -38,9 +38,7 @@
           >
             <div v-if="!clicked && backend===null">
               <div class="overlay-header">
-                <span>
-                  Which backend would you like to add to?
-                </span>
+                <span>Which backend would you like to add to?</span>
               </div>
               <div class="overlay-buttons">
                 <Button
@@ -56,9 +54,7 @@
             </div>
             <div v-else-if="!clicked && backend!=null">
               <div class="overlay-header">
-                <span>
-                  What type of source would you like to add?
-                </span>
+                <span>What type of source would you like to add?</span>
               </div>
               <div class="overlay-buttons">
                 <Button
