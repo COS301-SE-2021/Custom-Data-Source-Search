@@ -233,7 +233,6 @@
                 if (this.local.name === 'Local') {
                     this.localBackendBool = true;
                 }
-
                 this.tempBackendInfo.id = this.local.id;
                 this.tempBackendInfo.active = this.local.active;
 
