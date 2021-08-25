@@ -24,7 +24,7 @@
       />
       <add-user-card/>
     </div>
-    <span id="tips-span">Tip: {{tips[randomId]}}</span>
+    <span id="tips-span">Tip: {{tips[0]}}</span>
     <delete-user-are-you-sure
         :show="displayDeleteCheck"
         :user="selectedUser"
@@ -60,6 +60,7 @@ import SignOutCheck from "../components/popups/SignOutCheck";
 import SignIn from "../components/popups/SignIn";
 import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 import {mapGetters} from "vuex";
+import _ from 'lodash';
 
 export default {
   name: "Welcome",
@@ -105,7 +106,7 @@ export default {
 
   mounted () {
     this.isSignedIn = this.$store.getters.getSignedIn;
-    this.randomId = this.getRandomNumber(0, this.tips.length-1);
+    this.shuffleArray();
   },
 
   methods: {
@@ -156,8 +157,8 @@ export default {
      * @param max - maximum number that can be generated
      * @returns {number} - returns a random number between the min and max parameters
      */
-    getRandomNumber(min,max){
-      return Math.floor(Math.random()*(max-min+1)+min);
+    shuffleArray(){
+      this.tips = _.shuffle(this.tips)
     },
   }
 }

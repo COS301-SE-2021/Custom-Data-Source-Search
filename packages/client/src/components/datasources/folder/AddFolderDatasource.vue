@@ -122,8 +122,9 @@ export default {
 
     submitSelectedFolders() {
       if(this.selectedFolders.length!==0){
-        for (let i = 0; i < this.selectedFolders.length; i++) {
-          let respObject = {"path": this.selectedFolders[i], "tag1": this.tag1, "tag2": this.tag2};
+        let i;
+        for (i of this.selectedFolders) {
+          let respObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
           axios
               .post(url, respObject)
