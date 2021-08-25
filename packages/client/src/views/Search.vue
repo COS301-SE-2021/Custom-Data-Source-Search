@@ -2,7 +2,7 @@
   <div class="grid-content">
     <Toast position="bottom-right"/>
     <Splitter style="background:var(--surface-200);">
-      <SplitterPanel :minSize="20" :size="40">
+      <SplitterPanel :minSize="20" :size="90">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
             <img
@@ -27,7 +27,7 @@
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel :minSize="30" :size="60" class="container">
+      <SplitterPanel :minSize="30" class="container">
         <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
         <div v-else class="next-prev">
           <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
