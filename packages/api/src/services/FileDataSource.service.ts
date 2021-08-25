@@ -1,20 +1,10 @@
-/**
- * Data Model Interfaces
- */
 import {FileDataSource} from "../models/FileDataSource.interface";
-import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
 import fs from 'fs';
-import path from 'path';
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
-import axios from "axios";
 import hljs from "highlight.js";
-
 
 class FileDataSourceService {
 
-    /**
-     * Service Methods
-     */
     getAllFileDataSources() {
         let [result, err] = fileDataSourceRepository.getAllDataSources();
         if (err) {
@@ -120,79 +110,6 @@ class FileDataSourceService {
         }
     }
 
-
-    async searchAllFileDataSources(searchString: string): Promise<[FileOccurrence[], Error]> {
-        try {
-            let response: any = await axios.get(
-                'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=' + searchString
-                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false' +
-                '&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
-            );
-            let result: FileOccurrence[] = [];
-            for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
-                // @ts-ignore
-                if (value["content"] != undefined) {
-                    let stringOccurrences: StringOccurrence[] = [];
-                    // @ts-ignore
-                    for (let i = 0; i < value["content"].length; i++) {
-                        // @ts-ignore
-                        stringOccurrences.push({"lineNumber": 0, "snippet": value["content"][i]});
-                    }
-                    let [datasource, err] = fileDataSourceRepository.getDataSource(key);
-                    if (err) {
-                        result.push({"type": "file", "source": key, "match_snippets": stringOccurrences});
-                    } else {
-                        result.push({
-                            "type": "file",
-                            "source": datasource.path + datasource.filename,
-                            "match_snippets": stringOccurrences
-                        });
-                    }
-                }
-            }
-            return [result, null];
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
-    async readFile(location: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            fs.readFile(path.resolve(__dirname, location), 'utf-8', (err, data) => {
-                if (err) return reject(err);
-                return resolve(data.toString());
-            })
-        })
-    }
-
-
-    /**
-     * Internal Methods
-     */
-
-
-    searchFile(fileContents: string, searchString: string): StringOccurrence[] {
-        if (searchString === "" || fileContents === "") {
-            return [];
-        }
-        let stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
-        let matches: StringOccurrence[] = [];
-        let numOccurrence: number = 0;
-        for (
-            let index = stringWithStandardLineBreaks.indexOf(searchString);
-            index >= 0;
-            index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)
-        ) {
-            let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
-            matches.push({
-                lineNumber: lineNum,
-                snippet: '...' + fileContents.substring(index - 12, index + searchString.length + 13) + '...'
-            });
-            numOccurrence++;
-        }
-        return matches;
-    }
-
     getLineNumber(index: number, fullString: string): number {
         let lineNum = 1;
         for (
@@ -215,8 +132,10 @@ class FileDataSourceService {
     getSearchSnippet(snippet: string, fileName: string) {
         let temp: string[] = fileName.split('.');
         let extension: string = temp[temp.length - 1];
-        if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
-            //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
+        if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
+            .indexOf(extension) != -1) {
+            //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
+            // + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
             if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
@@ -231,8 +150,14 @@ class FileDataSourceService {
                 snippet = hljs.highlightAuto(snippet).value;
             }
             /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
-            snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
-            snippet = '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' + snippet + '</pre>';
+            snippet = snippet.replace(
+                reg,
+                '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>'
+            );*/
+            snippet =
+                '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' +
+                snippet +
+                '</pre>';
         } else {
             snippet = '<div>' + this.escapeAndHighlight(snippet) + '</div>';
         }
