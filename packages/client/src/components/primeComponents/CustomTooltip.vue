@@ -56,7 +56,7 @@
         transition: opacity 0.2s;
 
         position: absolute;
-        z-index: 1;
+        z-index: 2;
 
         background: rgb(121, 179, 177);
     }
