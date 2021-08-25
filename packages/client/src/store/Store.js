@@ -188,7 +188,6 @@ const store = createStore({
          * @return {boolean}
          */
         signInAUser: function (state, payload) {
-            // Payload: masterPassword, user { id, etc}
             let thisUser = state.users[payload.userID];
             let passCheck = decryptMasterKeyObject(
                 thisUser.info.encryptedMasterKeyObject,
@@ -211,11 +210,10 @@ const store = createStore({
          *
          * @param state
          * @param payload
-         * @return {boolean}
          */
         signInThisUser: function (state, payload) {
             payload.userID = state.signedInUserId;
-            return this.signInAUser(state, payload);
+            this.commit("signInAUser", payload);
         },
 
         /**
