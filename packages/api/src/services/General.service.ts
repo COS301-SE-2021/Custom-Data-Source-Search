@@ -33,9 +33,11 @@ class GeneralService {
     async searchAllDataSources(searchString: string): Promise<[any[], { code: number, message: string }]> {
         try {
             let response: any = await axios.get(
-                'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q='
-                + encodeURIComponent(searchString)
-                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=10'
+                'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=' +
+                encodeURIComponent(searchString) +
+                '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false' +
+                '&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>' +
+                '&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=10'
             );
             let docs: any[] = response["data"]["response"]["docs"];
             let result: any[] = [];
@@ -65,8 +67,10 @@ class GeneralService {
                                 // @ts-ignore
                                 for (let occurrence of value["content"]) {
                                     fileOccurrences.push({
-                                        "line_number": fileDataSourceService.getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": fileDataSourceService.getSearchSnippet(occurrence, fileDataSource.filename)
+                                        "line_number": fileDataSourceService
+                                            .getSnippetLineNumber(occurrence, currentObject["content"]),
+                                        "snippet": fileDataSourceService
+                                            .getSearchSnippet(occurrence, fileDataSource.filename)
                                     });
                                 }
                                 result.push({
@@ -87,7 +91,8 @@ class GeneralService {
                                 // @ts-ignore
                                 for (let occurrence of value["content"]) {
                                     webpageOccurrences.push({
-                                        "line_number": fileDataSourceService.getSnippetLineNumber(occurrence, currentObject["content"]),
+                                        "line_number": fileDataSourceService
+                                            .getSnippetLineNumber(occurrence, currentObject["content"]),
                                         "snippet": webPageDataSourceService.getSearchSnippet(occurrence)
                                     });
                                 }
@@ -109,7 +114,8 @@ class GeneralService {
                                 // @ts-ignore
                                 for (let occurrence of value["content"]) {
                                     folderOccurrences.push({
-                                        "line_number": fileDataSourceService.getSnippetLineNumber(occurrence, currentObject["content"]),
+                                        "line_number": fileDataSourceService
+                                            .getSnippetLineNumber(occurrence, currentObject["content"]),
                                         "snippet": webPageDataSourceService.getSearchSnippet(occurrence)
                                     });
                                 }
@@ -154,7 +160,8 @@ class GeneralService {
             } else {
                 let temp: string[] = dataSource.filename.split('.');
                 let extension: string = temp[temp.length - 1];
-                if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
+                if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
+                    .indexOf(extension) != -1) {
                     let snippet: string;
                     try {
                         snippet = hljs.highlight(content, {language: extension}).value;
