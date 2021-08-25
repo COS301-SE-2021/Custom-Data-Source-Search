@@ -8,6 +8,14 @@ const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 class WebPageDataSourceRepository {
 
+    /**
+     * Store a new webpage datasource in db and post the contents to solr
+     * @async
+     *
+     * @param {WebPageDataSource} dataSource
+     * @param {string} page
+     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     */
     async addDataSource(dataSource: WebPageDataSource, page: string): Promise<[{ code: number, message: string }, { code: number, message: string }]> {
         const uuid: string = randomBytes(16).toString("hex")
         try {
@@ -38,6 +46,15 @@ class WebPageDataSourceRepository {
         }, null];
     }
 
+    /**
+     * Post contents of a webpage to solr
+     * @async
+     *
+     * @param {string} page Content of webpage
+     * @param {string} id Id of datasource as stored in db
+     * @param {string} url url of the webpage
+     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     */
     async postToSolr(page: string, id: string, url: string) {
         try {
             let content: any = Buffer.from(page);
@@ -63,7 +80,12 @@ class WebPageDataSourceRepository {
         }]
     }
 
-    // TODO FROM HERE
+    /**
+     * Retrieve a webpage datasource stored in db by it's uuid
+     *
+     * @param {string} uuid
+     * @return {[StoredWebPageDataSource, { code: number, message: string }]}
+     */
     getDataSource(uuid: string): [StoredWebPageDataSource, { "code": number, "message": string }] {
         const dataSource = db.prepare("SELECT * FROM webpage_data WHERE uuid = ?;").get(uuid)
         if (dataSource !== undefined) {
@@ -75,11 +97,23 @@ class WebPageDataSourceRepository {
         }]
     }
 
+    /**
+     * Return all stored webpage datasources
+     *
+     * @return {[StoredWebPageDataSource[], { "code": number, "message": string }]}
+     */
     getAllDataSources(): [StoredWebPageDataSource[], { "code": number, "message": string }] {
         const webpageDataList = db.prepare("SELECT * FROM webpage_data;").all()
         return [webpageDataList, null];
     }
 
+    /**
+     * Delete a webpage datasource from db by it's uuid
+     * @async
+     *
+     * @param {string} uuid
+     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     */
     async deleteDataSource(uuid: string) {
         const [,err] = await this.deleteFromSolr(uuid);
         if (err) {
@@ -100,6 +134,13 @@ class WebPageDataSourceRepository {
         }, null];
     }
 
+    /**
+     * Remove document associated with datasource from solr
+     * @async
+     *
+     * @param {string} uuid
+     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     */
     async deleteFromSolr(uuid: string) {
         try {
             await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update?commit=true',
