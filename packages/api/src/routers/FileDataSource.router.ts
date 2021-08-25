@@ -1,18 +1,7 @@
-/**
- * Required External Modules and Interfaces
- */
 import express, {Request, Response} from "express";
 import fileDataSourceService from "../services/FileDataSource.service";
 
-/**
- * Router Definition
- */
 export const fileDataSourceRouter = express.Router();
-
-/**
- * Controller Definitions
- */
-
 
 /**
  * Return the file names and paths of all File Data Sources
