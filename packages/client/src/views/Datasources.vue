@@ -3,9 +3,7 @@
     <ConfirmDialog/>
     <Toast position="bottom-right"/>
     <div class="datasource-header">
-      <h1 class="datasource-heading">
-        Data Sources
-      </h1>
+      <h1 class="datasource-heading">Data Sources</h1>
       <p class="datasource-description">
         View and edit your data sources
       </p>

@@ -1,28 +1,36 @@
 <template>
     <div>
-      <span>
-        Enter the URL of desired webpage
-      </span>
-      <InputText id="input" v-model="dataSourceURI" placeholder="Add WebPage URL..."/>
+      <span>Enter the URL of desired webpage</span>
+      <InputText
+          id="input"
+          v-model="dataSourceURI"
+          placeholder="Add WebPage URL..."
+      />
       <div>
-        <span>
-          Add optional tags
-        </span>
+        <span>Add optional tags</span>
         <br/>
         <span class="p-float-label">
-          <InputText id="tag1" v-model="tag1"  type="text"/>
-          <label for="tag1">
-            Tag 1
-          </label>
+          <InputText
+              id="tag1"
+              v-model="tag1"
+              type="text"
+          />
+          <label for="tag1">Tag 1</label>
         </span>
         <span class="p-float-label">
-          <InputText id="tag2" v-model="tag2"  type="text"/>
-          <label for="tag2">
-            Tag 2
-          </label>
+          <InputText
+              id="tag2"
+              v-model="tag2"
+              type="text"
+          />
+          <label for="tag2">Tag 2</label>
         </span>
       </div>
-      <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitWebpage"/>
+      <Button
+          icon="pi pi-check"
+          class="p-button-rounded p-button-text"
+          @click="submitWebpage"
+      />
     </div>
 </template>
 

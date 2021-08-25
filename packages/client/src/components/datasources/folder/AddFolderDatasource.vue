@@ -1,13 +1,15 @@
 <template>
   <ScrollPanel>
-    <span>
-      Select one or more Folders to add as Data Sources
-    </span>
+    <span>Select one or more Folders to add as Data Sources</span>
     <br/>
-    <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="selectFolders()"/><br/>
-    <span>
-      Selected Folders
-    </span>
+    <Button
+        label="Browse"
+        icon="pi pi-plus"
+        class="p-button-raised p-button-text"
+        @click="selectFolders()"
+    />
+    <br/>
+    <span>Selected Folders</span>
     <div class="selected-folders">
       <ScrollPanel style="width: 100%; height: 10vh;">
         <ul v-if="selectedFolders.length!==0">
@@ -18,16 +20,12 @@
             {{folder}}
           </li>
         </ul>
-        <span v-else class="selection-list">
-          No folders selected.
-        </span>
+        <span v-else class="selection-list">No folders selected.</span>
       </ScrollPanel>
     </div>
     <br/>
     <div class="depth-selector">
-      <label for="stacked">
-        Specify depth of folders to search
-      </label>
+      <label for="stacked">Specify depth of folders to search</label>
       <div class="depth-selector-input">
         <InputNumber
             inputStyle="width: 9.3rem; background-color: #242424;"
@@ -40,30 +38,38 @@
       </div>
     </div>
     <div class="file-ignore">
-      <span>
-        Specify which files/sub-folders to ignore
-      </span>
-      <Textarea v-model="ignore" rows="5" cols="40"/>
+      <span>Specify which files/sub-folders to ignore</span>
+      <Textarea
+          v-model="ignore"
+          rows="5"
+          cols="40"
+      />
     </div>
     <div>
-      <span>
-        Add optional tags
-      </span>
+      <span>Add optional tags</span>
       <br/>
       <span class="p-float-label">
-        <InputText id="tag1" v-model="tag1" type="text"/>
-        <label for="tag1">
-          Tag 1
-        </label>
+        <InputText
+            id="tag1"
+            v-model="tag1"
+            type="text"
+        />
+        <label for="tag1">Tag 1</label>
       </span>
       <span class="p-float-label">
-        <InputText id="tag2" v-model="tag2" type="text"/>
-        <label for="tag2">
-          Tag 2
-        </label>
+        <InputText
+            id="tag2"
+            v-model="tag2"
+            type="text"
+        />
+        <label for="tag2">Tag 2</label>
       </span>
     </div>
-    <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSelectedFolders"/>
+    <Button
+        icon="pi pi-check"
+        class="p-button-rounded p-button-text"
+        @click="submitSelectedFolders"
+    />
   </ScrollPanel>
 </template>
 

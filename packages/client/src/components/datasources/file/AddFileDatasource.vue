@@ -1,14 +1,15 @@
 <template>
   <ScrollPanel>
-    <span>
-      Select one or more Files to add to data sources
-    </span>
+    <span>Select one or more Files to add to data sources</span>
     <br/>
-    <Button label="Browse" icon="pi pi-plus" class="p-button-raised p-button-text" @click="selectFiles()"/>
+    <Button
+        label="Browse"
+        icon="pi pi-plus"
+        class="p-button-raised p-button-text"
+        @click="selectFiles()"
+    />
     <br/>
-    <span>
-      Selected Files
-    </span>
+    <span>Selected Files</span>
     <div class="selected-files">
       <ScrollPanel style="width: 100%; height: 10vh">
         <ul v-if="filenames.length!==0">
@@ -19,30 +20,34 @@
             {{file}}
           </li>
         </ul>
-        <span v-else class="selection-list">
-          No files selected.
-        </span>
+        <span v-else class="selection-list">No files selected.</span>
       </ScrollPanel>
     </div>
     <div>
-      <span>
-        Add optional tags
-      </span>
+      <span>Add optional tags</span>
       <br/>
       <span class="p-float-label">
-        <InputText id="tag1" v-model="tag1" type="text"/>
-        <label for="tag1">
-          Tag 1
-        </label>
+        <InputText
+            id="tag1"
+            v-model="tag1"
+            type="text"
+        />
+        <label for="tag1">Tag 1</label>
       </span>
       <span class="p-float-label">
-        <InputText id="tag2" v-model="tag2" type="text"/>
-        <label for="tag2">
-          Tag 2
-        </label>
+        <InputText
+            id="tag2"
+            v-model="tag2"
+            type="text"
+        />
+        <label for="tag2">Tag 2</label>
       </span>
     </div>
-    <Button icon="pi pi-check" class="p-button-rounded p-button-text" @click="submitSelectedFiles()"/>
+    <Button
+        icon="pi pi-check"
+        class="p-button-rounded p-button-text"
+        @click="submitSelectedFiles()"
+    />
   </ScrollPanel>
 </template>
 

@@ -2,9 +2,7 @@
   <div class="page">
     <Toast position="bottom-left"/>
     <div class="heading-and-info">
-      <h1 class="header">
-        Who's Sleuthing?
-      </h1>
+      <h1 class="header">Who's Sleuthing?</h1>
       <p class="description">
         Select the user you would like to sign in as
       </p>
@@ -20,12 +18,13 @@
           @click="updateSelectedUser(user)"
           @show-sign-in="showReEnterMasterPass"
       />
-      <ContextMenu ref="deleteOption" :model="items"/>
+      <ContextMenu
+          ref="deleteOption"
+          :model="items"
+      />
       <add-user-card/>
     </div>
-    <span id="tips-span">
-      Tip: {{tips[randomId]}}
-    </span>
+    <span id="tips-span">Tip: {{tips[randomId]}}</span>
     <delete-user-are-you-sure
         :show="displayDeleteCheck"
         :user="selectedUser"
