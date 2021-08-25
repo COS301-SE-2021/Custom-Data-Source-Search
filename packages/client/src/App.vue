@@ -6,7 +6,6 @@
             <router-link title="Data Sources" class="icon" to="/datasources"><i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/></router-link>
             <router-link title="Admin" class="icon" to="/admin"><em class="pi pi-th-large" style="font-size:1.5rem"  /></router-link>
             <router-link title="Settings" class="icon" to="/settings"><i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/></router-link>
-            <!--            <i id="profile" class="pi pi-user" style="font-size:1.5rem" aria-hidden="true" @click="toggle"/>-->
             <div class="icon-container" title="User" @click="toggle">
                 <div class="image-ring-main" >
                     <h3 class="name-initial-main">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
@@ -107,15 +106,15 @@ button {
   padding: 10px;
 }
 
-.pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .unconnected-backend-warning{
+.pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
   color: grey;
   padding: 20px 10px 10px;
 }
 
-/*.pi-cog{*/
-/*  position: fixed;*/
-/*  bottom: 0;*/
-/*}*/
+.unconnected-backend-warning{
+  text-align: center;
+  padding: 10px 10px 10px;
+}
 
 .pi-search:hover,.pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
   color: #41B3B2;
@@ -195,12 +194,11 @@ button {
 
 
 #expiration-indicator {
-    font-size: 2rem;
-    color: #d69b2c;
+    font-size: 1.5rem;
+    color: #FFF59D;
     position: relative;
     display: inline-block;
-    margin-left: 0.4rem;
-    margin-top : auto;
+    margin-top : 0.5rem;
     margin-bottom : 0.3rem;
 }
 

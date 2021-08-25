@@ -34,6 +34,7 @@
     .tooltip-box {
         position: relative;
         display: inline-block;
+      text-align: center;
     }
 
     .tooltip-box:hover .tooltip{
