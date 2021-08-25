@@ -1,6 +1,7 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 import {authenticator} from 'otplib';
+import {pbkdf2Sync, createHash} from 'crypto'
 
 const pbkdf2 = require('pbkdf2');
 const aes = require('aes-js');
@@ -63,8 +64,8 @@ const store = createStore({
             return userNamesArr;
         },
 
-        getMasterKeyObject() {
-            return masterKeyObject;
+        getMasterKey() {
+            return masterKey;
         },
 
     /*
@@ -153,7 +154,7 @@ const store = createStore({
             let pairObject = null;
             try {
                 pairObject =  decryptJsonObject(
-                    getters.getMasterKeyObject["key"],
+                    getters.getMasterKey,
                     getters.getSignedInUserBackend(id).connect.keys.secretPair
                 );
             } catch (ignore) {}
@@ -179,28 +180,26 @@ const store = createStore({
         },
 
         /**
-         * Attempt to decrypt masterKeyObject of a specified user. Return true on success.
+         * Check hash of a specified user master key. Return true on success.
          *
-         * Save decrypted masterKeyObject to global variable that will not be persisted on close of app.
+         * Save masterKey to global variable that will not be persisted on close of app.
          *
          * @param state
          * @param {{userID: number, masterPassword: string}} payload
          * @return {boolean}
          */
         signInAUser: function (state, payload) {
-            let thisUser = state.users[payload.userID];
-            let passCheck = decryptMasterKeyObject(
-                thisUser.info.encryptedMasterKeyObject,
-                payload.masterPassword,
-                thisUser.info.email
-            );
-            if (passCheck) {
+            const thisUser = state.users[payload.userID];
+            console.log("before")
+            const candidateKey = generateMasterKey(payload.masterPassword, thisUser.info.email);
+            console.log(candidateKey)
+            console.log(sha512Hash(candidateKey))
+            if (sha512Hash(candidateKey) === thisUser.info.masterKeyHash) {
                 state.users[payload.userID].info.isActive = true;
                 state.signedInUserId = payload.userID;
-                masterKeyObject = passCheck;
+                masterKey = candidateKey;
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         },
@@ -223,7 +222,7 @@ const store = createStore({
          * @param {{userID: number}} payload
          */
         signOutUser (state, payload) {
-            masterKeyObject = null;
+            masterKey = null;
             state.users[payload.userID].info.isActive = false;
             state.signedIn = false;
             for (let backend of state.users[payload.userID].backends) {
@@ -267,7 +266,6 @@ const store = createStore({
          *  }} payload
          */
         addBackend(state, payload){
-            // Payload: name, associatedEmail, link, secretPair, refreshToken
             let newBackend = {
                 local: {
                     id: null,
@@ -325,7 +323,7 @@ const store = createStore({
         setSignedIn(state, signedIn){
             state.signedIn = signedIn;
             if (!signedIn) {
-                masterKeyObject = null;
+                masterKey = null;
             }
         },
 
@@ -335,7 +333,7 @@ const store = createStore({
          */
         setSignedInUserID(state, payload) {
             state.signedInUserId = payload.userID;
-            if ( payload.userID != null ){
+            if (payload.userID != null) {
                 state.users[payload.userID].info.isActive = payload.signedIn;
                 state.signedIn = true;
             } else {
@@ -345,7 +343,7 @@ const store = createStore({
 
         /**
          * @param state
-         * @param {{name: string, email: string, hasVault: boolean, passKey: Object}} payload
+         * @param {{name: string, email: string, hasVault: boolean, masterKeyHash: string}} payload
          */
         addUserToLocalList(state, payload) {
             let newUser = {
@@ -356,7 +354,7 @@ const store = createStore({
                     email: null,
                     isActive: true,
                     hasVault: null,
-                    encryptedMasterKeyObject: null
+                    masterKeyHash: null
                 },
                 backends: [{
                     local: {
@@ -385,7 +383,7 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
-            newUser.info.encryptedMasterKeyObject = payload.passKey.encryptedMasterKeyObject;
+            newUser.info.masterKeyHash = payload.masterKeyHash
             state.users.push(newUser);
             let x = 0;
             for (let user of state.users) {
@@ -407,7 +405,7 @@ const store = createStore({
             }
             //Delete local
             state.users.splice(payload.user.id, 1);
-            masterKeyObject = null;
+            masterKey = null;
             let x = 0;
             for (let user of state.users) {
                    user.info.id = x;
@@ -457,16 +455,11 @@ const store = createStore({
          * @param {{masterPassword: string, email: string, name: string, hasVault: boolean}} payload
          */
         addNewUser: function ({commit}, payload) {
-            //Payload: name, email, masterPassword, hasVault
-            let newPassKey = generateMasterKey(payload.masterPassword, payload.email);
             commit('addUserToLocalList', {
                 name: payload.name,
                 email: payload.email,
                 hasVault: payload.hasVault,
-                passKey: {
-                    masterKey: newPassKey.masterKey,
-                    encryptedMasterKeyObject: newPassKey.encryptedMasterKeyObject
-                }
+                masterKeyHash: sha512Hash(generateMasterKey(payload.masterPassword, payload.email))
             });
         },
 
@@ -564,12 +557,12 @@ const store = createStore({
          * }} payload
          */
         addNewBackend: function ({commit, getters}, payload) {
-            let masterKeyObject = getters.getMasterKeyObject;
-            if(masterKeyObject === null) {
+            let masterKey = getters.getMasterKey;
+            if(masterKey === null) {
                 return;
             }
             let encryptedPair = encryptJsonObject(
-                masterKeyObject["key"],
+                masterKey,
                 {backendKey: payload.passKey, seed: payload.seed}
             );
             commit('addBackend', {
@@ -598,54 +591,16 @@ Helper Cryptography Functions
  *
  * @param masterPassword
  * @param email
- * @return {{masterKey: Uint8Array, encryptedMasterKeyObject: string}}
+ * @return {string}
  */
 function generateMasterKey(masterPassword, email) {
-    let encryptionKey = pbkdf2.pbkdf2Sync(
+    return pbkdf2Sync(
         masterPassword,
-        email,
-        1000,
+        email + PEPPER,
+        1000000,
         256 / 8,
         'sha512'
-    );
-    // Generate Random Key K
-    let masterKey = new Uint8Array(256 / 8);
-    window.crypto.getRandomValues(masterKey);
-    // Encrypt K
-    let aesCtr = new aes.ModeOfOperation.ctr(encryptionKey);
-    let masterKeyObject = aes.utils.utf8.toBytes(JSON.stringify({"key": aes.utils.hex.fromBytes(masterKey)}));
-    let newEncryptedMasterKeyObject = aesCtr.encrypt(masterKeyObject);
-    //
-    return {
-        masterKey: masterKey,
-        encryptedMasterKeyObject: aes.utils.hex.fromBytes(newEncryptedMasterKeyObject)
-    };
-}
-
-/**
- * Decrypt the masterKeyObject sent in, return key object on success, return null on failure.
- *
- * @param encryptedMasterKeyObject
- * @param fedInPassword
- * @param email
- * @return {null|Object}
- */
-function decryptMasterKeyObject(encryptedMasterKeyObject, fedInPassword, email) {
-    let decryptionKey = pbkdf2.pbkdf2Sync(
-        fedInPassword,
-        email,
-        1000,
-        256 / 8,
-        'sha512'
-    );
-    let masterKeyEncrypted = aes.utils.hex.toBytes(encryptedMasterKeyObject);
-    let easCtr = new aes.ModeOfOperation.ctr(decryptionKey);
-    let decrypted = easCtr.decrypt(masterKeyEncrypted);
-    try {
-        return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
-    } catch (e) {
-        return null;
-    }
+    ).toString('hex');
 }
 
 /**
@@ -671,7 +626,17 @@ function decryptJsonObject(masterKey, jsonObject) {
     return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
 }
 
-// masterKeyObject is stored like this to ensure it is thrown away upon closing of app.
-let masterKeyObject = null;
+/**
+ * @param {string} key
+ * @return {string}
+ */
+function sha512Hash(key) {
+    const hash = createHash('sha512');
+    return hash.update(key).digest().toString('hex');
+}
+
+// masterKey is stored like this to ensure it is thrown away upon closing of app.
+let masterKey = null;
+let PEPPER = "11 f3 f5 72 e8 25 d8 79 ec e9 e5 4a a8 3c 8b 66";
 
 export default store;

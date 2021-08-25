@@ -241,12 +241,12 @@ button {
     },
     methods: {
         showAskMasterPw() {
-            if(this.$store.getters.getMasterKeyObject === null) {
+            if(this.$store.getters.getMasterKey === null) {
                 this.openMasterPwInput();
             } else {
                 if (this.$store.getters.unconnectedBackendBool) {
                     console.log("Error in credentials");
-                    console.log(JSON.stringify(this.$store.getters.getMasterKeyObject));
+                    console.log(JSON.stringify(this.$store.getters.getMasterKey));
                 }
             }
         },
