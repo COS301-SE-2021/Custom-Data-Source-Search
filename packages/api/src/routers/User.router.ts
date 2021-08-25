@@ -1,18 +1,8 @@
-/**
- * Required External Modules and Interfaces
- */
 import express, {Request, Response} from "express";
 import userService from "../services/User.service";
 import {check} from "express-validator";
 
-/**
- * Router Definition
- */
 export const userRouter = express.Router();
-
-/**
- * Controller Definitions
- */
 
 /**
  * Return all users that have been added to the system
