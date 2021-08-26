@@ -230,9 +230,7 @@
 <style scoped lang="scss">
 
 .grid-content {
-  /*display: grid;*/
-  /*grid-template-rows: 1fr 9fr;*/
-  height: 100vh;
+   height: 100vh;
 }
 
 .all-sources {

@@ -86,12 +86,12 @@
       <div class="logo-box">
         <div></div>
         <div id="imageInRegistrationBox">
-            <img
-                id="imageInRegistration"
-                src="../assets/search_logo.png"
-                height="300"
-                alt=""
-            >
+          <img
+              id="imageInRegistration"
+              src="../assets/search_logo.png"
+              height="300"
+              alt=""
+          >
         </div>
       </div>
     </div>
@@ -105,14 +105,17 @@
     import PasswordInputField from "../components/primeComponents/PasswordInputField";
 
     const zxcvbn = require('zxcvbn');
+
     export default {
         name: "Register",
+
         components: {
             PasswordInputField,
             Checkbox,
             SignIn,
             InputText
         },
+
         data() {
             return {
                 errors: [],
@@ -129,11 +132,13 @@
                 }
             }
         },
+
         computed: {
             passwordStrength() {
                 return zxcvbn(this.masterPassCheck);
             }
         },
+
         methods: {
             /**
              * Ensure form filled in.

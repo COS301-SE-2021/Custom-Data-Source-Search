@@ -13,17 +13,21 @@
 </template>
 
 <script>
-import AdminBackendCard from "@/components/admin/AdminBackendCard";
-import {mapGetters} from "vuex";
-import BackendCard from "@/components/settingsInfo/backendCard";
-export default {
+    import AdminBackendCard from "@/components/admin/AdminBackendCard";
+    import {mapGetters} from "vuex";
+    import BackendCard from "@/components/settingsInfo/backendCard";
+
+    export default {
   name: "Admin",
+
   components: {BackendCard, AdminBackendCard},
+
   data(){
     return{
       displayAdminPopup : false
     }
   },
+
   computed: {
     ...mapGetters([
       'getUserInfo',
@@ -32,6 +36,7 @@ export default {
       'getUserAdminStatus'
     ])
   },
+
   methods: {
     showAdminPopup(){
       this.displayAdminPopup = !this.displayAdminPopup
