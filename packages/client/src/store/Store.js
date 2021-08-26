@@ -1,7 +1,7 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 import {authenticator} from 'otplib';
-import {pbkdf2Sync, createHash} from 'crypto'
+import {randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync, createHash} from 'crypto'
 
 const aes = require('aes-js');
 
@@ -606,9 +606,10 @@ function generateMasterKey(masterPassword, email) {
  * @return {string}
  */
 function encryptJsonObject(masterKey, jsonObject) {
-    let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
-    let encryptedJsonObject = aesCtr.encrypt(aes.utils.utf8.toBytes(JSON.stringify(jsonObject)));
-    return aes.utils.hex.fromBytes(encryptedJsonObject);
+    const cipher = createCipheriv('aes-256-gcm', masterKey, randomBytes(16))
+    let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf8', 'hex')
+    encryptedJsonObject += cipher.final('hex');
+    return encryptedJsonObject;
 }
 
 /**
@@ -617,10 +618,10 @@ function encryptJsonObject(masterKey, jsonObject) {
  * @return {Object|error}
  */
 function decryptJsonObject(masterKey, jsonObject) {
-    let encryptedJsonObject = aes.utils.hex.toBytes(jsonObject);
-    let aesCtr = new aes.ModeOfOperation.ctr(aes.utils.hex.toBytes(masterKey));
-    let decrypted = aesCtr.decrypt(encryptedJsonObject);
-    return JSON.parse(aes.utils.utf8.fromBytes(decrypted));
+    const decipher = createDecipheriv('aes-256-gcm', masterKey, randomBytes(16))
+    let decrypted = decipher.update(jsonObject, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return JSON.parse(decrypted);
 }
 
 /**
@@ -634,6 +635,6 @@ function sha512Hash(key) {
 
 // masterKey is stored like this to ensure it is thrown away upon closing of app.
 let masterKey = null;
-let PEPPER = "11 f3 f5 72 e8 25 d8 79 ec e9 e5 4a a8 3c 8b 66";
+const PEPPER = "11 f3 f5 72 e8 25 d8 79 ec e9 e5 4a a8 3c 8b 66";
 
 export default store;
