@@ -19,47 +19,50 @@
         <Password id="password" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
       </div>
     </div>
-<br>
+    <br>
     <div class="p-field p-grid" style="text-align: center">
-    <Button type="button" class="p-button-sm" label="Submit" @click="assignData()"/>
+      <Button type="button" class="p-button-sm" label="Submit" @click="assignData()"/>
     </div>
   </Dialog>
 </template>
 
 <script>
-export default {
-  name: "SignIn",
-  props: {
-    show: Boolean,
-  },
-  data() {
-    return {
-      masterPass: null,
-      email: '',
-      display: this.show
+    export default {
+        name: "SignIn",
+        props: {
+            show: Boolean,
+        },
+
+        data() {
+            return {
+                masterPass: null,
+                email: '',
+                display: this.show
+            }
+        },
+
+        watch: {
+            show: function () {
+                this.display = this.show
+            }
+        },
+
+        methods: {
+            assignData() {
+                this.$store.commit('signInUser', {email: this.email, passWord: this.masterPass});
+                this.display = false;
+            }
+        }
     }
-  },
-  methods: {
-    assignData () {
-      this.$store.commit('signInUser', { email: this.email, passWord: this.masterPass});
-      this.display = false;
-    }
-  },
-  watch:{
-    show: function(){
-      this.display = this.show
-    }
-  }
-}
 </script>
 
 <style scoped>
 
-.p-field {
-  margin : 1rem;
-}
+  .p-field {
+    margin: 1rem;
+  }
 
- input {
-   width: 100%
- }
+  input {
+    width: 100%
+  }
 </style>

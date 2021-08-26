@@ -24,6 +24,7 @@
 
 <script>
     import PasswordInputField from "../primeComponents/PasswordInputField";
+
     export default {
         name: "ReEnterMasterPassword",
         components: {PasswordInputField},
@@ -38,12 +39,19 @@
         props: {
             show: Boolean,
             user: Object,
-            welcomePage: Boolean
+            welcomePage: Boolean,
+            unconnectedBackendIcon: Boolean,
         },
         methods: {
             assignData() {
                 if (this.welcomePage) {
                     this.$store.commit('signInAUser', {masterPassword: this.masterPass, userID: this.user.id})
+                } else if (this.unconnectedBackendIcon) {
+                    console.log("Signed in this user");
+                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                    for (let backend of this.$store.getters.unconnectedBackendObjects) {
+                        this.$store.dispatch('backendLogin', backend.local);
+                    }
                 } else {
                     this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
                 }
