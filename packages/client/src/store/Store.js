@@ -609,7 +609,7 @@ function generateMasterKey(masterPassword, email) {
 /**
  * @param masterKey
  * @param jsonObject
- * @return {{authTag: Buffer, data: string}}
+ * @return {{authTag: string, data: string}}
  */
 function encryptJsonObject(masterKey, jsonObject) {
     const cipher = createCipheriv(
@@ -619,7 +619,10 @@ function encryptJsonObject(masterKey, jsonObject) {
     )
     let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf8', 'hex');
     encryptedJsonObject += cipher.final('hex');
-    return {authTag: cipher.getAuthTag(), data: encryptedJsonObject};
+    return {
+        authTag: cipher.getAuthTag().toString('hex'),
+        data: encryptedJsonObject
+    };
 }
 
 /**
@@ -633,7 +636,7 @@ function decryptJsonObject(masterKey, encryptedJsonObject) {
         Buffer.from(masterKey, 'hex'),
         randomBytes(16)
     )
-    decipher.setAuthTag(encryptedJsonObject.authTag)
+    decipher.setAuthTag(Buffer.from(encryptedJsonObject.authTag, 'hex'));
     let decrypted = decipher.update(encryptedJsonObject.data, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return JSON.parse(decrypted);
