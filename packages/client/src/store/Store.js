@@ -279,7 +279,7 @@ const store = createStore({
                     link: '',
                     needsLogin: false,
                     keys: {
-                        secretPair: null,
+                        encryptedSecretPair: null,
                         jwtToken: null,
                         refreshToken: null
                     }
@@ -344,7 +344,7 @@ const store = createStore({
 
         /**
          * @param state
-         * @param {{name: string, email: string, hasVault: boolean, localSecretPair: Object}} payload
+         * @param {{name: string, email: string, hasVault: boolean, localEncryptedSecretPair: Object}} payload
          */
         addUserToLocalList(state, payload) {
             let newUser = {
@@ -368,7 +368,7 @@ const store = createStore({
                         link: 'localhost:3001',
                         needsLogin: false,
                         keys: {
-                            secretPair: payload.localSecretPair,
+                            encryptedSecretPair: payload.localEncryptedSecretPair,
                             jwtToken: null,
                             refreshToken: null
                         }
@@ -458,7 +458,7 @@ const store = createStore({
                 name: payload.name,
                 email: payload.email,
                 hasVault: payload.hasVault,
-                localSecretPair: encryptJsonObject(
+                localEncryptedSecretPair: encryptJsonObject(
                     generateMasterKey(payload.masterPassword, payload.email),
                     {
                         passKey: randomBytes(32).toString('hex'),
@@ -609,7 +609,7 @@ function generateMasterKey(masterPassword, email) {
 /**
  * @param masterKey
  * @param jsonObject
- * @return {string}
+ * @return {{authTag: Buffer, data: string}}
  */
 function encryptJsonObject(masterKey, jsonObject) {
     const cipher = createCipheriv(
@@ -617,23 +617,24 @@ function encryptJsonObject(masterKey, jsonObject) {
         Buffer.from(masterKey, 'hex'),
         randomBytes(16)
     )
-    let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf8', 'hex')
+    let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf8', 'hex');
     encryptedJsonObject += cipher.final('hex');
-    return encryptedJsonObject;
+    return {authTag: cipher.getAuthTag(), data: encryptedJsonObject};
 }
 
 /**
  * @param masterKey
- * @param jsonObject
+ * @param encryptedJsonObject
  * @return {Object|error}
  */
-function decryptJsonObject(masterKey, jsonObject) {
+function decryptJsonObject(masterKey, encryptedJsonObject) {
     const decipher = createDecipheriv(
         'aes-256-gcm',
         Buffer.from(masterKey, 'hex'),
         randomBytes(16)
     )
-    let decrypted = decipher.update(jsonObject, 'hex', 'utf8');
+    decipher.setAuthTag(encryptedJsonObject.authTag)
+    let decrypted = decipher.update(encryptedJsonObject.data, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return JSON.parse(decrypted);
 }
