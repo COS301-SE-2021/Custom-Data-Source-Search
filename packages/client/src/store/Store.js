@@ -154,7 +154,7 @@ const store = createStore({
             try {
                 pairObject =  decryptJsonObject(
                     getters.getMasterKey,
-                    getters.getSignedInUserBackend(id).connect.keys.secretPair
+                    getters.getSignedInUserBackend(id).connect.keys.encryptedSecretPair
                 );
             } catch (ignore) {}
             return pairObject;
@@ -193,7 +193,7 @@ const store = createStore({
             try {
                 decryptJsonObject(
                     candidateKey,
-                    thisUser.backends.find(b => b.local.id === 0).connect.keys.secretPair
+                    thisUser.backends.find(b => b.local.id === 0).connect.keys.encryptedSecretPair
                 )
             } catch (e) {
                 console.log(e)
@@ -612,15 +612,19 @@ function generateMasterKey(masterPassword, email) {
  * @return {{authTag: string, data: string}}
  */
 function encryptJsonObject(masterKey, jsonObject) {
+    const iv = randomBytes(16);
     const cipher = createCipheriv(
         'aes-256-gcm',
         Buffer.from(masterKey, 'hex'),
-        randomBytes(16)
+        iv
     )
-    let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf8', 'hex');
+    let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf-8', 'hex');
     encryptedJsonObject += cipher.final('hex');
+    const authTag = cipher.getAuthTag().toString('hex');
+    console.log(authTag)
     return {
-        authTag: cipher.getAuthTag().toString('hex'),
+        iv: iv.toString('hex'),
+        authTag: authTag,
         data: encryptedJsonObject
     };
 }
@@ -634,11 +638,12 @@ function decryptJsonObject(masterKey, encryptedJsonObject) {
     const decipher = createDecipheriv(
         'aes-256-gcm',
         Buffer.from(masterKey, 'hex'),
-        randomBytes(16)
+        Buffer.from(encryptedJsonObject.iv, 'hex')
     )
+    let decrypted = decipher.update(encryptedJsonObject.data, 'hex', 'utf-8');
+    console.log(encryptedJsonObject.authTag);
     decipher.setAuthTag(Buffer.from(encryptedJsonObject.authTag, 'hex'));
-    let decrypted = decipher.update(encryptedJsonObject.data, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
+    decrypted += decipher.final('utf-8');
     return JSON.parse(decrypted);
 }
 
