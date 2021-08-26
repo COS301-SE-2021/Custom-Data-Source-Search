@@ -45,8 +45,9 @@
           ref="op"
           appendTo="body"
           :showCloseIcon="false"
-          :breakpoints="{'900px': '40vw'}">
+          :breakpoints="{'900px': '40vw'}"
           style="width: 350px"
+      >
         <ProfileDropdown/>
       </OverlayPanel>
       <router-view/>
@@ -80,7 +81,7 @@
   }
 
   #sidebar {
-    min-width: 30px;
+    max-width: 4em;
   }
 
   .header {

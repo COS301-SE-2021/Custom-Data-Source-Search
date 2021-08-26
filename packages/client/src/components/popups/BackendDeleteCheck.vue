@@ -80,10 +80,4 @@
     margin-right: 1em;
   }
 
-  .radio-button-holders {
-    display: grid;
-    grid-row-gap: 0.5em;
-    padding: 0 24px 0 24px;
-  }
-
 </style>

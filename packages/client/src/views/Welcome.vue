@@ -53,16 +53,16 @@
 </template>
 
 <script>
-import UserCard from "../components/users/UserCard";
-import AddUserCard from "../components/users/AddUserCard";
-import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
-import SignOutCheck from "../components/popups/SignOutCheck";
-import SignIn from "../components/popups/SignIn";
-import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
-import {mapGetters} from "vuex";
-import _ from 'lodash';
+    import UserCard from "../components/users/UserCard";
+    import AddUserCard from "../components/users/AddUserCard";
+    import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+    import SignOutCheck from "../components/popups/SignOutCheck";
+    import SignIn from "../components/popups/SignIn";
+    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
+    import {mapGetters} from "vuex";
+    import _ from 'lodash';
 
-export default {
+    export default {
   name: "Welcome",
 
   components: {ReEnterMasterPassword, SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
@@ -82,11 +82,11 @@ export default {
       firstQuestionFedIn: true,
       randomId: null,
       items: [
-        {label: 'Remove', icon: 'pi pi-trash', command: () => {
-            this.displayDeleteCheck = !this.displayDeleteCheck;
-          }},
-        {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
+          {label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
             this.displaySignOutCheck = !this.displaySignOutCheck;
+          }},
+          {label: 'Remove', icon: 'pi pi-trash', command: () => {
+                  this.displayDeleteCheck = !this.displayDeleteCheck;
           }}
       ],
       tips: [

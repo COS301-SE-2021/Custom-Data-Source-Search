@@ -5,12 +5,10 @@
         <h3 class="name-initial">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
       </div>
     </div>
-
     <div class="user-detail-container">
       <div id="name"><strong>{{ getUserInfo(getSignedInUserId).name }}</strong></div>
       <div id="email">{{ getUserInfo(getSignedInUserId).email }}</div>
     </div>
-
     <div class="backends-container">
       <div class="backend"
            v-for="(backend) in getUserBackends(getSignedInUserId)"
@@ -21,7 +19,6 @@
         <Divider/>
       </div>
     </div>
-
     <div class="footer-buttons">
       <Button
           icon="pi pi-users"
