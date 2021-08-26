@@ -25,7 +25,7 @@
             @save-new-backend="saveNewBackend()"
             :user-index="getSignedInUserId"
         />
-        <backend-card
+        <BackendCard
             v-for="(backend) in getUserBackends(getSignedInUserId)"
             :user-index="getSignedInUserId"
             :backend-index="backend.local.id"

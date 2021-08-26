@@ -31,7 +31,7 @@
     import {createHmac} from 'crypto'
 
     export default {
-        name: "AddBackendCard",
+        name: "BackendCardAdd",
         components: {
             InputSwitch
         },
