@@ -104,7 +104,7 @@
         No sources found.
       </template>
       <template #loading>
-        Loading data. Please wait.
+        Loading data. Please wait...
       </template>
       <Column selectionMode="multiple" headerStyle="width: 3em">
         <template #body="{data}">
