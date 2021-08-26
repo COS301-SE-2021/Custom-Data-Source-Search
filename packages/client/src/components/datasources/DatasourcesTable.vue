@@ -4,12 +4,15 @@
         v-model:selection="selectedSources"
         v-model:filters="filters"
         :value="sources"
-        :paginator="true"
+        :paginator="false"
+        :scrollable="true"
         :rows="10"
         :rowsPerPageOptions="[10,20,50]"
         :row-hover="true"
         :loading="loading"
         :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']"
+        style="align-content: center"
+        scrollHeight="60vh"
         responsiveLayout="scroll"
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
@@ -236,6 +239,13 @@
       <template #paginatorRight>
       </template>
     </DataTable>
+    <Button
+        label="Delete Selected"
+        type="button"
+        icon="pi pi-trash"
+        class="p-button-text p-button-warning delete-selection"
+        @click="deleteSource"
+    />
   </ScrollPanel>
 </template>
 
@@ -284,6 +294,7 @@ export default {
       this.$router.push('/');
     }
     this.backends = this.$store.getters.getUserBackendNames;
+    console.log(this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId));
     this.updateSources();
   },
 
@@ -456,6 +467,19 @@ a {
 .p-multiselect {
   background-color: #242424;
   height: 34px;
+}
+
+.image-text{
+  word-break: break-word;
+}
+
+.delete-selection{
+  position: fixed;
+  bottom: 1em;
+}
+
+.data-table{
+ bottom: 4em;
 }
 
 #add-datasource-button{

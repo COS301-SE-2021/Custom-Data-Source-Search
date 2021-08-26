@@ -7,9 +7,9 @@
                  @rowUnselect="onRowUnselect"
                  @rowSelectAll="onRowSelectAll"
                  @rowUnselectAll="onRowUnselectAll"
+                 v-model:selection="selectedUsers"
                  :rowHover="true"
                  :value="tableData"
-                 :selection="selectedUsers"
                  :scrollable="true"
                  scrollHeight="70vh"
       >
@@ -639,7 +639,10 @@ export default {
 }
 
 ::v-deep(td){
-  overflow: hidden;
+  overflow: -moz-scrollbars-horizontal;
 }
 
+.p-selection-column{
+  margin-right: 0;
+}
 </style>
