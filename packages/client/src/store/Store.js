@@ -1,7 +1,7 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 import {authenticator} from 'otplib';
-import {randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync, createHash} from 'crypto'
+import {randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync} from 'crypto'
 
 const aes = require('aes-js');
 
@@ -189,18 +189,20 @@ const store = createStore({
          */
         signInAUser: function (state, payload) {
             const thisUser = state.users[payload.userID];
-            console.log("before")
             const candidateKey = generateMasterKey(payload.masterPassword, thisUser.info.email);
-            console.log(candidateKey)
-            console.log(sha512Hash(candidateKey))
-            if (sha512Hash(candidateKey) === thisUser.info.masterKeyHash) {
-                state.users[payload.userID].info.isActive = true;
-                state.signedInUserId = payload.userID;
-                masterKey = candidateKey;
-                return true;
-            } else {
+            try {
+                decryptJsonObject(
+                    candidateKey,
+                    thisUser.backends.find(b => b.local.id === 0).connect.keys.secretPair
+                )
+            } catch (e) {
+                console.log(e)
                 return false;
             }
+            state.users[payload.userID].info.isActive = true;
+            state.signedInUserId = payload.userID;
+            masterKey = candidateKey;
+            return true;
         },
 
         /**
@@ -342,7 +344,7 @@ const store = createStore({
 
         /**
          * @param state
-         * @param {{name: string, email: string, hasVault: boolean, masterKeyHash: string}} payload
+         * @param {{name: string, email: string, hasVault: boolean, localSecretPair: Object}} payload
          */
         addUserToLocalList(state, payload) {
             let newUser = {
@@ -353,7 +355,6 @@ const store = createStore({
                     email: null,
                     isActive: true,
                     hasVault: null,
-                    masterKeyHash: null
                 },
                 backends: [{
                     local: {
@@ -367,7 +368,7 @@ const store = createStore({
                         link: 'localhost:3001',
                         needsLogin: false,
                         keys: {
-                            secretPair: null,
+                            secretPair: payload.localSecretPair,
                             jwtToken: null,
                             refreshToken: null
                         }
@@ -382,7 +383,6 @@ const store = createStore({
             newUser.info.email = payload.email;
             newUser.info.isActive = true;
             newUser.info.hasVault = payload.hasVault;
-            newUser.info.masterKeyHash = payload.masterKeyHash
             state.users.push(newUser);
             let x = 0;
             for (let user of state.users) {
@@ -458,7 +458,13 @@ const store = createStore({
                 name: payload.name,
                 email: payload.email,
                 hasVault: payload.hasVault,
-                masterKeyHash: sha512Hash(generateMasterKey(payload.masterPassword, payload.email))
+                localSecretPair: encryptJsonObject(
+                    generateMasterKey(payload.masterPassword, payload.email),
+                    {
+                        passKey: randomBytes(32).toString('hex'),
+                        seed: randomBytes(32).toString('hex')
+                    }
+                )
             });
         },
 
@@ -595,7 +601,7 @@ function generateMasterKey(masterPassword, email) {
         masterPassword,
         email + PEPPER,
         1000000,
-        256 / 8,
+        32,
         'sha512'
     ).toString('hex');
 }
@@ -606,7 +612,11 @@ function generateMasterKey(masterPassword, email) {
  * @return {string}
  */
 function encryptJsonObject(masterKey, jsonObject) {
-    const cipher = createCipheriv('aes-256-gcm', masterKey, randomBytes(16))
+    const cipher = createCipheriv(
+        'aes-256-gcm',
+        Buffer.from(masterKey, 'hex'),
+        randomBytes(16)
+    )
     let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf8', 'hex')
     encryptedJsonObject += cipher.final('hex');
     return encryptedJsonObject;
@@ -618,19 +628,14 @@ function encryptJsonObject(masterKey, jsonObject) {
  * @return {Object|error}
  */
 function decryptJsonObject(masterKey, jsonObject) {
-    const decipher = createDecipheriv('aes-256-gcm', masterKey, randomBytes(16))
+    const decipher = createDecipheriv(
+        'aes-256-gcm',
+        Buffer.from(masterKey, 'hex'),
+        randomBytes(16)
+    )
     let decrypted = decipher.update(jsonObject, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return JSON.parse(decrypted);
-}
-
-/**
- * @param {string} key
- * @return {string}
- */
-function sha512Hash(key) {
-    const hash = createHash('sha512');
-    return hash.update(key).digest().toString('hex');
 }
 
 // masterKey is stored like this to ensure it is thrown away upon closing of app.
