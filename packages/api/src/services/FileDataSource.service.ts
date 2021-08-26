@@ -1,7 +1,9 @@
-import {FileDataSource} from "../models/FileDataSource.interface";
+import {FileDataSource, StoredFileDataSource} from "../models/FileDataSource.interface";
 import fs from 'fs';
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import hljs from "highlight.js";
+import solrService from "./solr.service";
+import {generateUUID} from "../general/generalFunctions";
 
 class FileDataSourceService {
 
@@ -9,9 +11,9 @@ class FileDataSourceService {
         let [result, err] = fileDataSourceRepository.getAllDataSources();
         if (err) {
             return {
-                "code": 500,
+                "code": err.code,
                 "body": {
-                    "message": "Internal error"
+                    "message": err.message
                 }
             }
         }
@@ -40,8 +42,7 @@ class FileDataSourceService {
         }
     }
 
-    async addFileDataSource(dataSource: FileDataSource) {
-        dataSource.path = this.correctPath(dataSource.path);
+    validateDataSource(dataSource: FileDataSource) {
         if (dataSource.filename === '') {
             return [null, {
                 "code": 400,
@@ -75,17 +76,73 @@ class FileDataSourceService {
                 "message": "Unknown error"
             }];
         }
-        let [, e] = await fileDataSourceRepository.addDataSource(dataSource);
-        if (e) {
-            return [null, e]
-        }
-        return [{
-            "code": 200,
-            "message": "Success"
-        }, null];
     }
 
-    correctPath(filePath: string) {
+    async addFileDataSource(dataSource: FileDataSource) {
+        dataSource.path = this.standardizePath(dataSource.path);
+        const [, validateErr] = this.validateDataSource(dataSource);
+        if (validateErr) {
+            return FileDataSourceService.generateErrorResponse(validateErr);
+        }
+        const [fileContent, fileErr] = this.readFile(dataSource.path + dataSource.filename);
+        if (fileErr) {
+            return FileDataSourceService.generateErrorResponse(fileErr);
+        }
+        const UUID = generateUUID();
+        const [, solrErr] = await solrService.postToSolr(
+            fileContent, UUID, this.removeExtension(dataSource.filename), "file"
+        )
+        if (solrErr) {
+            return FileDataSourceService.generateErrorResponse(solrErr);
+        }
+        const storedDataSource: StoredFileDataSource = {
+
+        }
+        const [, repositoryErr] = await fileDataSourceRepository.addDataSource(dataSource);
+        if (repositoryErr) {
+            return FileDataSourceService.generateErrorResponse(repositoryErr);
+        }
+        return {
+            "code": 200,
+            "body": {
+                "message": "Success"
+            }
+        };
+    }
+
+    readFile(path: string): [Buffer, { code: number; message: string; }] {
+        try {
+            return [fs.readFileSync(path), null];
+        } catch (e) {
+            return [null, {
+                "code": 500,
+                "message": "Error reading file"
+            }];
+        }
+    }
+
+    private static generateErrorResponse(err: { code: number; message: string; }) {
+        return {
+            "code": err.code,
+            "body": {
+                "message": err.message
+            }
+        };
+    }
+
+    /**
+     * Remove extension from file name
+     *
+     * @param {string} fileName
+     * @return {string}
+     */
+    removeExtension(fileName: string) {
+        let lastIndex: number = fileName.lastIndexOf(".");
+        fileName = fileName.substring(0, lastIndex);
+        return fileName;
+    }
+
+    standardizePath(filePath: string) {
         if (filePath === undefined) {
             return filePath;
         }
