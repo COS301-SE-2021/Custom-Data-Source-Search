@@ -183,10 +183,10 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-import axios from "axios";
+    import {mapGetters} from "vuex";
+    import axios from "axios";
 
-export default {
+    export default {
   name: "BackendManager.vue",
   props: {
     backendID: Number,
@@ -256,7 +256,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -287,7 +287,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -315,7 +315,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -326,7 +326,7 @@ export default {
       let reqObj = {
         role: this.selectedRole.toLowerCase(),
         users: usersArr
-      }
+      };
       let reqBody = JSON.stringify(reqObj);
 
       axios.post("http://localhost:3001/users/role", reqBody,
@@ -346,7 +346,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -367,7 +367,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -395,7 +395,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -417,7 +417,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -446,7 +446,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },
@@ -476,7 +476,7 @@ export default {
           summary: 'Error',
           detail: error.response.data.message,
           life: 3000
-        })
+        });
         console.log(error);
       })
 
@@ -506,7 +506,7 @@ export default {
               summary: 'Error',
               detail: error.response.data.message,
               life: 3000
-            })
+            });
             console.log(error);
           })
     },

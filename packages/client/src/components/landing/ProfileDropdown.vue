@@ -23,8 +23,18 @@
     </div>
 
     <div class="footer-buttons">
-      <Button icon="pi pi-users" label="Switch User" class="p-button-text p-button-plain switch-user" @click="switchUser"/>
-      <Button icon="pi pi-sign-out" label="Sign Out" class="p-button-text p-button-plain sign-out" @click="signOut"/>
+      <Button
+          icon="pi pi-users"
+          label="Switch User"
+          class="p-button-text p-button-plain switch-user"
+          @click="switchUser"
+      />
+      <Button
+          icon="pi pi-sign-out"
+          label="Sign Out"
+          class="p-button-text p-button-plain sign-out"
+          @click="signOut"
+      />
     </div>
   </div>
   <SignOutCheck
@@ -35,10 +45,10 @@
 </template>
 
 <script>
-  import {mapGetters} from "vuex";
-  import SignOutCheck from "../popups/SignOutCheck";
+    import {mapGetters} from "vuex";
+    import SignOutCheck from "../popups/SignOutCheck";
 
-  export default {
+    export default {
   name: "ProfileDropdown",
     components: {SignOutCheck},
     data(){
