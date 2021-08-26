@@ -62,10 +62,10 @@
 </template>
 
 <script>
-    import BackendCard from "../components/settingsInfo/backendCard";
-    import UserInfoCard from "../components/settingsInfo/userInfoCard";
+    import BackendCard from "../components/backends/BackendCard";
+    import UserInfoCard from "../components/backends/BackendPageUserInfo";
     import {mapGetters} from "vuex";
-    import AddBackendCard from "../components/settingsInfo/AddBackendCard";
+    import AddBackendCard from "../components/backends/BackendCardAdd";
     import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
     export default {

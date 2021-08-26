@@ -15,7 +15,7 @@
 <script>
     import AdminBackendCard from "@/components/admin/AdminBackendCard";
     import {mapGetters} from "vuex";
-    import BackendCard from "@/components/settingsInfo/backendCard";
+    import BackendCard from "@/components/backends/BackendCard";
 
     export default {
   name: "Admin",
