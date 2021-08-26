@@ -3,8 +3,6 @@ import axios from "axios";
 import {authenticator} from 'otplib';
 import {randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync} from 'crypto'
 
-const aes = require('aes-js');
-
 /**
  * @typedef {Object} Backend
  * @property {number} id
@@ -189,7 +187,7 @@ const store = createStore({
          */
         signInAUser: function (state, payload) {
             const thisUser = state.users[payload.userID];
-            const candidateKey = generateMasterKey(payload.masterPassword, thisUser.info.email);
+            const candidateKey = generateMasterKey(payload.masterPassword, thisUser.info.salt);
             try {
                 decryptJsonObject(
                     candidateKey,
@@ -344,17 +342,24 @@ const store = createStore({
 
         /**
          * @param state
-         * @param {{name: string, email: string, hasVault: boolean, localEncryptedSecretPair: Object}} payload
+         * @param {{
+         * name: string,
+         * email: string,
+         * hasVault: boolean,
+         * salt: string,
+         * localEncryptedSecretPair: Object
+         * }} payload
          */
         addUserToLocalList(state, payload) {
             let newUser = {
                 id: null,
                 info: {
                     id: null,
-                    name: null,
-                    email: null,
+                    name: payload.name,
+                    email: payload.email,
+                    salt: payload.salt,
                     isActive: true,
-                    hasVault: null,
+                    hasVault: payload.hasVault,
                 },
                 backends: [{
                     local: {
@@ -379,10 +384,6 @@ const store = createStore({
                     }
                 }]
             };
-            newUser.info.name = payload.name;
-            newUser.info.email = payload.email;
-            newUser.info.isActive = true;
-            newUser.info.hasVault = payload.hasVault;
             state.users.push(newUser);
             let x = 0;
             for (let user of state.users) {
@@ -390,7 +391,7 @@ const store = createStore({
                 user.info.id = x;
                 x++;
             }
-            state.signedInUserId = state.users.length-1;
+            state.signedInUserId = state.users.length - 1;
             state.signedIn = true;
         },
 
@@ -454,12 +455,14 @@ const store = createStore({
          * @param {{masterPassword: string, email: string, name: string, hasVault: boolean}} payload
          */
         addNewUser: function ({commit}, payload) {
+            const salt = randomBytes(32).toString('hex');
             commit('addUserToLocalList', {
                 name: payload.name,
                 email: payload.email,
                 hasVault: payload.hasVault,
+                salt: salt,
                 localEncryptedSecretPair: encryptJsonObject(
-                    generateMasterKey(payload.masterPassword, payload.email),
+                    generateMasterKey(payload.masterPassword, salt),
                     {
                         passKey: randomBytes(32).toString('hex'),
                         seed: randomBytes(32).toString('hex')
@@ -593,13 +596,13 @@ Helper Cryptography Functions
  * Derive a master key from master password, email and pepper.
  *
  * @param masterPassword
- * @param email
+ * @param salt
  * @return {string}
  */
-function generateMasterKey(masterPassword, email) {
+function generateMasterKey(masterPassword, salt) {
     return pbkdf2Sync(
         masterPassword,
-        email + PEPPER,
+        salt,
         1000000,
         32,
         'sha512'
@@ -639,7 +642,7 @@ function decryptJsonObject(masterKey, encryptedJsonObject) {
         'aes-256-gcm',
         Buffer.from(masterKey, 'hex'),
         Buffer.from(encryptedJsonObject.iv, 'hex')
-    )
+    );
     let decrypted = decipher.update(encryptedJsonObject.data, 'hex', 'utf-8');
     console.log(encryptedJsonObject.authTag);
     decipher.setAuthTag(Buffer.from(encryptedJsonObject.authTag, 'hex'));
@@ -649,6 +652,5 @@ function decryptJsonObject(masterKey, encryptedJsonObject) {
 
 // masterKey is stored like this to ensure it is thrown away upon closing of app.
 let masterKey = null;
-const PEPPER = "11 f3 f5 72 e8 25 d8 79 ec e9 e5 4a a8 3c 8b 66";
 
 export default store;
