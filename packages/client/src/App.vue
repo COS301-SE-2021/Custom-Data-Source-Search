@@ -25,6 +25,7 @@
             <ReEnterMasterPassword
                     :show="displayMasterPwInput"
                     @action-to-Occur="showAskMasterPw"
+                    :unconnected-backend-icon="true"
             />
         </div>
       </div>
