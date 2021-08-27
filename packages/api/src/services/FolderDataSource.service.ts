@@ -20,12 +20,7 @@ class FolderDataSourceService {
     getFolderDataSource(id: string) {
         let [result, err] = folderDataSourceRepository.getDataSource(id);
         if (err) {
-            return {
-                "code": err.code,
-                "body": {
-                    "message": err.message
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
         return {
             "code": 200,

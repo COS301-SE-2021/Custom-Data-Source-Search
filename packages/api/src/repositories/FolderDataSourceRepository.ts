@@ -96,17 +96,18 @@ class FolderDataSourceRepository {
      * Retrieve a folder datasource stored in db by it's uuid
      *
      * @param {string} uuid
-     * @return {[StoredFolderDataSource, { code: number, message: string }]}
+     * @return {[StoredFolderDataSource, StatusMessage]}
      */
-    getDataSource(uuid: string): [StoredFolderDataSource, { "code": number, "message": string }] {
-        const dataSource = db.prepare("SELECT * FROM folder_data WHERE uuid = ?").get(uuid)
-        if (dataSource !== undefined) {
-            return [FolderDataSourceRepository.castToStoredDataSource(dataSource), null];
+    getDataSource(uuid: string): [StoredFolderDataSource, StatusMessage] {
+        try {
+            const dataSource = db.prepare("SELECT * FROM folder_data WHERE uuid = ?").get(uuid);
+            if (dataSource !== undefined) {
+                return [FolderDataSourceRepository.castToStoredDataSource(dataSource), null];
+            }
+            return [null, statusMessage(404, "Datasource not found")];
+        } catch (e) {
+            return [null, statusMessage(500, "Error with db")];
         }
-        return [null, {
-            "code": 404,
-            "message": "Datasource not found"
-        }]
     }
 
     /**
