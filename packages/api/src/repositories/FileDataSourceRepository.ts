@@ -1,7 +1,4 @@
 import {StoredFileDataSource, FileDataSource} from "../models/FileDataSource.interface";
-import fs from "fs";
-import axios from "axios";
-import FormData from "form-data";
 import {StatusMessage} from "../models/response/general.interfaces";
 import {statusMessage} from "../general/generalFunctions";
 
@@ -33,96 +30,17 @@ class FileDataSourceRepository {
     }
 
     /**
-     * Remove extension from file name
-     *
-     * @param {string} fileName
-     * @return {string}
-     */
-    removeExtension(fileName: string) {
-        let lastIndex: number = fileName.lastIndexOf(".");
-        fileName = fileName.substring(0, lastIndex);
-        return fileName;
-    }
-
-    /**
-     * Post contents of a file to solr
-     * @async
-     *
-     * @param {Buffer} file Content of file
-     * @param {string} id Id of datasource as stored in db
-     * @param {string} fileName
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
-     */
-    async postToSolr(file: Buffer, id: string, fileName: string) {
-        let formData = new FormData();
-        fileName = this.removeExtension(fileName);
-        formData.append("file", file, fileName);
-        try {
-            await axios.post(
-                'http://localhost:' +
-                process.env.SOLR_PORT +
-                '/solr/files/update/extract?literal.id=' +
-                id +
-                '&commit=true&literal.datasource_type=file',
-                formData,
-                {
-                    headers: {
-                        ...formData.getHeaders()
-                    }
-                });
-        } catch (e) {
-            console.error(e)
-            return [null, {
-                "code": 500,
-                "message": "Could not post file to solr"
-            }]
-        }
-        return [{
-            "code": 200,
-            "message": "Successfully posted to Solr"
-        }]
-    }
-
-    /**
-     * Update all documents in solr that have been changed
-     * @async
-     */
-    async updateDatasources() {
-        const fileDataList = db.prepare("SELECT * FROM file_data;").all()
-        for (let fileData of fileDataList) {
-            let lastModified: number = fs.statSync(fileData.file_path).mtime.getTime();
-            if (fileData.last_modified !== lastModified) {
-                try {
-                    await this.postToSolr(
-                        fs.readFileSync(fileData.file_path),
-                        fileData.uuid,
-                        fileData.file_path.split("/").pop()
-                    );
-                    db.prepare(
-                        "UPDATE file_data SET last_modified = ? WHERE uuid = ?"
-                    ).run(lastModified, fileData.uuid)
-                } catch (e) {
-                    console.log("Error posting file to solr");
-                }
-            }
-        }
-    }
-
-    /**
      * Retrieve a file datasource stored in db by it's uuid
      *
      * @param {string} uuid
-     * @return {[StoredFileDataSource, { code: number, message: string }]}
+     * @return {[StoredFileDataSource, StatusMessage]}
      */
-    getDataSource(uuid: string): [StoredFileDataSource, { "code": number, "message": string }] {
+    getDataSource(uuid: string): [StoredFileDataSource, StatusMessage] {
         const dataSource = db.prepare("SELECT * FROM file_data WHERE uuid = ?").get(uuid)
         if (dataSource !== undefined) {
             return [FileDataSourceRepository.castToStoredDataSource(dataSource), null];
         }
-        return [null, {
-            "code": 404,
-            "message": "Datasource not found"
-        }]
+        return [null, statusMessage(404, "Datasource not found")];
     }
 
     /**
@@ -132,6 +50,9 @@ class FileDataSourceRepository {
      * @return {StoredFileDataSource}
      */
     private static castToStoredDataSource(dataSource: any): StoredFileDataSource {
+        if (dataSource === undefined) {
+            return undefined;
+        }
         const filename = dataSource.file_path.split("/").pop();
         return {
             uuid: dataSource.uuid,
@@ -146,9 +67,9 @@ class FileDataSourceRepository {
     /**
      * Return all stored file datasources
      *
-     * @return {[StoredFileDataSource[], { "code": number, "message": string }]}
+     * @return {[StoredFileDataSource[], StatusMessage]}
      */
-    getAllDataSources(): [StoredFileDataSource[], { "code": number, "message": string }] {
+    getAllDataSources(): [StoredFileDataSource[], StatusMessage] {
         const fileDataList = db.prepare("SELECT * FROM file_data;").all()
         return [fileDataList.map(FileDataSourceRepository.castToStoredDataSource), null];
     }
@@ -158,22 +79,23 @@ class FileDataSourceRepository {
      * @async
      *
      * @param {string} uuid
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     * @return {Promise<[StatusMessage, StatusMessage]>}
      */
-    async deleteDataSource(uuid: string) {
+    async deleteDataSource(uuid: string): Promise<[StatusMessage, StatusMessage]> {
         try {
             db.prepare("DELETE FROM file_data WHERE uuid = ?").run(uuid);
         } catch (e) {
-            console.error(e)
-            return [null, {
-                "code": 404,
-                "message": "File datasource not found"
-            }];
+            return [null, statusMessage(404, "File datasource not found")];
         }
-        return [{
-            "code": 204,
-            "message": "Successfully deleted File datasource"
-        }, null];
+        return [statusMessage(204, "Successfully deleted File datasource"), null];
+    }
+
+    updateLastModified(uuid: string, lastModified: number) {
+        try {
+            db.prepare(
+                "UPDATE file_data SET last_modified = ? WHERE uuid = ?"
+            ).run(lastModified, uuid);
+        } catch (e) {}
     }
 }
 

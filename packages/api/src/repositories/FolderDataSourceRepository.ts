@@ -2,8 +2,7 @@ import fs from "fs";
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import FormData from "form-data";
 import axios from "axios";
-import fileDataSourceRepository from "./FileDataSourceRepository";
-import {generateUUID} from "../general/generalFunctions";
+import {generateUUID, removeFileExtension} from "../general/generalFunctions";
 import solrService from "../services/solr.service";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
@@ -163,6 +162,9 @@ class FolderDataSourceRepository {
      * @return {StoredFolderDataSource}
      */
     private static castToStoredDataSource(dataSource: any): StoredFolderDataSource {
+        if (dataSource === undefined) {
+            return undefined;
+        }
         return {
             uuid: dataSource.uuid,
             path: dataSource.path,
@@ -182,7 +184,7 @@ class FolderDataSourceRepository {
      */
     async postToSolr(file: Buffer, id: string, fileName: string) {
         let formData = new FormData();
-        fileName = fileDataSourceRepository.removeExtension(fileName);
+        fileName = removeFileExtension(fileName);
         formData.append("file", file, fileName);
         try {
             await axios.post(

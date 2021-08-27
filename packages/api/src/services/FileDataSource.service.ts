@@ -6,7 +6,7 @@ import solrService from "./solr.service";
 import {
     generateDefaultHttpResponse,
     generateUUID,
-    getLastModifiedDateOfFile,
+    getLastModifiedDateOfFile, removeFileExtension,
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
@@ -72,7 +72,7 @@ class FileDataSourceService {
         }
         const UUID = generateUUID();
         const [, solrErr] = await solrService.postToSolr(
-            fileContent, UUID, this.removeExtension(dataSource.filename), "file"
+            fileContent, UUID, removeFileExtension(dataSource.filename), "file"
         );
         if (solrErr) {
             return generateDefaultHttpResponse(solrErr);
@@ -100,18 +100,6 @@ class FileDataSourceService {
         }
     }
 
-    /**
-     * Remove extension from file name
-     *
-     * @param {string} fileName
-     * @return {string}
-     */
-    removeExtension(fileName: string): string {
-        let lastIndex: number = fileName.lastIndexOf(".");
-        fileName = fileName.substring(0, lastIndex);
-        return fileName;
-    }
-
     standardizePath(filePath: string): string {
         if (filePath === undefined) {
             return filePath;
@@ -129,6 +117,34 @@ class FileDataSourceService {
             return generateDefaultHttpResponse(err);
         }
         return generateDefaultHttpResponse(result);
+    }
+
+    /**
+     * Reindex documents in solr that have been updated locally
+     * @async
+     */
+    async updateDatasources(): Promise<void> {
+        const [fileDataList, repositoryErr]  = fileDataSourceRepository.getAllDataSources();
+        if (repositoryErr) {
+            return;
+        }
+        for (let fileData of fileDataList) {
+            const filePath: string = fileData.path + fileData.filename;
+            const lastModified: number = getLastModifiedDateOfFile(filePath).getTime();
+            if (fileData.lastModified.getTime() !== lastModified) {
+                try {
+                    await solrService.postToSolr(
+                        fs.readFileSync(filePath),
+                        fileData.uuid,
+                        removeFileExtension(fileData.filename),
+                        "file"
+                    );
+                    fileDataSourceRepository.updateLastModified(fileData.uuid, lastModified);
+                } catch (e) {
+                    console.error("Error posting file to solr");
+                }
+            }
+        }
     }
 
     getLineNumber(index: number, fullString: string): number {

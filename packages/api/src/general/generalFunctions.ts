@@ -10,7 +10,7 @@ export function getLastModifiedDateOfFile(filePath: string): Date {
     try {
         return fs.statSync(filePath).mtime;
     } catch (e) {
-        return new Date();
+        return new Date(0);
     }
 }
 
@@ -28,4 +28,12 @@ export function statusMessage(code: number, message: string): StatusMessage {
         code: code,
         message: message
     }
+}
+
+export function removeFileExtension(fileName: string): string {
+    let lastIndex: number = fileName.lastIndexOf(".");
+    if (lastIndex === -1) {
+        return fileName
+    }
+    return fileName.substring(0, lastIndex);
 }
