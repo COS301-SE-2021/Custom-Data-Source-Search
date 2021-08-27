@@ -1,24 +1,20 @@
 <template>
-    <Dialog header="Enter Master Password" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup')">
-        <div class="header-size">
-            Please enter your master password to continue:
+    <Dialog header="Enter Master Password" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup'); masterPass = null">
+      Continue sleuthin' all your favourite backends
+      <div class="p-field p-grid">
+        <label for="password" class="p-col-fixed" style="width:100px">Password</label>
+        <div class="p-col">
+          <PasswordInputField id="password" style="width: 100%" @keyup.enter="assignData" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
+          <br><br>
+          <div v-if="passwordIncorrect" class="error-message">
+            <span>Incorrect password.</span>
+          </div>
         </div>
-        <br>
-        <div class="p-field p-grid">
-            <label for="password" class="p-col-fixed" style="width:100px">Password</label>
-            <div class="p-col">
-                <PasswordInputField id="password" style="width: 100%" @keyup.enter="assignData" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
-                <br><br>
-                <div v-if="passwordIncorrect" class="error-message">
-                    <span>Password Incorrect!</span>
-                    <br>
-                    <span>{{ errMessage }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="p-field p-grid" style="text-align: center">
-            <Button type="submit" class="p-button-sm" label="Submit" @click="assignData"/>
-        </div>
+      </div>
+      <template #footer>
+        <Button label="Cancel" class="p-button-text" @click="closeDialog"/>
+        <Button label="Submit" autofocus @click="assignData"/>
+      </template>
     </Dialog>
 </template>
 
@@ -33,7 +29,6 @@
                 masterPass: null,
                 display: this.show,
                 passwordIncorrect: false,
-                errMessage: 'Please repeat master password.',
             }
         },
         props: {
@@ -63,8 +58,13 @@
                 }
                 else {
                     this.passwordIncorrect = true;
+                    this.masterPass = null;
                 }
-            }
+            },
+          closeDialog(){
+              this.display = false;
+              this.masterPass = null;
+          }
         },
         watch: {
             show: function () {
@@ -77,19 +77,16 @@
 <style scoped>
 
     .p-field {
-        margin : 0.5rem;
+        margin-top: 3vh;
     }
 
     input {
         width: 100%
     }
 
-    .header-size {
-        max-width: 18vw;
-    }
-
     .error-message {
-        color: red;
+      color: #EF9A9A;
+      text-align: center;
     }
 
 </style>
