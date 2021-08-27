@@ -9,11 +9,11 @@
             title="Data Sources" class="icon" to="/datasources">
           <i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
-        <router-link title="Admin" class="icon" to="/admin">
-          <em class="pi pi-th-large" style="font-size:1.5rem"/>
+        <router-link title="Backends" class="icon" to="/backends">
+          <i class="pi pi-th-large" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
-        <router-link title="Settings" class="icon" to="/settings">
-          <i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/>
+        <router-link title="Admin" class="icon" to="/admin">
+          <em class="pi pi-user" style="font-size:1.5rem"/>
         </router-link>
         <div class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">

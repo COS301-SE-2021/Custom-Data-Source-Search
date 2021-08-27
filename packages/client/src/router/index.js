@@ -45,8 +45,8 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AddDatasources.vue')
   },
   {
-    path: '/settings',
-    name: 'SettingsPage',
+    path: '/backends',
+    name: 'Backends',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
