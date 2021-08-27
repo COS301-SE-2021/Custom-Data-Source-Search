@@ -2,31 +2,26 @@ import {StoredFileDataSource, FileDataSource} from "../models/FileDataSource.int
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
-import {generateUUID} from "../general/generalFunctions";
+import {StatusMessage} from "../models/response/statusMessage.interface";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
 class FileDataSourceRepository {
 
     /**
-     * Store a new file datasource in db and post the contents to solr
-     * @async
+     * Store a new file datasource in db
      *
      * @param {FileDataSource} dataSource
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     * @return {[StatusMessage, StatusMessage]}
      */
-    async addDataSource(dataSource: FileDataSource): Promise<[
-        { code: number, message: string },
-        { code: number, message: string }
-    ]> {
-        const uuid: string = generateUUID()
+    addDataSource(dataSource: StoredFileDataSource): [StatusMessage,StatusMessage] {
         try {
             db.prepare(
-                'INSERT INTO file_data VALUES (?, ?, ?, ?, ?);'
+                'INSERT INTO file_data (uuid, file_path, last_modified, tag1, tag2) VALUES (?, ?, ?, ?, ?);'
             ).run(
-                uuid,
+                dataSource.uuid,
                 dataSource.path + dataSource.filename,
-                fs.statSync(dataSource.path + dataSource.filename).mtime.getTime(),
+                dataSource.lastModified.getTime(),
                 dataSource.tag1,
                 dataSource.tag2
             )
@@ -35,13 +30,6 @@ class FileDataSourceRepository {
                 "code": 400,
                 "message": "File datasource already exists"
             }];
-        }
-        const [, err] = await this.postToSolr(
-            fs.readFileSync(dataSource.path + dataSource.filename), uuid, dataSource.filename
-        );
-        if (err) {
-            await this.deleteDataSource(uuid);
-            return [null, err];
         }
         return [{
             "code": 200,

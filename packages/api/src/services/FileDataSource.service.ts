@@ -3,19 +3,19 @@ import fs from 'fs';
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import hljs from "highlight.js";
 import solrService from "./solr.service";
-import {generateUUID} from "../general/generalFunctions";
+import {
+    generateDefaultHttpResponse,
+    generateUUID,
+    getLastModifiedDateOfFile,
+    statusMessage
+} from "../general/generalFunctions";
 
 class FileDataSourceService {
 
     getAllFileDataSources() {
         let [result, err] = fileDataSourceRepository.getAllDataSources();
         if (err) {
-            return {
-                "code": err.code,
-                "body": {
-                    "message": err.message
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
         return {
             "code": 200,
@@ -26,12 +26,7 @@ class FileDataSourceService {
     getFileDataSource(uuid: string) {
         let [result, err] = fileDataSourceRepository.getDataSource(uuid);
         if (err) {
-            return {
-                "code": err.code,
-                "body": {
-                    "message": err.message
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
         return {
             "code": 200,
@@ -39,20 +34,14 @@ class FileDataSourceService {
                 "message": "Success",
                 "data": result
             }
-        }
+        };
     }
 
     validateDataSource(dataSource: FileDataSource) {
         if (dataSource.filename === '') {
-            return [null, {
-                "code": 400,
-                "message": "No file name"
-            }]
+            return [null, statusMessage(400, "No file name")];
         } else if (dataSource.path === '') {
-            return [null, {
-                "code": 400,
-                "message": "No file path"
-            }]
+            return [null, statusMessage(400, "No file path")];
         }
         if (dataSource.path[dataSource.path.length - 1] !== '/') {
             dataSource.path += '/';
@@ -61,20 +50,11 @@ class FileDataSourceService {
             fs.readFileSync(dataSource.path + dataSource.filename);
         } catch (err) {
             if (err.code == 'ENOENT') {
-                return [null, {
-                    "code": 404,
-                    "message": "File not found"
-                }]
+                return [null, statusMessage(404, "File not found")];
             } else if (err.code == 'EACCES') {
-                return [null, {
-                    "code": 403,
-                    "message": "Access forbidden"
-                }]
+                return [null, statusMessage(403, "Access forbidden")];
             }
-            return [null, {
-                "code": 500,
-                "message": "Unknown error"
-            }];
+            return [null, statusMessage(500, "Internal server error")];
         }
     }
 
@@ -82,32 +62,32 @@ class FileDataSourceService {
         dataSource.path = this.standardizePath(dataSource.path);
         const [, validateErr] = this.validateDataSource(dataSource);
         if (validateErr) {
-            return FileDataSourceService.generateErrorResponse(validateErr);
+            return generateDefaultHttpResponse(validateErr);
         }
         const [fileContent, fileErr] = this.readFile(dataSource.path + dataSource.filename);
         if (fileErr) {
-            return FileDataSourceService.generateErrorResponse(fileErr);
+            return generateDefaultHttpResponse(fileErr);
         }
         const UUID = generateUUID();
         const [, solrErr] = await solrService.postToSolr(
             fileContent, UUID, this.removeExtension(dataSource.filename), "file"
-        )
+        );
         if (solrErr) {
-            return FileDataSourceService.generateErrorResponse(solrErr);
+            return generateDefaultHttpResponse(solrErr);
         }
         const storedDataSource: StoredFileDataSource = {
-
-        }
-        const [, repositoryErr] = await fileDataSourceRepository.addDataSource(dataSource);
-        if (repositoryErr) {
-            return FileDataSourceService.generateErrorResponse(repositoryErr);
-        }
-        return {
-            "code": 200,
-            "body": {
-                "message": "Success"
-            }
+            uuid: UUID,
+            filename: dataSource.filename,
+            path: dataSource.path,
+            lastModified: getLastModifiedDateOfFile(dataSource.path + dataSource.filename),
+            tag1: dataSource.tag1,
+            tag2: dataSource.tag2
         };
+        const [success, repositoryErr] = fileDataSourceRepository.addDataSource(storedDataSource);
+        if (repositoryErr) {
+            return generateDefaultHttpResponse(repositoryErr);
+        }
+        return generateDefaultHttpResponse(success);
     }
 
     readFile(path: string): [Buffer, { code: number; message: string; }] {
@@ -119,15 +99,6 @@ class FileDataSourceService {
                 "message": "Error reading file"
             }];
         }
-    }
-
-    private static generateErrorResponse(err: { code: number; message: string; }) {
-        return {
-            "code": err.code,
-            "body": {
-                "message": err.message
-            }
-        };
     }
 
     /**
