@@ -9,6 +9,7 @@ import {
     getLastModifiedDateOfFile,
     statusMessage
 } from "../general/generalFunctions";
+import {DefaultHttpResponse, StatusMessage} from "../models/response/general";
 
 class FileDataSourceService {
 
@@ -59,7 +60,7 @@ class FileDataSourceService {
         return [statusMessage(200, "Datasource is valid"), null];
     }
 
-    async addFileDataSource(dataSource: FileDataSource) {
+    async addFileDataSource(dataSource: FileDataSource): Promise<DefaultHttpResponse> {
         dataSource.path = this.standardizePath(dataSource.path);
         const [, validateErr] = this.validateDataSource(dataSource);
         if (validateErr) {
@@ -91,14 +92,11 @@ class FileDataSourceService {
         return generateDefaultHttpResponse(success);
     }
 
-    readFile(path: string): [Buffer, { code: number; message: string; }] {
+    readFile(path: string): [Buffer, StatusMessage] {
         try {
             return [fs.readFileSync(path), null];
         } catch (e) {
-            return [null, {
-                "code": 500,
-                "message": "Error reading file"
-            }];
+            return [null, statusMessage(500, "Error reading file")];
         }
     }
 
@@ -108,35 +106,25 @@ class FileDataSourceService {
      * @param {string} fileName
      * @return {string}
      */
-    removeExtension(fileName: string) {
+    removeExtension(fileName: string): string {
         let lastIndex: number = fileName.lastIndexOf(".");
         fileName = fileName.substring(0, lastIndex);
         return fileName;
     }
 
-    standardizePath(filePath: string) {
+    standardizePath(filePath: string): string {
         if (filePath === undefined) {
             return filePath;
         }
         return filePath.replace(/\\/g, "/");
     }
 
-    async removeFileDataSource(uuid: string) {
+    async removeFileDataSource(uuid: string): Promise<DefaultHttpResponse> {
         let [result, err] = await fileDataSourceRepository.deleteDataSource(uuid);
         if (err) {
-            return {
-                "code": err.code,
-                "body": {
-                    "message": err.message
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
-        return {
-            "code": 204,
-            "body": {
-                "message": result.message
-            }
-        }
+        return generateDefaultHttpResponse(result);
     }
 
     getLineNumber(index: number, fullString: string): number {
@@ -151,7 +139,7 @@ class FileDataSourceService {
         return lineNum;
     }
 
-    getSnippetLineNumber(snippet: string, content: string) {
+    getSnippetLineNumber(snippet: string, content: string): number {
         snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
         snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
         let snippetIndex: number = content.indexOf(snippet);

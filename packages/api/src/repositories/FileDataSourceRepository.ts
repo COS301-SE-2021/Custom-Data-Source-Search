@@ -2,7 +2,7 @@ import {StoredFileDataSource, FileDataSource} from "../models/FileDataSource.int
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
-import {StatusMessage} from "../models/response/statusMessage.interface";
+import {StatusMessage} from "../models/response/general";
 import {statusMessage} from "../general/generalFunctions";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');

@@ -1,6 +1,6 @@
 import {randomBytes} from "crypto";
 import fs from "fs";
-import {StatusMessage} from "../models/response/statusMessage.interface";
+import {DefaultHttpResponse, StatusMessage} from "../models/response/general";
 
 export function generateUUID(): string {
     return randomBytes(16).toString("hex");
@@ -14,8 +14,7 @@ export function getLastModifiedDateOfFile(filePath: string): Date {
     }
 }
 
-export function generateDefaultHttpResponse(response: { code: number; message: string; }):
-    { code: number; body: { message: string; } } {
+export function generateDefaultHttpResponse(response: { code: number; message: string; }): DefaultHttpResponse {
     return {
         "code": response.code,
         "body": {
