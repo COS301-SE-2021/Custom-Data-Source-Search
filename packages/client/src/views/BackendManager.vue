@@ -7,9 +7,9 @@
                  @rowUnselect="onRowUnselect"
                  @rowSelectAll="onRowSelectAll"
                  @rowUnselectAll="onRowUnselectAll"
+                 v-model:selection="selectedUsers"
                  :rowHover="true"
                  :value="tableData"
-                 :selection="selectedUsers"
                  :scrollable="true"
                  scrollHeight="70vh"
       >
@@ -579,72 +579,75 @@
 
 <style scoped>
 
-  .management-page {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 1fr 10fr;
-    grid-template-columns: 1fr;
-  }
+.management-page {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 10fr;
+  grid-template-columns: 1fr;
+}
 
-  .backend-name {
-    text-align: center;
-    color: #ededed;
-    grid-row-start: 1;
-  }
+.backend-name {
+  text-align: center;
+  color: #ededed;
+  grid-row-start : 1;
+}
 
-  .backend-toolbar {
-    padding: 0.3em
-  }
+.backend-toolbar {
+  padding: 0.3em
+}
 
-  .backend-toolbar-container {
-    justify-self: center;
-    position: sticky;
-    bottom: 3vh;
-    align-self: center;
-    margin: 0 0 2.5em;
-  }
+.backend-toolbar-container {
+  justify-self: center;
+  position: sticky;
+  bottom: 3vh;
+  align-self: center;
+  margin: 0 0 2.5em;
+}
 
-  .permissions-button {
-    margin-right: 0;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-  }
+.permissions-button {
+  margin-right: 0;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
 
 
-  .p-button-custom-med {
-    padding: 0.54rem 0.74rem;
-    font-size: 1rem;
-  }
+.p-button-custom-med {
+  padding: 0.54rem 0.74rem;
+  font-size: 1rem;
+}
 
-  ::v-deep(.p-button) {
-    padding: 0.54rem 0.74rem;
-    font-size: 1rem;
-  }
+::v-deep(.p-button) {
+  padding: 0.54rem 0.74rem;
+  font-size: 1rem;
+}
 
-  .table {
-    grid-row-start: 2;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-  }
+.table {
+  grid-row-start: 2;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
 
-  .p-datatable-header {
-    padding: 0.4rem 0.4rem;
-  }
+.p-datatable-header {
+  padding: 0.4rem 0.4rem;
+}
 
-  ::v-deep(.p-inputtext) {
-    padding: 0.54rem 0.74rem;
-    font-size: 1rem;
-  }
+::v-deep(.p-inputtext) {
+  padding: 0.54rem 0.74rem;
+  font-size: 1rem;
+}
 
-  ::v-deep(.p-dropdown) {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    width: 8em;
-  }
+::v-deep(.p-dropdown){
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  width: 8em;
+}
 
-  ::v-deep(td) {
-    overflow: hidden;
-  }
+::v-deep(td){
+  overflow: -moz-scrollbars-horizontal;
+}
 
+.p-selection-column{
+  margin-right: 0;
+}
 </style>
