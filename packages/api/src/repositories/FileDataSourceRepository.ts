@@ -2,7 +2,7 @@ import {StoredFileDataSource, FileDataSource} from "../models/FileDataSource.int
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
-import {StatusMessage} from "../models/response/general";
+import {StatusMessage} from "../models/response/general.interfaces";
 import {statusMessage} from "../general/generalFunctions";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
@@ -161,10 +161,6 @@ class FileDataSourceRepository {
      * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
      */
     async deleteDataSource(uuid: string) {
-        const [, err] = await this.deleteFromSolr(uuid);
-        if (err) {
-            return [null, err];
-        }
         try {
             db.prepare("DELETE FROM file_data WHERE uuid = ?").run(uuid);
         } catch (e) {
@@ -178,34 +174,6 @@ class FileDataSourceRepository {
             "code": 204,
             "message": "Successfully deleted File datasource"
         }, null];
-    }
-
-    /**
-     * Remove document associated with datasource from solr
-     * @async
-     *
-     * @param {string} uuid
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
-     */
-    async deleteFromSolr(uuid: string) {
-        try {
-            await axios.post('http://localhost:' + process.env.SOLR_PORT + '/solr/files/update?commit=true',
-                {
-                    "delete": {
-                        "query": "id:" + uuid
-                    }
-                }
-            );
-            return [{
-                "code": 204,
-                "message": "Successfully removed document from Solr"
-            }, null];
-        } catch (e) {
-            return [null, {
-                "code": 500,
-                "message": "Could not delete document from solr"
-            }]
-        }
     }
 }
 

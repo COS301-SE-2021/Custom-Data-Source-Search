@@ -9,7 +9,7 @@ import {
     getLastModifiedDateOfFile,
     statusMessage
 } from "../general/generalFunctions";
-import {DefaultHttpResponse, StatusMessage} from "../models/response/general";
+import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
 
 class FileDataSourceService {
 
@@ -120,6 +120,10 @@ class FileDataSourceService {
     }
 
     async removeFileDataSource(uuid: string): Promise<DefaultHttpResponse> {
+        const [, solrErr] = await solrService.deleteFromSolr(uuid);
+        if (solrErr) {
+            return generateDefaultHttpResponse(solrErr);
+        }
         let [result, err] = await fileDataSourceRepository.deleteDataSource(uuid);
         if (err) {
             return generateDefaultHttpResponse(err);

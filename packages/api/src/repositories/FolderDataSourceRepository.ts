@@ -4,6 +4,7 @@ import FormData from "form-data";
 import axios from "axios";
 import fileDataSourceRepository from "./FileDataSourceRepository";
 import {generateUUID} from "../general/generalFunctions";
+import solrService from "../services/solr.service";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
@@ -128,7 +129,7 @@ class FolderDataSourceRepository {
     async deleteDataSource(uuid: string) {
         try {
             for (let folderFile of db.prepare("SELECT * FROM folder_file_data WHERE folder_uuid = ?;").all(uuid)) {
-                await fileDataSourceRepository.deleteFromSolr(folderFile["uuid"]);
+                await solrService.deleteFromSolr(folderFile["uuid"]);
             }
             db.prepare("DELETE FROM folder_file_data WHERE folder_uuid = ?").run(uuid);
             db.prepare("DELETE FROM folder_data WHERE uuid = ?").run(uuid);

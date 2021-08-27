@@ -1,6 +1,6 @@
 import {randomBytes} from "crypto";
 import fs from "fs";
-import {DefaultHttpResponse, StatusMessage} from "../models/response/general";
+import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
 
 export function generateUUID(): string {
     return randomBytes(16).toString("hex");

@@ -1,5 +1,7 @@
 import FormData from "form-data";
 import axios from "axios";
+import {StatusMessage} from "../models/response/general.interfaces";
+import {statusMessage} from "../general/generalFunctions";
 
 class SolrService {
     /**
@@ -40,6 +42,31 @@ class SolrService {
             "code": 200,
             "message": "Successfully posted document to Solr"
         }, null];
+    }
+
+    /**
+     * Remove document associated with datasource from solr
+     * @async
+     *
+     * @param {string} uuid
+     * @return {Promise<[StatusMessage, StatusMessage]>}
+     */
+    async deleteFromSolr(uuid: string): Promise<[StatusMessage, StatusMessage]> {
+        try {
+            await axios.post(
+                'http://localhost:' +
+                process.env.SOLR_PORT +
+                '/solr/files/update?commit=true',
+                {
+                    "delete": {
+                        "query": "id:" + uuid
+                    }
+                }
+            );
+            return [statusMessage(204, "Successfully removed document from Solr"), null];
+        } catch (e) {
+            return [statusMessage(500, "Could not delete document from solr"), null];
+        }
     }
 }
 
