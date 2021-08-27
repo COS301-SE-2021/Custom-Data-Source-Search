@@ -1,7 +1,13 @@
 <template>
   <div class="grid-content">
     <div class="header">
-        <router-link to="/datasources"><Button label="Back to data sources" icon="pi pi-angle-left" class="p-button-text"/></router-link>
+        <router-link to="/datasources">
+          <Button
+              label="Back to data sources"
+              icon="pi pi-angle-left"
+              class="p-button-text"
+          />
+        </router-link>
       <h2>
         Add Data Sources
       </h2>
@@ -68,12 +74,13 @@
 
 <script>
 
-import WebpageDatasource from "../components/datasources/webpage/WebpageDatasource";
-import FileDatasource from "../components/datasources/file/FileDatasource";
-import FolderDatasource from "../components/datasources/folder/FolderDatasource";
-import DataSourceCard from "@/components/datasources/DataSourceCard";
-import axios from "axios";
-export default {
+    import WebpageDatasource from "../components/datasources/webpage/WebpageDatasource";
+    import FileDatasource from "../components/datasources/file/FileDatasource";
+    import FolderDatasource from "../components/datasources/folder/FolderDatasource";
+    import DataSourceCard from "@/components/datasources/DataSourceCard";
+    import axios from "axios";
+
+    export default {
   components: {
     WebpageDatasource,
     FileDatasource,
@@ -223,9 +230,7 @@ export default {
 <style scoped lang="scss">
 
 .grid-content {
-  /*display: grid;*/
-  /*grid-template-rows: 1fr 9fr;*/
-  height: 100vh;
+   height: 100vh;
 }
 
 .all-sources {
