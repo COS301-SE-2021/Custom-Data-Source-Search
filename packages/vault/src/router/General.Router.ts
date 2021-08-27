@@ -24,5 +24,5 @@ generalRouter.get("/test/:id",async (req: Request, res: Response) => {
 
 generalRouter.post("/register",async (req: Request, res: Response) => {
     const result = await registrationService.register(req.body)
-    res.status(result.code).send(result.body);
+    res.status(result.code).send(result.message);
 });
