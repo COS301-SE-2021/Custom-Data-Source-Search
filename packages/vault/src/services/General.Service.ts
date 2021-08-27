@@ -1,6 +1,6 @@
 class GeneralService {
 
-    test(id: Number){
+    test(id: String){
         return {
             code : 200,
             body : {

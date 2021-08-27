@@ -3,16 +3,12 @@
  */
 import express, {Request, Response} from "express";
 import generalService from "../services/General.Service";
+import registrationService from "../services/Registration.Service";
 
 /**
  * Router Definition
  */
 export const generalRouter = express.Router();
-
-/**
- * Controller Definitions
- */
-
 
 /**
  * Return all the search results from available data sources
@@ -22,6 +18,11 @@ generalRouter.get("/",async (req: Request, res: Response) => {
 });
 
 generalRouter.get("/test/:id",async (req: Request, res: Response) => {
-     const result = await generalService.test(req.params.id);
+     const result =  generalService.test(req.params.id);
+     res.status(result.code).send(result.body);
+});
+
+generalRouter.post("/register",async (req: Request, res: Response) => {
+    const result = await registrationService.register(req.body)
     res.status(result.code).send(result.body);
 });
