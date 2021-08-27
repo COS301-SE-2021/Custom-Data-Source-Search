@@ -1,5 +1,5 @@
 <template>
-  <ScrollPanel style="width: 92vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
+  <ScrollPanel id="main-scroll" style="width: 95vw; height: 80vh; align-content: center;">
     <DataTable
         v-model:selection="selectedSources"
         v-model:filters="filters"
@@ -25,6 +25,22 @@
             <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
           </span>
+          <Button
+              class="p-button-text action-button"
+              type="button"
+              label="Actions"
+              @click="toggleMenu"
+              aria-haspopup="true"
+              aria-controls="overlay_menu"
+          />
+          <Menu id="overlay_menu" ref="menu" :model="menuItems" :popup="true" />
+          <Button
+              id="add-datasource-button-small"
+              label="Add"
+              icon="pi pi-plus"
+              class="p-button-text"
+              @click="toggle"
+          />
           <Button
               id="add-datasource-button"
               label="Add Data Source"
@@ -273,6 +289,24 @@ export default {
         'file', 'folder', 'webpage'
       ],
       backends: [],
+      menuItems: [
+        {
+          label: 'Choose an action',
+          items: [{
+            label: 'Add Data Source',
+            command: () => {
+              this.toggle();
+            }
+          },
+            {
+              label: 'Delete Selected',
+              icon: 'pi pi-times',
+              command: () => {
+                this.deleteSource();
+              }
+            }
+          ]},
+      ]
     }
   },
 
@@ -288,6 +322,10 @@ export default {
   productService: null,
   
   methods: {
+    toggleMenu(event){
+      this.$refs.menu.toggle(event);
+    },
+
     /**
      * Toggles the visibility of the overlay panel
      * @param event
@@ -460,13 +498,10 @@ a {
   word-break: break-word;
 }
 
-.delete-selection{
+.action-button{
   float: right;
   margin-right: 2vw;
-}
-
-.data-table{
- bottom: 4em;
+  display: none;
 }
 
 #add-datasource-button{
@@ -474,7 +509,22 @@ a {
   margin-right: 2vw;
 }
 
+#add-datasource-button-small{
+  float: right;
+  margin-right: 2vw;
+  display: none;
+}
+
+#delete-button{
+  float: right;
+  margin-right: 2vw;
+}
+
 @media only screen and (max-width: 960px) {
+  .action-button{
+    display: block;
+  }
+
   #delete-button{
     display: none;
   }
@@ -485,6 +535,10 @@ a {
 
   #add-datasource-button{
     display: none;
+  }
+
+  #add-datasource-button-small{
+    display: block;
   }
 }
 </style>

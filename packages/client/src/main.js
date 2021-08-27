@@ -43,7 +43,7 @@ import InputNumber from 'primevue/inputnumber';
 import Textarea from 'primevue/textarea';
 import ContextMenu from "primevue/contextmenu";
 import RadioButton from "primevue/radiobutton";
-
+import Menu from 'primevue/menu';
 
 const app = createApp(App);
 app.use(router);
@@ -87,4 +87,4 @@ app.component('InputNumber', InputNumber);
 app.component('Textarea', Textarea);
 app.component('ContextMenu', ContextMenu);
 app.component('RadioButton', RadioButton);
-
+app.component('Menu', Menu);
