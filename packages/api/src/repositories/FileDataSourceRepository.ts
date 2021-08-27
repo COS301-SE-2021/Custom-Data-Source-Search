@@ -12,7 +12,7 @@ class FileDataSourceRepository {
      * @param {FileDataSource} dataSource
      * @return {[StatusMessage, StatusMessage]}
      */
-    addDataSource(dataSource: StoredFileDataSource): [StatusMessage,StatusMessage] {
+    addDataSource(dataSource: StoredFileDataSource): [StatusMessage, StatusMessage] {
         try {
             db.prepare(
                 'INSERT INTO file_data (uuid, file_path, last_modified, tag1, tag2) VALUES (?, ?, ?, ?, ?);'
@@ -36,11 +36,15 @@ class FileDataSourceRepository {
      * @return {[StoredFileDataSource, StatusMessage]}
      */
     getDataSource(uuid: string): [StoredFileDataSource, StatusMessage] {
-        const dataSource = db.prepare("SELECT * FROM file_data WHERE uuid = ?").get(uuid)
-        if (dataSource !== undefined) {
-            return [FileDataSourceRepository.castToStoredDataSource(dataSource), null];
+        try {
+            const dataSource = db.prepare("SELECT * FROM file_data WHERE uuid = ?").get(uuid)
+            if (dataSource !== undefined) {
+                return [FileDataSourceRepository.castToStoredDataSource(dataSource), null];
+            }
+            return [null, statusMessage(404, "Datasource not found")];
+        } catch (e) {
+            return [null, statusMessage(500, "Error with db")];
         }
-        return [null, statusMessage(404, "Datasource not found")];
     }
 
     /**
@@ -70,8 +74,12 @@ class FileDataSourceRepository {
      * @return {[StoredFileDataSource[], StatusMessage]}
      */
     getAllDataSources(): [StoredFileDataSource[], StatusMessage] {
-        const fileDataList = db.prepare("SELECT * FROM file_data;").all()
-        return [fileDataList.map(FileDataSourceRepository.castToStoredDataSource), null];
+        try {
+            const fileDataList = db.prepare("SELECT * FROM file_data;").all();
+            return [fileDataList.map(FileDataSourceRepository.castToStoredDataSource), null];
+        } catch (e) {
+            return [null, statusMessage(500, "Error with db")];
+        }
     }
 
     /**
@@ -81,7 +89,7 @@ class FileDataSourceRepository {
      * @param {string} uuid
      * @return {Promise<[StatusMessage, StatusMessage]>}
      */
-    async deleteDataSource(uuid: string): Promise<[StatusMessage, StatusMessage]> {
+    deleteDataSource(uuid: string): [StatusMessage, StatusMessage] {
         try {
             db.prepare("DELETE FROM file_data WHERE uuid = ?").run(uuid);
         } catch (e) {
@@ -95,7 +103,8 @@ class FileDataSourceRepository {
             db.prepare(
                 "UPDATE file_data SET last_modified = ? WHERE uuid = ?"
             ).run(lastModified, uuid);
-        } catch (e) {}
+        } catch (e) {
+        }
     }
 }
 

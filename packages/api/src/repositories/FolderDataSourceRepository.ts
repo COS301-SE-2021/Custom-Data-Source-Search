@@ -3,7 +3,7 @@ import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSour
 import FormData from "form-data";
 import axios from "axios";
 import {generateUUID, removeFileExtension} from "../general/generalFunctions";
-import solrService from "../services/solr.service";
+import solrService from "../services/Solr.service";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 

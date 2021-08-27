@@ -2,7 +2,7 @@ import {FileDataSource, StoredFileDataSource} from "../models/FileDataSource.int
 import fs from 'fs';
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import hljs from "highlight.js";
-import solrService from "./solr.service";
+import solrService from "./Solr.service";
 import {
     generateDefaultHttpResponse,
     generateUUID,
@@ -38,7 +38,7 @@ class FileDataSourceService {
         };
     }
 
-    validateDataSource(dataSource: FileDataSource) {
+    validateDataSource(dataSource: FileDataSource): [StatusMessage, StatusMessage] {
         if (dataSource.filename === '') {
             return [null, statusMessage(400, "No file name")];
         } else if (dataSource.path === '') {
@@ -112,7 +112,7 @@ class FileDataSourceService {
         if (solrErr) {
             return generateDefaultHttpResponse(solrErr);
         }
-        let [result, err] = await fileDataSourceRepository.deleteDataSource(uuid);
+        let [result, err] = fileDataSourceRepository.deleteDataSource(uuid);
         if (err) {
             return generateDefaultHttpResponse(err);
         }
@@ -147,13 +147,14 @@ class FileDataSourceService {
         }
     }
 
-    getLineNumber(index: number, fullString: string): number {
+    /**
+     * Count the newlines to determine on what line a specified index is
+     * @param index
+     * @param content
+     */
+    getLineNumber(index: number, content: string): number {
         let lineNum = 1;
-        for (
-            let index2 = fullString.indexOf('\n');
-            (index2 < index && index2 >= 0);
-            index2 = fullString.indexOf("\n", index2 + 1)
-        ) {
+        for (let i = content.indexOf('\n'); (i < index && i >= 0); i = content.indexOf("\n", i + 1)) {
             lineNum++;
         }
         return lineNum;
