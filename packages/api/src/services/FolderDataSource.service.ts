@@ -2,18 +2,14 @@ import folderDataSourceRepository from "../repositories/FolderDataSourceReposito
 import fs from "fs";
 import {FolderDataSource} from "../models/FolderDataSource.interface";
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
+import {generateDefaultHttpResponse} from "../general/generalFunctions";
 
 class FolderDataSourceService {
 
     getAllFolderDataSources() {
         let [result, err] = folderDataSourceRepository.getAllDataSources();
         if (err) {
-            return {
-                "code": 500,
-                "body": {
-                    "message": "Internal error"
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
         return {
             "code": 200,

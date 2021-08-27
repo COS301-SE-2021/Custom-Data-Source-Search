@@ -2,8 +2,9 @@ import fs from "fs";
 import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import FormData from "form-data";
 import axios from "axios";
-import {generateUUID, removeFileExtension} from "../general/generalFunctions";
+import {generateUUID, removeFileExtension, statusMessage} from "../general/generalFunctions";
 import solrService from "../services/Solr.service";
+import {StatusMessage} from "../models/response/general.interfaces";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
@@ -111,11 +112,15 @@ class FolderDataSourceRepository {
     /**
      * Return all stored folder datasources
      *
-     * @return {[StoredFolderDataSource[], { "code": number, "message": string }]}
+     * @return {[StoredFolderDataSource[], StatusMessage]}
      */
-    getAllDataSources(): [StoredFolderDataSource[], { "code": number, "message": string }] {
-        const fileDataList = db.prepare("SELECT * FROM folder_data;").all()
-        return [fileDataList.map(FolderDataSourceRepository.castToStoredDataSource), null];
+    getAllDataSources(): [StoredFolderDataSource[], StatusMessage] {
+        try {
+            const fileDataList = db.prepare("SELECT * FROM folder_data;").all()
+            return [fileDataList.map(FolderDataSourceRepository.castToStoredDataSource), null];
+        } catch (e) {
+            return [null, statusMessage(500, "Error with db")];
+        }
     }
 
     /**
