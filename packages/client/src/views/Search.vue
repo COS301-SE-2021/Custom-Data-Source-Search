@@ -467,6 +467,10 @@ input {
   height: 100vh;
 }
 
+.p-splitter {
+  border: none;
+}
+
 #full_file {
   padding-left: 10px;
   padding-top: 40px;

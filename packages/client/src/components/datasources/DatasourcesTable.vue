@@ -1,5 +1,5 @@
 <template>
-  <ScrollPanel style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
+  <ScrollPanel>
     <DataTable
         v-model:selection="selectedSources"
         v-model:filters="filters"
@@ -31,6 +31,13 @@
               icon="pi pi-plus"
               class="p-button-text"
               @click="toggle"
+          />
+          <Button
+              label="Delete Selected"
+              type="button"
+              icon="pi pi-trash"
+              class="p-button-text p-button-warning delete-selection"
+              @click="deleteSource"
           />
           <OverlayPanel
               ref="op"
@@ -109,7 +116,7 @@
       <template #loading>
         Loading data. Please wait...
       </template>
-      <Column selectionMode="multiple" headerStyle="width: 3em">
+      <Column selectionMode="multiple" headerStyle="width: 3em" style="max-width: 3em;">
         <template #body="{data}">
           <Checkbox
               v-if="datasourceAdminStatus(data.backend)"
@@ -225,27 +232,7 @@
           />
         </template>
       </Column>
-      <template #paginatorLeft>
-        <span>
-          <Button
-              label="Delete Selected"
-              type="button"
-              icon="pi pi-trash"
-              class="p-button-text p-button-warning"
-              @click="deleteSource"
-          />
-        </span>
-      </template>
-      <template #paginatorRight>
-      </template>
     </DataTable>
-    <Button
-        label="Delete Selected"
-        type="button"
-        icon="pi pi-trash"
-        class="p-button-text p-button-warning delete-selection"
-        @click="deleteSource"
-    />
   </ScrollPanel>
 </template>
 
@@ -473,9 +460,43 @@ a {
   word-break: break-word;
 }
 
+/*.delete-selection{*/
+/*  position: absolute;*/
+/*  float: right;*/
+/*  right: 4em;*/
+/*  bottom: 1em;*/
+/*}*/
+
 .delete-selection{
-  position: fixed;
-  bottom: 1em;
+  /*position: relative;*/
+  float: right;
+  margin-right: 2vw;
+
+  /*margin-right:10vw;*/
+
+
+}
+
+.p-scrollpanel{
+  width: 95vw;
+  height: 80vh;
+  bottom: 2em;
+  padding-bottom: 1vh;
+  align-content: center;
+}
+
+@media only screen and (max-width: 900px) {
+  .delete-selection{
+    display: none;
+  }
+
+  .p-scrollpanel{
+    width: 92vw;
+  }
+
+  #add-datasource-button{
+    display: none;
+  }
 }
 
 .data-table{
