@@ -14,41 +14,24 @@ class FolderDataSourceRepository {
      * Store a new folder datasource in db
      *
      * @param {FolderDataSource} dataSource
-     * @return {[{ code: number; message: string; uuid: string }, { code: number; message: string; }]}
+     * @return {[StatusMessage, StatusMessage]}
      */
-    addDataSource(dataSource: FolderDataSource): [
-        { code: number; message: string; uuid: string },
-        { code: number; message: string; }
-    ] {
-        if (!fs.existsSync(dataSource.path)) {
-            return [null, {
-                "code": 404,
-                "message": "Directory does not exist"
-            }];
-        }
-        const uuid: string = generateUUID()
+    addDataSource(dataSource: StoredFolderDataSource): [StatusMessage, StatusMessage] {
         try {
             db.prepare(
                 'INSERT INTO folder_data (folder_name, path, uuid, tag1, tag2, dot_ignore) VALUES (?, ?, ?, ?, ?, ?);'
             ).run(
                 FolderDataSourceRepository.getFolderName(dataSource.path),
                 dataSource.path,
-                uuid,
+                dataSource.uuid,
                 dataSource.tag1,
                 dataSource.tag2,
                 "ignore certain files"
             )
         } catch (e) {
-            return [null, {
-                "code": 400,
-                "message": "Folder datasource already exists"
-            }];
+            return [null, statusMessage(400, "Folder datasource already exists")];
         }
-        return [{
-            "code": 200,
-            "message": "Successfully added file datasource",
-            "uuid": uuid
-        }, null];
+        return [statusMessage(200, "Successfully added file datasource"), null];
     }
 
     /**

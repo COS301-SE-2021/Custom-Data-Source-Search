@@ -1,8 +1,8 @@
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import fs from "fs";
-import {FolderDataSource} from "../models/FolderDataSource.interface";
+import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
-import {generateDefaultHttpResponse} from "../general/generalFunctions";
+import {generateDefaultHttpResponse, generateUUID, statusMessage} from "../general/generalFunctions";
 
 class FolderDataSourceService {
 
@@ -35,18 +35,23 @@ class FolderDataSourceService {
         if (dataSource.path[dataSource.path.length - 1] !== '/') {
             dataSource.path += '/';
         }
-        let [result, e] = folderDataSourceRepository.addDataSource(dataSource);
+        if (!fs.existsSync(dataSource.path)) {
+            return generateDefaultHttpResponse(statusMessage(404, "Directory does not exist"));
+        }
+        const uuid: string = generateUUID();
+        const storedFolderDatasource: StoredFolderDataSource = {
+            uuid: uuid,
+            path: dataSource.path,
+            tag1: dataSource.tag1,
+            tag2: dataSource.tag2
+        }
+        let [, e] = folderDataSourceRepository.addDataSource(storedFolderDatasource);
         if (e) {
-            return {
-                "code": e.code,
-                "body": {
-                    "message": e.message
-                }
-            }
+            return generateDefaultHttpResponse(e);
         }
         try {
             for (let fileName of this.getFilesInFolder(dataSource.path)) {
-                await folderDataSourceRepository.addFileInFolder(dataSource.path + fileName, result.uuid);
+                await folderDataSourceRepository.addFileInFolder(dataSource.path + fileName, uuid);
             }
         } catch (e) {}
         return {
