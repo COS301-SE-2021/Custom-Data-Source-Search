@@ -1,5 +1,5 @@
 <template>
-  <ScrollPanel>
+  <ScrollPanel style="width: 92vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center;">
     <DataTable
         v-model:selection="selectedSources"
         v-model:filters="filters"
@@ -33,17 +33,17 @@
               @click="toggle"
           />
           <Button
+              id="delete-button"
               label="Delete Selected"
               type="button"
               icon="pi pi-trash"
-              class="p-button-text p-button-warning delete-selection"
+              class="p-button-text p-button-warning"
               @click="deleteSource"
           />
           <OverlayPanel
               ref="op"
               :showCloseIcon="true"
               :dismissable="false"
-              :breakpoints="{'960px': '75vw', '640px': '100vw'}"
               :style="{width: '450px'}"
           >
             <div v-if="!clicked && backend===null">
@@ -460,43 +460,9 @@ a {
   word-break: break-word;
 }
 
-/*.delete-selection{*/
-/*  position: absolute;*/
-/*  float: right;*/
-/*  right: 4em;*/
-/*  bottom: 1em;*/
-/*}*/
-
 .delete-selection{
-  /*position: relative;*/
   float: right;
   margin-right: 2vw;
-
-  /*margin-right:10vw;*/
-
-
-}
-
-.p-scrollpanel{
-  width: 95vw;
-  height: 80vh;
-  bottom: 2em;
-  padding-bottom: 1vh;
-  align-content: center;
-}
-
-@media only screen and (max-width: 900px) {
-  .delete-selection{
-    display: none;
-  }
-
-  .p-scrollpanel{
-    width: 92vw;
-  }
-
-  #add-datasource-button{
-    display: none;
-  }
 }
 
 .data-table{
@@ -506,5 +472,19 @@ a {
 #add-datasource-button{
   float: right;
   margin-right: 2vw;
+}
+
+@media only screen and (max-width: 960px) {
+  #delete-button{
+    display: none;
+  }
+
+  #main-scroll{
+    width: 90vw !important;
+  }
+
+  #add-datasource-button{
+    display: none;
+  }
 }
 </style>
