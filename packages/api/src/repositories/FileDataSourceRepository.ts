@@ -3,6 +3,7 @@ import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
 import {StatusMessage} from "../models/response/statusMessage.interface";
+import {statusMessage} from "../general/generalFunctions";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
@@ -26,15 +27,9 @@ class FileDataSourceRepository {
                 dataSource.tag2
             )
         } catch (e) {
-            return [null, {
-                "code": 400,
-                "message": "File datasource already exists"
-            }];
+            return [null, statusMessage(400, "File datasource already exists")];
         }
-        return [{
-            "code": 200,
-            "message": "Successfully added file datasource"
-        }, null];
+        return [statusMessage(200, "Successfully added file datasource"), null];
     }
 
     /**

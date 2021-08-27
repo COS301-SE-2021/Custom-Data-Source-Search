@@ -56,6 +56,7 @@ class FileDataSourceService {
             }
             return [null, statusMessage(500, "Internal server error")];
         }
+        return [statusMessage(200, "Datasource is valid"), null];
     }
 
     async addFileDataSource(dataSource: FileDataSource) {
