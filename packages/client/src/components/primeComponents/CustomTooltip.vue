@@ -1,12 +1,10 @@
 <template>
     <div class="tooltip-box">
-        <slot />
-        <div
-                class="tooltip"
-        >
-      <div class="text" v-for="text in unconnectedBackendNames">
-         <span>{{ text }}</span>
-      </div>
+        <slot/>
+        <div class="tooltip">
+          <div class="text" v-for="text in unconnectedBackendNames">
+             <span>{{ text }}</span>
+          </div>
         </div>
     </div>
 </template>
@@ -41,27 +39,37 @@
     }
 
     .tooltip {
-        color: #000000;
-        text-align: center;
-        border-radius: 2px;
-
-        width: fit-content;
-        padding: 1.5vh;
-        top: -50%;
-        left: 120%;
-        /*margin-left: -40px;*/
-
-        opacity: 0;
-        transition: opacity 0.2s;
-
-        position: absolute;
-        z-index: 1;
-
-        background: rgb(121, 179, 177);
+      color: rgba(255, 255, 255, 0.87);
+      border-radius: 2px;
+      width: fit-content;
+      padding: 2vh;
+      top: -50%;
+      left: 120%;
+      opacity: 0;
+      transition: opacity 0.2s;
+      position: absolute;
+      z-index: 2;
+      background: #303030;
+      margin-left: 0.5vw;
+      margin-top: 2vh;
+      box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
     }
 
-    span {
-        height: fit-content;
-        padding-top: 2px;
+    .tooltip:after{
+      content: "";
+      width: 20px;
+      height: 20px;
+      transform: rotate(-45deg);
+      background: #303030;
+      position: absolute;
+      z-index: -1;
+      top: 10px;
+      left: 0;
+    }
+
+    .text {
+      font-size: 15px;
+      padding-top: 2px;
+      float: left;
     }
 </style>

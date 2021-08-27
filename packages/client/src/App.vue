@@ -118,16 +118,21 @@
     padding: 10px;
   }
 
-  button {
+button {
     border: none;
     border-radius: 12px;
     padding: 10px;
-  }
+}
 
-  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .unconnected-backend-warning {
-    color: grey;
-    padding: 20px 10px 10px;
-  }
+.pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
+  color: grey;
+  padding: 20px 10px 10px;
+}
+
+.unconnected-backend-warning{
+  text-align: center;
+  padding: 10px 10px 10px;
+}
 
   .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
     color: #41B3B2;
@@ -203,15 +208,14 @@
     margin-right: 1%;
   }
 
-  #expiration-indicator {
-    font-size: 2rem;
-    color: #d69b2c;
+#expiration-indicator {
+    font-size: 1.5rem;
+    color: #FFF59D;
     position: relative;
     display: inline-block;
-    margin-left: 0.4rem;
-    margin-top: auto;
-    margin-bottom: 0.3rem;
-  }
+    margin-top : 0.5rem;
+    margin-bottom : 0.3rem;
+}
 
 </style>
 
