@@ -1,11 +1,12 @@
 <template>
     <Dialog header="Sign out?"
-            v-model:visible="display"
+            :visible="display"
             :draggable="false"
             :closable="true"
             :dismissable-mask="true"
             :modal="true"
-            @hide="$emit('display-popup')">
+            @hide="$emit('display-popup')"
+    >
         <div class="p-dialog-content">
             <span>Are you sure you want to sign out {{user.name}}?</span>
         </div>
@@ -19,11 +20,7 @@
 <script>
     export default {
         name: "SignOutCheck",
-        data () {
-            return {
-                display: this.show,
-            }
-        },
+
         props: {
             show: Boolean,
             user: {
@@ -32,6 +29,19 @@
                 hasVault: Boolean
             }
         },
+
+        data () {
+            return {
+                display: this.show,
+            }
+        },
+
+        watch:{
+            show: function(){
+                this.display = this.show
+            }
+        },
+
         methods: {
             closePopUp () {
                 this.display = false;
@@ -40,11 +50,6 @@
                 this.$store.commit('signOutUser', {userID: this.user.id});
                 this.closePopUp();
                 this.$router.push('/');
-            }
-        },
-        watch:{
-            show: function(){
-                this.display = this.show
             }
         }
     }
