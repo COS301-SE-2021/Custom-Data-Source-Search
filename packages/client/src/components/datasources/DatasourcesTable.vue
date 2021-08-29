@@ -299,7 +299,7 @@
               },
                 {
                   label: 'Edit',
-                  icon: 'pi pi-times',
+                  icon: 'pi pi-pencil',
                   command: () => {
                     // this.editSource();
                   }
