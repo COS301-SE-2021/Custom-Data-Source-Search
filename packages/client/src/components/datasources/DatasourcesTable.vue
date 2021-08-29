@@ -1,5 +1,8 @@
 <template>
-  <ScrollPanel>
+  <ScrollPanel
+      id="main-scroll"
+      style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
+  >
     <DataTable
         v-model:selection="selectedSources"
         v-model:filters="filters"
@@ -33,12 +36,23 @@
               @click="toggle"
           />
           <Button
-              label="Delete Selected"
-              type="button"
-              icon="pi pi-trash"
-              class="p-button-text p-button-warning delete-selection"
-              @click="deleteSource"
+              id="add-datasource-button-small"
+              label="Add"
+              icon="pi pi-plus"
+              class="p-button-text"
+              @click="toggle"
           />
+          <Button
+              id="actions-button"
+              type="button"
+              label="Actions"
+              icon="pi pi-angle-down"
+              aria-haspopup="true"
+              aria-controls="overlay_menu"
+              class="p-button-text"
+              @click="toggleMenu"
+          />
+          <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
           <OverlayPanel
               ref="op"
               :showCloseIcon="true"
@@ -252,6 +266,7 @@
             AddWebpageDatasource
         },
 
+<<<<<<< Updated upstream
         data() {
             return {
                 message: "No sources have been selected.",
@@ -275,6 +290,50 @@
                 backends: [],
             }
         },
+=======
+  data() {
+    return {
+      message: "No sources have been selected.",
+      type: null,
+      clicked: false,
+      sources: null,
+      loading: false,
+      backend: null,
+      selectedSources: null,
+      filters: {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'backend': {value: null, matchMode: FilterMatchMode.IN},
+        'type': {value: null, matchMode: FilterMatchMode.IN},
+        'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
+      },
+      types: [
+        'file', 'folder', 'webpage'
+      ],
+      backends: [],
+      items: [
+        {
+          label: 'Choose an action',
+          items: [{
+            label: 'Delete Selected',
+            icon: 'pi pi-trash',
+            command: () => {
+              this.deleteSource();
+            }
+          },
+            {
+              label: 'Edit',
+              icon: 'pi pi-times',
+              command: () => {
+                // this.editSource();
+              }
+            }
+          ]}
+      ]
+    }
+  },
+>>>>>>> Stashed changes
 
         beforeMount() {
           if (this.$store.getters.getNewAppStatus) {
@@ -285,7 +344,26 @@
           this.updateSources();
         },
 
+<<<<<<< Updated upstream
         productService: null,
+=======
+  productService: null,
+  
+  methods: {
+    toggleMenu(event) {
+      this.$refs.menu.toggle(event);
+    },
+
+    /**
+     * Toggles the visibility of the overlay panel
+     * @param event
+     */
+    toggle(event) {
+      this.$refs.op.toggle(event);
+      this.clicked = false;
+      this.backend = null;
+    },
+>>>>>>> Stashed changes
 
         methods: {
             /**
@@ -472,28 +550,6 @@
   margin-right: 2vw;
 }
 
-.p-scrollpanel{
-  width: 95vw;
-  height: 80vh;
-  bottom: 2em;
-  padding-bottom: 1vh;
-  align-content: center;
-}
-
-@media only screen and (max-width: 900px) {
-  .delete-selection{
-    display: none;
-  }
-
-  .p-scrollpanel{
-    width: 92vw;
-  }
-
-  #add-datasource-button{
-    display: none;
-  }
-}
-
 .data-table{
  bottom: 4em;
 }
@@ -501,5 +557,33 @@
 #add-datasource-button{
   float: right;
   margin-right: 2vw;
+}
+
+#add-datasource-button-small{
+  float: right;
+  margin-right: 2vw;
+  display: none;
+}
+
+#actions-button{
+  float: right;
+}
+
+@media only screen and (max-width: 960px) {
+  .delete-selection{
+    display: none;
+  }
+
+  #main-scroll{
+    width: 93vw !important;
+  }
+
+  #add-datasource-button{
+    display: none;
+  }
+
+  #add-datasource-button-small{
+    display: block;
+  }
 }
 </style>
