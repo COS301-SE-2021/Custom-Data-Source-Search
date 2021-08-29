@@ -57,7 +57,7 @@
               ref="op"
               :showCloseIcon="true"
               :dismissable="false"
-              :breakpoints="{'960px': '75vw', '640px': '100vw'}"
+              :breakpoints="{'960px': '70vw', '640px': '70vw'}"
               :style="{width: '450px'}"
           >
             <div v-if="!clicked && backend===null">
