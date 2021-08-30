@@ -99,7 +99,7 @@ input {
   font-size: 15px;
   font-style: italic;
   height: 5px;
-  background-color: #242424;
+  background-color: #262626;
 }
 
 .p-inputtext:enabled:focus {
