@@ -15,11 +15,9 @@ class VaultRepository {
             console.log(e.stack);
             return[null, e]
         }
-
-
-
-
-
+    }
+    
+    async getSaltAndVerifier(email: string){
 
     }
 

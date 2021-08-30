@@ -4,6 +4,7 @@
 import express, {Request, Response} from "express";
 import generalService from "../services/General.Service";
 import registrationService from "../services/Registration.Service";
+import authenticationService from "../services/Authentication.Service";
 
 /**
  * Router Definition
@@ -24,5 +25,16 @@ generalRouter.get("/test/:id",async (req: Request, res: Response) => {
 
 generalRouter.post("/register",async (req: Request, res: Response) => {
     const result = await registrationService.register(req.body)
+    res.status(result.code).send(result.message);
+});
+
+generalRouter.post("/challenge",async (req: Request, res: Response) => {
+    const result = await authenticationService.challenge(req.body)
+    res.status(result.code).send(result.message);
+});
+
+
+generalRouter.post("/authenticate",async (req: Request, res: Response) => {
+    const result = await authenticationService.challenge(req.body)
     res.status(result.code).send(result.message);
 });
