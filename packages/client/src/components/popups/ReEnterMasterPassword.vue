@@ -1,29 +1,41 @@
 <template>
-    <Dialog header="Enter Master Password" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup')">
-        <div class="header-size">
-            Please enter your master password to continue:
+  <Dialog
+      header="Enter Master Password"
+      v-model:visible="display"
+      :draggable="true "
+      :closable="true"
+      :dismissable-mask="true"
+      :modal="true"
+      @hide="$emit('display-popup'); masterPass = null"
+  >
+    Continue Sleuthin' all your favourite backends
+    <div class="p-field p-grid">
+      <label for="password" class="p-col-fixed" style="width:100px">Password</label>
+      <div class="p-col">
+        <PasswordInputField
+            id="password"
+            style="width: 100%"
+            @keyup.enter="assignData"
+            v-model="masterPass"
+            :toggle-mask="true"
+            :feedback="false"
+        />
+        <br><br>
+        <div v-if="passwordIncorrect" class="error-message">
+          <span>Incorrect password.</span>
         </div>
-        <br>
-        <div class="p-field p-grid">
-            <label for="password" class="p-col-fixed" style="width:100px">Password</label>
-            <div class="p-col">
-                <PasswordInputField id="password" style="width: 100%" @keyup.enter="assignData" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
-                <br><br>
-                <div v-if="passwordIncorrect" class="error-message">
-                    <span>Password Incorrect!</span>
-                    <br>
-                    <span>{{ errMessage }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="p-field p-grid" style="text-align: center">
-            <Button type="submit" class="p-button-sm" label="Submit" @click="assignData"/>
-        </div>
-    </Dialog>
+      </div>
+    </div>
+    <template #footer>
+      <Button label="Cancel" class="p-button-text" @click="closeDialog"/>
+      <Button label="Submit" autofocus @click="assignData"/>
+    </template>
+  </Dialog>
 </template>
 
 <script>
     import PasswordInputField from "../primeComponents/PasswordInputField";
+
     export default {
         name: "ReEnterMasterPassword",
         components: {PasswordInputField},
@@ -32,30 +44,43 @@
                 masterPass: null,
                 display: this.show,
                 passwordIncorrect: false,
-                errMessage: 'Please repeat master password.',
             }
         },
         props: {
             show: Boolean,
             user: Object,
-            welcomePage: Boolean
+            welcomePage: Boolean,
+            unconnectedBackendIcon: Boolean,
         },
         methods: {
             assignData() {
                 if (this.welcomePage) {
-                    this.$store.commit('signInAUser', {masterPassword: this.masterPass, userID: this.user.id})
+                    this.$store.commit('signInAUser', {
+                        masterPassword: this.masterPass,
+                        userID: this.user.id
+                    })
+                } else if (this.unconnectedBackendIcon) {
+                    console.log("Signed in this user");
+                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                    for (let backend of this.$store.getters.unconnectedBackendObjects) {
+                        this.$store.dispatch('backendLogin', backend.local);
+                    }
                 } else {
                     this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
                 }
-                if(this.$store.getters.getMasterKey != null) {
+                if (this.$store.getters.getMasterKeyObject != null) {
                     this.passwordIncorrect = false;
                     this.masterPass = '';
                     this.$emit("actionToOccur");
                     this.display = false;
-                }
-                else {
+                } else {
                     this.passwordIncorrect = true;
+                    this.masterPass = null;
                 }
+            },
+            closeDialog() {
+                this.display = false;
+                this.masterPass = null;
             }
         },
         watch: {
@@ -68,20 +93,17 @@
 
 <style scoped>
 
-    .p-field {
-        margin : 0.5rem;
-    }
+  .p-field {
+    margin-top: 3vh;
+  }
 
-    input {
-        width: 100%
-    }
+  input {
+    width: 100%
+  }
 
-    .header-size {
-        max-width: 18vw;
-    }
-
-    .error-message {
-        color: red;
-    }
+  .error-message {
+    color: #EF9A9A;
+    text-align: center;
+  }
 
 </style>
