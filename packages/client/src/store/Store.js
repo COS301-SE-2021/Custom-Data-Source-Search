@@ -187,6 +187,7 @@ const store = createStore({
          */
         signInAUser: function (state, payload) {
             const thisUser = state.users[payload.userID];
+            console.log(JSON.stringify(thisUser));
             const candidateKey = generateMasterKey(payload.masterPassword, thisUser.info.salt);
             try {
                 decryptJsonObject(
