@@ -298,7 +298,7 @@
                 }
               },
                 {
-                  label: 'Edit',
+                  label: 'Edit Selected',
                   icon: 'pi pi-pencil',
                   command: () => {
                     // this.editSource();
