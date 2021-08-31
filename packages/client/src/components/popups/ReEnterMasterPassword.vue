@@ -2,13 +2,13 @@
   <Dialog
       header="Enter Master Password"
       v-model:visible="display"
-      :draggable="true "
+      :draggable="true"
       :closable="true"
       :dismissable-mask="true"
       :modal="true"
       @hide="$emit('display-popup'); masterPass = null"
   >
-    Continue Sleuthin' all your favourite backends
+    Continue Sleuthin' all your favourite <backends></backends>
     <div class="p-field p-grid">
       <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
