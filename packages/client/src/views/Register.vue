@@ -10,8 +10,20 @@
           @submit="loadValues"
       >
         <div class="input-fields" style="max-height: 20vh">
-          <InputText type="text" v-model="userDetails.userName" label="Name" placeholder="Name"/>
-          <InputText type="email" v-model="userDetails.masterEmail" label="Email" placeholder="Email"/>
+          <span class="p-float-label">
+              <InputText
+                  id="Name"
+                  v-model="userDetails.userName"
+                  label="Name"
+                  type="text"
+                  class="p-inputtext-with-label"
+              />
+            <label class="p-label-placing" for="Name">Name</label>
+          </span>
+          <span class="p-float-label">
+            <InputText id="Email" type="email" v-model="userDetails.masterEmail"/>
+            <label class="p-label-placing" for="Email" >Email</label>
+          </span>
           <div>
             <PasswordInputField
                 id="masterPassword"
@@ -291,4 +303,16 @@
     margin: 1vw;
   }
 
+  .p-label-placing {
+    margin-top: 7px;
+    padding-left: 0;
+    /*position: relative;*/
+  }
+
+  .p-float-label {
+    padding-bottom: 0
+  }
+
+  .p-inputtext-with-label {
+  }
 </style>

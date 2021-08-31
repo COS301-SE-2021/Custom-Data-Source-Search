@@ -1,7 +1,7 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 import {authenticator} from 'otplib';
-import {randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync} from 'crypto'
+import {createCipheriv, createDecipheriv, pbkdf2Sync, randomBytes} from 'crypto'
 
 /**
  * @typedef {Object} Backend
@@ -531,7 +531,7 @@ const store = createStore({
                 commit('setBackendLoginStatus', {
                     id: payload.id,
                     needsLogin: true
-                })
+                });
                 return;
             }
             await axios.post(
