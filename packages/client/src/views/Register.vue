@@ -225,7 +225,6 @@
 </script>
 
 <style scoped>
-
   .registration-grid {
     overflow-y: scroll;
     display: grid;
@@ -280,17 +279,12 @@
     text-align: left;
   }
 
-  label {
-    padding-bottom: 4%;
-    padding-left: 2%;
-  }
-
   u {
     color: #41B3B2;
     cursor: pointer;
   }
 
-  input {
+  .p-float-label {
     margin-top: 3vh;
   }
 
@@ -303,16 +297,8 @@
     margin: 1vw;
   }
 
-  .p-label-placing {
-    margin-top: 7px;
-    padding-left: 0;
-    /*position: relative;*/
-  }
-
-  .p-float-label {
-    padding-bottom: 0
-  }
-
-  .p-inputtext-with-label {
+  label {
+    padding-bottom: 4%;
+    padding-left: 2%;
   }
 </style>
