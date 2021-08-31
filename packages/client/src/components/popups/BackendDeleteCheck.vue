@@ -8,16 +8,17 @@
       :modal="true"
       @hide="$emit('display-popup')"
   >
-    <div class="process-request-body">
+    <div class="process-request-body p-confirm-popup-message-moderator">
+      <em class="pi pi-exclamation-triangle em-dialog"></em>
       <div class="p-dialog-content">
-        <span>
-            It is a tedious process to insert the key. Are you sure there is no more use in {{backend.name}}?
-        </span>
+        <span>It is a tedious process to insert the key.</span>
+        <br>
+        <span> Are you sure there is no more use in {{backend.name}}?</span>
       </div>
-      <div class="button-holders">
-        <Button @click="closePopUp" class="p-button-text p-button-plain">Cancel</Button>
-        <Button @click="deleteBackend" class="p-button-danger">Delete</Button>
-      </div>
+    </div>
+    <div class="button-holders">
+      <Button @click="closePopUp" class="p-button-text p-button-plain">Cancel</Button>
+      <Button @click="deleteBackend" class="p-button-danger">Delete</Button>
     </div>
   </Dialog>
 </template>
@@ -60,9 +61,9 @@
 
 <style scoped>
 
-  .p-dialog-content {
-    max-width: 40em;
-  }
+  /*.p-dialog-content {*/
+  /*  max-width: 40em;*/
+  /*}*/
 
   span {
     max-width: 1vw;
@@ -79,4 +80,12 @@
     margin-right: 1em;
   }
 
+  .em-dialog {
+    font-size: xx-large;
+  }
+
+  .p-confirm-popup-message-moderator {
+    display: grid;
+    grid-template-columns: 1fr 12fr;
+  }
 </style>
