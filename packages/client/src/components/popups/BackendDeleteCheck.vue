@@ -1,6 +1,6 @@
 <template>
   <Dialog
-      header="Delete Backend?"
+      header="Confirm Deletion"
       :visible="display"
       :draggable="false"
       :closable="true"
@@ -15,8 +15,8 @@
         </span>
       </div>
       <div class="button-holders">
-        <Button @click="deleteBackend">Delete</Button>
-        <Button @click="closePopUp">Cancel</Button>
+        <Button @click="closePopUp" class="p-button-text p-button-plain">Cancel</Button>
+        <Button @click="deleteBackend" class="p-button-danger">Delete</Button>
       </div>
     </div>
   </Dialog>
@@ -70,8 +70,7 @@
   }
 
   .button-holders {
-    display: flex;
-    justify-content: center;
+    float: right;
   }
 
   Button {
