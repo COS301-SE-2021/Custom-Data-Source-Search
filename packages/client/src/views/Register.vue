@@ -91,6 +91,16 @@
       <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
         Import Profile From Vault
       </div>
+      <div class="input-fields">
+        <span class="p-float-label">
+          <InputText id="email" type="text" v-model="vaultEmail" />
+          <label for="email">Email</label>
+        </span>
+        <span class="p-float-label">
+          <InputText id="password" type="text" v-model="vaultPassword" />
+          <label for="password">Master Password</label>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -121,6 +131,8 @@
                 masterPassword: null,
                 displaySignIn: false,
                 notContinue: true,
+                vaultEmail: null,
+                vaultPassword: null,
                 userDetails: {
                     userName: null,
                     backupVault: null,
