@@ -68,7 +68,7 @@
                 } else {
                     this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
                 }
-                if (this.$store.getters.getMasterKeyObject != null) {
+                if (this.$store.getters.getMasterKey != null) {
                     this.passwordIncorrect = false;
                     this.masterPass = '';
                     this.$emit("actionToOccur");
