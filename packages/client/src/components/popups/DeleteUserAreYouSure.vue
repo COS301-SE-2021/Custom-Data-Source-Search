@@ -1,6 +1,6 @@
 <template>
   <Dialog
-      header="Remove User?"
+      header="Confirm Removal"
       :visible="display"
       :draggable="false"
       :closable="true"
@@ -9,14 +9,17 @@
       @hide="$emit('display-popup')"
   >
     <div class="process-request-body" v-if="firstQuestion">
-      <div class="p-dialog-content">
-        <span>Are you sure you want to delete {{user.name}}?</span>
-        <br><br>
-        <span>This user may not have a browser backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
+      <div class="p-dialog-content p-confirm-popup-message-moderator">
+        <em class="pi pi-exclamation-triangle em-dialog"></em>
+        <div>
+          <span>Are you sure you want to delete {{user.name}}?</span>
+          <br><br>
+          <span>This user may not have a browser backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
+        </div>
       </div>
       <div class="button-holders">
-        <Button @click="hasVault">Delete</Button>
-        <Button @click="closePopUp">Cancel</Button>
+        <Button @click="closePopUp" class="p-button-text p-button-plain">Cancel</Button>
+        <Button @click="hasVault" class="p-button-danger">Delete</Button>
       </div>
     </div>
     <div class="process-request-body" v-else>
@@ -116,8 +119,7 @@
   }
 
   .button-holders {
-    display: flex;
-    justify-content: center;
+    float: right;
   }
 
   Button {
@@ -132,4 +134,12 @@
     padding: 0 24px 0 24px;
   }
 
+  .p-confirm-popup-message-moderator {
+    display: grid;
+    grid-template-columns: 1fr 12fr;
+  }
+
+  .em-dialog {
+    font-size: xx-large;
+  }
 </style>
