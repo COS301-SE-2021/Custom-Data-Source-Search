@@ -1,7 +1,7 @@
 import {createStore} from 'vuex'
 import axios from "axios";
 import {authenticator} from 'otplib';
-import {randomBytes, createCipheriv, createDecipheriv, pbkdf2Sync} from 'crypto'
+import {createCipheriv, createDecipheriv, pbkdf2Sync, randomBytes} from 'crypto'
 
 /**
  * @typedef {Object} Backend
@@ -194,7 +194,7 @@ const store = createStore({
                     thisUser.backends.find(b => b.local.id === 0).connect.keys.encryptedSecretPair
                 )
             } catch (e) {
-                console.log(e)
+                console.log(e);
                 return false;
             }
             state.users[payload.userID].info.isActive = true;
@@ -499,7 +499,7 @@ const store = createStore({
                     })
                 })
                 .catch(async () => {
-                    await dispatch("backendLogin", {id: payload.id})
+                    await dispatch("backendLogin", {id: payload.id});
                     await axios
                         .post(url, {email: email, refresh_token: getters.getBackendRefreshToken(payload.id)})
                         .then((resp) => {
@@ -531,7 +531,7 @@ const store = createStore({
                 commit('setBackendLoginStatus', {
                     id: payload.id,
                     needsLogin: true
-                })
+                });
                 return;
             }
             await axios.post(
@@ -546,7 +546,7 @@ const store = createStore({
                     commit('setBackendLoginStatus', {
                         id: payload.id,
                         needsLogin: false
-                    })
+                    });
                     commit('setRefreshToken', {
                         id: payload.id,
                         refreshToken: resp.data.refresh_token
@@ -625,11 +625,11 @@ function encryptJsonObject(masterKey, jsonObject) {
         'aes-256-gcm',
         Buffer.from(masterKey, 'hex'),
         iv
-    )
+    );
     let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf-8', 'hex');
     encryptedJsonObject += cipher.final('hex');
     const authTag = cipher.getAuthTag().toString('hex');
-    console.log(authTag)
+    console.log(authTag);
     return {
         iv: iv.toString('hex'),
         authTag: authTag,
