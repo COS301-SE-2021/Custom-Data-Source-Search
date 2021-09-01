@@ -50,10 +50,11 @@ class FolderDataSourceService {
             return generateDefaultHttpResponse(e);
         }
         try {
-            for (let fileName of this.getFilesInFolder(dataSource.path, "folder\n*.pdf")) {
-                await folderDataSourceRepository.addFileInFolder(dataSource.path + fileName, uuid);
+            for (let fileName of this.getFilesInFolder(dataSource.path, "folderDepth2\n*.pdf", 3)) {
+                await folderDataSourceRepository.addFileInFolder(fileName, uuid);
             }
-        } catch (e) {}
+        } catch (e) {
+        }
         return {
             "code": 200,
             "body": {
@@ -80,7 +81,7 @@ class FolderDataSourceService {
         }
     }
 
-    getFilesInFolder(path: string, dotIgnore: string) {
+    getFilesInFolder(path: string, dotIgnore: string, depth: number) {
         let ignoreFolders: string[] = [];
         let ignoreFiles: string[] = [];
         let ignoreFileTypes: string[] = [];
@@ -89,25 +90,54 @@ class FolderDataSourceService {
                 continue;
             }
             if (line.indexOf("*") !== -1) {
-                ignoreFileTypes.push(line);
+                ignoreFileTypes.push(line.replace("*", ""));
             } else if (line.indexOf(".") !== -1) {
                 ignoreFiles.push(line);
             } else {
                 ignoreFolders.push(line);
             }
         }
-        let fileNames: string[] = fs.readdirSync(path);
-        let results: string[] = [];
+        console.log("All folders to ignore: " + ignoreFolders);
+        console.log("All files to ignore: " + ignoreFiles);
+        console.log("All file types to ignore: " + ignoreFileTypes);
         let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
-        fileNames.forEach((file) => {
-            if (
-                file.indexOf(".") !== -1 &&
-                file.indexOf(".ini") === -1 &&
-                !separateFiles.some(x => x.filename === file)
-            ) {
-                results.push(file);
+        let files: string[] = [];
+        this.getAllFilesRecursively(path, ignoreFolders, depth).forEach((filePath: string) => {
+            if (ignoreFileTypes.indexOf("." + filePath.split(".").pop()) !== -1) {
+                return;
             }
-        });
+            if (ignoreFiles.indexOf(path + filePath) !== -1) {
+                return;
+            }
+            if (separateFiles.some(x => {
+                return path + filePath === x.path + x.filename;
+            })) {
+                return;
+            }
+            files.push(path + filePath);
+        })
+        console.log(files);
+        return files;
+    }
+
+    getAllFilesRecursively(path: string, ignoreFolders: string[], depth: number): string[] {
+        if (depth < 0) {
+            return []
+        }
+        let results: string[] = [];
+        for (let folderItem of fs.readdirSync(path)) {
+            if (folderItem.indexOf(".") === -1 && ignoreFolders.indexOf(folderItem) === -1) {
+                this.getAllFilesRecursively(
+                    path + folderItem + "/",
+                    ignoreFolders,
+                    depth - 1
+                ).forEach((continuedPath) => {
+                    results.push(folderItem + "/" + continuedPath);
+                })
+            } else if (folderItem.indexOf(".ini") === -1) {
+                results.push(folderItem);
+            }
+        }
         return results;
     }
 }
