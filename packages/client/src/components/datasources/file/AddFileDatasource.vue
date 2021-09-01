@@ -152,7 +152,7 @@ input {
   font-size: 15px;
   font-style: italic;
   height: 5px;
-  background: #2a2a2a;
+  background: #262626;
 }
 
 .p-button-text{

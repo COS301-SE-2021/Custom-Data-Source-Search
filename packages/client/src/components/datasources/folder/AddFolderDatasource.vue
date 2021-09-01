@@ -167,7 +167,7 @@ input {
   font-size: 15px;
   font-style: italic;
   height: 5px;
-  background-color: #242424;
+  background-color: #262626;
 }
 
 .p-text-normal {
@@ -233,5 +233,9 @@ input {
   bottom: 2em;
   padding-bottom: 1vh;
   align-content: center;
+}
+
+.p-inputtextarea{
+  background: #262626;
 }
 </style>
