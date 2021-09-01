@@ -16,23 +16,30 @@
                   v-model="userDetails.userName"
                   label="Name"
                   type="text"
-                  class="p-inputtext-with-label"
+                  style="width: 100%"
               />
-            <label class="p-label-placing" for="Name">Name</label>
+            <label for="Name">Name</label>
           </span>
           <span class="p-float-label">
-            <InputText id="Email" type="email" v-model="userDetails.masterEmail"/>
-            <label class="p-label-placing" for="Email" >Email</label>
+            <InputText
+                id="Email"
+                type="email"
+                v-model="userDetails.masterEmail"
+                style="width: 100%"
+            />
+            <label for="Email" >Email</label>
           </span>
           <div>
-            <PasswordInputField
-                id="masterPassword"
-                style="width: 100%"
-                v-model="masterPassword"
-                placeholder="Master Password"
-                :feedback="true"
-                :toggle-mask="true"
-            />
+            <span class="p-float-label">
+              <PasswordInputField
+                  id="masterPassword"
+                  style="width: 100%"
+                  v-model="masterPassword"
+                  :feedback="true"
+                  :toggle-mask="true"
+              />
+              <label for="masterPassword">Master Password</label>
+            </span>
             <span style="font-size: small; margin-top: 30px">
                 The master password is the password you use to access your vault.
                 It is very important that you do not forget your master password.
@@ -40,14 +47,16 @@
             </span>
           </div>
           <div>
-            <PasswordInputField
-                id="masterPassCheck"
-                v-model="masterPassCheck"
-                style="width: 100%; margin-bottom: 15px"
-                :feedback="false"
-                :toggle-mask="true"
-                placeholder="Repeat Password"
-            />
+           <span class="p-float-label">
+              <PasswordInputField
+                  id="masterPassCheck"
+                  v-model="masterPassCheck"
+                  style="width: 100%;"
+                  :feedback="false"
+                  :toggle-mask="true"
+              />
+             <label for="masterPassCheck">Repeat Password</label>
+           </span>
           </div>
           <div id="checkboxBox">
             <checkbox
@@ -65,7 +74,13 @@
           <br>
           <br>
           <div>
-            <Button type="submit" style="text-align: center;" class="p-button-md p-button-outlined">Register</Button>
+            <Button
+                type="submit"
+                style="text-align: center;"
+                class="p-button-md p-button-outlined"
+            >
+              Register
+            </Button>
           </div>
           <div>
               <span>
@@ -241,17 +256,14 @@
     font-size: larger;
     vertical-align: center;
     text-align: left;
+    min-width: 250px;
   }
 
   .input-fields {
     display: grid;
-    /*grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 4fr;*/
     margin: 4%;
     vertical-align: text-top;
-  }
-
-  .input-fields div {
-    margin-top: 1.5vh;
+    grid-row-gap: 2.2vh;
   }
 
   .p-button.p-button-icon-only {
@@ -279,13 +291,17 @@
     text-align: left;
   }
 
+  .p-checkbox {
+    margin-right: 1em;
+    margin-bottom: 0.2em;
+  }
+
   u {
     color: #41B3B2;
     cursor: pointer;
   }
 
   .p-float-label {
-    margin-top: 3vh;
   }
 
   .p-button-lg {
@@ -297,8 +313,4 @@
     margin: 1vw;
   }
 
-  label {
-    padding-bottom: 4%;
-    padding-left: 2%;
-  }
 </style>
