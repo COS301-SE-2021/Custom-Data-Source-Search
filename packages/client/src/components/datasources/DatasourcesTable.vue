@@ -298,7 +298,7 @@
                 }
               },
                 {
-                  label: 'Edit',
+                  label: 'Edit Selected',
                   icon: 'pi pi-pencil',
                   command: () => {
                     // this.editSource();
@@ -501,49 +501,40 @@
     height: 34px;
   }
 
-.image-text{
-  word-break: break-word;
-}
-
-.delete-selection{
-  float: right;
-  margin-right: 2vw;
-}
-
-.data-table{
- bottom: 4em;
-}
-
-#add-datasource-button{
-  float: right;
-  margin-right: 2vw;
-}
-
-#add-datasource-button-small{
-  float: right;
-  margin-right: 2vw;
-  display: none;
-}
-
-#actions-button{
-  float: right;
-}
-
-@media only screen and (max-width: 960px) {
-  .delete-selection{
-    display: none;
+  .image-text{
+    word-break: break-word;
   }
 
-  #main-scroll{
-    width: 93vw !important;
+  .data-table{
+   bottom: 4em;
   }
 
   #add-datasource-button{
-    display: none;
+    float: right;
+    margin-right: 2vw;
   }
 
   #add-datasource-button-small{
-    display: block;
+    float: right;
+    margin-right: 2vw;
+    display: none;
   }
-}
+
+  #actions-button{
+    float: right;
+  }
+
+  @media only screen and (max-width: 960px) {
+    #main-scroll{
+      width: 93vw !important;
+    }
+
+    #add-datasource-button{
+      display: none;
+    }
+
+    #add-datasource-button-small{
+      display: block;
+    }
+  }
 </style>
