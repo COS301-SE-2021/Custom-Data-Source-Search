@@ -50,7 +50,7 @@ class FolderDataSourceService {
             return generateDefaultHttpResponse(e);
         }
         try {
-            for (let fileName of this.getFilesInFolder(dataSource.path)) {
+            for (let fileName of this.getFilesInFolder(dataSource.path, "folder\n*.pdf")) {
                 await folderDataSourceRepository.addFileInFolder(dataSource.path + fileName, uuid);
             }
         } catch (e) {}
@@ -80,14 +80,29 @@ class FolderDataSourceService {
         }
     }
 
-    getFilesInFolder(path: string) {
+    getFilesInFolder(path: string, dotIgnore: string) {
+        let ignoreFolders: string[] = [];
+        let ignoreFiles: string[] = [];
+        let ignoreFileTypes: string[] = [];
+        for (let line of dotIgnore.split("\n")) {
+            if (line === "") {
+                continue;
+            }
+            if (line.indexOf("*") !== -1) {
+                ignoreFileTypes.push(line);
+            } else if (line.indexOf(".") !== -1) {
+                ignoreFiles.push(line);
+            } else {
+                ignoreFolders.push(line);
+            }
+        }
         let fileNames: string[] = fs.readdirSync(path);
         let results: string[] = [];
         let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
         fileNames.forEach((file) => {
             if (
                 file.indexOf(".") !== -1 &&
-                file.indexOf(".ini") == -1 &&
+                file.indexOf(".ini") === -1 &&
                 !separateFiles.some(x => x.filename === file)
             ) {
                 results.push(file);
