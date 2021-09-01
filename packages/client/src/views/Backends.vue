@@ -1,7 +1,7 @@
 <template>
   <div class="settings-box">
     <div class="info-div">
-      <span><h1>Settings</h1></span>
+      <span><h1>Backends</h1></span>
     </div>
     <div class="info-div">
       <span><strong>Personal Information</strong></span>

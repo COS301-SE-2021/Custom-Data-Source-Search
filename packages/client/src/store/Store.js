@@ -630,7 +630,6 @@ function encryptJsonObject(masterKey, jsonObject) {
     let encryptedJsonObject = cipher.update(JSON.stringify(jsonObject), 'utf-8', 'hex');
     encryptedJsonObject += cipher.final('hex');
     const authTag = cipher.getAuthTag().toString('hex');
-    console.log(authTag);
     return {
         iv: iv.toString('hex'),
         authTag: authTag,
@@ -650,7 +649,6 @@ function decryptJsonObject(masterKey, encryptedJsonObject) {
         Buffer.from(encryptedJsonObject.iv, 'hex')
     );
     let decrypted = decipher.update(encryptedJsonObject.data, 'hex', 'utf-8');
-    console.log(encryptedJsonObject.authTag);
     decipher.setAuthTag(Buffer.from(encryptedJsonObject.authTag, 'hex'));
     decrypted += decipher.final('utf-8');
     return JSON.parse(decrypted);
