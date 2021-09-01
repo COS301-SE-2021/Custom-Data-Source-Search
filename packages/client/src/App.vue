@@ -15,10 +15,10 @@
         <router-link title="Admin" class="icon" to="/admin">
           <i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
-        <div v-if="!sync" class="refresh-container" @click="syncVault">
+        <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="syncVault">
           <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
         </div>
-        <div v-else class="refresh-container">
+        <div v-else title="Syncing..." class="refresh-container icon">
           <i class="fas fa-sync-alt fa-spin" style="font-size:1.2rem" aria-hidden="true"></i>
         </div>
         <div class="icon-container" title="User" @click="toggle">
