@@ -249,7 +249,7 @@
              * Security Note: NEVER allow any type of closing tags in the validWord regex snippet.
              * This would render the function unsafe.
              *
-             * @param {html} content suspect html
+             * @param {string} content suspect html
              * @returns {string} sanitised html
              */
             whitelistEscape(content) {
@@ -340,7 +340,7 @@
              * @param {[number]} lineNumbers line numbers of all results found in file
              */
             displayFullFileAtLineNumber(fileData, lineNumber, lineNumbers) {
-                this.fullFileData = this.whitelistEscape(fileData);
+                this.fullFileData = fileData;
                 this.fullFileLineNumbers = lineNumbers;
                 this.$nextTick().then(() => {
                     this.scrollFullFileLineIntoView(lineNumber);

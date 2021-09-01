@@ -1,5 +1,5 @@
 <template>
-    <Dialog header="Confirm Sign Out"
+    <Dialog header="Sign out?"
             :visible="display"
             :draggable="false"
             :closable="true"
@@ -7,17 +7,12 @@
             :modal="true"
             @hide="$emit('display-popup')"
     >
-        <div class="p-confirm-popup-message-moderator">
-            <em class="pi pi-exclamation-triangle em-dialog"></em>
-            <div class="p-dialog-content">
-                <span class="span-dialog">
-                    Are you sure you want to sign out {{user.name}}?
-                </span>
-            </div>
+        <div class="p-dialog-content">
+            <span>Are you sure you want to sign out {{user.name}}?</span>
         </div>
         <div class="button-holders">
-            <Button @click="signOut" class="p-button-danger these-buttons">Sign Out</Button>
-            <Button @click="closePopUp" class="p-button-text p-button-plain these-buttons">Cancel</Button>
+            <Button @click="signOut">Sign Out</Button>
+            <Button @click="closePopUp">Cancel</Button>
         </div>
     </Dialog>
 </template>
@@ -66,26 +61,20 @@
         width: 100%
     }
 
-    .em-dialog {
-        font-size: xx-large;
-    }
-
-    .these-buttons {
-        max-width: fit-content;
-        margin-left: 1em;
-        margin-right: 1em;
-        float: right;
-    }
-
-    .span-dialog {
-        height: 40px;
+    span {
         max-width: 1vw;
         overflow-wrap: normal;
     }
 
-    .p-confirm-popup-message-moderator {
-        display: grid;
-        grid-template-columns: 1fr 12fr;
+    .button-holders {
+        display: flex;
+        justify-content: center;
+    }
+
+    Button {
+        max-width: fit-content;
+        margin-left: 1em;
+        margin-right: 1em;
     }
 
 </style>

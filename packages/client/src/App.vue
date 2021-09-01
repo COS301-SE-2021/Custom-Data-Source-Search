@@ -9,11 +9,11 @@
             title="Data Sources" class="icon" to="/datasources">
           <i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
-        <router-link title="Backends" class="icon" to="/backends">
-          <i class="pi pi-th-large" style="font-size:1.5rem" aria-hidden="true"/>
-        </router-link>
         <router-link title="Admin" class="icon" to="/admin">
-          <em class="pi pi-user" style="font-size:1.5rem"/>
+          <em class="pi pi-th-large" style="font-size:1.5rem"/>
+        </router-link>
+        <router-link title="Settings" class="icon" to="/settings">
+          <i class="pi pi-cog" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
         <div class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
@@ -57,19 +57,19 @@
 </template>
 
 <style lang="scss">
-html,
-body,
-#app {
-  height: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  background-color: #242424;
-  color: rgba(255, 255, 255, 0.58);
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  html,
+  body,
+  #app {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #242424;
+    color: rgba(255, 255, 255, 0.58);
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
   input {
     height: 28px;
@@ -179,6 +179,7 @@ button {
   .image-ring-main:hover {
     background: linear-gradient(#232323, #1a1a1a) padding-box,
     linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
+
   }
 
   .name-initial-main {
@@ -226,48 +227,48 @@ button {
     import CustomTooltip from "./components/primeComponents/CustomTooltip";
 
     export default {
-  components: {
-      CustomTooltip,
-      ReEnterMasterPassword,
-      OverlayPanel,
-      ProfileDropdown
-  },
-  data() {
-    return {
-      name: "Data Sleuth",
-      displayMasterPwInput: false,
-    }
-  },
-    computed: {
-        ...mapGetters ([
-            'getUserInfo',
-            'getUserBackends',
-            'getSignedInUserId',
-            'unconnectedBackendNames',
-            'unconnectedBackendBool',
-            'unconnectedBackendNo'
-        ])
-    },
-    beforeCreate() {
-        this.$store.commit('initialiseStore');
-    },
-    methods: {
-        showAskMasterPw() {
-            if(this.$store.getters.getMasterKey === null) {
-                this.openMasterPwInput();
-            } else {
-                if (this.$store.getters.unconnectedBackendBool) {
-                    console.log("Error in credentials");
-                    console.log(JSON.stringify(this.$store.getters.getMasterKey));
-                }
+        components: {
+            CustomTooltip,
+            ReEnterMasterPassword,
+            OverlayPanel,
+            ProfileDropdown
+        },
+        data() {
+            return {
+                name: "Data Sleuth",
+                displayMasterPwInput: false,
             }
         },
-         toggle(event) {
-            this.$refs.op.toggle(event);
+        computed: {
+            ...mapGetters([
+                'getUserInfo',
+                'getUserBackends',
+                'getSignedInUserId',
+                'unconnectedBackendNames',
+                'unconnectedBackendBool',
+                'unconnectedBackendNo'
+            ])
         },
-        openMasterPwInput() {
+        beforeCreate() {
+            this.$store.commit('initialiseStore');
+        },
+        methods: {
+            showAskMasterPw() {
+                if (this.$store.getters.getMasterKeyObject === null) {
+                    this.openMasterPwInput();
+                } else {
+                    if (this.$store.getters.unconnectedBackendBool) {
+                        console.log("Error in credentials");
+                        console.log(JSON.stringify(this.$store.getters.getMasterKeyObject));
+                    }
+                }
+            },
+            toggle(event) {
+                this.$refs.op.toggle(event);
+            },
+            openMasterPwInput() {
                 this.displayMasterPwInput = !this.displayMasterPwInput;
+            }
         }
-  }
-}
+    }
 </script>

@@ -1,36 +1,21 @@
 <template>
-  <Dialog
-      header="Enter Master Password"
-      v-model:visible="display"
-      :draggable="true"
-      :closable="true"
-      :dismissable-mask="true"
-      :modal="true"
-      @hide="$emit('display-popup'); masterPass = null"
-  >
-    Continue Sleuthin' all your favourite <backends></backends>
-    <div class="p-field p-grid">
-      <label for="password" class="p-col-fixed" style="width:100px">Password</label>
-      <div class="p-col">
-        <PasswordInputField
-            id="password"
-            style="width: 100%"
-            @keyup.enter="assignData"
-            v-model="masterPass"
-            :toggle-mask="true"
-            :feedback="false"
-        />
-        <br><br>
-        <div v-if="passwordIncorrect" class="error-message">
-          <span>Incorrect password.</span>
+    <Dialog header="Enter Master Password" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup'); masterPass = null">
+      Continue sleuthin' all your favourite backends
+      <div class="p-field p-grid">
+        <label for="password" class="p-col-fixed" style="width:100px">Password</label>
+        <div class="p-col">
+          <PasswordInputField id="password" style="width: 100%" @keyup.enter="assignData" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
+          <br><br>
+          <div v-if="passwordIncorrect" class="error-message">
+            <span>Incorrect password.</span>
+          </div>
         </div>
       </div>
-    </div>
-    <template #footer>
-      <Button label="Cancel" class="p-button-text" @click="closeDialog"/>
-      <Button label="Submit" autofocus @click="assignData"/>
-    </template>
-  </Dialog>
+      <template #footer>
+        <Button label="Cancel" class="p-button-text" @click="closeDialog"/>
+        <Button label="Submit" autofocus @click="assignData"/>
+      </template>
+    </Dialog>
 </template>
 
 <script>
@@ -55,10 +40,7 @@
         methods: {
             assignData() {
                 if (this.welcomePage) {
-                    this.$store.commit('signInAUser', {
-                        masterPassword: this.masterPass,
-                        userID: this.user.id
-                    })
+                    this.$store.commit('signInAUser', {masterPassword: this.masterPass, userID: this.user.id})
                 } else if (this.unconnectedBackendIcon) {
                     console.log("Signed in this user");
                     this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
@@ -68,20 +50,21 @@
                 } else {
                     this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
                 }
-                if (this.$store.getters.getMasterKey != null) {
+                if(this.$store.getters.getMasterKeyObject != null) {
                     this.passwordIncorrect = false;
                     this.masterPass = '';
                     this.$emit("actionToOccur");
                     this.display = false;
-                } else {
+                }
+                else {
                     this.passwordIncorrect = true;
                     this.masterPass = null;
                 }
             },
-            closeDialog() {
-                this.display = false;
-                this.masterPass = null;
-            }
+          closeDialog(){
+              this.display = false;
+              this.masterPass = null;
+          }
         },
         watch: {
             show: function () {
@@ -93,17 +76,17 @@
 
 <style scoped>
 
-  .p-field {
-    margin-top: 3vh;
-  }
+    .p-field {
+        margin-top: 3vh;
+    }
 
-  input {
-    width: 100%
-  }
+    input {
+        width: 100%
+    }
 
-  .error-message {
-    color: #EF9A9A;
-    text-align: center;
-  }
+    .error-message {
+      color: #EF9A9A;
+      text-align: center;
+    }
 
 </style>

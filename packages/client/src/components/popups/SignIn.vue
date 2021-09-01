@@ -21,8 +21,7 @@
     </div>
     <br>
     <div class="p-field p-grid" style="text-align: center">
-      <Button type="button" class="p-button button-dialog" label="Submit" @click="assignData()"/>
-      <Button label="Cancel" class="p-button-text button-dialog" @click="closeDialog"/>
+      <Button type="button" class="p-button-sm" label="Submit" @click="assignData()"/>
     </div>
   </Dialog>
 </template>
@@ -49,11 +48,6 @@
         },
 
         methods: {
-            closeDialog() {
-               this.masterPass = null;
-               this.email = '';
-               this.display = false;
-            },
             assignData() {
                 this.$store.commit('signInUser', {email: this.email, passWord: this.masterPass});
                 this.display = false;
@@ -65,18 +59,10 @@
 <style scoped>
 
   .p-field {
-    margin-top: 1rem;
+    margin: 1rem;
   }
 
   input {
     width: 100%
-  }
-
-  .p-button {
-    border: none;
-  }
-
-  .button-dialog {
-    float: right;
   }
 </style>
