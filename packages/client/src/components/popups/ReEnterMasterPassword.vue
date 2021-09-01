@@ -8,7 +8,7 @@
       :modal="true"
       @hide="$emit('display-popup'); masterPass = null"
   >
-    Continue Sleuthin' all your favourite <backends></backends>
+    Continue Sleuthin' all your favourite backends
     <div class="p-field p-grid">
       <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
@@ -22,7 +22,7 @@
         />
         <br><br>
         <div v-if="passwordIncorrect" class="error-message">
-          <span>Incorrect password.</span>
+          <span class="error-message">Incorrect password.</span>
         </div>
       </div>
     </div>
@@ -54,6 +54,11 @@
         },
         methods: {
             assignData() {
+                if (this.masterPass === null || this.masterPass === '') {
+                    this.passwordIncorrect = true;
+                    this.masterPass = null;
+                    return;
+                }
                 if (this.welcomePage) {
                     this.$store.commit('signInAUser', {
                         masterPassword: this.masterPass,
