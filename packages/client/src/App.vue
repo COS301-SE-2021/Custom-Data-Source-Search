@@ -13,8 +13,9 @@
           <i class="pi pi-th-large" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
         <router-link title="Admin" class="icon" to="/admin">
-          <em class="pi pi-user" style="font-size:1.5rem"/>
+          <i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
+        <i class="fas fa-sync-alt" style="font-size:1.5rem" aria-hidden="true"></i>
         <div class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
             <h3 class="name-initial-main">
@@ -118,21 +119,21 @@ body,
     padding: 10px;
   }
 
-button {
-    border: none;
-    border-radius: 12px;
-    padding: 10px;
-}
+  button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px;
+  }
 
-.pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
-  color: grey;
-  padding: 20px 10px 10px;
-}
+  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
+    color: grey;
+    padding: 20px 10px 10px;
+  }
 
-.unconnected-backend-warning{
-  text-align: center;
-  padding: 10px 10px 10px;
-}
+  .unconnected-backend-warning{
+    text-align: center;
+    padding: 10px 10px 10px;
+  }
 
   .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
     color: #41B3B2;
@@ -163,6 +164,12 @@ button {
     margin-left: -53px;
     cursor: pointer;
     bottom: 5%;
+  }
+
+  .fa-sync-alt{
+    position: fixed;
+    margin-left: -45px;
+    bottom: 100px;
   }
 
   .image-ring-main {

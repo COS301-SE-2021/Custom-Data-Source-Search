@@ -3,6 +3,8 @@ import App from './App.vue'
 import Vuex from "vuex";
 import router from './router'
 import store from "@/store/Store";
+import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/js/all.js'
 import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmDialog from 'primevue/confirmdialog'
