@@ -456,13 +456,14 @@ const store = createStore({
          */
         addNewUser: function ({commit}, payload) {
             const salt = randomBytes(32).toString('hex');
+            masterKey = generateMasterKey(payload.masterPassword, salt);
             commit('addUserToLocalList', {
                 name: payload.name,
                 email: payload.email,
                 hasVault: payload.hasVault,
                 salt: salt,
                 localEncryptedSecretPair: encryptJsonObject(
-                    generateMasterKey(payload.masterPassword, salt),
+                    masterKey,
                     {
                         passKey: randomBytes(32).toString('hex'),
                         seed: randomBytes(32).toString('hex')

@@ -30,14 +30,22 @@
         name: "ContinueView",
 
         beforeMount() {
+            console.log("In before mount");
             if (this.$store.getters.getNewAppStatus || this.$store.getters.getMasterKey === null) {
+                console.log(this.$store.getters.getNewAppStatus);
+                console.log(this.$store.getters.getMasterKey === null);
+                console.log("One was true");
                 this.$router.push('/');
             }
         },
 
+        mounted() {
+            console.log("why does it skip?");
+        },
+
         methods: {
             goToSettings() {
-                this.$router.push("Settings");
+                this.$router.push("Backends");
             },
             goToSearch() {
                 this.$router.push('Search');

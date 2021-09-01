@@ -78,6 +78,7 @@
                 type="submit"
                 style="text-align: center;"
                 class="p-button-md p-button-outlined"
+                @click="loadValues"
             >
               Register
             </Button>
@@ -120,8 +121,8 @@
       </div>
       <div class="input-fields">
         <span class="p-float-label">
-          <InputText id="email" type="text" v-model="vaultEmail" />
-          <label for="email">Email</label>
+          <InputText id="emailVualt" type="text" v-model="vaultEmail" />
+          <label for="emailVualt">Email</label>
         </span>
         <span class="p-float-label">
           <InputText id="password" type="text" v-model="vaultPassword" />

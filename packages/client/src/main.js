@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import Vuex from "vuex";
 import router from './router'
@@ -47,6 +47,7 @@ import ContextMenu from "primevue/contextmenu";
 import RadioButton from "primevue/radiobutton";
 import Menu from 'primevue/menu';
 
+
 const app = createApp(App);
 app.use(router);
 app.use(store);
@@ -55,36 +56,36 @@ app.use(ToastService);
 app.use(PrimeVue, {ripple: true});
 app.use(Vuex);
 app.mount('#app');
+app.directive('tooltip', Tooltip);
+app.directive('badge', BadgeDirective);
+app.directive('ripple', Ripple);
+app.component("Button", Button);
 app.component('ConfirmDialog', ConfirmDialog);
+app.component("Checkbox", Checkbox);
+app.component("Column", Column);
+app.component("ColumnGroup", ColumnGroup);
+app.component("Chip", Chip);
+app.component("Dialog", Dialog);
+app.component('Divider', Divider);
+app.component("DataTable",DataTable);
+app.component("Dropdown", Dropdown);
 app.component('Toast', Toast);
 app.component('Splitter', Splitter);
 app.component('SplitterPanel', SplitterPanel);
 app.component('TabView', TabView);
 app.component('TabPanel', TabPanel);
 app.component('Sidebar', Sidebar);
-app.directive('tooltip', Tooltip);
 app.component('InputText', InputText);
-app.component("Button", Button);
-app.component("Dropdown", Dropdown);
 app.component("ScrollPanel", ScrollPanel);
 app.component("FileUpload", FileUpload);
-app.component("DataTable",DataTable);
-app.component("Column", Column);
-app.component("ColumnGroup", ColumnGroup);
 app.component("MultiSelect", MultiSelect);
 app.component("OverlayPanel", OverlayPanel);
 app.component("Tag", Tag);
-app.component("Chip", Chip);
-app.component("Dialog", Dialog);
 app.component("Password", Password);
-app.directive('badge', BadgeDirective);
-app.directive('ripple', Ripple);
-app.component('Divider', Divider);
 app.component('InputSwitch', InputSwitch);
 app.component('Toolbar', Toolbar);
 app.component('SplitButton', SplitButton);
 app.component('SelectButton', SelectButton);
-app.component("Checkbox", Checkbox);
 app.component('InputNumber', InputNumber);
 app.component('Textarea', Textarea);
 app.component('ContextMenu', ContextMenu);

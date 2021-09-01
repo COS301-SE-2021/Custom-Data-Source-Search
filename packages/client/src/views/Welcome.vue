@@ -107,6 +107,12 @@
             ])
         },
 
+        beforeMount() {
+            if (this.$store.getters.getSignedIn) {
+                this.$router.push('Search');
+            }
+        },
+
         mounted() {
             this.isSignedIn = this.$store.getters.getSignedIn;
             this.shuffleArray();
