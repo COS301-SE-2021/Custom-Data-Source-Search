@@ -15,7 +15,7 @@
         <PasswordInputField
             id="password"
             style="width: 100%"
-            @keyup.enter="assignData"
+            @keyup.enter="doChecks"
             v-model="masterPass"
             :toggle-mask="true"
             :feedback="false"
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import PasswordInputField from "../primeComponents/PasswordInputField";
+    import PasswordInputField from "../primeComponents/PasswordInputField";
 
     export default {
         name: "ReEnterMasterPassword",
