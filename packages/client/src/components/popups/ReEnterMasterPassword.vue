@@ -1,6 +1,6 @@
 <template>
   <Dialog
-      header="Enter Master Password"
+      header={{header}}
       v-model:visible="display"
       :draggable="true"
       :closable="true"
@@ -8,7 +8,7 @@
       :modal="true"
       @hide="$emit('display-popup'); masterPass = null"
   >
-    Continue Sleuthin' all your favourite backends
+    {{body}}
     <div class="p-field p-grid">
       <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
@@ -20,9 +20,8 @@
             :toggle-mask="true"
             :feedback="false"
         />
-        <br><br>
         <div v-if="passwordIncorrect" class="error-message">
-          <span>Incorrect password.</span>
+          <span class="error-message">Incorrect password.</span>
         </div>
       </div>
     </div>
@@ -34,11 +33,22 @@
 </template>
 
 <script>
-    import PasswordInputField from "../primeComponents/PasswordInputField";
+  import PasswordInputField from "../primeComponents/PasswordInputField";
 
     export default {
         name: "ReEnterMasterPassword",
+
         components: {PasswordInputField},
+
+        props: {
+            show: Boolean,
+            user: Object,
+            welcomePage: Boolean,
+            unconnectedBackendIcon: Boolean,
+            vault: Boolean,
+            body: String
+        },
+
         data() {
             return {
                 masterPass: null,
@@ -46,18 +56,15 @@
                 passwordIncorrect: false,
             }
         },
-        props: {
-            show: Boolean,
-            user: Object,
-            welcomePage: Boolean,
-            unconnectedBackendIcon: Boolean,
-        },
+
         methods: {
             doChecks() {
                 if (this.welcomePage) {
                     this.storeAUser();
                 } else if (this.unconnectedBackendIcon) {
                     this.updateBackendLogin();
+                } else if (this.vault) {
+                    this.storeThisUser();
                 } else {
                     this.storeThisUser();
                 }
@@ -103,7 +110,6 @@
 </script>
 
 <style scoped>
-
   .p-field {
     margin-top: 3vh;
   }
@@ -116,5 +122,4 @@
     color: #EF9A9A;
     text-align: center;
   }
-
 </style>

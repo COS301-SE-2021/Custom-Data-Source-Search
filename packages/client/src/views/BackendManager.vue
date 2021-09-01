@@ -14,9 +14,9 @@
                  scrollHeight="70vh"
       >
         <template #header>
-          <div class="p-datatable-header"> Users</div>
+          <div class="p-datatable-header">Users</div>
         </template>
-        <Column selectionMode="multiple" headerStyle="width: 1em"></Column>
+        <Column selectionMode="multiple" headerStyle="width: 1em" style="max-width: 3em;"></Column>
         <Column field="first_name" header="Name"></Column>
         <Column field="last_name" header="Last Name"></Column>
         <Column field="email" header="Email"></Column>
@@ -644,7 +644,7 @@
 }
 
 ::v-deep(td){
-  overflow: -moz-scrollbars-horizontal;
+  word-break: break-word;
 }
 
 .p-selection-column{

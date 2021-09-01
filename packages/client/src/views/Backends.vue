@@ -55,9 +55,12 @@
   </div>
   <ReEnterMasterPassword
       :show="displayMasterPwInput"
-      @action-to-Occur="newBackend"
+      :header="'Enter Master Password'"
+      :body="'We need to verify that it\'s you before we can add a new backend'"
+      :vault="false"
       :user="noUserReq"
       :welcome-page="false"
+      @action-to-Occur="newBackend"
   />
 </template>
 
