@@ -130,7 +130,7 @@
                 this.displayMasterPwInput = !this.displayMasterPwInput;
             },
             newBackend() {
-                if (this.$store.getters.getMasterKeyObject != null) {
+                if (this.$store.getters.getMasterKey != null) {
                     this.newBackendBool = !this.newBackendBool;
                 } else {
                     this.showMasterPwInput();
