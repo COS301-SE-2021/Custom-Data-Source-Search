@@ -28,7 +28,7 @@
     </div>
     <template #footer>
       <Button label="Cancel" class="p-button-text" @click="closeDialog"/>
-      <Button label="Submit" autofocus @click="assignData"/>
+      <Button label="Submit" autofocus @click="doChecks"/>
     </template>
   </Dialog>
 </template>
@@ -53,21 +53,32 @@
             unconnectedBackendIcon: Boolean,
         },
         methods: {
-            assignData() {
+            doChecks() {
                 if (this.welcomePage) {
-                    this.$store.commit('signInAUser', {
-                        masterPassword: this.masterPass,
-                        userID: this.user.id
-                    })
+                    this.storeAUser();
                 } else if (this.unconnectedBackendIcon) {
-                    console.log("Signed in this user");
-                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
-                    for (let backend of this.$store.getters.unconnectedBackendObjects) {
-                        this.$store.dispatch('backendLogin', backend.local);
-                    }
+                    this.updateBackendLogin();
                 } else {
-                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                    this.storeThisUser();
                 }
+                this.passwordIncorrectCheck();
+            },
+            updateBackendLogin () {
+                this.storeThisUser();
+                for (let backend of this.$store.getters.unconnectedBackendObjects) {
+                    this.$store.dispatch('backendLogin', backend.local);
+                }
+            },
+            storeAUser() {
+                this.$store.commit('signInAUser', {
+                    masterPassword: this.masterPass,
+                    userID: this.user.id
+                })
+            },
+            storeThisUser() {
+                this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+            },
+            passwordIncorrectCheck() {
                 if (this.$store.getters.getMasterKey != null) {
                     this.passwordIncorrect = false;
                     this.masterPass = '';
