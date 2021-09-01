@@ -8,7 +8,7 @@
       :modal="true"
       @hide="$emit('display-popup'); masterPass = null"
   >
-    Continue Sleuthin' all your favourite <backends></backends>
+    Continue Sleuthin' all your favourite backends
     <div class="p-field p-grid">
       <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
