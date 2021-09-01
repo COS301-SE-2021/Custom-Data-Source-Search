@@ -301,9 +301,6 @@
     cursor: pointer;
   }
 
-  .p-float-label {
-  }
-
   .p-button-lg {
     max-width: 6vw;
     max-height: 6vh;
