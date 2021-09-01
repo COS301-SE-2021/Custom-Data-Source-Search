@@ -10,9 +10,10 @@
 </template>
 
 <script>
-import axios from "axios";
-import IconDelete from "../icons/IconDelete";
-export default {
+    import axios from "axios";
+    import IconDelete from "../icons/IconDelete";
+
+    export default {
   name: "DataSourceCard",
   components: {IconDelete},
   data() {
@@ -20,6 +21,7 @@ export default {
       isNotDeleted: true
     }
   },
+
   props: {
     title: String,
     id: String,

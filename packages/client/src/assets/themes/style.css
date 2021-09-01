@@ -61,7 +61,7 @@
 }
 
 .p-component-overlay {
-    background-color: rgba(0, 0, 0, 0.32);
+    background-color: rgba(0, 0, 0, 0.1);
     transition-duration: 0.2s;
 }
 

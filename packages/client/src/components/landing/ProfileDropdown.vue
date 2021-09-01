@@ -5,12 +5,10 @@
         <h3 class="name-initial">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
       </div>
     </div>
-
     <div class="user-detail-container">
       <div id="name"><strong>{{ getUserInfo(getSignedInUserId).name }}</strong></div>
       <div id="email">{{ getUserInfo(getSignedInUserId).email }}</div>
     </div>
-
     <div class="backends-container">
       <div class="backend"
            v-for="(backend) in getUserBackends(getSignedInUserId)"
@@ -21,10 +19,19 @@
         <Divider/>
       </div>
     </div>
-
     <div class="footer-buttons">
-      <Button icon="pi pi-users" label="Switch User" class="p-button-text p-button-plain switch-user" @click="switchUser"/>
-      <Button icon="pi pi-sign-out" label="Sign Out" class="p-button-text p-button-plain sign-out" @click="signOut"/>
+      <Button
+          icon="pi pi-users"
+          label="Switch User"
+          class="p-button-text p-button-plain switch-user"
+          @click="switchUser"
+      />
+      <Button
+          icon="pi pi-sign-out"
+          label="Sign Out"
+          class="p-button-text p-button-plain sign-out"
+          @click="signOut"
+      />
     </div>
   </div>
   <SignOutCheck
@@ -35,10 +42,10 @@
 </template>
 
 <script>
-  import {mapGetters} from "vuex";
-  import SignOutCheck from "../popups/SignOutCheck";
+    import {mapGetters} from "vuex";
+    import SignOutCheck from "../popups/SignOutCheck";
 
-  export default {
+    export default {
   name: "ProfileDropdown",
     components: {SignOutCheck},
     data(){
