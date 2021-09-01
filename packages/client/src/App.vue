@@ -15,7 +15,7 @@
         <router-link title="Admin" class="icon" to="/admin">
           <i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
-        <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="syncVault">
+        <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
         </div>
         <div v-else title="Syncing..." class="refresh-container icon">
@@ -39,9 +39,21 @@
           </CustomTooltip>
         </div>
         <ReEnterMasterPassword
-            :show="displayMasterPwInput"
-            @action-to-Occur="showAskMasterPw"
+            :show="displayPasswordDialog"
             :unconnected-backend-icon="true"
+            :header="'Enter Master Password'"
+            :body="'Continue Sleuthin\' all your favourite backends!'"
+            :vault="false"
+            @action-to-Occur="showAskMasterPw"
+        />
+        <ReEnterMasterPassword
+            :show="displayVaultDialog"
+            :unconnected-backend-icon="true"
+            :header="'Sync Your Vault'"
+            :body="'Enter your master password to continue with sync'"
+            :vault="true"
+            @action-to-Occur="showAskMasterPw"
+            @sync-vault="toggleSync"
         />
       </div>
     </div>
@@ -236,7 +248,7 @@
   import {mapGetters} from "vuex";
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
   import CustomTooltip from "./components/primeComponents/CustomTooltip";
-  import Button from "primevue/button";
+  // import Button from "primevue/button";
 
   export default {
   components: {
@@ -244,13 +256,14 @@
     ReEnterMasterPassword,
     OverlayPanel,
     ProfileDropdown,
-    Button
+    // Button
   },
 
   data() {
     return {
       name: "Data Sleuth",
-      displayMasterPwInput: false,
+      displayPasswordDialog: false,
+      displayVaultDialog: false,
       sync: false,
     }
   },
@@ -271,25 +284,33 @@
     },
 
     methods: {
-        showAskMasterPw() {
-            if(this.$store.getters.getMasterKey === null) {
-                this.openMasterPwInput();
-            } else {
-                if (this.$store.getters.unconnectedBackendBool) {
-                    console.log("Error in credentials");
-                    console.log(JSON.stringify(this.$store.getters.getMasterKey));
-                }
-            }
-        },
-         toggle(event) {
-            this.$refs.op.toggle(event);
-        },
-        openMasterPwInput() {
-                this.displayMasterPwInput = !this.displayMasterPwInput;
-        },
-        syncVault(){
-          this.sync = !this.sync;
+      showAskMasterPw(){
+        if(this.$store.getters.getMasterKey === null){
+          this.showPasswordDialog();
         }
+        else{
+          if (this.$store.getters.unconnectedBackendBool) {
+            console.log("Error in credentials");
+            console.log(JSON.stringify(this.$store.getters.getMasterKey));
+          }
+        }
+      },
+
+      toggle(event){
+        this.$refs.op.toggle(event);
+      },
+
+      showPasswordDialog(){
+        this.displayPasswordDialog = !this.displayPasswordDialog;
+      },
+
+      showVaultSyncDialog(){
+        this.displayVaultDialog = !this.displayVaultDialog
+      },
+
+      toggleSync(){
+        this.sync = !this.sync;
+      }
     }
   }
 </script>
