@@ -17,12 +17,12 @@
           <div class="p-datatable-header">Users</div>
         </template>
         <Column selectionMode="multiple" headerStyle="width: 1em" style="max-width: 3em;"></Column>
-        <Column field="first_name" header="Name"></Column>
-        <Column field="last_name" header="Last Name"></Column>
-        <Column field="email" header="Email"></Column>
-        <Column field="role" header="Role"></Column>
+        <Column field="first_name" header="Name" style="max-width: 12rem;"></Column>
+        <Column field="last_name" header="Last Name" style="max-width: 12rem;"></Column>
+        <Column field="email" header="Email" style="min-width: 14rem;"></Column>
+        <Column field="role" header="Role" style="max-width: 8rem;"></Column>
         <Column field="regStatus" header="Registration Status"></Column>
-        <Column field="loggedIn" header="Logged In"></Column>
+        <Column field="loggedIn" header="Logged In" style="max-width: 8rem;"></Column>
         <Column field="regKey" header="Registration Key"></Column>
       </DataTable>
     </div>
