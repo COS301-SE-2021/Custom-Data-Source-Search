@@ -13,7 +13,7 @@
           <i class="pi pi-th-large" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
         <router-link title="Admin" class="icon" to="/admin">
-          <i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/>
+          <i class="fas fa-users-cog" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
         <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
@@ -130,12 +130,17 @@
     padding: 20px 10px 10px;
   }
 
+  .fa-users-cog{
+    color: grey;
+    margin: 20px 10px 10px;
+  }
+
   .unconnected-backend-warning{
     text-align: center;
     padding: 10px 10px 10px;
   }
 
-  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
+  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .fa-users-cog:hover {
     color: #41B3B2;
   }
 
