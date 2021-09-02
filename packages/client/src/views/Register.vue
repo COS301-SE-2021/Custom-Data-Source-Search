@@ -1,14 +1,13 @@
 <template>
   <div class="registration-grid">
     <div>
-      <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
+      <div style="margin-top: 10%;">
+        <Button icon="pi pi-arrow-left" class="p-button-lg p-button-rounded p-button-text" />
+      </div>
+      <div style="font-size: xx-large; color: #f9f6ee; text-align: center">
         Register
       </div>
-      <form
-          class="input-fields"
-          id="register"
-          @submit="loadValues"
-      >
+      <form @submit="loadValues">
         <div class="input-fields" style="max-height: 20vh">
           <span class="p-float-label">
               <InputText
@@ -59,19 +58,18 @@
            </span>
           </div>
           <div>
-            <checkbox
+            <Checkbox
                 id="checkbox"
                 name="checkbox"
                 v-model="userDetails.backupVault"
                 :binary="true"/>
             <label for="checkbox">Enable remote access to account?</label>
             <br>
-            <span style="font-size: small; margin-top: 30px">
+            <span style="font-size: small;">
                 Remote access enables the user to log into their
                 account on the web browser version of DataSleuth.
             </span>
           </div>
-          <br>
           <br>
           <div>
             <Button
@@ -83,6 +81,7 @@
               Register
             </Button>
           </div>
+          <br>
           <div>
               <span>
                   Already have an account?
@@ -90,15 +89,15 @@
               </span>
           </div>
           <div>
-            <Button
-                v-if="notContinue"
-                @click="back"
-                style="float: right"
-                icon="pi pi-arrow-circle-left"
-                class="p-button-lg p-button-outlined"
-            >
-              Back
-            </Button>
+<!--            <Button-->
+<!--                v-if="notContinue"-->
+<!--                @click="back"-->
+<!--                style="float: right"-->
+<!--                icon="pi pi-angle-left"-->
+<!--                class="p-button-lg p-button-outlined"-->
+<!--            >-->
+<!--              Back-->
+<!--            </Button>-->
           </div>
           <div v-if="errors.length" style="max-height: 0.05vh">
             <span> <strong>Please correct the following error(s):</strong></span>
@@ -116,7 +115,7 @@
       </Divider>
     </div>
     <div>
-      <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
+      <div style="font-size: xx-large; padding-top: 20%; color: #f9f6ee; text-align: center">
         Import Profile From Vault
       </div>
       <div class="input-fields">
@@ -259,51 +258,16 @@
     padding-right: 5%;
   }
 
-  .registration-box {
-    display: grid;
-    grid-template-rows: 1fr 7fr;
-    margin: 4%;
-    font-size: larger;
-    vertical-align: center;
-    text-align: left;
-    min-width: 250px;
-  }
-
   .input-fields {
     display: grid;
-    margin: 4%;
+    margin: 10% 4% 4%;
     vertical-align: text-top;
     grid-row-gap: 2.2vh;
   }
 
-  .p-button.p-button-icon-only {
-    width: 5rem;
-  }
-
-  .logo-box {
-    height: 100%;
-    display: grid;
-    grid-template-rows: 1fr 3fr 1fr;
-    vertical-align: center;
-  }
-
-  #imageInRegistrationBox {
-    text-align: center;
-    justify-content: center;
-    vertical-align: center;
-  }
-
-  #imageInRegistration {
-    padding: 10px;
-  }
-
-  #checkbox {
-    text-align: left;
-  }
-
   .p-checkbox {
     margin-right: 1em;
-    margin-bottom: 0.2em;
+    text-align: left;
   }
 
   u {
@@ -311,12 +275,12 @@
     cursor: pointer;
   }
 
-  .p-button-lg {
-    max-width: 6vw;
-    max-height: 6vh;
-    position: revert;
-    bottom: 3vh;
-    right: 55vw;
-    margin: 1vw;
-  }
+  /*.p-button-lg {*/
+  /*  max-width: 6vw;*/
+  /*  max-height: 6vh;*/
+  /*  position: revert;*/
+  /*  bottom: 3vh;*/
+  /*  right: 55vw;*/
+  /*  margin: 1vw;*/
+  /*}*/
 </style>
