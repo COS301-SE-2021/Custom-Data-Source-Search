@@ -45,6 +45,7 @@
             :body="'Continue Sleuthin\' all your favourite backends!'"
             :vault="false"
             @action-to-Occur="showAskMasterPw"
+            @close-dialog="closeDialog"
         />
         <ReEnterMasterPassword
             :show="displayVaultDialog"
@@ -54,6 +55,7 @@
             :vault="true"
             @action-to-Occur="showAskMasterPw"
             @sync-vault="toggleSync"
+            @close-dialog="closeDialog"
         />
       </div>
     </div>
@@ -309,6 +311,11 @@
 
       toggleSync(){
         this.sync = !this.sync;
+      },
+
+      closeDialog(){
+        this.displayPasswordDialog = false;
+        this.displayVaultDialog = false;
       }
     }
   }

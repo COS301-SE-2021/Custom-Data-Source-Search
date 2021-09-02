@@ -6,7 +6,7 @@
       :closable="true"
       :dismissable-mask="true"
       :modal="true"
-      @hide="$emit('display-popup'); masterPass = null"
+      @hide="this.closeDialog; masterPass = null"
   >
     {{body}}
     <div class="p-field p-grid">
@@ -90,7 +90,7 @@
                     this.passwordIncorrect = false;
                     this.masterPass = '';
                     this.$emit("actionToOccur");
-                    this.display = false;
+                    this.closeDialog();
                 } else {
                     this.passwordIncorrect = true;
                     this.masterPass = null;
@@ -99,6 +99,7 @@
             closeDialog() {
                 this.display = false;
                 this.masterPass = null;
+                this.$emit("closeDialog");
             }
         },
         watch: {
