@@ -243,14 +243,13 @@
 </style>
 
 <script>
-  import OverlayPanel from 'primevue/overlaypanel';
-  import ProfileDropdown from "@/components/landing/ProfileDropdown";
-  import {mapGetters} from "vuex";
-  import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
-  import CustomTooltip from "./components/primeComponents/CustomTooltip";
-  // import Button from "primevue/button";
+    import OverlayPanel from 'primevue/overlaypanel';
+    import ProfileDropdown from "@/components/landing/ProfileDropdown";
+    import {mapGetters} from "vuex";
+    import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
+    import CustomTooltip from "./components/primeComponents/CustomTooltip";
 
-  export default {
+    export default {
   components: {
     CustomTooltip,
     ReEnterMasterPassword,

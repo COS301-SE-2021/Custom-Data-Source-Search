@@ -112,7 +112,7 @@
     </div>
     <div>
       <Divider layout="vertical">
-        <b>OR</b>
+        <strong>OR</strong>
       </Divider>
     </div>
     <div>
