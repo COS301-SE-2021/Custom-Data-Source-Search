@@ -148,119 +148,119 @@
 </template>
 
 <script>
-    import InputText from 'primevue/inputtext'
-    import SignIn from "../components/popups/SignIn";
-    import Checkbox from 'primevue/checkbox';
-    import PasswordInputField from "../components/primeComponents/PasswordInputField";
+  import InputText from 'primevue/inputtext'
+  import SignIn from "../components/popups/SignIn";
+  import Checkbox from 'primevue/checkbox';
+  import PasswordInputField from "../components/primeComponents/PasswordInputField";
 
-    const zxcvbn = require('zxcvbn');
+  const zxcvbn = require('zxcvbn');
 
-    export default {
-        name: "Register",
+  export default {
+    name: "Register",
 
-        components: {
-            PasswordInputField,
-            Checkbox,
-            SignIn,
-            InputText
-        },
+    components: {
+      PasswordInputField,
+      Checkbox,
+      SignIn,
+      InputText
+    },
 
-        data() {
-            return {
-                errors: [],
-                regexTester: null,
-                masterPassCheck: null,
-                masterPassword: null,
-                displaySignIn: false,
-                notContinue: true,
-                vaultEmail: null,
-                vaultPassword: null,
-                userDetails: {
-                    userName: null,
-                    backupVault: null,
-                    masterEmail: null,
-                    hashToStore: null
-                }
-            }
-        },
-
-        computed: {
-            passwordStrength() {
-                return zxcvbn(this.masterPassCheck);
-            }
-        },
-
-        methods: {
-            /**
-             * Ensure form filled in.
-             *
-             * Present errors on failure, create new user on success.
-             */
-            loadValues() {
-                let passFormValidation = this.formValidationChecks();
-                if (passFormValidation) {
-                    this.$store.dispatch("addNewUser", {
-                        name: this.userDetails.userName,
-                        email: this.userDetails.masterEmail,
-                        masterPassword: this.masterPassword,
-                        hasVault: this.userDetails.backupVault
-                    });
-                    this.$router.push({name: 'ContinueView'});
-                }
-            },
-            formValidationChecks() {
-                this.errors = [];
-                //
-                if (!this.userDetails.userName) {
-                    this.errors.push('Name required');
-                }
-                if (!this.userDetails.masterEmail) {
-                    this.errors.push("Email required");
-                }
-                let emailArr = this.$store.getters.getUserMasterEmailsArr;
-                for (let email of emailArr) {
-                    if (email === this.userDetails.masterEmail) {
-                        this.errors.push('Email already registered. Please select another.');
-                        this.userDetails.masterEmail = null;
-                    }
-                }
-                // Password Checks
-                if (!this.masterPassword || !this.masterPassCheck) {
-                    this.errors.push("Password required");
-                } else if (this.masterPassword !== this.masterPassCheck) {
-                    this.errors.push('Your passwords do not match. Please repeat');
-                    this.masterPassword = null;
-                    this.masterPassCheck = null;
-                } else if (this.passwordStrength.score <= 1) {
-                    this.errors.push('Please select a stronger password');
-                    this.masterPassword = null;
-                    this.masterPassCheck = null;
-                }
-                return !this.errors.length;
-            },
-            /**
-             * Display sign-in Popup
-             */
-            showSignIn() {
-                this.displaySignIn = !this.displaySignIn
-            },
-            continue() {
-                this.notContinue = false;
-            },
-            back() {
-                if (this.notContinue) {
-                    this.$router.push('/');
-                }
-                this.notContinue = true;
-            },
-            goToSearch() {
-                this.$router.push('Search');
-            },
-            goToSettings() {
-                this.$router.push("Settings");
-            }
+    data() {
+      return {
+        errors: [],
+        regexTester: null,
+        masterPassCheck: null,
+        masterPassword: null,
+        displaySignIn: false,
+        notContinue: true,
+        vaultEmail: null,
+        vaultPassword: null,
+        userDetails: {
+            userName: null,
+            backupVault: null,
+            masterEmail: null,
+            hashToStore: null
         }
+      }
+    },
+
+    computed: {
+      passwordStrength() {
+        return zxcvbn(this.masterPassCheck);
+      }
+    },
+
+    methods: {
+      /**
+       * Ensure form filled in.
+       *
+       * Present errors on failure, create new user on success.
+       */
+      loadValues() {
+        let passFormValidation = this.formValidationChecks();
+        if (passFormValidation) {
+          this.$store.dispatch("addNewUser", {
+            name: this.userDetails.userName,
+            email: this.userDetails.masterEmail,
+            masterPassword: this.masterPassword,
+            hasVault: this.userDetails.backupVault
+          });
+          this.$router.push({name: 'ContinueView'});
+        }
+      },
+      formValidationChecks() {
+        this.errors = [];
+        //
+        if (!this.userDetails.userName) {
+          this.errors.push('Name required');
+        }
+        if (!this.userDetails.masterEmail) {
+          this.errors.push("Email required");
+        }
+        let emailArr = this.$store.getters.getUserMasterEmailsArr;
+        for (let email of emailArr) {
+          if (email === this.userDetails.masterEmail) {
+            this.errors.push('Email already registered. Please select another.');
+            this.userDetails.masterEmail = null;
+          }
+        }
+        // Password Checks
+        if (!this.masterPassword || !this.masterPassCheck) {
+          this.errors.push("Password required");
+        } else if (this.masterPassword !== this.masterPassCheck) {
+          this.errors.push('Your passwords do not match. Please repeat');
+          this.masterPassword = null;
+          this.masterPassCheck = null;
+        } else if (this.passwordStrength.score <= 1) {
+          this.errors.push('Please select a stronger password');
+          this.masterPassword = null;
+          this.masterPassCheck = null;
+        }
+        return !this.errors.length;
+      },
+      /**
+       * Display sign-in Popup
+       */
+      showSignIn() {
+        this.displaySignIn = !this.displaySignIn
+      },
+      continue() {
+        this.notContinue = false;
+      },
+      back() {
+        if (this.notContinue) {
+          this.$router.push('/');
+        }
+        this.notContinue = true;
+      },
+      goToSearch() {
+        this.$router.push('Search');
+      },
+      goToSettings() {
+        this.$router.push("Settings");
+      }
     }
+  }
 </script>
 
 <style scoped>
