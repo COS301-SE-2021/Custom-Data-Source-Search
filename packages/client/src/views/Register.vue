@@ -2,10 +2,14 @@
   <div class="registration-grid">
     <div>
       <div style="margin-top: 10%;">
-        <Button icon="pi pi-arrow-left" class="p-button-lg p-button-rounded p-button-text" />
+        <Button
+            icon="pi pi-arrow-left"
+            class="p-button-lg p-button-rounded p-button-text"
+            @click="back"
+        />
       </div>
       <div style="font-size: xx-large; color: #f9f6ee; text-align: center">
-        Register
+        <span>Register</span>
       </div>
       <form @submit="loadValues">
         <div class="input-fields" style="max-height: 20vh">
@@ -70,34 +74,14 @@
                 account on the web browser version of DataSleuth.
             </span>
           </div>
-          <br>
-          <div>
+          <div style="text-align: center; margin-top: 5%;">
             <Button
+                label="Register"
                 type="submit"
                 style="text-align: center;"
                 class="p-button-md p-button-outlined"
                 @click="loadValues"
-            >
-              Register
-            </Button>
-          </div>
-          <br>
-          <div>
-              <span>
-                  Already have an account?
-                  <u><a @click="showSignIn">Sign in</a></u>
-              </span>
-          </div>
-          <div>
-<!--            <Button-->
-<!--                v-if="notContinue"-->
-<!--                @click="back"-->
-<!--                style="float: right"-->
-<!--                icon="pi pi-angle-left"-->
-<!--                class="p-button-lg p-button-outlined"-->
-<!--            >-->
-<!--              Back-->
-<!--            </Button>-->
+            />
           </div>
           <div v-if="errors.length" style="max-height: 0.05vh">
             <span> <strong>Please correct the following error(s):</strong></span>
@@ -114,19 +98,50 @@
         <strong>OR</strong>
       </Divider>
     </div>
-    <div>
-      <div style="font-size: xx-large; padding-top: 20%; color: #f9f6ee; text-align: center">
-        Import Profile From Vault
+    <div style="margin-top: 25vh;">
+<!--      <div style="margin-top: 10%;">-->
+<!--        <Button-->
+<!--            icon="pi pi-arrow-left"-->
+<!--            class="p-button-lg p-button-rounded p-button-text"-->
+<!--            style="visibility: hidden"-->
+<!--            @click="back"-->
+<!--        />-->
+<!--      </div>-->
+      <div style="font-size: xx-large; color: #f9f6ee; text-align: center;">
+        <span>Sign In</span>
+      </div>
+      <div style="text-align: center; margin-top: 10px;">
+        Sign in to an existing profile on the vault
       </div>
       <div class="input-fields">
         <span class="p-float-label">
-          <InputText id="emailVualt" type="text" v-model="vaultEmail" />
+          <InputText
+              id="emailVualt"
+              type="text"
+              v-model="vaultEmail"
+              style="width: 100%"
+          />
           <label for="emailVualt">Email</label>
         </span>
         <span class="p-float-label">
-          <InputText id="password" type="text" v-model="vaultPassword" />
+          <PasswordInputField
+              id="password"
+              style="width: 100%"
+              v-model="masterPassword"
+              :feedback="false"
+              :toggle-mask="true"
+          />
           <label for="password">Master Password</label>
         </span>
+        <div style="text-align: center; margin-top: 5%;">
+          <Button
+              label="Sign In"
+              type="submit"
+              style="text-align: center;"
+              class="p-button-md p-button-outlined"
+              @click="loadValues"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -274,13 +289,4 @@
     color: #41B3B2;
     cursor: pointer;
   }
-
-  /*.p-button-lg {*/
-  /*  max-width: 6vw;*/
-  /*  max-height: 6vh;*/
-  /*  position: revert;*/
-  /*  bottom: 3vh;*/
-  /*  right: 55vw;*/
-  /*  margin: 1vw;*/
-  /*}*/
 </style>
