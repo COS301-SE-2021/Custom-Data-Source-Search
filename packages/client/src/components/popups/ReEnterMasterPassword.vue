@@ -1,6 +1,6 @@
 <template>
   <Dialog
-      header="Enter Master Password"
+      header={{header}}
       v-model:visible="display"
       :draggable="true"
       :closable="true"
@@ -8,19 +8,18 @@
       :modal="true"
       @hide="$emit('display-popup'); masterPass = null"
   >
-    Continue Sleuthin' all your favourite backends
+    {{body}}
     <div class="p-field p-grid">
       <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
         <PasswordInputField
             id="password"
             style="width: 100%"
-            @keyup.enter="assignData"
+            @keyup.enter="doChecks"
             v-model="masterPass"
             :toggle-mask="true"
             :feedback="false"
         />
-        <br><br>
         <div v-if="passwordIncorrect" class="error-message">
           <span class="error-message">Incorrect password.</span>
         </div>
@@ -28,7 +27,7 @@
     </div>
     <template #footer>
       <Button label="Cancel" class="p-button-text" @click="closeDialog"/>
-      <Button label="Submit" autofocus @click="assignData"/>
+      <Button label="Submit" autofocus @click="doChecks"/>
     </template>
   </Dialog>
 </template>
@@ -38,7 +37,18 @@
 
     export default {
         name: "ReEnterMasterPassword",
+
         components: {PasswordInputField},
+
+        props: {
+            show: Boolean,
+            user: Object,
+            welcomePage: Boolean,
+            unconnectedBackendIcon: Boolean,
+            vault: Boolean,
+            body: String
+        },
+
         data() {
             return {
                 masterPass: null,
@@ -46,33 +56,36 @@
                 passwordIncorrect: false,
             }
         },
-        props: {
-            show: Boolean,
-            user: Object,
-            welcomePage: Boolean,
-            unconnectedBackendIcon: Boolean,
-        },
+
         methods: {
-            assignData() {
-                if (this.masterPass === null || this.masterPass === '') {
-                    this.passwordIncorrect = true;
-                    this.masterPass = null;
-                    return;
-                }
+            doChecks() {
                 if (this.welcomePage) {
-                    this.$store.commit('signInAUser', {
-                        masterPassword: this.masterPass,
-                        userID: this.user.id
-                    })
+                    this.storeAUser();
                 } else if (this.unconnectedBackendIcon) {
-                    console.log("Signed in this user");
-                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
-                    for (let backend of this.$store.getters.unconnectedBackendObjects) {
-                        this.$store.dispatch('backendLogin', backend.local);
-                    }
+                    this.updateBackendLogin();
+                } else if (this.vault) {
+                    this.storeThisUser();
                 } else {
-                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                    this.storeThisUser();
                 }
+                this.passwordIncorrectCheck();
+            },
+            updateBackendLogin () {
+                this.storeThisUser();
+                for (let backend of this.$store.getters.unconnectedBackendObjects) {
+                    this.$store.dispatch('backendLogin', backend.local);
+                }
+            },
+            storeAUser() {
+                this.$store.commit('signInAUser', {
+                    masterPassword: this.masterPass,
+                    userID: this.user.id
+                })
+            },
+            storeThisUser() {
+                this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+            },
+            passwordIncorrectCheck() {
                 if (this.$store.getters.getMasterKey != null) {
                     this.passwordIncorrect = false;
                     this.masterPass = '';
@@ -97,7 +110,6 @@
 </script>
 
 <style scoped>
-
   .p-field {
     margin-top: 3vh;
   }
@@ -110,5 +122,4 @@
     color: #EF9A9A;
     text-align: center;
   }
-
 </style>

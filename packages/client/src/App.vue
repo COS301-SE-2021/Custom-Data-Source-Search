@@ -13,8 +13,14 @@
           <i class="pi pi-th-large" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
         <router-link title="Admin" class="icon" to="/admin">
-          <em class="pi pi-user" style="font-size:1.5rem"/>
+          <i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
+        <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
+          <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
+        </div>
+        <div v-else title="Syncing..." class="refresh-container icon">
+          <i class="fas fa-sync-alt fa-spin" style="font-size:1.2rem" aria-hidden="true"></i>
+        </div>
         <div class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
             <h3 class="name-initial-main">
@@ -33,9 +39,21 @@
           </CustomTooltip>
         </div>
         <ReEnterMasterPassword
-            :show="displayMasterPwInput"
-            @action-to-Occur="showAskMasterPw"
+            :show="displayPasswordDialog"
             :unconnected-backend-icon="true"
+            :header="'Enter Master Password'"
+            :body="'Continue Sleuthin\' all your favourite backends!'"
+            :vault="false"
+            @action-to-Occur="showAskMasterPw"
+        />
+        <ReEnterMasterPassword
+            :show="displayVaultDialog"
+            :unconnected-backend-icon="true"
+            :header="'Sync Your Vault'"
+            :body="'Enter your master password to continue with sync'"
+            :vault="true"
+            @action-to-Occur="showAskMasterPw"
+            @sync-vault="toggleSync"
         />
       </div>
     </div>
@@ -57,19 +75,19 @@
 </template>
 
 <style lang="scss">
-html,
-body,
-#app {
-  height: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  background-color: #242424;
-  color: rgba(255, 255, 255, 0.58);
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  html,
+  body,
+  #app {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #242424;
+    color: rgba(255, 255, 255, 0.58);
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
   input {
     height: 28px;
@@ -80,8 +98,10 @@ body,
     border: none;
   }
 
-  #sidebar {
-    max-width: 4em;
+  button {
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
   }
 
   .header {
@@ -99,40 +119,19 @@ body,
     height: 100%;
   }
 
-  #grid-div-1 {
-    padding-top: 20px;
-    background-color: #1e1e1e;
-    grid-row-start: 2;
-    height: 100%;
-  }
-
-  #grid-div-2 {
-    border: 1px none #212121;
-    border-right-style: solid;
-    border-left-style: solid;
-    height: 100%;
-    grid-row-start: 2;
-  }
-
   .icon {
     padding: 10px;
   }
 
-button {
-    border: none;
-    border-radius: 12px;
-    padding: 10px;
-}
+  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
+    color: grey;
+    padding: 20px 10px 10px;
+  }
 
-.pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
-  color: grey;
-  padding: 20px 10px 10px;
-}
-
-.unconnected-backend-warning{
-  text-align: center;
-  padding: 10px 10px 10px;
-}
+  .unconnected-backend-warning{
+    text-align: center;
+    padding: 10px 10px 10px;
+  }
 
   .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
     color: #41B3B2;
@@ -152,17 +151,6 @@ button {
     z-index: -1;
     top: 0;
     left: 20px;
-  }
-
-  #overlay_panel {
-    margin-left: 1%;
-  }
-
-  #profile {
-    position: fixed;
-    margin-left: -53px;
-    cursor: pointer;
-    bottom: 5%;
   }
 
   .image-ring-main {
@@ -207,15 +195,51 @@ button {
     margin-right: 1%;
   }
 
-#expiration-indicator {
-    font-size: 1.5rem;
-    color: #FFF59D;
-    position: relative;
-    display: inline-block;
-    margin-top : 0.5rem;
-    margin-bottom : 0.3rem;
-}
+  .refresh-container {
+    position: fixed;
+    padding-left: 1.4em;
+    bottom: 90px;
+    cursor: pointer;
+  }
 
+  #grid-div-1 {
+    padding-top: 20px;
+    background-color: #1e1e1e;
+    grid-row-start: 2;
+    height: 100%;
+  }
+
+  #grid-div-2 {
+    border: 1px none #212121;
+    border-right-style: solid;
+    border-left-style: solid;
+    height: 100%;
+    grid-row-start: 2;
+  }
+
+  #expiration-indicator {
+      font-size: 1.5rem;
+      color: #FFF59D;
+      position: relative;
+      display: inline-block;
+      margin-top : 0.5rem;
+      margin-bottom : 0.3rem;
+  }
+
+  #profile {
+    position: fixed;
+    margin-left: -53px;
+    cursor: pointer;
+    bottom: 5%;
+  }
+
+  #overlay_panel {
+    margin-left: 1%;
+  }
+
+  #sidebar {
+    max-width: 4em;
+  }
 </style>
 
 <script>
@@ -227,17 +251,22 @@ button {
 
     export default {
   components: {
-      CustomTooltip,
-      ReEnterMasterPassword,
-      OverlayPanel,
-      ProfileDropdown
+    CustomTooltip,
+    ReEnterMasterPassword,
+    OverlayPanel,
+    ProfileDropdown,
+    // Button
   },
+
   data() {
     return {
       name: "Data Sleuth",
-      displayMasterPwInput: false,
+      displayPasswordDialog: false,
+      displayVaultDialog: false,
+      sync: false,
     }
   },
+
     computed: {
         ...mapGetters ([
             'getUserInfo',
@@ -248,26 +277,39 @@ button {
             'unconnectedBackendNo'
         ])
     },
+
     beforeCreate() {
         this.$store.commit('initialiseStore');
     },
+
     methods: {
-        showAskMasterPw() {
-            if(this.$store.getters.getMasterKey === null) {
-                this.openMasterPwInput();
-            } else {
-                if (this.$store.getters.unconnectedBackendBool) {
-                    console.log("Error in credentials");
-                    console.log(JSON.stringify(this.$store.getters.getMasterKey));
-                }
-            }
-        },
-         toggle(event) {
-            this.$refs.op.toggle(event);
-        },
-        openMasterPwInput() {
-                this.displayMasterPwInput = !this.displayMasterPwInput;
+      showAskMasterPw(){
+        if(this.$store.getters.getMasterKey === null){
+          this.showPasswordDialog();
         }
+        else{
+          if (this.$store.getters.unconnectedBackendBool) {
+            console.log("Error in credentials");
+            console.log(JSON.stringify(this.$store.getters.getMasterKey));
+          }
+        }
+      },
+
+      toggle(event){
+        this.$refs.op.toggle(event);
+      },
+
+      showPasswordDialog(){
+        this.displayPasswordDialog = !this.displayPasswordDialog;
+      },
+
+      showVaultSyncDialog(){
+        this.displayVaultDialog = !this.displayVaultDialog
+      },
+
+      toggleSync(){
+        this.sync = !this.sync;
+      }
+    }
   }
-}
 </script>

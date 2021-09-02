@@ -8,7 +8,7 @@
       </p>
     </div>
     <div class="user-select">
-      <user-card
+      <UserCard
           v-for="(user, i) in getArrUserInfo"
           v-if="!getNewAppStatus"
           :key="i"
@@ -22,10 +22,10 @@
           ref="deleteOption"
           :model="items"
       />
-      <add-user-card/>
+      <AddUserCard/>
     </div>
     <span id="tips-span">Tip: {{tips[0]}}</span>
-    <delete-user-are-you-sure
+    <DeleteUserAreYouSure
         :show="displayDeleteCheck"
         :user="selectedUser"
         :delete-vault-fed-in="null"
@@ -34,19 +34,18 @@
         @close="cleanPopUp"
         @clear-current-user="clearCurrentUser"
     />
-    <sign-out-check
+    <SignOutCheck
         :show="displaySignOutCheck"
         :user="selectedUser"
         @display-popup="showSignOutCheck"
     />
-    <sign-in
-        :show="displaySignIn"
-        @show-sign-in="showSignIn"
-    />
-    <re-enter-master-password
+    <ReEnterMasterPassword
         :show="displayMasterPwInput"
         :user="selectedUser"
         :welcomePage="true"
+        :header="'Enter Master Password'"
+        :body="'Get back to Sleuthin\' all your favourite backends!'"
+        :vault="false"
         @action-to-Occur="signInThisUser"
     />
   </div>
@@ -106,6 +105,12 @@
                 'getArrUserInfo',
                 'getNewAppStatus'
             ])
+        },
+
+        beforeMount() {
+            if (this.$store.getters.getSignedIn) {
+                this.$router.push('Search');
+            }
         },
 
         mounted() {

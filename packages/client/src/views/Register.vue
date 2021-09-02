@@ -1,8 +1,8 @@
 <template>
   <div class="registration-grid">
-    <div class="registration-box">
+    <div>
       <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
-        REGISTER
+        Register
       </div>
       <form
           class="input-fields"
@@ -58,13 +58,13 @@
              <label for="masterPassCheck">Repeat Password</label>
            </span>
           </div>
-          <div id="checkboxBox">
+          <div>
             <checkbox
-                id="checkBox"
+                id="checkbox"
                 name="checkbox"
                 v-model="userDetails.backupVault"
                 :binary="true"/>
-            <label for="checkBox">Enable remote access to account?</label>
+            <label for="checkbox">Enable remote access to account?</label>
             <br>
             <span style="font-size: small; margin-top: 30px">
                 Remote access enables the user to log into their
@@ -78,6 +78,7 @@
                 type="submit"
                 style="text-align: center;"
                 class="p-button-md p-button-outlined"
+                @click="loadValues"
             >
               Register
             </Button>
@@ -110,16 +111,23 @@
       </form>
     </div>
     <div>
-      <div class="logo-box">
-        <div></div>
-        <div id="imageInRegistrationBox">
-          <img
-              id="imageInRegistration"
-              src="../assets/search_logo.png"
-              height="300"
-              alt=""
-          >
-        </div>
+      <Divider layout="vertical">
+        <strong>OR</strong>
+      </Divider>
+    </div>
+    <div>
+      <div style="font-size: xx-large; padding-top: 10%; color: #f9f6ee; text-align: center">
+        Import Profile From Vault
+      </div>
+      <div class="input-fields">
+        <span class="p-float-label">
+          <InputText id="emailVualt" type="text" v-model="vaultEmail" />
+          <label for="emailVualt">Email</label>
+        </span>
+        <span class="p-float-label">
+          <InputText id="password" type="text" v-model="vaultPassword" />
+          <label for="password">Master Password</label>
+        </span>
       </div>
     </div>
   </div>
@@ -151,6 +159,8 @@
                 masterPassword: null,
                 displaySignIn: false,
                 notContinue: true,
+                vaultEmail: null,
+                vaultPassword: null,
                 userDetails: {
                     userName: null,
                     backupVault: null,
@@ -243,7 +253,7 @@
   .registration-grid {
     overflow-y: scroll;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr 2fr;
     height: 100vh;
     padding-left: 5%;
     padding-right: 5%;
@@ -287,7 +297,7 @@
     padding: 10px;
   }
 
-  #checkboxBox {
+  #checkbox {
     text-align: left;
   }
 
@@ -309,5 +319,4 @@
     right: 55vw;
     margin: 1vw;
   }
-
 </style>

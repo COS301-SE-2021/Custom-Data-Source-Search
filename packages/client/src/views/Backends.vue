@@ -1,7 +1,7 @@
 <template>
   <div class="settings-box">
     <div class="info-div">
-      <span><h1>Settings</h1></span>
+      <span><h1>Backends</h1></span>
     </div>
     <div class="info-div">
       <span><strong>Personal Information</strong></span>
@@ -55,9 +55,12 @@
   </div>
   <ReEnterMasterPassword
       :show="displayMasterPwInput"
-      @action-to-Occur="newBackend"
+      :header="'Enter Master Password'"
+      :body="'We need to verify that it\'s you before we can add a new backend'"
+      :vault="false"
       :user="noUserReq"
       :welcome-page="false"
+      @action-to-Occur="newBackend"
   />
 </template>
 
@@ -127,7 +130,7 @@
                 this.displayMasterPwInput = !this.displayMasterPwInput;
             },
             newBackend() {
-                if (this.$store.getters.getMasterKeyObject != null) {
+                if (this.$store.getters.getMasterKey != null) {
                     this.newBackendBool = !this.newBackendBool;
                 } else {
                     this.showMasterPwInput();

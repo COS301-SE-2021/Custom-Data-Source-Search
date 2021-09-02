@@ -37,7 +37,7 @@
 
         methods: {
             goToSettings() {
-                this.$router.push("Settings");
+                this.$router.push("Backends");
             },
             goToSearch() {
                 this.$router.push('Search');
