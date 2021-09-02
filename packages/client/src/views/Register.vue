@@ -99,14 +99,6 @@
       </Divider>
     </div>
     <div style="margin-top: 25vh;">
-<!--      <div style="margin-top: 10%;">-->
-<!--        <Button-->
-<!--            icon="pi pi-arrow-left"-->
-<!--            class="p-button-lg p-button-rounded p-button-text"-->
-<!--            style="visibility: hidden"-->
-<!--            @click="back"-->
-<!--        />-->
-<!--      </div>-->
       <div style="font-size: xx-large; color: #f9f6ee; text-align: center;">
         <span>Sign In</span>
       </div>
