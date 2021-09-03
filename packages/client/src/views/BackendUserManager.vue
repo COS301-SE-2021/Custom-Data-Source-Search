@@ -8,22 +8,116 @@
                  @rowSelectAll="onRowSelectAll"
                  @rowUnselectAll="onRowUnselectAll"
                  v-model:selection="selectedUsers"
+                 v-model:filters="filters"
                  :rowHover="true"
                  :value="tableData"
                  :scrollable="true"
                  scrollHeight="70vh"
+                 filterDisplay="row"
+                 responsiveLayout="scroll"
       >
         <template #header>
           <div class="p-datatable-header">Users</div>
         </template>
         <Column selectionMode="multiple" headerStyle="width: 1em" style="max-width: 3em;"></Column>
-        <Column field="first_name" header="Name" style="max-width: 12rem;"></Column>
-        <Column field="last_name" header="Last Name" style="max-width: 12rem;"></Column>
-        <Column field="email" header="Email" style="min-width: 14rem;"></Column>
-        <Column field="role" header="Role" style="max-width: 8rem;"></Column>
-        <Column field="regStatus" header="Registration Status"></Column>
-        <Column field="loggedIn" header="Logged In" style="max-width: 8rem;"></Column>
-        <Column field="regKey" header="Registration Key"></Column>
+        <Column filterField="firstname" :showFilterMenu="false" header="Name" style="min-width:12rem">
+          <template #body="{data}">
+            {{data.first_name}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <InputText
+                type="text"
+                v-model="filterModel.value"
+                @input="filterCallback()"
+                class="p-column-filter"
+                :placeholder="`Search by name`"
+            />
+          </template>
+        </Column>
+        <Column filterField="lastname" :showFilterMenu="false" header="Surname" style="min-width:12rem">
+          <template #body="{data}">
+            {{data.last_name}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <InputText
+                type="text"
+                v-model="filterModel.value"
+                @input="filterCallback()"
+                class="p-column-filter"
+                :placeholder="`Search by surname`"
+            />
+          </template>
+        </Column>
+        <Column filterField="email" :showFilterMenu="false" header="Email" style="min-width:12rem">
+          <template #body="{data}">
+            {{data.email}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <InputText
+                type="text"
+                v-model="filterModel.value"
+                @input="filterCallback()"
+                class="p-column-filter"
+                :placeholder="`Search by email`"
+            />
+          </template>
+        </Column>
+        <Column filterField="role" :showFilterMenu="false" header="Role" style="min-width:12rem">
+          <template #body="{data}">
+            {{data.role}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <InputText
+                type="text"
+                v-model="filterModel.value"
+                @input="filterCallback()"
+                class="p-column-filter"
+                :placeholder="`Search by role`"
+            />
+          </template>
+        </Column>
+        <Column filterField="registration.status" :showFilterMenu="false" header="Registration Status" style="min-width:12rem">
+          <template #body="{data}">
+            {{data.reg_status}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <InputText
+                type="text"
+                v-model="filterModel.value"
+                @input="filterCallback()"
+                class="p-column-filter"
+                :placeholder="`Search by registration status`"
+            />
+          </template>
+        </Column>
+        <Column filterField="loggedin" :showFilterMenu="false" header="Logged In" style="min-width:12rem">
+          <template #body="{data}">
+            {{data.logged_in}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <InputText
+                type="text"
+                v-model="filterModel.value"
+                @input="filterCallback()"
+                class="p-column-filter"
+                :placeholder="`Search by log in status`"
+            />
+          </template>
+        </Column>
+        <Column filterField="registration.key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
+          <template #body="{data}">
+            {{data.reg_key}}
+          </template>
+          <template #filter="{filterModel,filterCallback}">
+            <InputText
+                type="text"
+                v-model="filterModel.value"
+                @input="filterCallback()"
+                class="p-column-filter"
+                :placeholder="`Search by registration key`"
+            />
+          </template>
+        </Column>
       </DataTable>
     </div>
     <div class="backend-toolbar-container">
@@ -184,6 +278,7 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import {FilterMatchMode} from 'primevue/api';
     import axios from "axios";
 
     export default {
@@ -234,6 +329,21 @@
                             });
                         }
                     }],
+
+                filters: {
+                  'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+                  'firstname': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+                  'lastname': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+                  'email': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+                  'role': {value: null, matchMode: FilterMatchMode.EQUALS},
+                  'registration.status': {value: null, matchMode: FilterMatchMode.EQUALS},
+                  'loggedin': {value: null, matchMode: FilterMatchMode.EQUALS},
+                  'registration.key': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
+                },
+                loggedIn: ['true', 'false'],
+                registrationStatus: [
+                    'Unregistered', 'Registered'
+                ]
             }
         },
 
@@ -245,15 +355,21 @@
         },
 
         beforeMount() {
-            this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
-            this.updateTableData();
+          this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
+          this.updateTableData();
         },
 
         methods: {
             updateTableData() {
                 axios.get("http://localhost:3001/users")
                     .then((resp) => {
-                        this.tableData = resp.data.data;
+                      console.log(resp.data.data);
+                      this.tableData = resp.data.data;
+                      let i=0;
+                      for(i; i<this.tableData.length; i++){
+                        this.tableData[i].role = this.tableData[i].role.charAt(0).toUpperCase() + this.tableData[i].role.slice(1);
+                        this.tableData[i].reg_status = this.tableData[i].reg_status.charAt(0).toUpperCase() + this.tableData[i].reg_status.slice(1);
+                      }
                     })
                     .catch((error) => {
                         this.$toast.add({
@@ -590,7 +706,6 @@
 .backend-name {
   text-align: center;
   color: #ededed;
-  grid-row-start : 1;
 }
 
 .backend-toolbar {
