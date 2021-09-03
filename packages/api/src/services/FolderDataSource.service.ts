@@ -97,9 +97,6 @@ class FolderDataSourceService {
                 ignoreFolders.push(line);
             }
         }
-        console.log("All folders to ignore: " + ignoreFolders);
-        console.log("All files to ignore: " + ignoreFiles);
-        console.log("All file types to ignore: " + ignoreFileTypes);
         let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
         let files: string[] = [];
         this.getAllFilesRecursively(path, ignoreFolders, depth).forEach((filePath: string) => {
@@ -114,9 +111,11 @@ class FolderDataSourceService {
             })) {
                 return;
             }
+            if (filePath.indexOf(".") !== -1) {
+                return;
+            }
             files.push(path + filePath);
         })
-        console.log(files);
         return files;
     }
 
