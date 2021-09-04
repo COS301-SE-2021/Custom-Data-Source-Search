@@ -16,8 +16,24 @@ class VaultRepository {
             return[null, e]
         }
     }
-    
+
     async getSaltAndVerifier(email: string){
+
+        try {
+            const data = await db.query(
+                "SELECT salt, verifier FROM users WHERE email = $1",
+                [email],
+            );
+
+            const result = {
+                salt : data.rows[0].salt
+            }
+
+            return[result, null]
+        } catch (e){
+            console.log(e.stack);
+            return[null, e]
+        }
 
     }
 
