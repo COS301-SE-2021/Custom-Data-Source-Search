@@ -1,2 +1,2 @@
 [config]
-command = bash deploy.cmd
+command = bash deploy.sh
