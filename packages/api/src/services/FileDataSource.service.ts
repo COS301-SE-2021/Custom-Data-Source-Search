@@ -31,10 +31,7 @@ class FileDataSourceService {
         }
         return {
             "code": 200,
-            "body": {
-                "message": "Success",
-                "data": result
-            }
+            "body": result
         };
     }
 

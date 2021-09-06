@@ -32,14 +32,11 @@ class FolderDataSourceService {
         }
         return {
             "code": 200,
-            "body": {
-                "message": "Success",
-                "data": result
-            }
+            "body": result
         }
     }
 
-    async addFolderDataSource(dataSource: FolderDataSource) {
+    async addFolderDataSource(dataSource: FolderDataSource): Promise<DefaultHttpResponse> {
         if (dataSource.path[dataSource.path.length - 1] !== '/') {
             dataSource.path += '/';
         }
@@ -85,21 +82,14 @@ class FolderDataSourceService {
     }
 
     async removeFolderDataSource(id: string): Promise<DefaultHttpResponse> {
-        let [result, err] = await folderDataSourceRepository.deleteDataSource(id);
+        for (let folderFileUUID of folderDataSourceRepository.getAllFolderFileUUIDs(id)) {
+            await solrService.deleteFromSolr(folderFileUUID);
+        }
+        let [result, err] = folderDataSourceRepository.deleteDataSource(id);
         if (err) {
-            return {
-                "code": err.code,
-                "body": {
-                    "message": err.message
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
-        return {
-            "code": 204,
-            "body": {
-                "message": result.message
-            }
-        }
+        return generateDefaultHttpResponse(result);
     }
 
     getFilesInFolder(path: string, dotIgnore: string, depth: number): string[] {

@@ -1,6 +1,5 @@
 import {FileInFolder, FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import {statusMessage} from "../general/generalFunctions";
-import solrService from "../services/Solr.service";
 import {StatusMessage} from "../models/response/general.interfaces";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
@@ -91,26 +90,37 @@ class FolderDataSourceRepository {
      * @async
      *
      * @param {string} uuid
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     * @return {[StatusMessage, StatusMessage]}
      */
-    async deleteDataSource(uuid: string) {
+    deleteDataSource(uuid: string): [StatusMessage, StatusMessage] {
         try {
-            for (let folderFile of db.prepare("SELECT * FROM folder_file_data WHERE folder_uuid = ?;").all(uuid)) {
-                await solrService.deleteFromSolr(folderFile["uuid"]);
-            }
             db.prepare("DELETE FROM folder_file_data WHERE folder_uuid = ?").run(uuid);
             db.prepare("DELETE FROM folder_data WHERE uuid = ?").run(uuid);
         } catch (e) {
             console.error(e)
-            return [null, {
-                "code": 404,
-                "message": "Folder datasource not found"
-            }];
+            return [null, statusMessage(404, "Folder datasource not found")];
         }
-        return [{
-            "code": 204,
-            "message": "Successfully deleted Folder datasource"
-        }, null];
+        return [statusMessage(204, "Successfully deleted Folder datasource"), null];
+    }
+
+    /**
+     * Return all the uuids from folder_file_data where the parent folder uuid is specified
+     *
+     * @param {string} folderUUID
+     * @return {string[]}
+     */
+    getAllFolderFileUUIDs(folderUUID: string): string[] {
+        try {
+            return db
+                .prepare("SELECT * FROM folder_file_data WHERE folder_uuid = ?;")
+                .all(folderUUID)
+                .map((folderFile: any) => {
+                    return folderFile["uuid"];
+                });
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
     }
 
     /**
@@ -145,9 +155,9 @@ class FolderDataSourceRepository {
      * Return folder datasource which is associated with the file in the folder
      *
      * @param {string} uuid
-     * @return {string}
+     * @return {[any, StatusMessage]}
      */
-    getFolderFromFile(uuid: string) {
+    getFolderFromFile(uuid: string): [any, StatusMessage] {
         try {
             const dataSource = db.prepare(
                 "SELECT * FROM folder_data WHERE uuid = (SELECT folder_uuid FROM folder_file_data WHERE uuid = ?)"
@@ -155,10 +165,7 @@ class FolderDataSourceRepository {
             return [dataSource, null];
         } catch (e) {
             console.error(e);
-            return [null, {
-                "code": 404,
-                "message": "Datasource not found"
-            }]
+            return [null, statusMessage(404, "Datasource not found")];
         }
     }
 }
