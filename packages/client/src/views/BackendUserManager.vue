@@ -1,26 +1,40 @@
 <template>
   <div class="management-page">
-    <h1 class="backend-name">{{backend.local.name}}</h1>
+    <div class="management-page-header">
+      <h1 class="backend-name">{{backend.local.name}}</h1>
+      <p class="management-page-description">
+        Manage users of this backend
+      </p>
+    </div>
     <div class="admin-table-container">
-      <DataTable class="p-datatable-sm table"
-                 @rowSelect="onRowSelect"
-                 @rowUnselect="onRowUnselect"
-                 @rowSelectAll="onRowSelectAll"
-                 @rowUnselectAll="onRowUnselectAll"
-                 v-model:selection="selectedUsers"
-                 v-model:filters="filters"
-                 :rowHover="true"
-                 :value="tableData"
-                 :scrollable="true"
-                 scrollHeight="70vh"
-                 filterDisplay="row"
-                 responsiveLayout="scroll"
+      <ScrollPanel
+          id="main-scroll"
+          style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
       >
-        <template #header>
-          <div class="p-datatable-header">Users</div>
+      <DataTable
+          class="p-datatable-sm table"
+          @rowSelect="onRowSelect"
+          @rowUnselect="onRowUnselect"
+          @rowSelectAll="onRowSelectAll"
+          @rowUnselectAll="onRowUnselectAll"
+          v-model:selection="selectedUsers"
+          v-model:filters="filters"
+          :rowHover="true"
+          :value="tableData"
+          :scrollable="true"
+          :globalFilterFields="['firstname', 'lastname', 'email', 'role', 'loggedin', 'registration.key', 'registration.status']"
+          scrollHeight="50vh"
+          filterDisplay="row"
+          responsiveLayout="scroll"
+      >
+        <template #empty>
+          No users found.
         </template>
-        <Column selectionMode="multiple" headerStyle="width: 1em" style="max-width: 3em;"></Column>
-        <Column filterField="firstname" :showFilterMenu="false" header="Name" style="min-width:12rem">
+        <template #loading>
+          Loading user data. Please wait...
+        </template>
+        <Column selectionMode="multiple" headerStyle="min-width: 2.5em" style="max-width: 3em;"></Column>
+        <Column filterField="first_name" :showFilterMenu="false" header="Name" style="min-width:12rem">
           <template #body="{data}">
             {{data.first_name}}
           </template>
@@ -34,7 +48,7 @@
             />
           </template>
         </Column>
-        <Column filterField="lastname" :showFilterMenu="false" header="Surname" style="min-width:12rem">
+        <Column filterField="last_name" :showFilterMenu="false" header="Surname" style="min-width:12rem">
           <template #body="{data}">
             {{data.last_name}}
           </template>
@@ -67,44 +81,68 @@
             {{data.role}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
+            <MultiSelect
                 v-model="filterModel.value"
-                @input="filterCallback()"
+                :options="roleOptions"
+                placeholder="Any"
                 class="p-column-filter"
-                :placeholder="`Search by role`"
-            />
+                @change="filterCallback()"
+            >
+              <template #option="slotProps">
+                <div class="p-multiselect-backends-option">
+                <span class="image-text">
+                  {{ slotProps.option }}
+                </span>
+                </div>
+              </template>
+            </MultiSelect>
           </template>
         </Column>
-        <Column filterField="registration.status" :showFilterMenu="false" header="Registration Status" style="min-width:12rem">
+        <Column filterField="reg_status" :showFilterMenu="false" header="Registration Status" style="min-width:12rem">
           <template #body="{data}">
             {{data.reg_status}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
+            <MultiSelect
                 v-model="filterModel.value"
-                @input="filterCallback()"
+                :options="registrationStatus"
+                placeholder="Any"
                 class="p-column-filter"
-                :placeholder="`Search by registration status`"
-            />
+                @change="filterCallback()"
+            >
+              <template #option="slotProps">
+                <div class="p-multiselect-backends-option">
+                <span class="image-text">
+                  {{ slotProps.option }}
+                </span>
+                </div>
+              </template>
+            </MultiSelect>
           </template>
         </Column>
-        <Column filterField="loggedin" :showFilterMenu="false" header="Logged In" style="min-width:12rem">
+        <Column filterField="logged_in" :showFilterMenu="false" header="Logged In" style="min-width:12rem">
           <template #body="{data}">
             {{data.logged_in}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
+            <MultiSelect
                 v-model="filterModel.value"
-                @input="filterCallback()"
+                :options="loggedIn"
+                placeholder="Any"
                 class="p-column-filter"
-                :placeholder="`Search by log in status`"
-            />
+                @change="filterCallback()"
+            >
+              <template #option="slotProps">
+                <div class="p-multiselect-backends-option">
+                <span class="image-text">
+                  {{ slotProps.option }}
+                </span>
+                </div>
+              </template>
+            </MultiSelect>
           </template>
         </Column>
-        <Column filterField="registration.key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
+        <Column filterField="reg_key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
           <template #body="{data}">
             {{data.reg_key}}
           </template>
@@ -119,6 +157,7 @@
           </template>
         </Column>
       </DataTable>
+      </ScrollPanel>
     </div>
     <div class="backend-toolbar-container">
       <Toolbar class="backend-toolbar">
@@ -332,13 +371,13 @@
 
                 filters: {
                   'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-                  'firstname': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-                  'lastname': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+                  'first_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+                  'last_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
                   'email': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
                   'role': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'registration.status': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'loggedin': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'registration.key': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
+                  'reg_status': {value: null, matchMode: FilterMatchMode.EQUALS},
+                  'logged_in': {value: null, matchMode: FilterMatchMode.EQUALS},
+                  'reg_key': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
                 },
                 loggedIn: ['true', 'false'],
                 registrationStatus: [
@@ -743,13 +782,14 @@
   padding-right: 0.5em;
 }
 
-.p-datatable-header {
-  padding: 0.4rem 0.4rem;
+
+.p-inputtext {
+  background-color: #242424;
 }
 
-::v-deep(.p-inputtext) {
-  padding: 0.54rem 0.74rem;
-  font-size: 1rem;
+.p-multiselect {
+  background-color: #242424;
+  height: 34px;
 }
 
 ::v-deep(.p-dropdown){
@@ -764,5 +804,14 @@
 
 .p-selection-column{
   margin-right: 0;
+}
+
+.management-page-header{
+  margin-bottom: 50px;
+}
+
+.management-page-description {
+  text-align: center;
+  color: #ededed;
 }
 </style>

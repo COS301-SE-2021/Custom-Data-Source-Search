@@ -130,7 +130,7 @@
       <template #loading>
         Loading data. Please wait...
       </template>
-      <Column selectionMode="multiple" headerStyle="width: 3em" style="max-width: 3em;">
+      <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;">
         <template #body="{data}">
           <Checkbox
               v-if="datasourceAdminStatus(data.backend)"
