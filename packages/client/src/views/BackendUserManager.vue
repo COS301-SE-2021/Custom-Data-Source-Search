@@ -1,4 +1,5 @@
 <template>
+  <ConfirmDialog/>
   <div class="management-page">
     <div class="management-page-header">
       <h1 class="backend-name">{{backend.local.name}}</h1>
@@ -189,12 +190,12 @@
           />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
           <span class="p-buttonset">
-          <Button @click="showLogoutUsersDialog"
+          <Button @click="logoutUsersConfirmation"
                   label="Logout"
                   icon="pi pi-lock"
                   class="p-button-warning p-button-custom-med"
           />
-          <Button @click="showRevokeUserKeysDialog"
+          <Button @click="revokeUserKeysConfirmation"
                   label="Revoke Keys"
                   icon="pi pi-ban"
                   class="p-button-danger p-button-custom-med"
@@ -245,11 +246,11 @@
           />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
           <span class="p-buttonset">
-          <Button @click="showLogoutUsersDialog"
+          <Button @click="logoutUsersConfirmation"
                   icon="pi pi-lock"
                   class="p-button-warning p-button-custom-med"
           />
-          <Button @click="showRevokeUserKeysDialog"
+          <Button @click="revokeUserKeysConfirmation"
                   icon="pi pi-ban"
                   class="p-button-danger p-button-custom-med"
           />
@@ -314,52 +315,6 @@
           <Button label="Add" icon="pi pi-check" @click="addUsers" autofocus/>
         </template>
       </Dialog>
-      <Dialog header="Confirmation"
-              v-model:visible="displayGlobalLogoutConfirmation"
-              :style="{width: '32em'}"
-              :modal="true">
-        <div class="confirmation-content">
-          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem"/>
-          <span style="margin-left: 0.8em;"> Are you sure you want to log all users out?</span>
-        </div>
-        <template #footer>
-          <Button label="No" icon="pi pi-times" @click="closeGlobalLogoutConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="logOutUsersGlobally()" class="p-button-text" autofocus/>
-        </template>
-      </Dialog>
-      <Dialog header="Confirmation" v-model:visible="displayLogoutConfirmation" :style="{width: '32em'}" :modal="true">
-        <div class="confirmation-content">
-          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem"/>
-          <span style="margin-left: 0.8em;">Are you sure you want to log the selected users out?</span>
-        </div>
-        <template #footer>
-          <Button label="No" icon="pi pi-times" @click="closeLogoutConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="logOutSelectedUsers()" class="p-button-text" autofocus/>
-        </template>
-      </Dialog>
-      <Dialog header="Confirmation"
-              v-model:visible="displayGlobalRevokeConfirmation"
-              :style="{width: '32em'}"
-              :modal="true">
-        <div class="confirmation-content">
-          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem"/>
-          <span style="margin-left: 0.8em;"> Are you sure you want to revoke all user keys?</span>
-        </div>
-        <template #footer>
-          <Button label="No" icon="pi pi-times" @click="closeGlobalRevokeConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="revokeKeysGlobally()" class="p-button-text" autofocus/>
-        </template>
-      </Dialog>
-      <Dialog header="Confirmation" v-model:visible="displayRevokeConfirmation" :style="{width: '32em'}" :modal="true">
-        <div class="confirmation-content">
-          <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem"/>
-          <span style="margin-left: 0.8em;">Are you sure you want to revoke the selected user's keys?</span>
-        </div>
-        <template #footer>
-          <Button label="No" icon="pi pi-times" @click="closeRevokeConfirmation" class="p-button-text"/>
-          <Button label="Yes" icon="pi pi-check" @click="revokeSelectedUserKeys()" class="p-button-text" autofocus/>
-        </template>
-      </Dialog>
     </div>
     <Toast position="bottom-right"/>
   </div>
@@ -387,10 +342,6 @@
 
         addUserPos: "bottomleft",
         displayAddUsersDialog: false,
-        displayGlobalLogoutConfirmation: false,
-        displayLogoutConfirmation: false,
-        displayGlobalRevokeConfirmation: false,
-        displayRevokeConfirmation: false,
 
         addUserFirstName: "",
         addUserLastName: "",
@@ -564,110 +515,6 @@
                   console.log(error);
               })
       },
-      revokeKeysGlobally() {
-          axios
-              .post("http://localhost:3001/users/global/revoke")
-              .then(resp => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Revoked All User Keys",
-                      life: 3000
-                  });
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
-      },
-      revokeSelectedUserKeys() {
-          let usersArr = this.selectedUsers.map(function (a) {
-              return {uuid: a.uuid};
-          });
-          let reqObj = {users: usersArr};
-          let reqBody = JSON.stringify(reqObj);
-
-          axios
-              .post("http://localhost:3001/users/revoke", reqBody,
-              {headers: {"Content-Type": "application/json"}})
-              .then(resp => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Revoked User Keys",
-                      life: 3000
-                  });
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
-      },
-      logOutUsersGlobally() {
-          axios
-              .post("http://localhost:3001/users/global/logout")
-              .then(resp => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Logged All Users Out",
-                      life: 3000
-                  });
-                  console.log(resp.data);
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
-      },
-      logOutSelectedUsers() {
-          let usersArr = this.selectedUsers.map(function (a) {
-              return {uuid: a.uuid};
-          });
-          let reqObj = {users: usersArr};
-          let reqBody = JSON.stringify(reqObj);
-
-          axios
-              .post("http://localhost:3001/users/logout", reqBody,
-              {headers: {"Content-Type": "application/json"}})
-              .then(resp => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Logged Users Out",
-                      life: 3000
-                  });
-                  console.log(resp.data);
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
-      },
       generateSelectedUserRegistrationKeys() {
           let usersArr = this.selectedUsers.map(function (a) {
               return {uuid: a.uuid};
@@ -762,30 +609,149 @@
       hideAddUsersDialog() {
           this.displayAddUsersDialog = false;
       },
-      closeGlobalLogoutConfirmation() {
-          this.displayGlobalLogoutConfirmation = false;
-      },
-      closeLogoutConfirmation() {
-          this.displayLogoutConfirmation = false;
-      },
-      closeGlobalRevokeConfirmation() {
-          this.displayGlobalRevokeConfirmation = false;
-      },
       closeRevokeConfirmation() {
           this.displayRevokeConfirmation = false;
       },
-      showLogoutUsersDialog() {
+      logoutUsersConfirmation() {
           if (this.selectedUsers === null || this.selectedUsers.length === 0) {
-              this.displayGlobalLogoutConfirmation = true;
+            this.$confirm.require({
+              message: "Are you sure you want to log all users out?",
+              header: 'Confirmation',
+              icon: 'pi pi-exclamation-triangle',
+              acceptClass: "p-button-danger",
+              rejectClass: "p-button-text p-button-plain",
+              accept: () => {
+                axios
+                    .post("http://localhost:3001/users/global/logout")
+                    .then(resp => {
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: "Logged All Users Out",
+                        life: 3000
+                      });
+                      console.log(resp.data);
+                      this.updateTableData();
+                    })
+                    .catch((error) => {
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response.data.message,
+                        life: 3000
+                      });
+                      console.log(error);
+                    })
+              }
+            })
           } else {
-              this.displayLogoutConfirmation = true;
+            this.$confirm.require({
+              message: "Are you sure you want to log the selected users out?\n",
+              header: 'Confirmation',
+              icon: 'pi pi-exclamation-triangle',
+              acceptClass: "p-button-danger",
+              rejectClass: "p-button-text p-button-plain",
+              accept: () => {
+                let usersArr = this.selectedUsers.map(function (a) {
+                  return {uuid: a.uuid};
+                });
+                let reqObj = {users: usersArr};
+                let reqBody = JSON.stringify(reqObj);
+
+                axios
+                    .post("http://localhost:3001/users/logout", reqBody,
+                        {headers: {"Content-Type": "application/json"}})
+                    .then(resp => {
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: "Logged Users Out",
+                        life: 3000
+                      });
+                      console.log(resp.data);
+                      this.updateTableData();
+                    })
+                    .catch((error) => {
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response.data.message,
+                        life: 3000
+                      });
+                      console.log(error);
+                    })
+              }
+            })
           }
       },
-      showRevokeUserKeysDialog() {
+      revokeUserKeysConfirmation() {
           if (this.selectedUsers === null || this.selectedUsers.length === 0) {
-              this.displayGlobalRevokeConfirmation = true;
+            this.$confirm.require({
+              message: "Are you sure you want to revoke all user keys?",
+              header: 'Confirmation',
+              icon: 'pi pi-exclamation-triangle',
+              acceptClass: "p-button-danger",
+              rejectClass: "p-button-text p-button-plain",
+              accept: () => {
+                axios
+                    .post("http://localhost:3001/users/global/revoke")
+                    .then(resp => {
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: "Revoked All User Keys",
+                        life: 3000
+                      });
+                      this.updateTableData();
+                    })
+                    .catch((error) => {
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response.data.message,
+                        life: 3000
+                      });
+                      console.log(error);
+                    })
+              }
+            })
           } else {
-              this.displayRevokeConfirmation = true;
+            this.$confirm.require({
+              message: "Are you sure you want to revoke the selected user's keys?",
+              header: 'Confirmation',
+              icon: 'pi pi-exclamation-triangle',
+              acceptClass: "p-button-danger",
+              rejectClass: "p-button-text p-button-plain",
+              accept: () => {
+                let usersArr = this.selectedUsers.map(function (a) {
+                  return {uuid: a.uuid};
+                });
+                let reqObj = {users: usersArr};
+                let reqBody = JSON.stringify(reqObj);
+
+                axios
+                    .post("http://localhost:3001/users/revoke", reqBody,
+                        {headers: {"Content-Type": "application/json"}})
+                    .then(resp => {
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: "Revoked User Keys",
+                        life: 3000
+                      });
+                      this.updateTableData();
+                    })
+                    .catch((error) => {
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response.data.message,
+                        life: 3000
+                      });
+                      console.log(error);
+                    })
+              }
+            })
           }
       }
     }
