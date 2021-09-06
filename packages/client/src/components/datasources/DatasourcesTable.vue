@@ -15,7 +15,7 @@
         :loading="loading"
         :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']"
         style="align-content: center"
-        scrollHeight="60vh"
+        scrollHeight="65vh"
         responsiveLayout="scroll"
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"

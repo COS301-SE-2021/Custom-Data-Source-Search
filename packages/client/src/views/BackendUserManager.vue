@@ -6,6 +6,10 @@
         Manage users of this backend
       </p>
     </div>
+    <ScrollPanel
+        id="main-scroll"
+        style="width: 95vw; height: 80vh; bottom: 4em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
+    >
     <div class="admin-table-container">
       <DataTable class="p-datatable-sm table"
                  @rowSelect="onRowSelect"
@@ -21,10 +25,7 @@
                  filterDisplay="row"
                  responsiveLayout="scroll"
       >
-        <template #header>
-          <div class="p-datatable-header">Users</div>
-        </template>
-        <Column selectionMode="multiple" headerStyle="width: 1em" style="max-width: 3em;"></Column>
+        <Column selectionMode="multiple" headerStyle="min-width: 2.3em" style="max-width: 3em;"></Column>
         <Column filterField="firstname" :showFilterMenu="false" header="Name" style="min-width:12rem">
           <template #body="{data}">
             {{data.first_name}}
@@ -125,6 +126,7 @@
         </Column>
       </DataTable>
     </div>
+    </ScrollPanel>
     <div class="backend-toolbar-container">
       <Toolbar class="backend-toolbar">
         <template #left>
@@ -180,6 +182,58 @@
                        :model="copyOptions"
                        @click="mailUsers"
                        label="Email"
+                       icon="pi pi-inbox"
+                       class="p-button-info p-button-custom-med"
+          />
+        </template>
+      </Toolbar>
+      <Toolbar class="backend-toolbar-small">
+        <template #left>
+        <span class="p-buttonset">
+          <Button @click="showAddUsersDialog"
+                  icon="pi pi-user-plus"
+                  class="p-button p-button-success p-mr-2 p-button-custom-med"
+          />
+          <Button :disabled="!isUserSelected"
+                  @click="deleteUsers"
+                  icon="pi pi-user-minus"
+                  class="p-button-danger p-mr-2
+                  p-button-custom-med"
+          />
+        </span>
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
+          <Button :disabled="!isUserSelected"
+                  @click="changeUserRoles"
+                  icon="pi pi-sort"
+                  class="p-button-info p-mr-2 permissions-button p-button-custom-med"
+          />
+          <Dropdown class="toolbar-dropdown"
+                    :disabled="!isUserSelected"
+                    v-model="selectedRole"
+                    :options="roleOptions"
+                    placeholder="Select a Role"
+          />
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
+          <span class="p-buttonset">
+          <Button @click="showLogoutUsersDialog"
+                  icon="pi pi-lock"
+                  class="p-button-warning p-button-custom-med"
+          />
+          <Button @click="showRevokeUserKeysDialog"
+                  icon="pi pi-ban"
+                  class="p-button-danger p-button-custom-med"
+          />
+        </span>
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
+          <Button @click="generateSelectedUserRegistrationKeys"
+                  :disabled="!isUserSelected"
+                  icon="pi pi-key"
+                  class="p-button-info p-button-custom-med"
+          />
+          <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
+          <SplitButton :disabled="!isUserSelected"
+                       :model="copyOptions"
+                       @click="mailUsers"
                        icon="pi pi-inbox"
                        class="p-button-info p-button-custom-med"
           />
@@ -701,8 +755,8 @@
 <style scoped>
 
 .management-page {
-  width: 100%;
-  height: 100%;
+  height: 100vh;
+  padding-left: 1%;
   display: grid;
   grid-template-rows: 1fr 10fr;
   grid-template-columns: 1fr;
@@ -714,7 +768,12 @@
 }
 
 .backend-toolbar {
-  padding: 0.3em
+  padding: 0;
+}
+
+.backend-toolbar-small{
+  display: none;
+  padding: 0;
 }
 
 .backend-toolbar-container {
@@ -722,7 +781,6 @@
   position: sticky;
   bottom: 3vh;
   align-self: center;
-  margin: 0 0 2.5em;
 }
 
 .permissions-button {
@@ -771,12 +829,32 @@
   margin-right: 0;
 }
 
-+.management-page-header{
-  margin-bottom: 50px;
+.management-page-header{
+  margin-bottom: 20px;
 }
 
 .management-page-description {
   text-align: center;
   color: #ededed;
+}
+
+@media only screen and (max-width: 1366px) {
+  .backend-toolbar{
+    display: none;
+  }
+
+  .backend-toolbar-small{
+    display: block;
+  }
+}
+
+@media only screen and (max-height: 768px) {
+  .management-page-description{
+    display: none;
+  }
+
+  .management-page-header{
+    margin: 0;
+  }
 }
 </style>
