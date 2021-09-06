@@ -73,18 +73,30 @@
                 this.passwordIncorrectCheck();
             },
             updateBackendLogin () {
+                if (this.masterPass === null) {
+                    this.passwordIncorrect = true;
+                    return;
+                }
                 this.storeThisUser();
                 for (let backend of this.$store.getters.unconnectedBackendObjects) {
                     this.$store.dispatch('backendLogin', backend.local);
                 }
             },
             storeAUser() {
+                if (this.masterPass === null) {
+                    this.passwordIncorrect = true;
+                    return;
+                }
                 this.$store.commit('signInAUser', {
                     masterPassword: this.masterPass,
                     userID: this.user.id
                 })
             },
             storeThisUser() {
+                if (this.masterPass === null) {
+                    this.passwordIncorrect = true;
+                    return;
+                }
                 this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
             },
             passwordIncorrectCheck() {

@@ -242,6 +242,10 @@
   #sidebar {
     max-width: 4em;
   }
+
+  .pi-info-circle {
+    cursor: pointer;
+  }
 </style>
 
 <script>
