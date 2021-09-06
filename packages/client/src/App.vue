@@ -247,6 +247,10 @@
   #sidebar {
     max-width: 4em;
   }
+
+  .pi-info-circle {
+    cursor: pointer;
+  }
 </style>
 
 <script>
@@ -319,8 +323,8 @@
       },
 
       closeDialog(){
-        this.displayPasswordDialog = !this.displayPasswordDialog;
-        this.displayVaultDialog = !this.displayVaultDialog;
+        this.displayPasswordDialog = false;
+        this.displayVaultDialog = false;
       }
     }
   }
