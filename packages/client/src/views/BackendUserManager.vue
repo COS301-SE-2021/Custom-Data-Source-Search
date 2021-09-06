@@ -1,6 +1,11 @@
 <template>
   <div class="management-page">
-    <h1 class="backend-name">{{backend.local.name}}</h1>
+    <div class="management-page-header">
+      <h1 class="backend-name">{{backend.local.name}}</h1>
+      <p class="management-page-description">
+        Manage users of this backend
+      </p>
+    </div>
     <div class="admin-table-container">
       <DataTable class="p-datatable-sm table"
                  @rowSelect="onRowSelect"
@@ -764,5 +769,14 @@
 
 .p-selection-column{
   margin-right: 0;
+}
+
++.management-page-header{
+  margin-bottom: 50px;
+}
+
+.management-page-description {
+  text-align: center;
+  color: #ededed;
 }
 </style>
