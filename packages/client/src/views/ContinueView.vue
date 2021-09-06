@@ -30,14 +30,14 @@
         name: "ContinueView",
 
         beforeMount() {
-            if (this.$store.getters.getNewAppStatus || this.$store.getters.getMasterKeyObject === null) {
+            if (this.$store.getters.getNewAppStatus || this.$store.getters.getMasterKey === null) {
                 this.$router.push('/');
             }
         },
 
         methods: {
             goToSettings() {
-                this.$router.push("Settings");
+                this.$router.push("Backends");
             },
             goToSearch() {
                 this.$router.push('Search');

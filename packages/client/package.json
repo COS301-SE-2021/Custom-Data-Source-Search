@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@electron/remote": "^1.2.0",
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-e2e-cypress": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
