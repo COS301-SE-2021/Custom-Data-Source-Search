@@ -7,11 +7,11 @@
       </p>
     </div>
     <ScrollPanel
-        id="main-scroll"
-        style="width: 95vw; height: 80vh; bottom: 4em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
+      id="main-scroll"
+      style="width: 95vw; height: 80vh; bottom: 4em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
     >
     <div class="admin-table-container">
-      <DataTable class="p-datatable-sm table"
+      <DataTable class="p-datatable table"
                  @rowSelect="onRowSelect"
                  @rowUnselect="onRowUnselect"
                  @rowSelectAll="onRowSelectAll"
@@ -31,7 +31,7 @@
         <template #loading>
           Loading user data. Please wait...
         </template>
-        <Column selectionMode="multiple" headerStyle="min-width: 2.3em" style="max-width: 3em;"></Column>
+        <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;"></Column>
         <Column filterField="first_name" :showFilterMenu="false" header="Name" style="min-width:12rem">
           <template #body="{data}">
             {{data.first_name}}
@@ -366,534 +366,543 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
-    import {FilterMatchMode} from 'primevue/api';
-    import axios from "axios";
+  import {mapGetters} from "vuex";
+  import {FilterMatchMode} from 'primevue/api';
+  import axios from "axios";
 
-    export default {
-        name: "BackendManager.vue",
+  export default {
+    name: "BackendManager.vue",
 
-        props: {
-            backendID: Number,
-        },
+    props: {
+      backendID: Number,
+    },
 
-        data() {
-            return {
-                backend: null,
-                tableData: [],
-                isUserSelected: false,
-                selectedUsers: null,
-                selectedRole: null,
+    data() {
+      return {
+        backend: null,
+        tableData: [],
+        isUserSelected: false,
+        selectedUsers: null,
+        selectedRole: null,
 
-                addUserPos: "bottomleft",
-                displayAddUsersDialog: false,
-                displayGlobalLogoutConfirmation: false,
-                displayLogoutConfirmation: false,
-                displayGlobalRevokeConfirmation: false,
-                displayRevokeConfirmation: false,
+        addUserPos: "bottomleft",
+        displayAddUsersDialog: false,
+        displayGlobalLogoutConfirmation: false,
+        displayLogoutConfirmation: false,
+        displayGlobalRevokeConfirmation: false,
+        displayRevokeConfirmation: false,
 
-                addUserFirstName: "",
-                addUserLastName: "",
-                addUserEmail: "",
-                addUserRole: "",
-                roleOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
-                copyOptions: [
-                    {
-                        label: 'Copy',
-                        icon: 'pi pi-copy',
-                        command: () => {
-                            let usersString = "";
-                            for (let userData of this.selectedUsers) {
-                                usersString += "Backend: " + this.backend.connect.link;
-                                usersString += ",Email: " + userData.email;
-                                usersString += ",Name: " + userData.first_name + " " + userData.last_name;
-                                usersString += ",Registration Key: " + userData.regKey + "\n";
-                            }
-                            navigator.clipboard.writeText(usersString);
-                            this.$toast.add({
-                                severity: 'success',
-                                summary: 'Success',
-                                detail: this.selectedUsers.length + " Users Copied to Clipboard",
-                                life: 3000
-                            });
-                        }
-                    }],
-
-                filters: {
-                  'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-                  'first_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-                  'last_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-                  'email': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-                  'role': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'reg_status': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'logged_in': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'reg_key': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
-                },
-                loggedIn: ['true', 'false'],
-                registrationStatus: [
-                    'Unregistered', 'Registered'
-                ]
+        addUserFirstName: "",
+        addUserLastName: "",
+        addUserEmail: "",
+        addUserRole: "",
+        roleOptions: ['Super', 'Admin', 'Editor', 'Viewer'],
+        copyOptions: [
+          {
+            label: 'Copy',
+            icon: 'pi pi-copy',
+            command: () => {
+              let usersString = "";
+              for (let userData of this.selectedUsers) {
+                  usersString += "Backend: " + this.backend.connect.link;
+                  usersString += ",Email: " + userData.email;
+                  usersString += ",Name: " + userData.first_name + " " + userData.last_name;
+                  usersString += ",Registration Key: " + userData.regKey + "\n";
+              }
+              navigator.clipboard.writeText(usersString);
+              this.$toast.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: this.selectedUsers.length + " Users Copied to Clipboard",
+                  life: 3000
+              });
             }
+          }],
+
+        filters: {
+          'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+          'first_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+          'last_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+          'email': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+          'role': {value: null, matchMode: FilterMatchMode.EQUALS},
+          'reg_status': {value: null, matchMode: FilterMatchMode.EQUALS},
+          'logged_in': {value: null, matchMode: FilterMatchMode.EQUALS},
+          'reg_key': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
         },
+        loggedIn: ['true', 'false'],
+        registrationStatus: [
+          'Unregistered', 'Registered'
+        ]
+      }
+    },
 
-        computed: {
-            ...mapGetters([
-                'getUserBackends',
-                'getSignedInUserId',
-            ])
-        },
+    computed: {
+      ...mapGetters([
+        'getUserBackends',
+        'getSignedInUserId',
+      ])
+    },
 
-        beforeMount() {
-          this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
-          this.updateTableData();
-        },
+    beforeMount() {
+      this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
+      this.updateTableData();
+    },
 
-        methods: {
-            updateTableData() {
-                axios.get("http://localhost:3001/users")
-                    .then((resp) => {
-                      console.log(resp.data.data);
-                      this.tableData = resp.data.data;
-                      let i=0;
-                      for(i; i<this.tableData.length; i++){
-                        this.tableData[i].role = this.tableData[i].role.charAt(0).toUpperCase() + this.tableData[i].role.slice(1);
-                        this.tableData[i].reg_status = this.tableData[i].reg_status.charAt(0).toUpperCase() + this.tableData[i].reg_status.slice(1);
-                      }
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            addUsers() {
-                let reqUser = {
-                    first_name: this.addUserFirstName,
-                    last_name: this.addUserLastName,
-                    email: this.addUserEmail,
-                    role: this.addUserRole.toLowerCase()
-                };
-                let reqObj = {users: [reqUser]};
-                let reqBody = JSON.stringify(reqObj);
-
-                axios.post("http://localhost:3001/users", reqBody,
-                    {headers: {"Content-Type": "application/json"}})
-                    .then((resp) => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Added Users",
-                            life: 3000
-                        });
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            deleteUsers() {
-                let usersArr = this.selectedUsers.map(function (a) {
-                    return {uuid: a.uuid};
+    methods: {
+      updateTableData() {
+        axios
+            .get("http://localhost:3001/users")
+            .then((resp) => {
+              console.log(resp.data.data);
+              this.tableData = resp.data.data;
+              let i=0;
+              for(i; i<this.tableData.length; i++){
+                this.tableData[i].role = this.tableData[i].role.charAt(0).toUpperCase() + this.tableData[i].role.slice(1);
+                this.tableData[i].reg_status = this.tableData[i].reg_status.charAt(0).toUpperCase() + this.tableData[i].reg_status.slice(1);
+              }
+            })
+            .catch((error) => {
+                this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data.message,
+                    life: 3000
                 });
-                let reqObj = {users: usersArr};
-                let reqBody = JSON.stringify(reqObj);
+                console.log(error);
+            })
+      },
+      addUsers() {
+          let reqUser = {
+              first_name: this.addUserFirstName,
+              last_name: this.addUserLastName,
+              email: this.addUserEmail,
+              role: this.addUserRole.toLowerCase()
+          };
+          let reqObj = {users: [reqUser]};
+          let reqBody = JSON.stringify(reqObj);
 
-                axios.delete("http://localhost:3001/users",
-                    {data: reqBody, headers: {"Content-Type": "application/json"}})
-                    .then((resp) => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Deleted Users",
-                            life: 3000
-                        });
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            changeUserRoles() {
-                let usersArr = this.selectedUsers.map(function (a) {
-                    return {uuid: a.uuid};
-                });
-                let reqObj = {
-                    role: this.selectedRole.toLowerCase(),
-                    users: usersArr
-                };
-                let reqBody = JSON.stringify(reqObj);
+          axios
+              .post("http://localhost:3001/users", reqBody,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Added Users",
+                      life: 3000
+                  });
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      deleteUsers() {
+          let usersArr = this.selectedUsers.map(function (a) {
+              return {uuid: a.uuid};
+          });
+          let reqObj = {users: usersArr};
+          let reqBody = JSON.stringify(reqObj);
 
-                axios.post("http://localhost:3001/users/role", reqBody,
-                    {headers: {"Content-Type": "application/json"}})
-                    .then((resp) => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Updated Roles",
-                            life: 3000
-                        });
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            revokeKeysGlobally() {
-                axios.post("http://localhost:3001/users/global/revoke")
-                    .then(resp => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Revoked All User Keys",
-                            life: 3000
-                        });
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            revokeSelectedUserKeys() {
-                let usersArr = this.selectedUsers.map(function (a) {
-                    return {uuid: a.uuid};
-                });
-                let reqObj = {users: usersArr};
-                let reqBody = JSON.stringify(reqObj);
+          axios
+              .delete("http://localhost:3001/users",
+              {data: reqBody, headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Deleted Users",
+                      life: 3000
+                  });
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      changeUserRoles() {
+          let usersArr = this.selectedUsers.map(function (a) {
+              return {uuid: a.uuid};
+          });
+          let reqObj = {
+              role: this.selectedRole.toLowerCase(),
+              users: usersArr
+          };
+          let reqBody = JSON.stringify(reqObj);
 
-                axios.post("http://localhost:3001/users/revoke", reqBody,
-                    {headers: {"Content-Type": "application/json"}})
-                    .then(resp => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Revoked User Keys",
-                            life: 3000
-                        });
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            logOutUsersGlobally() {
-                axios.post("http://localhost:3001/users/global/logout")
-                    .then(resp => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Logged All Users Out",
-                            life: 3000
-                        });
-                        console.log(resp.data);
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            logOutSelectedUsers() {
-                let usersArr = this.selectedUsers.map(function (a) {
-                    return {uuid: a.uuid};
-                });
-                let reqObj = {users: usersArr};
-                let reqBody = JSON.stringify(reqObj);
+          axios
+              .post("http://localhost:3001/users/role", reqBody,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Updated Roles",
+                      life: 3000
+                  });
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      revokeKeysGlobally() {
+          axios
+              .post("http://localhost:3001/users/global/revoke")
+              .then(resp => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Revoked All User Keys",
+                      life: 3000
+                  });
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      revokeSelectedUserKeys() {
+          let usersArr = this.selectedUsers.map(function (a) {
+              return {uuid: a.uuid};
+          });
+          let reqObj = {users: usersArr};
+          let reqBody = JSON.stringify(reqObj);
 
-                axios.post("http://localhost:3001/users/logout", reqBody,
-                    {headers: {"Content-Type": "application/json"}})
-                    .then(resp => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Logged Users Out",
-                            life: 3000
-                        });
-                        console.log(resp.data);
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            generateSelectedUserRegistrationKeys() {
-                let usersArr = this.selectedUsers.map(function (a) {
-                    return {uuid: a.uuid};
-                });
-                let reqObj = {users: usersArr};
-                let reqBody = JSON.stringify(reqObj);
+          axios
+              .post("http://localhost:3001/users/revoke", reqBody,
+              {headers: {"Content-Type": "application/json"}})
+              .then(resp => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Revoked User Keys",
+                      life: 3000
+                  });
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      logOutUsersGlobally() {
+          axios
+              .post("http://localhost:3001/users/global/logout")
+              .then(resp => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Logged All Users Out",
+                      life: 3000
+                  });
+                  console.log(resp.data);
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      logOutSelectedUsers() {
+          let usersArr = this.selectedUsers.map(function (a) {
+              return {uuid: a.uuid};
+          });
+          let reqObj = {users: usersArr};
+          let reqBody = JSON.stringify(reqObj);
 
-                axios.post("http://localhost:3001/users/registrationkey", reqBody,
-                    {headers: {"Content-Type": "application/json"}})
-                    .then((resp) => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Generated Registration Keys",
-                            life: 3000
-                        });
+          axios
+              .post("http://localhost:3001/users/logout", reqBody,
+              {headers: {"Content-Type": "application/json"}})
+              .then(resp => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Logged Users Out",
+                      life: 3000
+                  });
+                  console.log(resp.data);
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      generateSelectedUserRegistrationKeys() {
+          let usersArr = this.selectedUsers.map(function (a) {
+              return {uuid: a.uuid};
+          });
+          let reqObj = {users: usersArr};
+          let reqBody = JSON.stringify(reqObj);
 
-                        console.log(resp.data);
-                        this.updateTableData();
+          axios
+              .post("http://localhost:3001/users/registrationkey", reqBody,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Generated Registration Keys",
+                      life: 3000
+                  });
 
-                    }).catch((error) => {
-                    this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: error.response.data.message,
-                        life: 3000
-                    });
-                    console.log(error);
-                })
+                  console.log(resp.data);
+                  this.updateTableData();
 
-            },
-            mailUsers() {
-                let usersArr = this.selectedUsers.map(function (a) {
-                    return {uuid: a.uuid};
-                });
-                let reqObj = {users: usersArr};
-                let reqBody = JSON.stringify(reqObj);
+              }).catch((error) => {
+              this.$toast.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: error.response.data.message,
+                  life: 3000
+              });
+              console.log(error);
+          })
 
-                axios.post("http://localhost:3001/users/email", reqBody,
-                    {headers: {"Content-Type": "application/json"}})
-                    .then((resp) => {
-                        this.$toast.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: "Mailed Users",
-                            life: 3000
-                        });
-                        console.log(resp.data);
-                        this.updateTableData();
-                    })
-                    .catch((error) => {
-                        this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data.message,
-                            life: 3000
-                        });
-                        console.log(error);
-                    })
-            },
-            /*
-            Selection Event Handlers
-            ================
-            */
-            onRowSelect() {
-                console.log("Selected a Row");
-                this.isUserSelected = true;
-            },
-            onRowUnselect() {
-                console.log("Unselected a Row");
-                if (this.selectedUsers.length === 0) {
-                    this.isUserSelected = false;
-                }
-            },
-            onRowSelectAll() {
-                console.log("Selected all Rows");
-                this.isUserSelected = true;
-            },
-            onRowUnselectAll() {
-                console.log("Unselected all Rows");
-                this.isUserSelected = false;
-            },
-            /*
-            Dialog Display Toggles
-            ======================
-            */
-            showAddUsersDialog() {
-                this.displayAddUsersDialog = true;
-            },
-            hideAddUsersDialog() {
-                this.displayAddUsersDialog = false;
-            },
-            closeGlobalLogoutConfirmation() {
-                this.displayGlobalLogoutConfirmation = false;
-            },
-            closeLogoutConfirmation() {
-                this.displayLogoutConfirmation = false;
-            },
-            closeGlobalRevokeConfirmation() {
-                this.displayGlobalRevokeConfirmation = false;
-            },
-            closeRevokeConfirmation() {
-                this.displayRevokeConfirmation = false;
-            },
-            showLogoutUsersDialog() {
-                if (this.selectedUsers === null || this.selectedUsers.length === 0) {
-                    this.displayGlobalLogoutConfirmation = true;
-                } else {
-                    this.displayLogoutConfirmation = true;
-                }
-            },
-            showRevokeUserKeysDialog() {
-                if (this.selectedUsers === null || this.selectedUsers.length === 0) {
-                    this.displayGlobalRevokeConfirmation = true;
-                } else {
-                    this.displayRevokeConfirmation = true;
-                }
-            }
-        }
+      },
+      mailUsers() {
+          let usersArr = this.selectedUsers.map(function (a) {
+              return {uuid: a.uuid};
+          });
+          let reqObj = {users: usersArr};
+          let reqBody = JSON.stringify(reqObj);
+
+          axios
+              .post("http://localhost:3001/users/email", reqBody,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                  this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Mailed Users",
+                      life: 3000
+                  });
+                  console.log(resp.data);
+                  this.updateTableData();
+              })
+              .catch((error) => {
+                  this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                  });
+                  console.log(error);
+              })
+      },
+      /*
+      Selection Event Handlers
+      ================
+      */
+      onRowSelect() {
+          console.log("Selected a Row");
+          this.isUserSelected = true;
+      },
+      onRowUnselect() {
+          console.log("Unselected a Row");
+          if (this.selectedUsers.length === 0) {
+              this.isUserSelected = false;
+          }
+      },
+      onRowSelectAll() {
+          console.log("Selected all Rows");
+          this.isUserSelected = true;
+      },
+      onRowUnselectAll() {
+          console.log("Unselected all Rows");
+          this.isUserSelected = false;
+      },
+      /*
+      Dialog Display Toggles
+      ======================
+      */
+      showAddUsersDialog() {
+          this.displayAddUsersDialog = true;
+      },
+      hideAddUsersDialog() {
+          this.displayAddUsersDialog = false;
+      },
+      closeGlobalLogoutConfirmation() {
+          this.displayGlobalLogoutConfirmation = false;
+      },
+      closeLogoutConfirmation() {
+          this.displayLogoutConfirmation = false;
+      },
+      closeGlobalRevokeConfirmation() {
+          this.displayGlobalRevokeConfirmation = false;
+      },
+      closeRevokeConfirmation() {
+          this.displayRevokeConfirmation = false;
+      },
+      showLogoutUsersDialog() {
+          if (this.selectedUsers === null || this.selectedUsers.length === 0) {
+              this.displayGlobalLogoutConfirmation = true;
+          } else {
+              this.displayLogoutConfirmation = true;
+          }
+      },
+      showRevokeUserKeysDialog() {
+          if (this.selectedUsers === null || this.selectedUsers.length === 0) {
+              this.displayGlobalRevokeConfirmation = true;
+          } else {
+              this.displayRevokeConfirmation = true;
+          }
+      }
     }
+  }
 </script>
 
 <style scoped>
+  .management-page {
+    height: 100vh;
+    padding-left: 1%;
+    display: grid;
+    grid-template-rows: 1fr 10fr;
+    grid-template-columns: 1fr;
+  }
 
-.management-page {
-  height: 100vh;
-  padding-left: 1%;
-  display: grid;
-  grid-template-rows: 1fr 10fr;
-  grid-template-columns: 1fr;
-}
+  .backend-name {
+    text-align: center;
+    color: #ededed;
+  }
 
-.backend-name {
-  text-align: center;
-  color: #ededed;
-}
-
-.backend-toolbar {
-  padding: 0;
-}
-
-.backend-toolbar-small{
-  display: none;
-  padding: 0;
-}
-
-.backend-toolbar-container {
-  justify-self: center;
-  position: sticky;
-  bottom: 3vh;
-  align-self: center;
-  z-index: 5;
-}
-
-.permissions-button {
-  margin-right: 0;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-}
-
-
-.p-button-custom-med {
-  padding: 0.54rem 0.74rem;
-  font-size: 1rem;
-}
-
-::v-deep(.p-button) {
-  padding: 0.54rem 0.74rem;
-  font-size: 1rem;
-}
-
-.table {
-  grid-row-start: 2;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-
-.p-datatable-header {
-  padding: 0.4rem 0.4rem;
-}
-
-::v-deep(.p-dropdown){
-  height: 36px;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-}
-
-::v-deep(.p-dropdown-label){
-  padding: 6px;
-}
-
-::v-deep(td){
-  word-break: break-word;
-}
-
-.p-selection-column{
-  margin-right: 0;
-}
-
-.management-page-header{
-  margin-bottom: 20px;
-}
-
-.management-page-description {
-  text-align: center;
-  color: #ededed;
-}
-
-.p-multiselect {
-  background-color: #242424;
-  height: 34px;
-}
-
-.p-inputtext {
-  background-color: #242424;
-}
-
-@media only screen and (max-width: 1366px) {
-  .backend-toolbar{
-    display: none;
+  .backend-toolbar {
+    padding: 0;
   }
 
   .backend-toolbar-small{
-    display: block;
-  }
-}
-
-@media only screen and (max-height: 768px) {
-  .management-page-description{
     display: none;
+    padding: 0;
+  }
+
+  .backend-toolbar-container {
+    justify-self: center;
+    position: sticky;
+    bottom: 3vh;
+    align-self: center;
+    z-index: 5;
+  }
+
+  .permissions-button {
+    margin-right: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+
+  .p-button-custom-med {
+    padding: 0.54rem 0.74rem;
+    font-size: 1rem;
+  }
+
+  ::v-deep(.p-button) {
+    padding: 0.54rem 0.74rem;
+    font-size: 1rem;
+  }
+
+  .table {
+    grid-row-start: 2;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .p-datatable-header {
+    padding: 0.4rem 0.4rem;
+  }
+
+  ::v-deep(.p-dropdown){
+    height: 36px;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+  }
+
+  ::v-deep(.p-dropdown-label){
+    padding: 6px;
+  }
+
+  ::v-deep(td){
+    word-break: break-word;
+  }
+
+  .p-selection-column{
+    margin-right: 0;
   }
 
   .management-page-header{
-    margin: 0;
+    margin-bottom: 20px;
   }
-}
+
+  .management-page-description {
+    text-align: center;
+    color: #ededed;
+  }
+
+  .p-multiselect {
+    background-color: #242424;
+    height: 34px;
+  }
+
+  .p-inputtext {
+    background-color: #242424;
+  }
+
+  @media only screen and (max-width: 1366px) {
+    .backend-toolbar{
+      display: none;
+    }
+
+    .backend-toolbar-small{
+      display: block;
+    }
+  }
+
+  @media only screen and (max-height: 768px) {
+    .management-page-description{
+      display: none;
+    }
+
+    .management-page-header{
+      margin: 0;
+    }
+  }
 </style>
