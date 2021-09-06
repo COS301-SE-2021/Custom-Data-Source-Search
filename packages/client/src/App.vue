@@ -314,8 +314,8 @@
       },
 
       closeDialog(){
-        this.displayPasswordDialog = !this.displayPasswordDialog;
-        this.displayVaultDialog = !this.displayVaultDialog;
+        this.displayPasswordDialog = false;
+        this.displayVaultDialog = false;
       }
     }
   }
