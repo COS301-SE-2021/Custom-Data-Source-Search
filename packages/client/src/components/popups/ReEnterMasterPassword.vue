@@ -6,7 +6,7 @@
       :closable="true"
       :dismissable-mask="true"
       :modal="true"
-      @hide="this.closeDialog; masterPass = null"
+      @hide="closeDialog"
   >
     {{body}}
     <div class="p-field p-grid">
