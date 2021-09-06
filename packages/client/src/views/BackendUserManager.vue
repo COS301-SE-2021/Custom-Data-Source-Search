@@ -25,8 +25,14 @@
                  filterDisplay="row"
                  responsiveLayout="scroll"
       >
+        <template #empty>
+          No users found.
+        </template>
+        <template #loading>
+          Loading user data. Please wait...
+        </template>
         <Column selectionMode="multiple" headerStyle="min-width: 2.3em" style="max-width: 3em;"></Column>
-        <Column filterField="firstname" :showFilterMenu="false" header="Name" style="min-width:12rem">
+        <Column filterField="first_name" :showFilterMenu="false" header="Name" style="min-width:12rem">
           <template #body="{data}">
             {{data.first_name}}
           </template>
@@ -40,7 +46,7 @@
             />
           </template>
         </Column>
-        <Column filterField="lastname" :showFilterMenu="false" header="Surname" style="min-width:12rem">
+        <Column filterField="last_name" :showFilterMenu="false" header="Surname" style="min-width:12rem">
           <template #body="{data}">
             {{data.last_name}}
           </template>
@@ -73,44 +79,68 @@
             {{data.role}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
+            <MultiSelect
                 v-model="filterModel.value"
-                @input="filterCallback()"
+                :options="roleOptions"
+                placeholder="Any"
                 class="p-column-filter"
-                :placeholder="`Search by role`"
-            />
+                @change="filterCallback()"
+            >
+              <template #option="slotProps">
+                <div class="p-multiselect-backends-option">
+                <span class="image-text">
+                  {{ slotProps.option }}
+                </span>
+                </div>
+              </template>
+            </MultiSelect>
           </template>
         </Column>
-        <Column filterField="registration.status" :showFilterMenu="false" header="Registration Status" style="min-width:12rem">
+        <Column filterField="reg_status" :showFilterMenu="false" header="Registration Status" style="min-width:12rem">
           <template #body="{data}">
             {{data.reg_status}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
+            <MultiSelect
                 v-model="filterModel.value"
-                @input="filterCallback()"
+                :options="registrationStatus"
+                placeholder="Any"
                 class="p-column-filter"
-                :placeholder="`Search by registration status`"
-            />
+                @change="filterCallback()"
+            >
+              <template #option="slotProps">
+                <div class="p-multiselect-backends-option">
+                <span class="image-text">
+                  {{ slotProps.option }}
+                </span>
+                </div>
+              </template>
+            </MultiSelect>
           </template>
         </Column>
-        <Column filterField="loggedin" :showFilterMenu="false" header="Logged In" style="min-width:12rem">
+        <Column filterField="logged_in" :showFilterMenu="false" header="Logged In" style="min-width:12rem">
           <template #body="{data}">
             {{data.logged_in}}
           </template>
           <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
+            <MultiSelect
                 v-model="filterModel.value"
-                @input="filterCallback()"
+                :options="loggedIn"
+                placeholder="Any"
                 class="p-column-filter"
-                :placeholder="`Search by log in status`"
-            />
+                @change="filterCallback()"
+            >
+              <template #option="slotProps">
+                <div class="p-multiselect-backends-option">
+                <span class="image-text">
+                  {{ slotProps.option }}
+                </span>
+                </div>
+              </template>
+            </MultiSelect>
           </template>
         </Column>
-        <Column filterField="registration.key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
+        <Column filterField="reg_key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
           <template #body="{data}">
             {{data.reg_key}}
           </template>
@@ -391,13 +421,13 @@
 
                 filters: {
                   'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-                  'firstname': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
-                  'lastname': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+                  'first_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
+                  'last_name': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
                   'email': {value: null, matchMode: FilterMatchMode.STARTS_WITH},
                   'role': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'registration.status': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'loggedin': {value: null, matchMode: FilterMatchMode.EQUALS},
-                  'registration.key': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
+                  'reg_status': {value: null, matchMode: FilterMatchMode.EQUALS},
+                  'logged_in': {value: null, matchMode: FilterMatchMode.EQUALS},
+                  'reg_key': {value: null, matchMode: FilterMatchMode.STARTS_WITH}
                 },
                 loggedIn: ['true', 'false'],
                 registrationStatus: [
@@ -781,6 +811,7 @@
   position: sticky;
   bottom: 3vh;
   align-self: center;
+  z-index: 5;
 }
 
 .permissions-button {
@@ -810,15 +841,14 @@
   padding: 0.4rem 0.4rem;
 }
 
-::v-deep(.p-inputtext) {
-  padding: 0.54rem 0.74rem;
-  font-size: 1rem;
-}
-
 ::v-deep(.p-dropdown){
+  height: 36px;
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
-  width: 8em;
+}
+
+::v-deep(.p-dropdown-label){
+  padding: 6px;
 }
 
 ::v-deep(td){
@@ -836,6 +866,15 @@
 .management-page-description {
   text-align: center;
   color: #ededed;
+}
+
+.p-multiselect {
+  background-color: #242424;
+  height: 34px;
+}
+
+.p-inputtext {
+  background-color: #242424;
 }
 
 @media only screen and (max-width: 1366px) {
