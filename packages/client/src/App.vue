@@ -159,9 +159,9 @@
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     background: linear-gradient(#232323, #1a1a1a) padding-box,
-    linear-gradient(to right bottom, rgba(128, 128, 128, 0.7), rgba(168, 168, 168, 0.71)) border-box;
+    linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
     border-radius: 50em;
-    border: 2.8px solid transparent;
+    border: 2.9px solid transparent;
   }
 
   .image-ring-main:hover {
@@ -170,9 +170,9 @@
   }
 
   .name-initial-main {
-    color: grey;
+    color: rgba(204, 204, 204, 0.97);
     font-size: 20px;
-    font-weight: normal;
+    font-weight: bold;
     margin: auto;
     width: 100%;
     height: 100%;
