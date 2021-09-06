@@ -283,7 +283,7 @@
              *
              * @param {string} content html that might be unsafe
              * @param {[string]} legalTokens exhaustive ordered list of legal tokens that actually exist in the content
-             * @returns {string} content with only legal tokens not escaped
+             * @returns {string} content with only legal tokens unescaped
              */
             escapeAllExceptMatches(content, legalTokens) {
                 let processedString = "";
