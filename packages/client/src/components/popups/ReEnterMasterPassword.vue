@@ -1,61 +1,105 @@
 <template>
-    <Dialog header="Enter Master Password" v-model:visible="display" :draggable="true " :closable="true" :dismissable-mask="true" :modal="true" @hide="$emit('display-popup')">
-        <div class="header-size">
-            Please enter your master password to continue:
+  <Dialog
+      header={{header}}
+      v-model:visible="display"
+      :draggable="true"
+      :closable="true"
+      :dismissable-mask="true"
+      :modal="true"
+      @hide="closeDialog"
+  >
+    {{body}}
+    <div class="p-field p-grid">
+      <label for="password" class="p-col-fixed" style="width:100px">Password</label>
+      <div class="p-col">
+        <PasswordInputField
+            id="password"
+            style="width: 100%"
+            @keyup.enter="doChecks"
+            v-model="masterPass"
+            :toggle-mask="true"
+            :feedback="false"
+        />
+        <div v-if="passwordIncorrect" class="error-message">
+          <span class="error-message">Incorrect password.</span>
         </div>
-        <br>
-        <div class="p-field p-grid">
-            <label for="password" class="p-col-fixed" style="width:100px">Password</label>
-            <div class="p-col">
-                <PasswordInputField id="password" style="width: 100%" @keyup.enter="assignData" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
-                <br><br>
-                <div v-if="passwordIncorrect" class="error-message">
-                    <span>Password Incorrect!</span>
-                    <br>
-                    <span>{{ errMessage }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="p-field p-grid" style="text-align: center">
-            <Button type="submit" class="p-button-sm" label="Submit" @click="assignData"/>
-        </div>
-    </Dialog>
+      </div>
+    </div>
+    <template #footer>
+      <Button label="Cancel" class="p-button-text" @click="closeDialog"/>
+      <Button label="Submit" autofocus @click="doChecks"/>
+    </template>
+  </Dialog>
 </template>
 
 <script>
     import PasswordInputField from "../primeComponents/PasswordInputField";
+
     export default {
         name: "ReEnterMasterPassword",
+
         components: {PasswordInputField},
+
+        props: {
+            show: Boolean,
+            user: Object,
+            welcomePage: Boolean,
+            unconnectedBackendIcon: Boolean,
+            vault: Boolean,
+            body: String
+        },
+
         data() {
             return {
                 masterPass: null,
                 display: this.show,
                 passwordIncorrect: false,
-                errMessage: 'Please repeat master password.',
             }
         },
-        props: {
-            show: Boolean,
-            user: Object,
-            welcomePage: Boolean
-        },
+
         methods: {
-            assignData() {
+            doChecks() {
                 if (this.welcomePage) {
-                    this.$store.commit('signInAUser', {masterPassword: this.masterPass, userID: this.user.id})
+                    this.storeAUser();
+                } else if (this.unconnectedBackendIcon) {
+                    this.updateBackendLogin();
+                } else if (this.vault) {
+                    this.storeThisUser();
                 } else {
-                    this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+                    this.storeThisUser();
                 }
-                if(this.$store.getters.getMasterKeyObject != null) {
+                this.passwordIncorrectCheck();
+            },
+            updateBackendLogin () {
+                this.storeThisUser();
+                for (let backend of this.$store.getters.unconnectedBackendObjects) {
+                    this.$store.dispatch('backendLogin', backend.local);
+                }
+            },
+            storeAUser() {
+                this.$store.commit('signInAUser', {
+                    masterPassword: this.masterPass,
+                    userID: this.user.id
+                })
+            },
+            storeThisUser() {
+                this.$store.commit('signInThisUser', {masterPassword: this.masterPass});
+            },
+            passwordIncorrectCheck() {
+                if (this.$store.getters.getMasterKey != null) {
                     this.passwordIncorrect = false;
                     this.masterPass = '';
                     this.$emit("actionToOccur");
-                    this.display = false;
-                }
-                else {
+                    this.closeDialog();
+                } else {
                     this.passwordIncorrect = true;
+                    this.masterPass = null;
                 }
+            },
+            closeDialog() {
+                this.display = false;
+                this.masterPass = null;
+                this.$emit("closeDialog");
             }
         },
         watch: {
@@ -67,21 +111,16 @@
 </script>
 
 <style scoped>
+  .p-field {
+    margin-top: 3vh;
+  }
 
-    .p-field {
-        margin : 0.5rem;
-    }
+  input {
+    width: 100%
+  }
 
-    input {
-        width: 100%
-    }
-
-    .header-size {
-        max-width: 18vw;
-    }
-
-    .error-message {
-        color: red;
-    }
-
+  .error-message {
+    color: #EF9A9A;
+    text-align: center;
+  }
 </style>
