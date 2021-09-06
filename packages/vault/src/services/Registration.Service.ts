@@ -9,7 +9,7 @@ class RegistrationService {
 
     async register(body: SRPRegistrationRequest): Promise<SRPRegistrationResponse> {
         if(this.detailsAreValid(body)){
-            const [data, err] = await vaultRepository.addUser(body.email, body.salt, body.verifier);
+            const [data, err] = await vaultRepository.addUser(body);
 
             if (err) {
                 return {
@@ -35,10 +35,13 @@ class RegistrationService {
         return body.hasOwnProperty("email") &&
                body.hasOwnProperty("salt") &&
                body.hasOwnProperty("verifier") &&
+               body.hasOwnProperty("data") &&
+               body.hasOwnProperty("fingerprint") &&
                isNaN(Number(body.email)) &&
                !isNaN(Number(body.salt)) &&
-               !isNaN(Number(body.verifier));
-
+               !isNaN(Number(body.verifier)) &&
+               isNaN(Number(body.data)) &&
+               !isNaN(Number(body.data));
     }
 
 }

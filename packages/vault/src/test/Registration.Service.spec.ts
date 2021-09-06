@@ -19,6 +19,7 @@ const service = registrationService
           const body = {
               email : "example.com",
               salt : 54545454554545,
+              data : "gfgfgfgfgfgfgfgfgfg"
           };
 
           const isValid =  service.detailsAreValid(body as any);
@@ -32,7 +33,8 @@ const service = registrationService
           const body = {
               email : "example.com",
               salt : 54545454554545,
-              verifier: "fhgfh5445dfhf"
+              verifier: "fhgfh5445dfhf",
+              body: "gfgfggfgfgfgfgfgfgf"
           };
 
           const isValid =  service.detailsAreValid(body as any);
@@ -46,13 +48,12 @@ const service = registrationService
           const body = {
               email : "example.com",
               salt : 54545454554545,
-              verifier: 12345677894
+              verifier: 12345677894,
+              data: "vgffgdfbfdggrdggfsgsg"
           };
 
-          const isValid =  service.detailsAreValid(body as any);
-
+          const isValid = service.detailsAreValid(body as any);
           expect(isValid).toEqual(true);
-
       })
 
 })

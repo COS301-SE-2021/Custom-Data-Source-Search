@@ -1,14 +1,16 @@
+import {SRPRegistrationRequest} from "../models/request/RegistrationReq.interface";
+
 const db = require("../config/db.config");
 
 class VaultRepository {
 
-    async addUser(email: string, salt: bigint, verifier: bigint){
+    async addUser(body : SRPRegistrationRequest){
         try {
-            const data = await db.query(
-                "INSERT INTO users (email, salt, verifier) VALUES ($1, $2, $3)",
-                [email, salt, verifier],
+            const result = await db.query(
+                'INSERT INTO "Users" (email, salt, verifier, data, fingerprint) VALUES ($1, $2, $3, $4, $5)',
+                [body.email, body.salt, body.verifier, body.data, body.fingerprint],
             );
-            return[data, null]
+            return[result, null]
         } catch (e){
             console.log(e.stack);
             return[null, e]
