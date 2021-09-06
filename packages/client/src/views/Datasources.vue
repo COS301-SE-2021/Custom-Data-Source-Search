@@ -42,4 +42,10 @@
   text-align: center;
   color: #ededed;
 }
+
+@media only screen and (max-height: 768px) {
+  .datasource-description{
+    display: none;
+  }
+}
 </style>

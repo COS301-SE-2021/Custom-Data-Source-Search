@@ -15,7 +15,7 @@
         :loading="loading"
         :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']"
         style="align-content: center"
-        scrollHeight="60vh"
+        scrollHeight="65vh"
         responsiveLayout="scroll"
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
@@ -130,7 +130,7 @@
       <template #loading>
         Loading data. Please wait...
       </template>
-      <Column selectionMode="multiple" headerStyle="width: 3em" style="max-width: 3em;">
+      <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;">
         <template #body="{data}">
           <Checkbox
               v-if="datasourceAdminStatus(data.backend)"
