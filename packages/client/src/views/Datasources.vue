@@ -13,9 +13,10 @@
 </template>
 
 <script>
-import DatasourcesTable from "../components/datasources/DatasourcesTable";
+    import DatasourcesTable from "../components/datasources/DatasourcesTable";
 
-export default{
+    export default{
+
   name: "Datasources",
 
   components: {DatasourcesTable}

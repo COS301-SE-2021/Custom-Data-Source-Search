@@ -22,9 +22,10 @@
 </template>
 
 <script>
-    import {ConnectedOverlayScrollHandler,DomHandler,ZIndexUtils} from 'primevue/utils';
+    import {ConnectedOverlayScrollHandler, DomHandler, ZIndexUtils} from 'primevue/utils';
     import OverlayEventBus from 'primevue/overlayeventbus';
     import InputText from 'primevue/inputtext';
+
     const zxcvbn = require('zxcvbn');
     export default {
         name: 'PasswordInputField',
@@ -368,4 +369,5 @@
     .p-fluid ~.p-password {
         display: flex;
     }
+
 </style>
