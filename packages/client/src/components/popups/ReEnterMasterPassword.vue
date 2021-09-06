@@ -10,16 +10,18 @@
   >
     {{body}}
     <div class="p-field p-grid">
-      <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
-        <PasswordInputField
-            id="password"
-            style="width: 100%"
-            @keyup.enter="doChecks"
-            v-model="masterPass"
-            :toggle-mask="true"
-            :feedback="false"
-        />
+        <span class="p-float-label">
+           <PasswordInputField
+              id="password"
+              style="width: 100%"
+              @keyup.enter="doChecks"
+              v-model="masterPass"
+              :toggle-mask="true"
+              :feedback="false"
+           />
+        <label for="password">Password</label>
+        </span>
         <div v-if="passwordIncorrect" class="error-message">
           <span class="error-message">Incorrect password.</span>
         </div>
