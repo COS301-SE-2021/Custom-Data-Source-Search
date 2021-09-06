@@ -20,8 +20,16 @@
                 <div> {{connect.link}} </div>
                 <div></div>
                 <div v-if="!localBackendBool" >
-                    <Button @click="editBackend" style="float: right" class="p-button p-button-outlined">Edit </Button>
-                    <Button @click="showBackendDeleteCheck" style="float: right" class="p-button p-button-outlined">Delete </Button>
+                    <Button
+                        label="Delete"
+                        class="p-button-danger confirmation-button"
+                        @click="showBackendDeleteCheck"
+                    />
+                    <Button
+                        label="Edit"
+                        class="p-button confirmation-button"
+                        @click="editBackend"
+                    />
                 </div>
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
@@ -33,9 +41,21 @@
                 <div>{{tempBackendInfo.link}}</div>
                 <div></div>
                 <div>
-                    <Button @click="editPermissions" style="float: left" class="p-button p-button-outlined" v-if="!newBackend && getUserAdminStatus(local.id)">Permissions</Button>
-                    <Button type="button" style="float: right" @click="saveChanges" class="p-button p-button-outlined">Save</Button>
-                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
+                    <Button
+                        type="button"
+                        style="float: right"
+                        @click="saveChanges"
+                        class="p-button"
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        label="Cancel"
+                        @click="cancelChanges"
+                        style="float: right"
+                        class="p-button-text"
+                    />
+
                 </div>
             </div>
         </div>
@@ -57,7 +77,7 @@
         name: "backendCard",
         components: {
             BackendDeleteCheck,
-          InputSwitch
+            InputSwitch
         },
         data () {
             return {
@@ -307,6 +327,12 @@
         grid-template-columns: 5fr 1fr;
     }
 
+    .confirmation-button {
+        float: right;
+    }
 
+    .p-button-text {
+        color: grey;
+    }
 
 </style>

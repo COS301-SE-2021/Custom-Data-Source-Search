@@ -1,6 +1,6 @@
 <template>
   <Dialog
-      header="Confirm Removal"
+      header="Confirm Deletion"
       :visible="display"
       :draggable="false"
       :closable="true"
