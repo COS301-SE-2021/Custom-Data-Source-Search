@@ -1,8 +1,5 @@
-import fs from "fs";
-import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
-import FormData from "form-data";
-import axios from "axios";
-import {generateUUID, removeFileExtension, statusMessage} from "../general/generalFunctions";
+import {FileInFolder, FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
+import {statusMessage} from "../general/generalFunctions";
 import solrService from "../services/Solr.service";
 import {StatusMessage} from "../models/response/general.interfaces";
 
@@ -36,43 +33,25 @@ class FolderDataSourceRepository {
 
     /**
      * Add a file contained in a folder to db and post it's contents to solr
-     * @async
      *
-     * @param {string} filePath Complete path to file
-     * @param {string} folderUUID uuid of corresponding folder that file is contained in
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     * @param {FileInFolder} fileInFolder
+     * @return {[StatusMessage, StatusMessage]}
      */
-    async addFileInFolder(filePath: string, folderUUID: string) {
-        const uuid: string = generateUUID()
-        const [, err] = await this.postToSolr(
-            fs.readFileSync(filePath), uuid, FolderDataSourceRepository.getFileName(filePath)
-        );
-        if (err) {
-            return [null, {
-                "code": 500,
-                "message": "Could not add file to solr"
-            }];
-        }
+    addFileInFolder(fileInFolder: FileInFolder): [StatusMessage, StatusMessage] {
         try {
             db.prepare(
                 'INSERT INTO folder_file_data (file_path, last_modified, folder_uuid, uuid) VALUES (?, ?, ?, ?);'
             ).run(
-                filePath,
-                fs.statSync(filePath).mtime.getTime(),
-                folderUUID,
-                uuid
+                fileInFolder.filePath,
+                fileInFolder.lastModified.getTime(),
+                fileInFolder.folderUUID,
+                fileInFolder.UUID
             )
         } catch (e) {
             console.error(e);
-            return [null, {
-                "code": 400,
-                "message": "File from folder datasource already exists"
-            }];
+            return [null, statusMessage(400, "File from folder datasource already exists")];
         }
-        return [{
-            "code": 200,
-            "message": "Successfully added file from folder datasource"
-        }, null];
+        return [statusMessage(200, "Successfully added file from folder datasource"), null];
     }
 
     /**
@@ -160,55 +139,6 @@ class FolderDataSourceRepository {
             tag1: dataSource.tag1,
             tag2: dataSource.tag2
         };
-    }
-
-    /**
-     * Post contents of a file to solr
-     * @async
-     *
-     * @param {Buffer} file Content of file
-     * @param {string} id Id of datasource as stored in db
-     * @param {string} fileName
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
-     */
-    async postToSolr(file: Buffer, id: string, fileName: string) {
-        let formData = new FormData();
-        fileName = removeFileExtension(fileName);
-        formData.append("file", file, fileName);
-        try {
-            await axios.post(
-                'http://localhost:' +
-                process.env.SOLR_PORT +
-                '/solr/files/update/extract?literal.id=' +
-                id +
-                '&commit=true&literal.datasource_type=folder',
-                formData,
-                {
-                    headers: {
-                        ...formData.getHeaders()
-                    }
-                });
-        } catch (e) {
-            console.error(e)
-            return [null, {
-                "code": 500,
-                "message": "Could not post file from folder to solr"
-            }]
-        }
-        return [{
-            "code": 200,
-            "message": "Successfully posted to Solr"
-        }]
-    }
-
-    /**
-     * Return file name from path
-     *
-     * @param {string} filePath
-     * @return {string}
-     */
-    private static getFileName(filePath: string) {
-        return filePath.split("/").pop();
     }
 
     /**

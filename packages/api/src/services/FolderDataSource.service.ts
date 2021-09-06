@@ -1,8 +1,16 @@
 import folderDataSourceRepository from "../repositories/FolderDataSourceRepository";
 import fs from "fs";
-import {FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
+import {FileInFolder, FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
-import {generateDefaultHttpResponse, generateUUID, statusMessage} from "../general/generalFunctions";
+import {
+    generateDefaultHttpResponse,
+    generateUUID, getLastModifiedDateOfFile,
+    removeFileExtension,
+    statusMessage
+} from "../general/generalFunctions";
+import {DefaultHttpResponse} from "../models/response/general.interfaces";
+import solrService from "./Solr.service";
+import fileDataSourceService from "./FileDataSource.service";
 
 class FolderDataSourceService {
 
@@ -38,9 +46,9 @@ class FolderDataSourceService {
         if (!fs.existsSync(dataSource.path)) {
             return generateDefaultHttpResponse(statusMessage(404, "Directory does not exist"));
         }
-        const uuid: string = generateUUID();
+        const folderUUID: string = generateUUID();
         const storedFolderDatasource: StoredFolderDataSource = {
-            uuid: uuid,
+            uuid: folderUUID,
             path: dataSource.path,
             tag1: dataSource.tag1,
             tag2: dataSource.tag2
@@ -49,21 +57,34 @@ class FolderDataSourceService {
         if (e) {
             return generateDefaultHttpResponse(e);
         }
-        try {
-            for (let fileName of this.getFilesInFolder(dataSource.path, "folderDepth2\n*.pdf", 3)) {
-                await folderDataSourceRepository.addFileInFolder(fileName, uuid);
+        for (let filePath of this.getFilesInFolder(dataSource.path, "folderDepth2\n*.pdf", 3)) {
+            const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
+            if (fileErr) {
+                continue;
             }
-        } catch (e) {
-        }
-        return {
-            "code": 200,
-            "body": {
-                "message": "Successfully added datasource"
+            const fileInFolderUUID: string = generateUUID()
+            const [, solrErr] = await solrService.postToSolr(
+                fileContent, fileInFolderUUID, removeFileExtension(this.extractFileName(filePath)), "folder"
+            );
+            if (solrErr) {
+                continue;
             }
+            const fileInFolder: FileInFolder = {
+                filePath: filePath,
+                lastModified: getLastModifiedDateOfFile(filePath),
+                folderUUID: folderUUID,
+                UUID: fileInFolderUUID
+            }
+            folderDataSourceRepository.addFileInFolder(fileInFolder);
         }
+        return generateDefaultHttpResponse(statusMessage(200, "Successfully added datasource"));
     }
 
-    async removeFolderDataSource(id: string) {
+    extractFileName(filePath: string): string {
+        return filePath.split("/").pop();
+    }
+
+    async removeFolderDataSource(id: string): Promise<DefaultHttpResponse> {
         let [result, err] = await folderDataSourceRepository.deleteDataSource(id);
         if (err) {
             return {
@@ -81,7 +102,7 @@ class FolderDataSourceService {
         }
     }
 
-    getFilesInFolder(path: string, dotIgnore: string, depth: number) {
+    getFilesInFolder(path: string, dotIgnore: string, depth: number): string[] {
         let ignoreFolders: string[] = [];
         let ignoreFiles: string[] = [];
         let ignoreFileTypes: string[] = [];
