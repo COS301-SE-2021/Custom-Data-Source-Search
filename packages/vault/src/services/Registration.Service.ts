@@ -35,6 +35,7 @@ class RegistrationService {
         return body.hasOwnProperty("email") &&
                body.hasOwnProperty("salt") &&
                body.hasOwnProperty("verifier") &&
+               isNaN(Number(body.email)) &&
                !isNaN(Number(body.salt)) &&
                !isNaN(Number(body.verifier));
 

@@ -8,7 +8,7 @@ const service = registrationService
          //given
         const body = {};
         // when
-        const isValid =  registrationService.detailsAreValid(body as any);
+        const isValid =  service.detailsAreValid(body as any);
         //then
         expect(isValid).toEqual(false);
 
@@ -21,7 +21,7 @@ const service = registrationService
               salt : 54545454554545,
           };
 
-          const isValid =  registrationService.detailsAreValid(body as any);
+          const isValid =  service.detailsAreValid(body as any);
 
           expect(isValid).toEqual(false);
 
@@ -35,7 +35,7 @@ const service = registrationService
               verifier: "fhgfh5445dfhf"
           };
 
-          const isValid =  registrationService.detailsAreValid(body as any);
+          const isValid =  service.detailsAreValid(body as any);
 
           expect(isValid).toEqual(false);
 
@@ -49,7 +49,7 @@ const service = registrationService
               verifier: 12345677894
           };
 
-          const isValid =  registrationService.detailsAreValid(body as any);
+          const isValid =  service.detailsAreValid(body as any);
 
           expect(isValid).toEqual(true);
 

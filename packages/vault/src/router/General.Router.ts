@@ -35,6 +35,6 @@ generalRouter.post("/challenge",async (req: Request, res: Response) => {
 
 
 generalRouter.post("/authenticate",async (req: Request, res: Response) => {
-    const result = await authenticationService.challenge(req.body)
+    const result = await authenticationService.authenticate(req.body)
     res.status(result.code).send(result.message);
 });

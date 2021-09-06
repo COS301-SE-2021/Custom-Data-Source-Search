@@ -3,7 +3,6 @@ const { Pool } = require('pg');
 
 
 dotenv.config({path:  __dirname + `/../../../../.env`});
-console.log("found env: " + process.env.VAULT_DB_URL + "   " + __dirname);
 
 const pool = new Pool({
     connectionString: process.env.VAULT_DB_URL

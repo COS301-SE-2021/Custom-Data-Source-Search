@@ -3,8 +3,7 @@ export interface SRPChallengeRequest {
 }
 
 export interface SRPAuthRequest {
-
-    A : bigint;
-    verificationMessage1 : bigint;
-
+    email : string,
+    A : bigint,
+    verificationMessage1 : bigint
 }
