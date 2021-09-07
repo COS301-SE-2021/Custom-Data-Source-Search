@@ -298,12 +298,6 @@
         if(this.$store.getters.getMasterKey === null){
           this.showPasswordDialog();
         }
-        else{
-          if (this.$store.getters.unconnectedBackendBool) {
-            console.log("Error in credentials");
-            console.log(JSON.stringify(this.$store.getters.getMasterKey));
-          }
-        }
       },
 
       toggle(event){

@@ -195,7 +195,6 @@
                     this.$emit('saveNewBackend');
                 }
                 else {
-                    console.log("Saving to store - email: " + this.tempBackendInfo.associatedEmail);
                     this.$store.commit("editBackend", {
                         userIndex: this.userIndex,
                         backendIndex: this.backendIndex,
@@ -225,11 +224,6 @@
                 this.setTempVars();
                 // Still need "are you sure you want to delete this backend?" warning
             },
-
-            editPermissions() {
-                console.log("To be implemented");
-            },
-
             connectToBackend() {
                 //Api call to make sure that connection information is valid, then it will call the connect api.
                 //If valid, a backend is added to the user's array of backends, and it returns the Backend's name and if you are an admin or not. (?)

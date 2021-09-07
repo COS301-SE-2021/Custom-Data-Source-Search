@@ -73,14 +73,11 @@
                 this.passwordIncorrectCheck();
             },
             updateBackendLogin () {
-                if (this.masterPass === null) {
-                    this.passwordIncorrect = true;
-                    return;
-                }
                 this.storeThisUser();
                 for (let backend of this.$store.getters.unconnectedBackendObjects) {
                     this.$store.dispatch('backendLogin', backend.local);
                 }
+                console.log(this.$store.getters.unconnectedBackendBool);
             },
             storeAUser() {
                 if (this.masterPass === null) {
