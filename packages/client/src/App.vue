@@ -3,23 +3,50 @@
     <div id="grid-div-1">
       <div id="sidebar">
         <router-link title="Search" class="icon" to="/search">
-          <i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/>
+          <i
+              id="SearchIcon"
+              class="pi pi-search"
+              style="font-size:1.5rem"
+              aria-hidden="true"
+          />
         </router-link>
-        <router-link
-            title="Data Sources" class="icon" to="/datasources">
-          <i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/>
+        <router-link title="Data Sources" class="icon" to="/datasources">
+          <i
+              id="DataSourcesIcon"
+              class="pi pi-list"
+              style="font-size:1.5rem"
+              aria-hidden="true"
+          />
         </router-link>
         <router-link title="Backends" class="icon" to="/backends">
-          <i class="pi pi-th-large" style="font-size:1.5rem" aria-hidden="true"/>
+          <i
+              id="BackendIcon"
+              class="pi pi-th-large"
+              style="font-size:1.5rem"
+              aria-hidden="true"
+          />
         </router-link>
         <router-link title="Admin" class="icon" to="/admin">
-          <i class="fas fa-users-cog" style="font-size:1.5rem" aria-hidden="true"/>
+          <i
+              id="AdminIcon"
+              class="fas fa-users-cog"
+              style="font-size:1.5rem"
+              aria-hidden="true"
+          />
         </router-link>
         <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
-          <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
+          <i
+              class="fas fa-sync-alt"
+              style="font-size:1.2rem"
+              aria-hidden="true"
+          />
         </div>
         <div v-else title="Syncing..." class="refresh-container icon">
-          <i class="fas fa-sync-alt fa-spin" style="font-size:1.2rem" aria-hidden="true"></i>
+          <i
+              class="fas fa-sync-alt fa-spin"
+              style="font-size:1.2rem"
+              aria-hidden="true"
+          />
         </div>
         <div class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
@@ -75,6 +102,79 @@
   </div>
   <router-view v-else/>
 </template>
+
+<script>
+  import OverlayPanel from 'primevue/overlaypanel';
+  import ProfileDropdown from "@/components/landing/ProfileDropdown";
+  import {mapGetters} from "vuex";
+  import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
+  import CustomTooltip from "./components/primeComponents/CustomTooltip";
+
+  export default {
+  components: {
+    CustomTooltip,
+    ReEnterMasterPassword,
+    OverlayPanel,
+    ProfileDropdown,
+    // Button
+  },
+
+  data() {
+    return {
+      name: "Data Sleuth",
+      displayPasswordDialog: false,
+      displayVaultDialog: false,
+      sync: false,
+      activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
+      activePageNum: null
+    }
+  },
+
+    computed: {
+        ...mapGetters ([
+            'getUserInfo',
+            'getUserBackends',
+            'getSignedInUserId',
+            'unconnectedBackendNames',
+            'unconnectedBackendBool',
+            'unconnectedBackendNo'
+        ])
+    },
+
+    beforeCreate() {
+        this.$store.commit('initialiseStore');
+    },
+
+    methods: {
+      showAskMasterPw(){
+        if(this.$store.getters.getMasterKey === null){
+          this.showPasswordDialog();
+        }
+      },
+
+      toggle(event){
+        this.$refs.op.toggle(event);
+      },
+
+      showPasswordDialog(){
+        this.displayPasswordDialog = !this.displayPasswordDialog;
+      },
+
+      showVaultSyncDialog(){
+        this.displayVaultDialog = !this.displayVaultDialog
+      },
+
+      toggleSync(){
+        this.sync = !this.sync;
+      },
+
+      closeDialog(){
+        this.displayPasswordDialog = false;
+        this.displayVaultDialog = false;
+      }
+    }
+  }
+</script>
 
 <style lang="scss">
   html,
@@ -225,12 +325,12 @@
   }
 
   #expiration-indicator {
-      font-size: 1.5rem;
-      color: #FFF59D;
-      position: relative;
-      display: inline-block;
-      margin-top : 0.5rem;
-      margin-bottom : 0.3rem;
+    font-size: 1.5rem;
+    color: #FFF59D;
+    position: relative;
+    display: inline-block;
+    margin-top : 0.5rem;
+    margin-bottom : 0.3rem;
   }
 
   #profile {
@@ -252,74 +352,3 @@
     cursor: pointer;
   }
 </style>
-
-<script>
-    import OverlayPanel from 'primevue/overlaypanel';
-    import ProfileDropdown from "@/components/landing/ProfileDropdown";
-    import {mapGetters} from "vuex";
-    import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
-    import CustomTooltip from "./components/primeComponents/CustomTooltip";
-
-    export default {
-  components: {
-    CustomTooltip,
-    ReEnterMasterPassword,
-    OverlayPanel,
-    ProfileDropdown,
-    // Button
-  },
-
-  data() {
-    return {
-      name: "Data Sleuth",
-      displayPasswordDialog: false,
-      displayVaultDialog: false,
-      sync: false,
-    }
-  },
-
-    computed: {
-        ...mapGetters ([
-            'getUserInfo',
-            'getUserBackends',
-            'getSignedInUserId',
-            'unconnectedBackendNames',
-            'unconnectedBackendBool',
-            'unconnectedBackendNo'
-        ])
-    },
-
-    beforeCreate() {
-        this.$store.commit('initialiseStore');
-    },
-
-    methods: {
-      showAskMasterPw(){
-        if(this.$store.getters.getMasterKey === null){
-          this.showPasswordDialog();
-        }
-      },
-
-      toggle(event){
-        this.$refs.op.toggle(event);
-      },
-
-      showPasswordDialog(){
-        this.displayPasswordDialog = !this.displayPasswordDialog;
-      },
-
-      showVaultSyncDialog(){
-        this.displayVaultDialog = !this.displayVaultDialog
-      },
-
-      toggleSync(){
-        this.sync = !this.sync;
-      },
-
-      closeDialog(){
-        this.displayPasswordDialog = false;
-        this.displayVaultDialog = false;
-      }
-    }
-  }
-</script>
