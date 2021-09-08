@@ -9,9 +9,14 @@ import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 import fileDataSourceRepository from "./repositories/FileDataSourceRepository";
 import {userRouter} from "./routers/User.router";
 import {randomBytes} from "crypto";
+import fs from "fs";
 
-dotenv.config({path: __dirname + `/../../../.env`});
-console.log(__dirname);
+try {
+    fs.readFileSync(__dirname + `/../../../.env`);
+    dotenv.config({path: __dirname + `/../../../.env`});
+    console.log(__dirname);
+} catch (e) {}
+
 
 if (!process.env.PORT) {
     console.log("Can't find .env");
