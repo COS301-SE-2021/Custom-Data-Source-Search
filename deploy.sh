@@ -7,5 +7,5 @@ then
   deploy.client.sh
 else
   a=%SITE_FLAVOUR%
-  echo "Something went wrong with your site flavour (${a}). Should be either api or client."
+  echo "Something went wrong with your site flavour (${a})! Should be either api or client."
 fi
