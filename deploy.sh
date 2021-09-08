@@ -1,8 +1,8 @@
 @echo off
-if "%SITE_FLAVOR%" == "api";
+if "%SITE_FLAVOUR%" == "api";
 then
 deploy.api.sh
-elif "%SITE_FLAVOR%" == "client";
+elif "%SITE_FLAVOUR%" == "client";
 then
   deploy.client.sh
 else
