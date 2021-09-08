@@ -1,7 +1,6 @@
-@echo off
 if "%SITE_FLAVOUR%" == "api";
 then
-deploy.api.sh
+  deploy.api.sh
 elif "%SITE_FLAVOUR%" == "client";
 then
   deploy.client.sh
