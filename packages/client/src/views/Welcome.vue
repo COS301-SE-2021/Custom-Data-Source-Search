@@ -1,4 +1,5 @@
 <template>
+  <ConfirmDialog/>
   <div class="page">
     <Toast position="bottom-left"/>
     <div class="heading-and-info">
@@ -25,15 +26,6 @@
       <AddUserCard/>
     </div>
     <span id="tips-span">Tip: {{tips[0]}}</span>
-    <DeleteUserAreYouSure
-        :show="displayDeleteCheck"
-        :user="selectedUser"
-        :delete-vault-fed-in="null"
-        :first-question-fed-in="true"
-        @display-popup="showPopup"
-        @close="cleanPopUp"
-        @clear-current-user="clearCurrentUser"
-    />
     <SignOutCheck
         :show="displaySignOutCheck"
         :user="selectedUser"
@@ -60,6 +52,7 @@
     import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
     import {mapGetters} from "vuex";
     import _ from 'lodash';
+    import axios from "axios";
 
     export default {
         name: "Welcome",
@@ -83,7 +76,31 @@
                 items: [
                     {
                         label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
-                            this.displaySignOutCheck = !this.displaySignOutCheck;
+                        this.$confirm.require({
+                          message: "Are you sure you want to sign out, " + this.selectedUser.name + "?",
+                          header: 'Confirmation',
+                          icon: 'pi pi-exclamation-triangle',
+                          acceptClass: "p-button-danger",
+                          rejectClass: "p-button-text p-button-plain",
+                          accept: () => {
+                            axios
+                                .post("http://localhost:3001/users/global/logout")
+                                .then(resp => {
+                                  this.$store.commit('signOutUser', {userID: this.selectedUser.id});
+                                  this.closePopUp();
+                                  this.$router.push('/');
+                                })
+                                .catch((error) => {
+                                  this.$toast.add({
+                                    severity: 'error',
+                                    summary: 'Error',
+                                    detail: 'Could not sign out user',
+                                    life: 3000
+                                  });
+                                  console.log(error);
+                                })
+                          }
+                        })
                         }
                     },
                     {
