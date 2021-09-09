@@ -26,10 +26,14 @@
       <AddUserCard/>
     </div>
     <span id="tips-span">Tip: {{tips[0]}}</span>
-    <SignOutCheck
-        :show="displaySignOutCheck"
+    <DeleteUserAreYouSure
+        :show="displayDeleteCheck"
         :user="selectedUser"
-        @display-popup="showSignOutCheck"
+        :delete-vault-fed-in="null"
+        :first-question-fed-in="true"
+        @display-popup="showPopup"
+        @close="cleanPopUp"
+        @clear-current-user="clearCurrentUser"
     />
     <ReEnterMasterPassword
         :show="displayMasterPwInput"

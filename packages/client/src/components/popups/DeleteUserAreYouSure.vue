@@ -12,9 +12,9 @@
       <div class="p-dialog-content p-confirm-popup-message-moderator">
         <em class="pi pi-exclamation-triangle em-dialog"></em>
         <div>
-          <span>Are you sure you want to delete {{user.name}}?</span>
+          <span>Are you sure you want to delete "{{user.name}}"?</span>
           <br><br>
-          <span>This user may not have a browser backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
+          <span>This user may not have a vault backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
         </div>
       </div>
       <div class="button-holders">
