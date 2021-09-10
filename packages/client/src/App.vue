@@ -307,7 +307,7 @@
 
   .refresh-container {
     position: fixed;
-    padding-left: 1.3em;
+    padding-left: 1.1em;
     bottom: 90px;
     cursor: pointer;
   }
