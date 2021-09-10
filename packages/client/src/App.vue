@@ -10,29 +10,29 @@
             style="font-size:1.5rem"
             aria-hidden="true"
         />
-        <router-link title="Data Sources" class="icon" to="/datasources">
-          <i
-              id="DataSourcesIcon"
-              class="pi pi-list"
-              style="font-size:1.5rem"
-              aria-hidden="true"
-          />
-        </router-link>
-        <router-link title="Backends" class="icon" to="/backends">
-          <i
-              id="BackendIcon"
-              class="pi pi-th-large"
-              style="font-size:1.5rem"
-              aria-hidden="true"
-          />
-        </router-link>
-        <router-link title="Admin" class="icon" to="/admin">
-          <i
+        <router-link
+            title="Data Sources"
+            to="/datasources"
+            id="DataSourcesIcon"
+            class="pi pi-list icon"
+            style="font-size:1.5rem"
+            aria-hidden="true"
+        />
+        <router-link
+            title="Backends"
+            to="/backends"
+            id="BackendIcon"
+            class="pi pi-th-large icon"
+            style="font-size:1.5rem"
+            aria-hidden="true"
+        />
+        <router-link
+            title="Admin"
+            to="/admin"
             id="AdminIcon"
-            class="fas fa-users-cog"
+            class="pi pi-sitemap"
             style="font-size:1.5rem"
           />
-        </router-link>
         <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
               class="fas fa-sync-alt"
@@ -228,7 +228,7 @@
     padding: 10px;
   }
 
-  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
+  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .pi-sitemap{
     color: grey;
     padding: 20px 10px 10px;
   }
@@ -236,6 +236,7 @@
   .fa-users-cog{
     color: grey;
     margin: 20px 10px 10px;
+    padding: 0
   }
 
   .unconnected-backend-warning{
@@ -243,7 +244,7 @@
     padding: 10px 10px 10px;
   }
 
-  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .fa-users-cog:hover {
+  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .pi-sitemap:hover {
     color: #41B3B2;
   }
 
