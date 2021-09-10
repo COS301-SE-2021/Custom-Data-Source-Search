@@ -234,12 +234,6 @@
     padding: 20px 10px 10px;
   }
 
-  .fa-users-cog{
-    color: grey;
-    margin: 20px 10px 10px;
-    padding: 0
-  }
-
   .unconnected-backend-warning{
     text-align: center;
     padding: 10px 10px 10px;
@@ -354,7 +348,7 @@
   }
 
   #sidebar {
-    max-width: 4em;
+    width: 3.5em;
   }
 
   .pi-info-circle {
