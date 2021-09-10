@@ -222,7 +222,7 @@
 
   a:-webkit-any-link {
     text-decoration: none;
-    padding-left: 0.8em
+    padding-left: 0.7em
   }
 
   .icon {
@@ -298,7 +298,7 @@
     text-align: left;
     max-width: 30px;
     max-height: 30px;
-    padding-left: 0.7em;
+    padding-left: 0.5em;
     bottom: 2em;
     cursor: pointer;
     padding-bottom: 0.8vh;
@@ -307,7 +307,7 @@
 
   .refresh-container {
     position: fixed;
-    padding-left: 1.4em;
+    padding-left: 1.3em;
     bottom: 90px;
     cursor: pointer;
   }
