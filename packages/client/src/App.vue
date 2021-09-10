@@ -269,9 +269,10 @@
   }
 
   .image-ring-main {
-    width: 30px;
-    max-height: 20%;
-    padding: 0.3em;
+    width: 40px;
+    max-height: 40%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
     background: linear-gradient(#232323, #1a1a1a) padding-box,
     linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
     border-radius: 50em;
@@ -279,14 +280,14 @@
   }
 
   .image-ring-main:hover {
-    background: linear-gradient(#545454, #3e3e3e) padding-box,
+    background: linear-gradient(#232323, #1a1a1a) padding-box,
     linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
   }
 
   .name-initial-main {
     color: rgba(204, 204, 204, 0.97);
-    font-size: 1em;
-    font-weight: normal;
+    font-size: 20px;
+    font-weight: bold;
     margin: auto;
     width: 100%;
     height: 100%;
@@ -300,10 +301,10 @@
   .icon-container {
     position: fixed;
     text-align: left;
-    max-width: 40px;
-    max-height: 40px;
-    padding-left: 0.5em;
-    bottom: 1em;
+    max-width: 30px;
+    max-height: 30px;
+    padding-left: 0.7em;
+    bottom: 2em;
     cursor: pointer;
     padding-bottom: 0.8vh;
     margin-right: 1%;
@@ -311,7 +312,7 @@
 
   .refresh-container {
     position: fixed;
-    padding-left: 0.9em;
+    padding-left: 1.4em;
     bottom: 90px;
     cursor: pointer;
   }
