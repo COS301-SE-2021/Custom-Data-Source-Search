@@ -1,15 +1,15 @@
 <template>
   <div class="grid-app" v-if="this.$store.getters.getSignedIn">
     <div id="grid-div-1">
-      <div id="sidebar">
-        <router-link title="Search" class="icon" to="/search">
-          <i
-              id="SearchIcon"
-              class="pi pi-search"
-              style="font-size:1.5rem"
-              aria-hidden="true"
-          />
-        </router-link>
+      <div id="sidebar" class="nav">
+        <router-link
+            title="Search"
+            to="/search"
+            id="SearchIcon"
+            class="pi pi-search icon"
+            style="font-size:1.5rem"
+            aria-hidden="true"
+        />
         <router-link title="Data Sources" class="icon" to="/datasources">
           <i
               id="DataSourcesIcon"
@@ -28,10 +28,9 @@
         </router-link>
         <router-link title="Admin" class="icon" to="/admin">
           <i
-              id="AdminIcon"
-              class="fas fa-users-cog"
-              style="font-size:1.5rem"
-              aria-hidden="true"
+            id="AdminIcon"
+            class="fas fa-users-cog"
+            style="font-size:1.5rem"
           />
         </router-link>
         <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
@@ -221,6 +220,10 @@
     height: 100%;
   }
 
+  a:-webkit-any-link {
+    text-decoration: none;
+  }
+
   .icon {
     padding: 10px;
   }
@@ -241,6 +244,10 @@
   }
 
   .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .fa-users-cog:hover {
+    color: #41B3B2;
+  }
+
+  a.router-link-active {
     color: #41B3B2;
   }
 
