@@ -222,6 +222,7 @@
 
   a:-webkit-any-link {
     text-decoration: none;
+    padding-left: 0.8em
   }
 
   .icon {
