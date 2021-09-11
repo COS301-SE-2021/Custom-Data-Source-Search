@@ -31,7 +31,7 @@ class FolderDataSourceRepository {
     }
 
     /**
-     * Add a file contained in a folder to db and post it's contents to solr
+     * Add a file contained in a folder to db
      *
      * @param {FileInFolder} fileInFolder
      * @return {[StatusMessage, StatusMessage]}

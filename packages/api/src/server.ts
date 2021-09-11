@@ -9,6 +9,7 @@ import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 import {userRouter} from "./routers/User.router";
 import {generateUUID} from "./general/generalFunctions";
 import fileDataSourceService from "./services/FileDataSource.service";
+import fs from "fs";
 
 try {
     fs.readFileSync(__dirname + `/../../../.env`);
