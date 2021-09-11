@@ -1,6 +1,6 @@
 import {statusMessage} from "../general/generalFunctions";
 import {StatusMessage} from "../models/response/general.interfaces";
-import {FileFromRepo, GitHubDataSource} from "../models/GitHubDataSource.interface";
+import {FileFromRepo, StoredGitHubDataSource} from "../models/GitHubDataSource.interface";
 
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 
@@ -9,10 +9,10 @@ class GitHubDataSourceRepository {
     /**
      * Store a new github datasource in db
      *
-     * @param {GitHubDataSource} dataSource
+     * @param {StoredGitHubDataSource} dataSource
      * @return {[StatusMessage, StatusMessage]}
      */
-    addDataSource(dataSource: GitHubDataSource): [StatusMessage, StatusMessage] {
+    addDataSource(dataSource: StoredGitHubDataSource): [StatusMessage, StatusMessage] {
         try {
             db.prepare(
                 'INSERT INTO github_data (repo, uuid, tag1, tag2, token) VALUES (?, ?, ?, ?, ?);'
@@ -55,9 +55,9 @@ class GitHubDataSourceRepository {
      * Retrieve a GitHub datasource stored in db by it's uuid
      *
      * @param {string} uuid
-     * @return {[GitHubDataSource, StatusMessage]}
+     * @return {[StoredGitHubDataSource, StatusMessage]}
      */
-    getDataSource(uuid: string): [GitHubDataSource, StatusMessage] {
+    getDataSource(uuid: string): [StoredGitHubDataSource, StatusMessage] {
         try {
             const dataSource = db.prepare("SELECT * FROM github_data WHERE uuid = ?").get(uuid);
             if (dataSource !== undefined) {
@@ -72,9 +72,9 @@ class GitHubDataSourceRepository {
     /**
      * Return all GitHub datasources
      *
-     * @return {[GitHubDataSource[], StatusMessage]}
+     * @return {[StoredGitHubDataSource[], StatusMessage]}
      */
-    getAllDataSources(): [GitHubDataSource[], StatusMessage] {
+    getAllDataSources(): [StoredGitHubDataSource[], StatusMessage] {
         try {
             const repoList = db.prepare("SELECT * FROM github_data;").all()
             return [repoList, null];

@@ -1,7 +1,6 @@
-import gitHubDataSourceRepository from "../repositories/FolderDataSourceRepository";
+import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
 import fs from "fs";
-import {FileInFolder, FolderDataSource, StoredFolderDataSource} from "../models/FolderDataSource.interface";
-import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
+import {FileInFolder, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import {
     generateDefaultHttpResponse,
     generateUUID, getLastModifiedDateOfFile,
@@ -11,10 +10,11 @@ import {
 import {DefaultHttpResponse} from "../models/response/general.interfaces";
 import solrService from "./Solr.service";
 import fileDataSourceService from "./FileDataSource.service";
+import {GitHubDataSource} from "../models/GitHubDataSource.interface";
 
 class GitHubDataSourceService {
 
-    getAllFolderDataSources() {
+    getAllGitHubDataSources() {
         let [result, err] = gitHubDataSourceRepository.getAllDataSources();
         if (err) {
             return generateDefaultHttpResponse(err);
@@ -25,7 +25,7 @@ class GitHubDataSourceService {
         };
     }
 
-    getFolderDataSource(id: string) {
+    getGitHubDataSource(id: string) {
         let [result, err] = gitHubDataSourceRepository.getDataSource(id);
         if (err) {
             return generateDefaultHttpResponse(err);
@@ -36,13 +36,7 @@ class GitHubDataSourceService {
         }
     }
 
-    async addFolderDataSource(dataSource: FolderDataSource): Promise<DefaultHttpResponse> {
-        if (dataSource.path[dataSource.path.length - 1] !== '/') {
-            dataSource.path += '/';
-        }
-        if (!fs.existsSync(dataSource.path)) {
-            return generateDefaultHttpResponse(statusMessage(404, "Directory does not exist"));
-        }
+    async addGitHubDataSource(dataSource: GitHubDataSource): Promise<DefaultHttpResponse> {
         const folderUUID: string = generateUUID();
         const storedFolderDatasource: StoredFolderDataSource = {
             uuid: folderUUID,
