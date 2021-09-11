@@ -6,10 +6,9 @@ import { fileDataSourceRouter } from "./routers/FileDataSource.router";
 import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
-import fileDataSourceRepository from "./repositories/FileDataSourceRepository";
 import {userRouter} from "./routers/User.router";
-import {randomBytes} from "crypto";
-import fs from "fs";
+import {generateUUID} from "./general/generalFunctions";
+import fileDataSourceService from "./services/FileDataSource.service";
 
 try {
     fs.readFileSync(__dirname + `/../../../.env`);
@@ -43,17 +42,14 @@ const server = app.listen(PORT , () => {
 setTimeout(() => {
     setInterval(async () => {
         try {
-            await fileDataSourceRepository.updateDatasources();
+            await fileDataSourceService.updateDatasources();
         } catch (e) {
             console.log("Error encountered.");
         }
     }, 10000);
-}, 500);
-
-setTimeout(() => {
-    process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+    process.env.JWT_SECRET_KEY = generateUUID();
     setInterval(async () => {
-        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+        process.env.JWT_SECRET_KEY = generateUUID();
     }, 60000 * 5);
 }, 500);
 

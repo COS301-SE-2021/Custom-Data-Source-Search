@@ -10,3 +10,10 @@ export interface StoredFolderDataSource {
     tag1: string;
     tag2: string;
 }
+
+export interface FileInFolder {
+    filePath: string;
+    lastModified: Date;
+    folderUUID: string;
+    UUID: string;
+}
