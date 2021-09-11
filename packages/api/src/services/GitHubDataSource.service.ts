@@ -1,16 +1,15 @@
 import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
 import fs from "fs";
-import {FileInFolder, StoredFolderDataSource} from "../models/FolderDataSource.interface";
 import {
     generateDefaultHttpResponse,
-    generateUUID, getLastModifiedDateOfFile,
+    generateUUID,
     removeFileExtension,
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse} from "../models/response/general.interfaces";
 import solrService from "./Solr.service";
 import fileDataSourceService from "./FileDataSource.service";
-import {GitHubDataSource} from "../models/GitHubDataSource.interface";
+import {FileFromRepo, GitHubDataSource, StoredGitHubDataSource} from "../models/GitHubDataSource.interface";
 
 class GitHubDataSourceService {
 
@@ -37,36 +36,36 @@ class GitHubDataSourceService {
     }
 
     async addGitHubDataSource(dataSource: GitHubDataSource): Promise<DefaultHttpResponse> {
-        const folderUUID: string = generateUUID();
-        const storedFolderDatasource: StoredFolderDataSource = {
-            uuid: folderUUID,
-            path: dataSource.path,
+        const repoUUID: string = generateUUID();
+        const storedGitHubDatasource: StoredGitHubDataSource = {
+            uuid: repoUUID,
+            repo: dataSource.repo,
             tag1: dataSource.tag1,
-            tag2: dataSource.tag2
+            tag2: dataSource.tag2,
+            token: dataSource.token
         }
-        let [, e] = gitHubDataSourceRepository.addDataSource(storedFolderDatasource);
+        let [, e] = gitHubDataSourceRepository.addDataSource(storedGitHubDatasource);
         if (e) {
             return generateDefaultHttpResponse(e);
         }
-        for (let filePath of this.getFilesInFolder(dataSource.path, "folderDepth2\n*.pdf", 3)) {
+        for (let filePath of this.getFilesInFolder(__dirname + dataSource.repo, "", 3)) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
                 continue;
             }
-            const fileInFolderUUID: string = generateUUID()
+            const fileFromRepoUUID: string = generateUUID()
             const [, solrErr] = await solrService.postToSolr(
-                fileContent, fileInFolderUUID, removeFileExtension(this.extractFileName(filePath)), "folder"
+                fileContent, fileFromRepoUUID, removeFileExtension(this.extractFileName(filePath)), "github"
             );
             if (solrErr) {
                 continue;
             }
-            const fileInFolder: FileInFolder = {
+            const fileFromRepo: FileFromRepo = {
                 filePath: filePath,
-                lastModified: getLastModifiedDateOfFile(filePath),
-                folderUUID: folderUUID,
-                UUID: fileInFolderUUID
+                repoUUID: repoUUID,
+                UUID: fileFromRepoUUID
             }
-            gitHubDataSourceRepository.addFileInFolder(fileInFolder);
+            gitHubDataSourceRepository.addFileInRepo(fileFromRepo);
         }
         return generateDefaultHttpResponse(statusMessage(200, "Successfully added datasource"));
     }
