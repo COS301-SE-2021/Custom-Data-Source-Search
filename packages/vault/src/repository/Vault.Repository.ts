@@ -30,6 +30,20 @@ class VaultRepository {
         }
     }
 
+    async getFingerprint(email: string){
+        try {
+            const data = await db.query(
+                'SELECT fingerprint FROM "Users" WHERE email = $1',
+                [email],
+            );
+            return[data, null]
+        } catch (e){
+            console.log(e.stack);
+            return[null, e]
+        }
+
+    }
+
     async storeServerState(email : string, state : string){
         try {
             const data = await db.query(

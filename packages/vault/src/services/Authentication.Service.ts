@@ -1,16 +1,57 @@
 import {SRPParameters, SRPRoutines, SRPServerSession, SRPServerSessionStep1} from "tssrp6a";
-import {SRPAuthRequest, SRPChallengeRequest} from "../models/request/AuthenticationReq.interface";
-import {SRPAuthResponse, SRPChallengeResponse} from "../models/response/AuthenticationResp.interface";
+import {
+    CompareRequest,
+    SRPAuthRequest,
+    SRPChallengeRequest, SRPPullRequest, SRPPushRequest,
+} from "../models/request/AuthenticationReq.interface";
+import {CompareResponse, SRPAuthResponse, SRPChallengeResponse} from "../models/response/AuthenticationResp.interface";
 import vaultRepository from "../repository/Vault.Repository";
-
-//declare var server: SRPServerSession;
-//declare var serverStep1 : SRPServerSessionStep1
 
 class AuthenticationService {
 
-    async challenge(body: SRPChallengeRequest) : Promise<SRPChallengeResponse> {
+    async compare(body: CompareRequest): Promise<CompareResponse>{
 
-        if (this.challengeDetailsAreValid(body)) {
+        if(this.compareDetailsAreValid(body)){
+
+            const [data, err] = await vaultRepository.getFingerprint(body.email);
+            if(err){
+                return {
+                    code: 400,
+                    message: err
+                }
+            } else {
+
+                if(body.fingerprint == data.rows[0].fingerprint){
+                    return {
+                        code: 200,
+                        message: {
+                            isOutOfSync: false
+                        }
+                    }
+                } else {
+                    return {
+                        code: 200,
+                        message: {
+                            isOutOfSync: true
+                        }
+                    }
+                }
+            }
+
+        } else {
+            return {
+                code:400,
+                message: {
+                    error: "Invalid Details"
+                }
+            }
+        }
+
+    }
+
+    async challenge(body: SRPChallengeRequest): Promise<SRPChallengeResponse> {
+
+        if (this.challengeDetailsAreValid(body)){
 
             const [emailData, emailErr] = await vaultRepository.getSaltAndVerifier(body.email);
             if (emailErr) {
@@ -25,7 +66,7 @@ class AuthenticationService {
                 const serializedServerStep1 = JSON.stringify(serverStep1);
 
                 //Store serialized sever state at this point
-                const [stateData , stateErr ] = await vaultRepository.storeServerState(body.email,serializedServerStep1)
+                const [stateData , stateErr ] = await vaultRepository.storeServerState(body.email, serializedServerStep1)
 
                 if(stateErr){
                     return {
@@ -50,9 +91,7 @@ class AuthenticationService {
         }
     }
 
-    challengeDetailsAreValid(body: SRPChallengeRequest): boolean{
-        return body.hasOwnProperty("email") && isNaN(Number(body.email));
-    }
+
 
     async authenticate(body: SRPAuthRequest): Promise<SRPAuthResponse> {
 
@@ -91,6 +130,22 @@ class AuthenticationService {
             }
         }
 
+        pull(body: SRPPullRequest): SRPPullResponse {
+
+        //retrieve sever state from db
+
+        }
+
+        push(body: SRPPushRequest): SRPPushResponse {
+
+        //retrieve server state from db
+
+        }
+
+    challengeDetailsAreValid(body: SRPChallengeRequest): boolean{
+        return body.hasOwnProperty("email") && isNaN(Number(body.email));
+    }
+
     authenticateDetailsAreValid(body: SRPAuthRequest): boolean{
         return body.hasOwnProperty("email") &&
             body.hasOwnProperty("A") &&
@@ -98,8 +153,17 @@ class AuthenticationService {
             isNaN(Number(body.email)) &&
             !isNaN(Number(body.A)) &&
             !isNaN(Number(body.verificationMessage1));
+    }
+    compareDetailsAreValid(body: CompareRequest): boolean{
+        return body.hasOwnProperty("email") &&
+            body.hasOwnProperty("fingerprint") &&
+            isNaN(Number(body.email)) &&
+            isNaN(Number(body.fingerprint));
+
 
     }
+
+
 
 }
 

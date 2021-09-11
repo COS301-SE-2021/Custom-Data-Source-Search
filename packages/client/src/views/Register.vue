@@ -144,6 +144,12 @@
   import SignIn from "../components/popups/SignIn";
   import Checkbox from 'primevue/checkbox';
   import PasswordInputField from "../components/primeComponents/PasswordInputField";
+  import axios from "axios";
+  import {createHash} from 'crypto'
+
+  import {
+    createVerifierAndSalt, SRPParameters, SRPRoutines,
+  } from "tssrp6a"
 
   const zxcvbn = require('zxcvbn');
 
@@ -188,7 +194,8 @@
        *
        * Present errors on failure, create new user on success.
        */
-      loadValues() {
+      async loadValues(){
+
         let passFormValidation = this.formValidationChecks();
         if (passFormValidation) {
           this.$store.dispatch("addNewUser", {
@@ -198,6 +205,75 @@
             hasVault: this.userDetails.backupVault
           });
           this.$router.push({name: 'ContinueView'});
+        }
+
+        if(this.userDetails.backupVault === true){
+
+          /*
+           email : string,
+    salt: bigint,
+    verifier: bigint,
+    data : string,
+    fingerprint: string,
+           */
+
+            const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
+
+            const email = this.userDetails.masterEmail;
+            const password = this.userDetails.masterEmail;
+
+            const saltAndVerifier = await createVerifierAndSalt(
+                srp6aNimbusRoutines,
+                email,
+                password,
+            );
+
+          console.log(saltAndVerifier.s);
+          console.log(saltAndVerifier.v);
+
+          let payloadObj = {name: this.userDetails.userName,
+                          content: "Test"
+          };
+          let payloadStr = JSON.stringify(payloadObj)
+
+          let reqObj = {
+                  email: this.userDetails.masterEmail,
+                  salt: saltAndVerifier.s,
+                  verifier: saltAndVerifier.v,
+                  data: payloadStr,
+                  fingerprint: createHash("md5").update(payloadStr).digest("hex")
+          }
+
+          console.log(reqObj.fingerprint);
+          let reqBody = JSON.stringify(reqObj, (key, value) =>
+          typeof value === 'bigint'
+              ? value.toString()
+              : value // return everything else unchanged
+        );
+
+          axios.post("http://localhost:3002/vault/register", reqBody,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                this.$toast.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: "User Added to Vault",
+                  life: 3000
+                });
+                console.log(resp.data);
+                this.updateTableData();
+              })
+              .catch((error) => {
+                this.$toast.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: error.response.data.message,
+                  life: 3000
+                });
+                console.log(error);
+              })
+
+
         }
       },
       formValidationChecks() {

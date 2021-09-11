@@ -7,3 +7,23 @@ export interface SRPAuthRequest {
     A : bigint,
     verificationMessage1 : bigint
 }
+
+export interface CompareRequest {
+    email: string,
+    fingerprint : string
+}
+
+export interface SRPPullRequest {
+    email : string,
+    A : bigint,
+    verificationMessage1 : bigint
+}
+
+export interface SRPPushRequest {
+    email : string,
+    A : bigint,
+    verificationMessage1 : bigint
+    data : string,
+    fingerprint: string,
+
+}

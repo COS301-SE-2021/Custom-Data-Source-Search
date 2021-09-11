@@ -38,3 +38,18 @@ generalRouter.post("/authenticate",async (req: Request, res: Response) => {
     const result = await authenticationService.authenticate(req.body)
     res.status(result.code).send(result.message);
 });
+
+generalRouter.post("/compare",async (req: Request, res: Response) => {
+    const result = await authenticationService.compare(req.body)
+    res.status(result.code).send(result.message);
+});
+
+generalRouter.post("/pull",async (req: Request, res: Response) => {
+    const result = await authenticationService.pull(req.body)
+    res.status(result.code).send(result.message);
+});
+
+generalRouter.post("/push",async (req: Request, res: Response) => {
+    const result = await authenticationService.push(req.body)
+    res.status(result.code).send(result.message);
+});

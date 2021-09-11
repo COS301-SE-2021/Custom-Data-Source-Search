@@ -8,6 +8,9 @@ import vaultRepository from "../repository/Vault.Repository";
 class RegistrationService {
 
     async register(body: SRPRegistrationRequest): Promise<SRPRegistrationResponse> {
+        console.log("salt: " + body.salt);
+        console.log("verifier: " + body.verifier);
+        console.log("fingerprint: " + body.fingerprint);
         if(this.detailsAreValid(body)){
             const [data, err] = await vaultRepository.addUser(body);
 
@@ -41,7 +44,7 @@ class RegistrationService {
                !isNaN(Number(body.salt)) &&
                !isNaN(Number(body.verifier)) &&
                isNaN(Number(body.data)) &&
-               !isNaN(Number(body.data));
+               isNaN(Number(body.fingerprint));
     }
 
 }
