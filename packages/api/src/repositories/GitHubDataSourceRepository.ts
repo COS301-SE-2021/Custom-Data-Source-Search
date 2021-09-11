@@ -35,7 +35,7 @@ class GitHubDataSourceRepository {
      * @return {[StatusMessage, StatusMessage]}
      * @param fileFromRepo
      */
-    addFileInFolder(fileFromRepo: FileFromRepo): [StatusMessage, StatusMessage] {
+    addFileInRepo(fileFromRepo: FileFromRepo): [StatusMessage, StatusMessage] {
         try {
             db.prepare(
                 'INSERT INTO repo_file_data (file_path, repo_uuid, uuid) VALUES (?, ?, ?);'
@@ -107,7 +107,7 @@ class GitHubDataSourceRepository {
      * @param {string} repoUUID
      * @return {string[]}
      */
-    getAllFolderFileUUIDs(repoUUID: string): string[] {
+    getAllRepoFileUUIDs(repoUUID: string): string[] {
         try {
             return db
                 .prepare("SELECT * FROM repo_file_data WHERE repo_uuid = ?;")
@@ -122,12 +122,12 @@ class GitHubDataSourceRepository {
     }
 
     /**
-     * Return GitHub datasource which is associated with the file in the repository
+     * Return GitHub datasource uuid which is associated with the file in the repository
      *
      * @param {string} uuid
      * @return {[any, StatusMessage]}
      */
-    getFolderFromFile(uuid: string): [any, StatusMessage] {
+    getRepoFromFile(uuid: string): [any, StatusMessage] {
         try {
             const dataSource = db.prepare(
                 "SELECT * FROM github_data WHERE uuid = (SELECT repo_uuid FROM repo_file_data WHERE uuid = ?)"
