@@ -208,7 +208,6 @@
         }
 
         if(this.userDetails.backupVault === true){
-
           /*
            email : string,
     salt: bigint,
@@ -216,7 +215,6 @@
     data : string,
     fingerprint: string,
            */
-
             const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
 
             const email = this.userDetails.masterEmail;
@@ -248,7 +246,7 @@
           let reqBody = JSON.stringify(reqObj, (key, value) =>
           typeof value === 'bigint'
               ? value.toString()
-              : value // return everything else unchanged
+              : value
         );
 
           axios.post("http://localhost:3002/vault/register", reqBody,
@@ -272,8 +270,6 @@
                 });
                 console.log(error);
               })
-
-
         }
       },
       formValidationChecks() {

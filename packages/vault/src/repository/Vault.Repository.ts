@@ -44,16 +44,15 @@ class VaultRepository {
 
     }
 
-    async updateUsrData(data: string, fingerprint: string){
+    async updateUserData(email: string, data: string, fingerprint: string){
         try {
-            const data = await db.query(
-                'INSERT INTO "SRPSessionStates" (email, "Step1State") VALUES($1, $2) ON DUPLICATE KEY UPDATE ' +
-                'email=$1, "Step1State"=$2',
-                [data, fingerprint],
+            const result = await db.query(
+                'UPDATE "Users"' +
+                'SET  data =  $2' +
+                'SET fingerprint = $3' +
+                'WHERE email = $1',
+                [email, data, fingerprint],
             );
-            const result = {
-                salt : data.rows[0].salt
-            }
             return[result, null]
         } catch (e){
             console.log(e.stack);
@@ -68,10 +67,8 @@ class VaultRepository {
                 'email=$1, "Step1State"=$2',
                 [email,state],
             );
-            const result = {
-                salt : data.rows[0].salt
-            }
-            return[result, null]
+
+            return[data, null]
         } catch (e){
             console.log(e.stack);
             return[null, e]
@@ -85,6 +82,24 @@ class VaultRepository {
                 [email],
             );
             return[data, null]
+        } catch (e){
+            console.log(e.stack);
+            return[null, e]
+        }
+    }
+
+    async getUserData(email: string){
+        try {
+            const data = await db.query(
+                'SELECT data FROM "Users" WHERE email = $1',
+                [email],
+            );
+
+            const result = {
+                data : data.rows[0].data
+            }
+
+            return[result, null]
         } catch (e){
             console.log(e.stack);
             return[null, e]

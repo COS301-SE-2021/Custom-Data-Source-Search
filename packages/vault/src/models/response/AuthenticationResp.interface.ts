@@ -23,13 +23,13 @@ export interface CompareResponse {
         error? : string,
         isOutOfSync?: boolean
     },
-
 }
 
 export interface SRPPullResponse {
     code: number,
     message: {
-        data : string
+        error?: string,
+        data? : string
     }
 }
 

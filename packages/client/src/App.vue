@@ -15,7 +15,7 @@
         <router-link title="Admin" class="icon" to="/admin">
           <i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/>
         </router-link>
-        <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
+        <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
         </div>
         <div v-else title="Syncing..." class="refresh-container icon">
@@ -250,6 +250,8 @@
     import {mapGetters} from "vuex";
     import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
     import CustomTooltip from "./components/primeComponents/CustomTooltip";
+    import axios from "axios";
+    import {createHash} from "crypto";
 
     export default {
   components: {
@@ -276,15 +278,54 @@
             'getSignedInUserId',
             'unconnectedBackendNames',
             'unconnectedBackendBool',
-            'unconnectedBackendNo'
+            'unconnectedBackendNo',
+            'getSignedIn'
         ])
     },
 
     beforeCreate() {
         this.$store.commit('initialiseStore');
     },
+    mounted() {
+      this.interval = setInterval(() => this.checkSyncStatus(), 9000);
+    },
 
-    methods: {
+      methods: {
+      checkSyncStatus(){
+        if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
+          console.log("Checking Sync Status");
+          const userInfo = this.getUserInfo(this.getSignedInUserId);
+
+          let payloadObj = {name: userInfo.name,
+                          content: "Test"
+          };
+          let payloadStr = JSON.stringify(payloadObj)
+
+          let reqObj = {
+                  email: userInfo.email,
+                  fingerprint: createHash("md5").update(payloadStr).digest("hex")
+          }
+
+          console.log("requestObject" + JSON.stringify(reqObj));
+          axios.post("http://localhost:3002/vault/compare", reqObj,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                console.log("Out Of Sync: " +resp.data.isOutOfSync);
+
+                if(resp.data.isOutOfSync){
+                  this.showOutOfSync();
+                }else {
+                  this.hideOutOfSync();
+                }
+
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+
+        }
+        //call compare
+      },
       showAskMasterPw(){
         if(this.$store.getters.getMasterKey === null){
           this.showPasswordDialog();
@@ -312,7 +353,12 @@
       toggleSync(){
         this.sync = !this.sync;
       },
-
+      showOutOfSync(){
+        this.sync = true;
+      },
+      hideOutOfSync(){
+        this.sync = false;
+      },
       closeDialog(){
         this.displayPasswordDialog = !this.displayPasswordDialog;
         this.displayVaultDialog = !this.displayVaultDialog;
