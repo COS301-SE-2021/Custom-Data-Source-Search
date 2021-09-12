@@ -18,9 +18,11 @@
         <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
         </div>
+        <!---
         <div v-else title="Syncing..." class="refresh-container icon">
           <i class="fas fa-sync-alt fa-spin" style="font-size:1.2rem" aria-hidden="true"></i>
         </div>
+        --->
         <div class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
             <h3 class="name-initial-main">
@@ -57,6 +59,8 @@
             @sync-vault="toggleSync"
             @close-dialog="closeDialog"
         />
+
+        <VaultSync :show="displayVaultSync"></VaultSync>
       </div>
     </div>
     <div id="grid-div-2">
@@ -252,9 +256,11 @@
     import CustomTooltip from "./components/primeComponents/CustomTooltip";
     import axios from "axios";
     import {createHash} from "crypto";
+    import VaultSync from "@/components/popups/VaultSync";
 
     export default {
   components: {
+    VaultSync,
     CustomTooltip,
     ReEnterMasterPassword,
     OverlayPanel,
@@ -267,6 +273,8 @@
       name: "Data Sleuth",
       displayPasswordDialog: false,
       displayVaultDialog: false,
+      //New version testing
+      displayVaultSync: false,
       sync: false,
     }
   },
@@ -324,7 +332,7 @@
               })
 
         }
-        //call compare
+
       },
       showAskMasterPw(){
         if(this.$store.getters.getMasterKey === null){
@@ -347,7 +355,8 @@
       },
 
       showVaultSyncDialog(){
-        this.displayVaultDialog = !this.displayVaultDialog
+        console.log("It does execute");
+        this.displayVaultSync = !this.displayVaultSync;
       },
 
       toggleSync(){
