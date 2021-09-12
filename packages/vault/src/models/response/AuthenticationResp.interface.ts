@@ -25,3 +25,15 @@ export interface CompareResponse {
     },
 
 }
+
+export interface SRPPullResponse {
+    code: number,
+    message: {
+        data : string
+    }
+}
+
+export interface SRPPushResponse {
+    code: number,
+    message: string
+}

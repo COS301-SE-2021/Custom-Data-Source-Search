@@ -4,7 +4,12 @@ import {
     SRPAuthRequest,
     SRPChallengeRequest, SRPPullRequest, SRPPushRequest,
 } from "../models/request/AuthenticationReq.interface";
-import {CompareResponse, SRPAuthResponse, SRPChallengeResponse} from "../models/response/AuthenticationResp.interface";
+import {
+    CompareResponse,
+    SRPAuthResponse,
+    SRPChallengeResponse,
+    SRPPullResponse, SRPPushResponse
+} from "../models/response/AuthenticationResp.interface";
 import vaultRepository from "../repository/Vault.Repository";
 
 class AuthenticationService {
@@ -130,16 +135,54 @@ class AuthenticationService {
             }
         }
 
-        pull(body: SRPPullRequest): SRPPullResponse {
+        async pull(body: SRPPullRequest): SRPPullResponse {
 
-        //retrieve sever state from db
+       // if(pushDetailsAreValid(body)){
+//
+            //retrieve sever state from db
+ //           const [ stateData, stateErr] = await vaultRepository.retrieveServerState(body.email);
+//
+  //      } else {
+
+  //      }
+
+
 
         }
 
-        push(body: SRPPushRequest): SRPPushResponse {
+        async push(body: SRPPushRequest): Promise<SRPPushResponse> {
 
-        //retrieve server state from db
+            if(this.pushDetailsAreValid(body)){
+                const [ stateData, stateErr] = await vaultRepository.retrieveServerState(body.email);
+                if(stateErr){
+                    return {
+                        code : 400,
+                        message : "Database Error"
+                    }
+                } else {
 
+                    const serverStep1 = SRPServerSessionStep1.fromState(
+                        new SRPRoutines(new SRPParameters()),
+                        JSON.parse(stateData.Step1State),
+                    );
+
+                    //Attempt Verification of User Credentials
+                    try {
+                        await serverStep1.step2(body.A, body.verificationMessage1);
+
+                        //Update Data and fingerprint
+                        const [ stateData, stateErr] = await vaultRepository.updateUserData(body.data, body.fingerprint);
+
+
+                    } catch(e) {
+                        return {
+                            code : 400,
+                            message : "Error"
+                        }
+                    }
+                }
+            } else {
+            }
         }
 
     challengeDetailsAreValid(body: SRPChallengeRequest): boolean{
@@ -159,12 +202,20 @@ class AuthenticationService {
             body.hasOwnProperty("fingerprint") &&
             isNaN(Number(body.email)) &&
             isNaN(Number(body.fingerprint));
-
-
     }
 
-
-
+    pushDetailsAreValid(body: SRPPushRequest): boolean{
+        return body.hasOwnProperty("email") &&
+            body.hasOwnProperty("A") &&
+            body.hasOwnProperty("verificationMessage1") &&
+            body.hasOwnProperty("data") &&
+            body.hasOwnProperty("fingerprint") &&
+            isNaN(Number(body.email)) &&
+            !isNaN(Number(body.A)) &&
+            !isNaN(Number(body.verificationMessage1)) &&
+            isNaN(Number(body.data)) &&
+            isNaN(Number(body.fingerprint));
+    }
 }
 
 const authenticationService = new AuthenticationService();

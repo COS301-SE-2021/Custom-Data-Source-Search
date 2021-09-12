@@ -44,7 +44,24 @@ class VaultRepository {
 
     }
 
-    async storeServerState(email : string, state : string){
+    async updateUsrData(data: string, fingerprint: string){
+        try {
+            const data = await db.query(
+                'INSERT INTO "SRPSessionStates" (email, "Step1State") VALUES($1, $2) ON DUPLICATE KEY UPDATE ' +
+                'email=$1, "Step1State"=$2',
+                [data, fingerprint],
+            );
+            const result = {
+                salt : data.rows[0].salt
+            }
+            return[result, null]
+        } catch (e){
+            console.log(e.stack);
+            return[null, e]
+        }
+    }
+
+    async storeServerState(email: string, state: string){
         try {
             const data = await db.query(
                 'INSERT INTO "SRPSessionStates" (email, "Step1State") VALUES($1, $2) ON DUPLICATE KEY UPDATE ' +
