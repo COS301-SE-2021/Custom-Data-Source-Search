@@ -7,7 +7,7 @@
       </div>
       <div>
         <div
-            v-if="datasource_name !== undefined" class="datasource_name"
+            v-if="datasource_name !== undefined" class="datasource-name"
             @click=openFile(source)
             @mousedown.right="openFileUsing(source)"
         >
@@ -31,7 +31,7 @@
           @mousedown.right="toggleNumSnippetsToShow"
       />
     </div>
-    <div v-if="match_snippets.length > 1" class="expand_icon_div">
+    <div v-if="match_snippets.length > 1" class="expand-icon-div">
       <icon-simple-expand-more
           v-if="notDisplayingAllAvailableSnippets"
           height="25"
@@ -49,12 +49,12 @@
 </template>
 
 <script>
-import {shell} from "electron";
-import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
-import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
-import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+  import {shell} from "electron";
+  import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
+  import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+  import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
-export default {
+  export default {
   name: "SearchResultCard",
 
   components: {
@@ -146,7 +146,7 @@ export default {
      * @param newNumber upper bound of result snippets to display
      */
     updateDisplaySnippets(newNumber) {
-      this.snippetsOnDisplay = []
+      this.snippetsOnDisplay = [];
       for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
         this.snippetsOnDisplay.push(this.match_snippets[i])
       }
@@ -187,13 +187,13 @@ h2 {
   width: 100px;
 }
 
-.expand_icon_div {
+.expand-icon-div {
   width: max-content;
   margin: auto;
   cursor: pointer;
 }
 
-.datasource_name {
+.datasource-name {
   word-wrap: break-word;
   padding-top: 10px;
   padding-bottom: 5px;
@@ -209,7 +209,7 @@ small {
   padding-bottom: 5px;
 }
 
-.datasource_name:hover {
+.datasource-name:hover {
   text-decoration: underline;
 }
 
