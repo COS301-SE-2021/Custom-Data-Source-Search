@@ -60,20 +60,23 @@
           />
           <Button
               v-if="selectedSources.length !== 0"
-              id="actions-button"
-              type="button"
-              label="More Actions"
-              icon="pi pi-angle-down"
-              aria-haspopup="true"
-              aria-controls="overlay_menu"
+              id="edit-datasource-button-small"
+              icon="pi pi-pencil"
               class="p-button-text"
-              @click="toggleMenu"
+              @click="editSource"
+          />
+          <Button
+              v-if="selectedSources.length !== 0"
+              id="delete-datasource-button-small"
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger"
+              @click="deleteSource"
           />
           <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
           <OverlayPanel
               ref="op"
               :showCloseIcon="true"
-              :dismissable="false"
+              :dismissable="true"
               :breakpoints="{'640px': '70vw'}"
               :style="{width: '450px'}"
           >
@@ -135,7 +138,7 @@
               </div>
             </div>
             <div v-else-if="type==='File'">
-              <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
+              <add-file-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Folder'">
               <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
@@ -309,26 +312,6 @@
             'file', 'folder', 'webpage'
           ],
           backends: [],
-          items: [
-            {
-              label: 'Choose an action',
-              items: [{
-                label: 'Delete Selected',
-                icon: 'pi pi-trash',
-                command: () => {
-                  this.deleteSource();
-                }
-              },
-                {
-                  label: 'Edit Selected',
-                  icon: 'pi pi-pencil',
-                  command: () => {
-                    // this.editSource();
-                  }
-                }
-              ]
-            }
-          ]
         }
       },
 
@@ -428,8 +411,13 @@
           }
         },
 
+        submitted(){
+          this.toggle();
+          this.updateSources();
+        },
+
         deleteSource() {
-          if (this.selectedSources === null || this.selectedSources.length === 0) {
+          if (this.selectedSources.length === 0) {
             this.$toast.add({
               severity: 'info',
               summary: 'No Sources Selected',
@@ -465,9 +453,8 @@
                         severity: 'success',
                         summary: 'Deleted',
                         detail: "Source deleted",
-                        life: 3000
+                        life: 2000
                       });
-                      this.updateSources();
                     })
                     .catch(() => {
                       this.$toast.add({
@@ -478,7 +465,8 @@
                       });
                     })
               }
-              this.selectedSources = null;
+              this.selectedSources = [];
+              this.updateSources();
             }
           })
         }
@@ -547,11 +535,6 @@
     display: none;
   }
 
-  #actions-button{
-    display: none;
-    float: right;
-  }
-
   #edit-datasource-button{
     float: right;
     animation: fadeIn 1s;
@@ -563,6 +546,26 @@
 
   #delete-datasource-button{
     float: right;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  #delete-datasource-button-small{
+    float: right;
+    display: none;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  #edit-datasource-button-small{
+    float: right;
+    display: none;
     animation: fadeIn 1s;
     -webkit-animation: fadeIn 1s;
     -moz-animation: fadeIn 1s;
@@ -638,16 +641,20 @@
       display: block;
     }
 
-    #actions-button{
-      display: block;
-    }
-
     #delete-datasource-button{
       display: none;
     }
 
+    #delete-datasource-button-small{
+      display: block;
+    }
+
     #edit-datasource-button{
       display: none;
+    }
+
+    #edit-datasource-button-small{
+      display: block;
     }
   }
 </style>
