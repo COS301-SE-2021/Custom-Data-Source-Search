@@ -43,13 +43,13 @@
 </template>
 
 <script>
-    import axios from "axios";
-    import {mapGetters} from 'vuex';
-    import SearchResultCard from "@/components/results/SearchResultCard";
-    import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
-    import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+  import axios from "axios";
+  import {mapGetters} from 'vuex';
+  import SearchResultCard from "@/components/results/SearchResultCard";
+  import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+  import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
-    /**
+  /**
      * @typedef {Object} MatchSnippet
      * @property {string} snippet
      * @property {number} line_number
@@ -390,6 +390,7 @@
     border-color: #4d4d4d;
     border-width: 1px;
     padding-top: 10px;
+    max-width: 1000px
   }
 
   .search-results {
@@ -425,6 +426,7 @@
     align-items: center;
     padding: 30px;
     max-height: 100px;
+    max-width: 1000px
   }
 
   ::placeholder {
