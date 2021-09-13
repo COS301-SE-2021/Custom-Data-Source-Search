@@ -17,7 +17,7 @@
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
             <span>
-              <checkbox v-model="advancedSolrSearch" :binary="true" class="checkbox"></checkbox>
+              <checkbox v-model="advancedSolrSearch" :binary="true" @click=reQuery class="checkbox"></checkbox>
               Advanced Search
             </span>
           </div>
@@ -119,6 +119,11 @@
         },
 
         methods: {
+            reQuery() {
+              if (this.query !== '') {
+                this.queryBackends(this.query);
+              }
+            },
             /**
              * Queries each active backend of the user for this.query then saves search results to this.searchResults.
              *
@@ -137,7 +142,9 @@
                         continue;
                     }
                     const url = `http://${backend.connect.link}/general/?q=${
-                        encodeURIComponent(this.escapeSolrControlCharacters(q))
+                        encodeURIComponent(
+                            this.advancedSolrSearch ? q : this.escapeSolrControlCharacters(q)
+                        )
                     }`;
                     let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
                     await axios
