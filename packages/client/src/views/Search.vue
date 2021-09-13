@@ -16,8 +16,8 @@
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
-            <span>
-              <checkbox v-model="advancedSolrSearch" :binary="true" @click=reQuery class="checkbox"></checkbox>
+            <span id="advanced_checkbox">
+              <checkbox v-model="advancedSolrSearch" :binary="true" @click=reQuery() class="checkbox"></checkbox>
               Advanced Search
             </span>
           </div>
@@ -121,6 +121,7 @@
         methods: {
             reQuery() {
               if (this.query !== '') {
+                this.advancedSolrSearch = !this.advancedSolrSearch;
                 this.queryBackends(this.query);
               }
             },
@@ -495,6 +496,10 @@
   .checkbox {
     margin-left: 15px;
     margin-right: 3px;
+  }
+
+  #advanced_checkbox {
+    min-width: 170px;
   }
 
   #divider_usage_message {
