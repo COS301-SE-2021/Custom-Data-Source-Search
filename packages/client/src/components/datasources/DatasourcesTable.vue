@@ -251,13 +251,13 @@
 </template>
 
 <script>
-    import axios from "axios";
-    import {FilterMatchMode} from 'primevue/api';
-    import AddFileDatasource from "./file/AddFileDatasource";
-    import AddFolderDatasource from "./folder/AddFolderDatasource";
-    import AddWebpageDatasource from "./webpage/AddWebpageDatasource";
+  import axios from "axios";
+  import {FilterMatchMode} from 'primevue/api';
+  import AddFileDatasource from "./file/AddFileDatasource";
+  import AddFolderDatasource from "./folder/AddFolderDatasource";
+  import AddWebpageDatasource from "./webpage/AddWebpageDatasource";
 
-    export default {
+  export default {
       name: "DatasourcesTable",
 
       components: {
@@ -315,7 +315,6 @@
           this.$router.push('/');
         }
         this.backends = this.$store.getters.getUserBackendNames;
-        console.log(this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId));
         this.updateSources();
       },
 
