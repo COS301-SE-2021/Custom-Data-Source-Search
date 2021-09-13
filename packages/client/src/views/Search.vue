@@ -148,6 +148,7 @@ export default {
                         this.advancedSolrSearch ? q : this.escapeSolrControlCharacters(q)
                     )
                 }`;
+                console.log(url);
                 let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
                 await axios
                     .get(url, {headers})
@@ -177,9 +178,9 @@ export default {
          * @returns {string} string with any special control characters escaped
          */
         escapeSolrControlCharacters(query) {
-            return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
-                return '\\' + match
-            })
+            return query.replace(/[{}\[\]+^\-.:()]/gm, (match) => {
+              return '\\' + match
+            });
         },
 
         /**
