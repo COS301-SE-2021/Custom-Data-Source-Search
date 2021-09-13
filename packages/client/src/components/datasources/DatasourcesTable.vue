@@ -60,14 +60,17 @@
           />
           <Button
               v-if="selectedSources.length !== 0"
-              id="actions-button"
-              type="button"
-              label="More Actions"
-              icon="pi pi-angle-down"
-              aria-haspopup="true"
-              aria-controls="overlay_menu"
+              id="edit-datasource-button-small"
+              icon="pi pi-pencil"
               class="p-button-text"
-              @click="toggleMenu"
+              @click="editSource"
+          />
+          <Button
+              v-if="selectedSources.length !== 0"
+              id="delete-datasource-button-small"
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger"
+              @click="deleteSource"
           />
           <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
           <OverlayPanel
@@ -309,26 +312,6 @@
             'file', 'folder', 'webpage'
           ],
           backends: [],
-          items: [
-            {
-              label: 'Choose an action',
-              items: [{
-                label: 'Delete Selected',
-                icon: 'pi pi-trash',
-                command: () => {
-                  this.deleteSource();
-                }
-              },
-                {
-                  label: 'Edit Selected',
-                  icon: 'pi pi-pencil',
-                  command: () => {
-                    // this.editSource();
-                  }
-                }
-              ]
-            }
-          ]
         }
       },
 
@@ -552,11 +535,6 @@
     display: none;
   }
 
-  #actions-button{
-    display: none;
-    float: right;
-  }
-
   #edit-datasource-button{
     float: right;
     animation: fadeIn 1s;
@@ -568,6 +546,26 @@
 
   #delete-datasource-button{
     float: right;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  #delete-datasource-button-small{
+    float: right;
+    display: none;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  #edit-datasource-button-small{
+    float: right;
+    display: none;
     animation: fadeIn 1s;
     -webkit-animation: fadeIn 1s;
     -moz-animation: fadeIn 1s;
@@ -643,16 +641,20 @@
       display: block;
     }
 
-    #actions-button{
-      display: block;
-    }
-
     #delete-datasource-button{
       display: none;
     }
 
+    #delete-datasource-button-small{
+      display: block;
+    }
+
     #edit-datasource-button{
       display: none;
+    }
+
+    #edit-datasource-button-small{
+      display: block;
     }
   }
 </style>
