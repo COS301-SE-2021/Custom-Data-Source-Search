@@ -83,7 +83,6 @@ class GitHubDataSourceService {
                     console.error("Unable to delete directory");
                     console.error(err);
                 }
-                console.log("Successfully deleted temporary repo");
             });
         return generateDefaultHttpResponse(statusMessage(200, "Successfully added datasource"));
     }
@@ -104,7 +103,6 @@ class GitHubDataSourceService {
     }
 
     getFilesInFolder(path: string): string[] {
-        console.log("File path to search is " + path);
         let files: string[] = [];
         this.getAllFilesRecursively(path).forEach((filePath: string) => {
             console.log(filePath);
@@ -113,8 +111,6 @@ class GitHubDataSourceService {
             }
             files.push(path + "\\" + filePath);
         })
-        console.log("All files are ");
-        console.log(files);
         return files;
     }
 
