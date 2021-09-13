@@ -20,10 +20,14 @@ class VaultRepository {
     async getSaltAndVerifier(email: string){
         try {
             const data = await db.query(
-                "SELECT salt, verifier FROM users WHERE email = $1",
+                'SELECT salt, verifier FROM "Users" WHERE email = $1',
                 [email],
             );
-            return[data, null]
+            const result = {
+                salt: data.rows[0].salt,
+                verifier: data.rows[0].verifier
+            }
+            return[result, null]
         } catch (e){
             console.log(e.stack);
             return[null, e]
@@ -63,8 +67,11 @@ class VaultRepository {
     async storeServerState(email: string, state: string){
         try {
             const data = await db.query(
-                'INSERT INTO "SRPSessionStates" (email, "Step1State") VALUES($1, $2) ON DUPLICATE KEY UPDATE ' +
-                'email=$1, "Step1State"=$2',
+                'INSERT INTO "SRPSessionStates" (email, "Step1State")' +
+                'VALUES($1, $2) ' +
+                'ON CONFLICT (email) DO UPDATE ' +
+                'SET email=$1, ' +
+                '"Step1State"=$2',
                 [email,state],
             );
 

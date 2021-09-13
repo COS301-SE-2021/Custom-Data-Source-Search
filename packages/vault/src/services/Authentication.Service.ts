@@ -66,8 +66,11 @@ class AuthenticationService {
                 }
             } else {
 
+                const s = BigInt(emailData.salt);
+                const v = BigInt(emailData.verifier)
+
                 const server = new SRPServerSession(new SRPRoutines(new SRPParameters()));
-                const serverStep1 = await server.step1(body.email, emailData.salt, emailData.verifier);
+                const serverStep1 = await server.step1(body.email, s, v);
                 const serializedServerStep1 = JSON.stringify(serverStep1);
 
                 //Store serialized sever state at this point
@@ -82,7 +85,7 @@ class AuthenticationService {
                     return {
                         code: 200,
                         message: {
-                            salt: emailData.salt,
+                            salt: s,
                             B: serverStep1.B
                         }
                     }

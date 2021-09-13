@@ -60,22 +60,19 @@ export default {
     async pullFromVault(){
       //1. challenge
       console.log("Attempting to Pull from the vault...");
-      const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
-      const step1 = await client.step1(username, "passw0rd");
-
       const userInfo = this.getUserInfo(this.getSignedInUserId);
-      var salt
+      const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
+      const step1 = await client.step1(userInfo.email, this.masterPass);
+
+      const reqBody = {
+        email: userInfo.email
+      }
       axios.post("http://localhost:3002/vault/challenge", reqBody,
           {headers: {"Content-Type": "application/json"}})
           .then((resp) => {
-            this.$toast.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: "User Added to Vault",
-              life: 3000
-            });
-            console.log(resp.data);
-            this.updateTableData();
+            //authenticate
+            console.log("Salt: " + resp.data.message.salt);
+            console.log("B: " + resp.data.message.B);
           })
           .catch((error) => {
             this.$toast.add({
