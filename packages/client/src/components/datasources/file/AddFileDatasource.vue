@@ -49,6 +49,7 @@
       </span>
     </div>
     <Button
+        label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFiles()"
