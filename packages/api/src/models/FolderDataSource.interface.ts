@@ -2,6 +2,8 @@ export interface FolderDataSource {
     path: string;
     tag1: string;
     tag2: string;
+    dotIgnore: string;
+    depth: number;
 }
 
 export interface StoredFolderDataSource {
@@ -9,6 +11,7 @@ export interface StoredFolderDataSource {
     path: string;
     tag1: string;
     tag2: string;
+    dotIgnore: string;
 }
 
 export interface FileInFolder {

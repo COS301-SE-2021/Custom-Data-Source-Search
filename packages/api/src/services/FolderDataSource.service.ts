@@ -43,18 +43,25 @@ class FolderDataSourceService {
         if (!fs.existsSync(dataSource.path)) {
             return generateDefaultHttpResponse(statusMessage(404, "Directory does not exist"));
         }
+        if (dataSource.dotIgnore === undefined) {
+            dataSource.dotIgnore = "";
+        }
+        if (dataSource.depth === undefined) {
+            dataSource.depth = 10;
+        }
         const folderUUID: string = generateUUID();
         const storedFolderDatasource: StoredFolderDataSource = {
             uuid: folderUUID,
             path: dataSource.path,
             tag1: dataSource.tag1,
-            tag2: dataSource.tag2
+            tag2: dataSource.tag2,
+            dotIgnore: dataSource.dotIgnore
         }
         let [, e] = folderDataSourceRepository.addDataSource(storedFolderDatasource);
         if (e) {
             return generateDefaultHttpResponse(e);
         }
-        for (let filePath of this.getFilesInFolder(dataSource.path, "folderDepth2\n*.pdf", 3)) {
+        for (let filePath of this.getFilesInFolder(dataSource.path, dataSource.dotIgnore, dataSource.depth)) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
                 continue;
@@ -126,7 +133,7 @@ class FolderDataSourceService {
                 return;
             }
             files.push(path + filePath);
-        })
+        });
         return files;
     }
 

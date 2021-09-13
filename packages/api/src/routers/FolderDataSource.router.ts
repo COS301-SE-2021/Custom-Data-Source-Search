@@ -23,6 +23,7 @@ folderDataSourceRouter.get("/:id", (req: Request, res: Response) => {
  * Add a data source by it's path
  */
 folderDataSourceRouter.post("/", async (req: Request, res: Response) => {
+    console.log("Adding datasource");
     const result = await folderDataSourceService.addFolderDataSource(req.body);
     res.status(result.code).send(result.body);
 });

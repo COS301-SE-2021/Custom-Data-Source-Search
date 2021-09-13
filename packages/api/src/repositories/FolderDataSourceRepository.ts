@@ -22,7 +22,7 @@ class FolderDataSourceRepository {
                 dataSource.uuid,
                 dataSource.tag1,
                 dataSource.tag2,
-                "ignore certain files"
+                dataSource.dotIgnore
             )
         } catch (e) {
             return [null, statusMessage(400, "Folder datasource already exists")];
@@ -147,7 +147,8 @@ class FolderDataSourceRepository {
             uuid: dataSource.uuid,
             path: dataSource.path,
             tag1: dataSource.tag1,
-            tag2: dataSource.tag2
+            tag2: dataSource.tag2,
+            dotIgnore: dataSource.dotIgnore
         };
     }
 
