@@ -16,6 +16,10 @@
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
+            <span>
+              <checkbox v-model="advancedSolrSearch" :binary="true" class="checkbox"></checkbox>
+              Advanced Search
+            </span>
           </div>
         </div>
         <div class="search-results container">
@@ -87,6 +91,7 @@
 
         data() {
             return {
+                advancedSolrSearch: false,
                 fullFileLineNumbers: [],
                 currentLineNumber: -1,
                 fullFileData: "",
@@ -478,6 +483,11 @@
     padding-left: 10px;
     padding-top: 40px;
     padding-bottom: 40px;
+  }
+
+  .checkbox {
+    margin-left: 15px;
+    margin-right: 3px;
   }
 
   #divider_usage_message {
