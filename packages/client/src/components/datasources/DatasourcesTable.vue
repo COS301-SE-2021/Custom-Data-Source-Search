@@ -43,9 +43,26 @@
               @click="toggle"
           />
           <Button
+              v-if="selectedSources.length !== 0"
+              id="edit-datasource-button"
+              label="Edit Selected Sources"
+              icon="pi pi-pencil"
+              class="p-button-text"
+              @click="editSource"
+          />
+          <Button
+              v-if="selectedSources.length !== 0"
+              id="delete-datasource-button"
+              label="Delete Selected Sources"
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger"
+              @click="deleteSource"
+          />
+          <Button
+              v-if="selectedSources.length !== 0"
               id="actions-button"
               type="button"
-              label="Actions"
+              label="More Actions"
               icon="pi pi-angle-down"
               aria-haspopup="true"
               aria-controls="overlay_menu"
@@ -279,7 +296,7 @@
           sources: null,
           loading: false,
           backend: null,
-          selectedSources: null,
+          selectedSources: [],
           filters: {
             'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
             'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -412,7 +429,8 @@
         },
 
         deleteSource() {
-          if (this.selectedSources === null) {
+          console.log(this.selectedSources)
+          if (this.selectedSources === null || this.selectedSources.length === 0) {
             this.$toast.add({
               severity: 'info',
               summary: 'No Sources Selected',
@@ -531,10 +549,54 @@
   }
 
   #actions-button{
+    display: none;
     float: right;
   }
 
-  @media only screen and (max-width: 960px) {
+  #edit-datasource-button{
+    float: right;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  #delete-datasource-button{
+    float: right;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  @keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-moz-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-webkit-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-o-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @-ms-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+  @media only screen and (max-width: 1080px) {
     #main-scroll{
       width: 93vw !important;
     }
@@ -545,6 +607,18 @@
 
     #add-datasource-button-small{
       display: block;
+    }
+
+    #actions-button{
+      display: block;
+    }
+
+    #delete-datasource-button{
+      display: none;
+    }
+
+    #edit-datasource-button{
+      display: none;
     }
   }
 </style>
