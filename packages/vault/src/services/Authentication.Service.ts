@@ -109,28 +109,32 @@ class AuthenticationService {
                     message : "Internal Error"
                 }
             } else {
+                console.log("Step1State:" + stateData.Step1State)
                 const serverStep1 = SRPServerSessionStep1.fromState(
                     new SRPRoutines(new SRPParameters()),
                     JSON.parse(stateData.Step1State),);
 
+                //SEE if state is equal
+                ///
+                ////
+                ///
+                ////
+                const newserializedServerStep1 = JSON.stringify(serverStep1);
+                console.log("new: " + newserializedServerStep1);
+
                 //Attempt Verification of User Credentials
                 try {
-                    const verificationMessage2 = await serverStep1.step2(body.A, body.verificationMessage1);
-
-
+                    const verificationMessage2 = await serverStep1.step2(BigInt(body.A), BigInt(body.verificationMessage1));
                     return {
                         code: 200,
-                      //  message: {vM2: verificationMessage2}
-                          message: {vM2: stateData.rows[0].Step1State}
-
+                        message: {vM2: verificationMessage2}
                     }
                 } catch(e) {
                     return {
                         code : 400,
-                        message : "Error"
+                        message : e.message
                     }
                 }
-
             }
         }
 
@@ -199,7 +203,7 @@ class AuthenticationService {
                 } else {
                     const serverStep1 = SRPServerSessionStep1.fromState(
                         new SRPRoutines(new SRPParameters()),
-                        JSON.parse(stateData.Step1State),
+                        JSON.parse(stateData),
                     );
                     //Attempt Verification of User Credentials
                     try {

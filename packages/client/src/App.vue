@@ -295,7 +295,7 @@
         this.$store.commit('initialiseStore');
     },
     mounted() {
-      this.interval = setInterval(() => this.checkSyncStatus(), 9000);
+      this.interval = setInterval(() => this.checkSyncStatus(), 17000);
     },
 
       methods: {

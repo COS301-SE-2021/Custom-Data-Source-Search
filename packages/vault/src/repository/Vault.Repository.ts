@@ -88,7 +88,11 @@ class VaultRepository {
                 'SELECT "Step1State" FROM "SRPSessionStates" WHERE email = $1',
                 [email],
             );
-            return[data, null]
+
+            const result = {
+                Step1State : data.rows[0].Step1State
+            }
+            return[result, null]
         } catch (e){
             console.log(e.stack);
             return[null, e]

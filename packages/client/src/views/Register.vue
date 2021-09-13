@@ -208,17 +208,12 @@
         }
 
         if(this.userDetails.backupVault === true){
-          /*
-           email : string,
-    salt: bigint,
-    verifier: bigint,
-    data : string,
-    fingerprint: string,
-           */
+
             const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
 
             const email = this.userDetails.masterEmail;
-            const password = this.userDetails.masterEmail;
+            const password = this.masterPassword;
+            console.log(password);
 
             const saltAndVerifier = await createVerifierAndSalt(
                 srp6aNimbusRoutines,

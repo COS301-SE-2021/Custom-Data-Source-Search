@@ -29,7 +29,7 @@ generalRouter.post("/register",async (req: Request, res: Response) => {
 });
 
 generalRouter.post("/challenge",async (req: Request, res: Response) => {
-    const result = await authenticationService.challenge(req.body)
+    const result = await authenticationService.challenge(req.body);
     res.status(result.code).send(result.message);
 });
 

@@ -63,22 +63,62 @@ export default {
       const userInfo = this.getUserInfo(this.getSignedInUserId);
       const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
       const step1 = await client.step1(userInfo.email, this.masterPass);
+      console.log("passw: " + this.masterPass)
 
       const reqBody = {
         email: userInfo.email
       }
       axios.post("http://localhost:3002/vault/challenge", reqBody,
           {headers: {"Content-Type": "application/json"}})
-          .then((resp) => {
-            //authenticate
-            console.log("Salt: " + resp.data.message.salt);
-            console.log("B: " + resp.data.message.B);
+          .then(async (resp) => {
+
+            console.log(resp.data);
+            console.log("Salt: " + resp.data.salt);
+            console.log("B: " + resp.data.B);
+
+
+            const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
+
+            const clientA = step2.A;
+            const clientM1 = step2.M1;
+
+            let reqObj = {
+              email: userInfo.email,
+              A: clientA,
+              verificationMessage1: clientM1
+            }
+
+            let reqBody = JSON.stringify(reqObj, (key, value) =>
+                typeof value === 'bigint'
+                    ? value.toString()
+                    : value
+            );
+
+            axios.post("http://localhost:3002/vault/authenticate", reqBody,
+                {headers: {"Content-Type": "application/json"}})
+                .then(async (resp) => {
+
+                  console.log(resp.data);
+
+                  //verify server
+                  const step3 = await step2.step3(data.vM2);
+
+                })
+                .catch((error) => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data,
+                    life: 3000
+                  });
+                  console.log(error);
+                })
           })
           .catch((error) => {
             this.$toast.add({
               severity: 'error',
               summary: 'Error',
-              detail: error.response.data.message,
+              detail: error.response.data,
               life: 3000
             });
             console.log(error);
