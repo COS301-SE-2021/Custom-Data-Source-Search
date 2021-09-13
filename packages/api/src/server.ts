@@ -10,6 +10,7 @@ import {userRouter} from "./routers/User.router";
 import {generateUUID} from "./general/generalFunctions";
 import fileDataSourceService from "./services/FileDataSource.service";
 import fs from "fs";
+import {gitHubDataSourceRouter} from "./routers/GitHubDataSource.router";
 
 try {
     fs.readFileSync(__dirname + `/../../../.env`);
@@ -29,11 +30,12 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use("/filedatasources", fileDataSourceRouter);
 app.use("/general", generalRouter);
+app.use("/users", userRouter);
+app.use("/filedatasources", fileDataSourceRouter);
 app.use("/webpagedatasources", webPageDataSourceRouter);
 app.use("/folderdatasources", folderDataSourceRouter);
-app.use("/users", userRouter);
+app.use("/githubdatasources", gitHubDataSourceRouter);
 
 const server = app.listen(PORT , () => {
     console.log("Server Started");
