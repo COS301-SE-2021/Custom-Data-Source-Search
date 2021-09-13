@@ -1,4 +1,5 @@
 import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
+import folderDataSourceService from "./FolderDataSource.service";
 import fs from "fs";
 import {
     generateDefaultHttpResponse,
@@ -63,7 +64,10 @@ class GitHubDataSourceService {
             }
             const fileFromRepoUUID: string = generateUUID()
             const [, solrErr] = await solrService.postToSolr(
-                fileContent, fileFromRepoUUID, removeFileExtension(this.extractFileName(filePath)), "github"
+                fileContent,
+                fileFromRepoUUID,
+                removeFileExtension(folderDataSourceService.extractFileName(filePath)),
+                "github"
             );
             if (solrErr) {
                 continue;
@@ -85,10 +89,6 @@ class GitHubDataSourceService {
                 }
             });
         return generateDefaultHttpResponse(statusMessage(200, "Successfully added datasource"));
-    }
-
-    extractFileName(filePath: string): string {
-        return filePath.split("/").pop();
     }
 
     async removeFolderDataSource(id: string): Promise<DefaultHttpResponse> {
