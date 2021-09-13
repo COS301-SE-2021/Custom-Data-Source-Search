@@ -429,7 +429,6 @@
         },
 
         deleteSource() {
-          console.log(this.selectedSources)
           if (this.selectedSources === null || this.selectedSources.length === 0) {
             this.$toast.add({
               severity: 'info',
