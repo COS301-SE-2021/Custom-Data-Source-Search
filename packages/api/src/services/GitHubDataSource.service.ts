@@ -11,6 +11,7 @@ import solrService from "./Solr.service";
 import fileDataSourceService from "./FileDataSource.service";
 import {FileFromRepo, GitHubDataSource, StoredGitHubDataSource} from "../models/GitHubDataSource.interface";
 import axios from "axios";
+import shell from "shelljs";
 
 class GitHubDataSourceService {
 
@@ -40,7 +41,6 @@ class GitHubDataSourceService {
         if (!await GitHubDataSourceService.repoExists(dataSource.repo)) {
             return generateDefaultHttpResponse(statusMessage(404, "Repo not found"));
         }
-        return generateDefaultHttpResponse(statusMessage(200, "Testing success"));
         const repoUUID: string = generateUUID();
         const storedGitHubDatasource: StoredGitHubDataSource = {
             uuid: repoUUID,
@@ -48,12 +48,14 @@ class GitHubDataSourceService {
             tag1: dataSource.tag1,
             tag2: dataSource.tag2,
             token: dataSource.token
-        }
+        };
         let [, e] = gitHubDataSourceRepository.addDataSource(storedGitHubDatasource);
         if (e) {
             return generateDefaultHttpResponse(e);
         }
-        for (let filePath of this.getFilesInFolder(__dirname + dataSource.repo, "", 3)) {
+        shell.cd(__dirname);
+        shell.exec('git clone https://github.com/' + dataSource.repo);
+        for (let filePath of this.getFilesInFolder(__dirname + dataSource.repo)) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
                 continue;
@@ -72,6 +74,15 @@ class GitHubDataSourceService {
             }
             gitHubDataSourceRepository.addFileInRepo(fileFromRepo);
         }
+        await fs.rm(
+            __dirname + "\\" + dataSource.repo.split("/").pop(),
+            {recursive: true},
+            (err) => {
+                if (err) {
+                    console.error("Unable to delete directory");
+                    console.error(err);
+                }
+            });
         return generateDefaultHttpResponse(statusMessage(200, "Successfully added datasource"));
     }
 
@@ -90,7 +101,7 @@ class GitHubDataSourceService {
         return generateDefaultHttpResponse(result);
     }
 
-    getFilesInFolder(path: string, dotIgnore: string): string[] {
+    getFilesInFolder(path: string): string[] {
         let files: string[] = [];
         this.getAllFilesRecursively(path).forEach((filePath: string) => {
             if (filePath.indexOf(".") !== -1) {
@@ -117,8 +128,12 @@ class GitHubDataSourceService {
 
     private static async repoExists(repo: string) {
         return axios.get("https://api.github.com/repos/" + repo)
-            .then(() => {return true;})
-            .catch(() => {return false;});
+            .then(() => {
+                return true;
+            })
+            .catch(() => {
+                return false;
+            });
     }
 }
 
