@@ -129,7 +129,7 @@ export default {
       if(this.selectedFolders.length!==0){
         let i;
         for (i of this.selectedFolders) {
-          let respObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2};
+          let respObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2, "dot_ignore": this.ignore};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
           axios
               .post(url, respObject)
@@ -150,7 +150,7 @@ export default {
                   detail: error.response.data.message,
                   life: 3000
                 });
-                this.selectedFolders = null;
+                this.selectedFolders = [];
               })
         }
         this.selectedFolders = [];

@@ -87,7 +87,7 @@ export default {
                 detail: 'Could Not Add Webpage.',
                 life: 3000
               });
-              this.dataSourceURI = null;
+              this.dataSourceURI = "";
             })
       }
       else{
