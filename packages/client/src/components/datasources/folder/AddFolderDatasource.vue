@@ -130,10 +130,10 @@ export default {
       if(this.selectedFolders.length!==0){
         let i;
         for (i of this.selectedFolders) {
-          let respObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2, "dot_ignore": this.ignore};
+          let reqObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2, "dotIgnore": this.ignore, "depth": this.depth};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
           axios
-              .post(url, respObject)
+              .post(url, reqObject)
               .then((resp) => {
                 this.$toast.add({
                   severity: 'success',
