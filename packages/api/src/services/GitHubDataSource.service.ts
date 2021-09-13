@@ -55,7 +55,8 @@ class GitHubDataSourceService {
         }
         shell.cd(__dirname);
         shell.exec('git clone https://github.com/' + dataSource.repo);
-        for (let filePath of this.getFilesInFolder(__dirname + dataSource.repo)) {
+        const repoDirectory: string = __dirname + "\\" + dataSource.repo.split("/").pop();
+        for (let filePath of this.getFilesInFolder(repoDirectory)) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
                 continue;
@@ -75,13 +76,14 @@ class GitHubDataSourceService {
             gitHubDataSourceRepository.addFileInRepo(fileFromRepo);
         }
         await fs.rm(
-            __dirname + "\\" + dataSource.repo.split("/").pop(),
+            repoDirectory,
             {recursive: true},
             (err) => {
                 if (err) {
                     console.error("Unable to delete directory");
                     console.error(err);
                 }
+                console.log("Successfully deleted temporary repo");
             });
         return generateDefaultHttpResponse(statusMessage(200, "Successfully added datasource"));
     }
@@ -102,13 +104,17 @@ class GitHubDataSourceService {
     }
 
     getFilesInFolder(path: string): string[] {
+        console.log("File path to search is " + path);
         let files: string[] = [];
         this.getAllFilesRecursively(path).forEach((filePath: string) => {
-            if (filePath.indexOf(".") !== -1) {
+            console.log(filePath);
+            if (filePath.indexOf(".") === -1 || filePath.indexOf(".git") !== -1) {
                 return;
             }
-            files.push(path + filePath);
+            files.push(path + "\\" + filePath);
         })
+        console.log("All files are ");
+        console.log(files);
         return files;
     }
 

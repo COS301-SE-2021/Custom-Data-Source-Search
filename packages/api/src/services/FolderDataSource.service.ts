@@ -122,7 +122,7 @@ class FolderDataSourceService {
             })) {
                 return;
             }
-            if (filePath.indexOf(".") !== -1) {
+            if (filePath.indexOf(".") === -1) {
                 return;
             }
             files.push(path + filePath);
