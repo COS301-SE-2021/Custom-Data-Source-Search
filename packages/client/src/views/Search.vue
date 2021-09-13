@@ -257,9 +257,9 @@
                     return ""
                 }
                 // Parts Of Regex
-                const validWord = "[\\w\\s\\-:;,#.]+"; // WARNING: NO closing tags allowed in here! {', ", >} are ILLEGAL here.
-                const validAttributeTypes = ["class", "title", "d", "fill", "height", "style", "viewBox", "width"];
-                const validHtmlTags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg"];
+                const validWord = "[\\w\\s\\-_:;,#.]+"; // WARNING: NO closing tags allowed in here! {', ", >} are ILLEGAL here.
+                const validAttributeTypes = ["class", "title", "d", "fill", "height", "style", "viewBox", "width", "id"];
+                const validHtmlTags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg", "br"];
                 // Full Regex
                 const validAttribute = `(?:\\s(?:${validAttributeTypes.join("|")})=(?:"(?:${validWord})"|'(?:${validWord})'))*`;
                 //
