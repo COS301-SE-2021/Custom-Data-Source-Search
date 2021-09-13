@@ -169,7 +169,7 @@
             },
 
             showPopup() {
-                this.displayDeleteCheck = !this.displayDeleteCheck
+                this.displayDeleteCheck = !this.displayDeleteCheck;
             },
 
             updateSelectedUser(user) {
