@@ -57,7 +57,7 @@
               ref="op"
               :showCloseIcon="true"
               :dismissable="false"
-              :breakpoints="{'960px': '70vw', '640px': '70vw'}"
+              :breakpoints="{'640px': '70vw'}"
               :style="{width: '450px'}"
           >
             <div v-if="!clicked && backend===null">
@@ -77,6 +77,11 @@
               </div>
             </div>
             <div v-else-if="!clicked && backend!=null">
+              <Button
+                  icon="pi pi-arrow-left"
+                  class="p-button-lg p-button-rounded p-button-text back-button"
+                  @click="backend=null"
+              />
               <div class="overlay-header">
                 <span>What type of source would you like to add?</span>
               </div>
@@ -113,13 +118,13 @@
               </div>
             </div>
             <div v-else-if="type==='File'">
-              <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Folder'">
-              <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Webpage'">
-              <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
             </div>
           </OverlayPanel>
         </div>
@@ -484,7 +489,9 @@
   }
 
   .overlay-header {
+    margin-top: 10px;
     margin-bottom: 30px;
+    margin-left: 15px;
   }
 
   .p-input-icon-left {
@@ -506,6 +513,10 @@
 
   .data-table{
    bottom: 4em;
+  }
+
+  .back-button{
+    /*margin-bottom: 30px;*/
   }
 
   #add-datasource-button{
