@@ -1,37 +1,45 @@
 <template>
+  <div>
+    <Button
+        icon="pi pi-arrow-left"
+        class="p-button-lg p-button-rounded p-button-text back-button"
+        @click="$emit('back')"
+    />
+  </div>
+  <br><br><br>
+  <div class="main-contents">
+    <span>Enter the URL of desired webpage</span>
+    <InputText
+        id="input"
+        v-model="dataSourceURI"
+        placeholder="Add WebPage URL..."
+    />
     <div>
-      <span>Enter the URL of desired webpage</span>
-      <InputText
-          id="input"
-          v-model="dataSourceURI"
-          placeholder="Add WebPage URL..."
-      />
-      <div>
-        <span>Add optional tags</span>
-        <br/>
-        <span class="p-float-label">
-          <InputText
-              id="tag1"
-              v-model="tag1"
-              type="text"
-          />
-          <label for="tag1">Tag 1</label>
-        </span>
-        <span class="p-float-label">
-          <InputText
-              id="tag2"
-              v-model="tag2"
-              type="text"
-          />
-          <label for="tag2">Tag 2</label>
-        </span>
-      </div>
-      <Button
-          icon="pi pi-check"
-          class="p-button-rounded p-button-text"
-          @click="submitWebpage"
-      />
+      <span>Add optional tags</span>
+      <br/>
+      <span class="p-float-label">
+        <InputText
+            id="tag1"
+            v-model="tag1"
+            type="text"
+        />
+        <label for="tag1">Tag 1</label>
+      </span>
+      <span class="p-float-label">
+        <InputText
+            id="tag2"
+            v-model="tag2"
+            type="text"
+        />
+        <label for="tag2">Tag 2</label>
+      </span>
     </div>
+    <Button
+        icon="pi pi-check"
+        class="p-button-rounded p-button-text"
+        @click="submitWebpage"
+    />
+  </div>
 </template>
 
 <script>
@@ -95,30 +103,40 @@ export default {
 </script>
 
 <style scoped>
-input {
-  font-size: 15px;
-  font-style: italic;
-  height: 5px;
-  background-color: #262626;
-}
+  input {
+    font-size: 15px;
+    font-style: italic;
+    height: 5px;
+    background-color: #262626;
+  }
 
-.p-inputtext:enabled:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
-}
+  .p-inputtext:enabled:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
+  }
 
-.p-button-rounded{
-  float: right;
-  margin: 7px;
-}
+  .p-button-rounded{
+    float: right;
+    margin: 7px;
+  }
 
-.p-float-label{
-  margin-top: 15px;
-}
+  .p-float-label{
+    margin-top: 15px;
+  }
 
-#input{
-  min-width: 100%;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
+  .main-contents{
+    margin-left: 15px;
+  }
+
+  #input{
+    min-width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .back-button{
+    float: left;
+    padding: 0;
+    margin: 0;
+  }
 </style>
