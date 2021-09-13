@@ -10,9 +10,7 @@ import webPageDataSourceService from "./WebPageDataSource.service";
 class GeneralService {
 
     async getResults(searchString: string) {
-
         const [results, error] = await this.searchAllDataSources(searchString);
-
         if (error) {
             return {
                 "code": error.code,
