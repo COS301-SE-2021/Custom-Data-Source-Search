@@ -73,7 +73,7 @@
           <OverlayPanel
               ref="op"
               :showCloseIcon="true"
-              :dismissable="false"
+              :dismissable="true"
               :breakpoints="{'640px': '70vw'}"
               :style="{width: '450px'}"
           >
@@ -429,7 +429,7 @@
         },
 
         deleteSource() {
-          if (this.selectedSources === null || this.selectedSources.length === 0) {
+          if (this.selectedSources.length === 0) {
             this.$toast.add({
               severity: 'info',
               summary: 'No Sources Selected',
@@ -478,7 +478,7 @@
                       });
                     })
               }
-              this.selectedSources = null;
+              this.selectedSources = [];
             }
           })
         }
