@@ -1,4 +1,9 @@
 <template>
+  <Button
+      icon="pi pi-arrow-left"
+      class="p-button-lg p-button-rounded p-button-text back-button"
+      @click="$emit('back')"
+  />
   <ScrollPanel>
     <span>Select one or more Folders to add as Data Sources</span>
     <br/>
@@ -66,6 +71,7 @@
       </span>
     </div>
     <Button
+        label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFolders"
@@ -124,7 +130,7 @@ export default {
       if(this.selectedFolders.length!==0){
         let i;
         for (i of this.selectedFolders) {
-          let respObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2};
+          let respObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2, "dot_ignore": this.ignore};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
           axios
               .post(url, respObject)
@@ -145,6 +151,7 @@ export default {
                   detail: error.response.data.message,
                   life: 3000
                 });
+                this.selectedFolders = [];
               })
         }
         this.selectedFolders = [];
@@ -163,79 +170,86 @@ export default {
 </script>
 
 <style scoped>
-input {
-  font-size: 15px;
-  font-style: italic;
-  height: 5px;
-  background-color: #262626;
-}
+  input {
+    font-size: 15px;
+    font-style: italic;
+    height: 5px;
+    background-color: #262626;
+  }
 
-.p-text-normal {
-  display: inline-flex;
-  padding-left: 15px;
-}
+  .p-text-normal {
+    display: inline-flex;
+    padding-left: 15px;
+  }
 
-.p-button-sm {
-  vertical-align: middle;
-  margin-top: 30px;
-}
+  .p-button-sm {
+    vertical-align: middle;
+    margin-top: 30px;
+  }
 
-.p-inputtext:enabled:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
-}
+  .p-inputtext:enabled:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
+  }
 
-.p-button-text{
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
+  .p-button-text{
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
 
-.p-float-label{
-  margin-top: 15px;
-}
+  .p-float-label{
+    margin-top: 15px;
+  }
 
-.p-button-rounded{
-  float: right;
-  margin: 7px;
-}
+  .p-button-rounded{
+    float: right;
+    margin: 7px;
+  }
 
-.depth-selector{
-  margin-bottom: 15px;
-  margin-top: 5px;
-}
+  .depth-selector{
+    margin-bottom: 15px;
+    margin-top: 5px;
+  }
 
-.depth-selector-input{
-  margin-top: 15px;
-}
+  .depth-selector-input{
+    margin-top: 15px;
+  }
 
-.file-ignore{
-  margin-bottom: 15px;
-}
+  .file-ignore{
+    margin-bottom: 15px;
+  }
 
-.p-inputtextarea{
-  margin-top: 15px;
-}
+  .p-inputtextarea{
+    margin-top: 15px;
+  }
 
-.selected-folders{
-  color: #9e9d9e;
-  font-style: italic;
-  font-size: 15px;
-  margin-top: 15px;
-}
+  .selected-folders{
+    color: #9e9d9e;
+    font-style: italic;
+    font-size: 15px;
+    margin-top: 15px;
+  }
 
-.selection-list{
-  display: block;
-  margin-bottom: 2px;
-}
+  .selection-list{
+    display: block;
+    margin-bottom: 2px;
+  }
 
-.p-scrollpanel{
-  height: 50vh;
-  bottom: 2em;
-  padding-bottom: 1vh;
-  align-content: center;
-}
+  .p-scrollpanel{
+    height: 50vh;
+    bottom: 2em;
+    padding-bottom: 1vh;
+    align-content: center;
+    margin-left: 15px;
+  }
 
-.p-inputtextarea{
-  background: #262626;
-}
+  .p-inputtextarea{
+    background: #262626;
+  }
+
+  .back-button{
+    float: left;
+    padding: 0;
+    margin: 0 0 10px;
+  }
 </style>

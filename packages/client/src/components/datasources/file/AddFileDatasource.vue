@@ -1,6 +1,11 @@
 <template>
+  <Button
+      icon="pi pi-arrow-left"
+      class="p-button-lg p-button-rounded p-button-text back-button"
+      @click="$emit('back')"
+  />
   <ScrollPanel>
-    <span>Select one or more Files to add to data sources</span>
+    <span id="header">Select one or more Files to add to data sources</span>
     <br/>
     <Button
         label="Browse"
@@ -44,6 +49,7 @@
       </span>
     </div>
     <Button
+        label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFiles()"
@@ -126,6 +132,7 @@ export default {
                   detail: error.response.data.message,
                   life: 3000
                 });
+                this.filenames = [];
               })
         }
       }
@@ -143,48 +150,55 @@ export default {
 </script>
 
 <style scoped>
-div {
-  padding: 0 15px 15px 0;
-}
+  div {
+    padding: 0 15px 15px 0;
+  }
 
-input {
-  min-width: 90%;
-  font-size: 15px;
-  font-style: italic;
-  height: 5px;
-  background: #262626;
-}
+  input {
+    min-width: 90%;
+    font-size: 15px;
+    font-style: italic;
+    height: 5px;
+    background: #262626;
+  }
 
-.p-button-text{
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
+  .p-button-text{
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
 
-.p-float-label{
-  margin-top: 15px;
-}
+  .p-float-label{
+    margin-top: 15px;
+  }
 
-.p-button-rounded{
-  float: right;
-  margin: 7px;
-}
+  .p-button-rounded{
+    float: right;
+    margin: 7px;
+  }
 
-.selected-files{
-  color: #9e9d9e;
-  font-style: italic;
-  font-size: 15px;
-  margin-top: 15px;
-}
+  .selected-files{
+    color: #9e9d9e;
+    font-style: italic;
+    font-size: 15px;
+    margin-top: 15px;
+  }
 
-.selection-list{
-  display: block;
-  margin-bottom: 2px;
-}
+  .selection-list{
+    display: block;
+    margin-bottom: 2px;
+  }
 
-.p-scrollpanel{
-  height: 50vh;
-  bottom: 2em;
-  padding-bottom: 1vh;
-  align-content: center;
-}
+  .p-scrollpanel{
+    height: 45vh;
+    bottom: 2em;
+    padding-bottom: 1vh;
+    align-content: center;
+    margin-left:15px;
+  }
+
+  .back-button{
+    float: left;
+    padding: 0;
+    margin: 0 0 10px;
+  }
 </style>
