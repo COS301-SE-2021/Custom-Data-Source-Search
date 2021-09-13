@@ -224,12 +224,14 @@
           <Button @click="showAddUsersDialog"
                   icon="pi pi-user-plus"
                   class="p-button p-button-success p-mr-2 p-button-custom-med"
+                  v-tooltip="'Add user'"
           />
           <Button :disabled="!isUserSelected"
                   @click="deleteUsers"
                   icon="pi pi-user-minus"
                   class="p-button-danger p-mr-2
                   p-button-custom-med"
+                  v-tooltip="'Remove user'"
           />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
@@ -237,6 +239,7 @@
                   @click="changeUserRoles"
                   icon="pi pi-sort"
                   class="p-button-info p-mr-2 permissions-button p-button-custom-med"
+                  v-tooltip="'Change user role'"
           />
           <Dropdown class="toolbar-dropdown"
                     :disabled="!isUserSelected"
@@ -249,10 +252,12 @@
           <Button @click="logoutUsersConfirmation"
                   icon="pi pi-lock"
                   class="p-button-warning p-button-custom-med"
+                  v-tooltip="'Logout'"
           />
           <Button @click="revokeUserKeysConfirmation"
                   icon="pi pi-ban"
                   class="p-button-danger p-button-custom-med"
+                  v-tooltip="'Revoke keys'"
           />
         </span>
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
@@ -260,6 +265,7 @@
                   :disabled="!isUserSelected"
                   icon="pi pi-key"
                   class="p-button-info p-button-custom-med"
+                  v-tooltip="'Generate keys'"
           />
           <i class="pi pi-pause p-toolbar-separator p-mr-2" aria-hidden="true"/>
           <SplitButton :disabled="!isUserSelected"
@@ -267,6 +273,7 @@
                        @click="mailUsers"
                        icon="pi pi-inbox"
                        class="p-button-info p-button-custom-med"
+                       v-tooltip="'Email key'"
           />
         </template>
       </Toolbar>
