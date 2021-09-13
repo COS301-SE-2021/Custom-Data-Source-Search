@@ -265,11 +265,11 @@ class FileDataSourceService {
         return string.replace(new RegExp(/[<>&"']/g), (match) => {
             switch (match) {
                 case "<":
-                    return "&lt"
+                    return "&lt";
                 case ">":
-                    return "&gt"
+                    return "&gt";
                 case "&":
-                    return "&amp;"
+                    return "&amp;";
                 case '"':
                     return "&quot";
                 default:
