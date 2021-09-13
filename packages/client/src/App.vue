@@ -91,7 +91,6 @@
           ref="op"
           appendTo="body"
           :showCloseIcon="false"
-          :breakpoints="{'900px': '40vw'}"
           style="width: 350px"
       >
         <ProfileDropdown/>
@@ -115,7 +114,6 @@
     ReEnterMasterPassword,
     OverlayPanel,
     ProfileDropdown,
-    // Button
   },
 
   data() {
@@ -344,7 +342,7 @@
   }
 
   #overlay_panel {
-    margin-left: 1%;
+    margin-left: 0.5%;
   }
 
   #sidebar {

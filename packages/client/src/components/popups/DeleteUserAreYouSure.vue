@@ -3,18 +3,18 @@
       header="Confirm Deletion"
       :visible="display"
       :draggable="false"
-      :closable="true"
+      :closable="false"
       :dismissable-mask="true"
       :modal="true"
-      @hide="$emit('display-popup')"
+      @hide="hide"
   >
     <div class="process-request-body" v-if="firstQuestion">
       <div class="p-dialog-content p-confirm-popup-message-moderator">
-        <em class="pi pi-exclamation-triangle em-dialog"></em>
+        <i class="pi pi-exclamation-triangle em-dialog" aria-hidden="true"></i>
         <div>
-          <span>Are you sure you want to delete {{user.name}}?</span>
+          <span>Are you sure you want to delete "{{user.name}}"?</span>
           <br><br>
-          <span>This user may not have a browser backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
+          <span>This user may not have a vault backup of their information. If you delete their local account, they may have to re-register to gain access to all their data sources.</span>
         </div>
       </div>
       <div class="button-holders">
@@ -57,46 +57,50 @@
     export default {
         name: "DeleteUserAreYouSure",
         props: {
-            show: Boolean,
-            firstQuestionFedIn: Boolean,
-            deleteVaultFedIn: {
-                type: String,
-                default: null
-            },
-            user: {
-                id: Number,
-                name: String,
-                hasVault: Boolean
-            }
+          show: Boolean,
+          firstQuestionFedIn: Boolean,
+          deleteVaultFedIn: {
+              type: String,
+              default: null
+          },
+          user: {
+              id: Number,
+              name: String,
+              hasVault: Boolean
+          }
         },
         data() {
-            return {
-                display: this.show,
-                firstQuestion: true,
-                deleteVault: null
-            }
+          return {
+              display: this.show,
+              firstQuestion: true,
+              deleteVault: null
+          }
         },
         mounted() {
-            this.firstQuestion = this.firstQuestionFedIn;
-            this.deleteVault = this.deleteVaultFedIn;
+          this.firstQuestion = this.firstQuestionFedIn;
+          this.deleteVault = this.deleteVaultFedIn;
         },
         methods: {
-            closePopUp() {
-                this.display = false;
-                this.firstQuestion = true;
-            },
-            hasVault() {
-                if (this.user.hasVault) {
-                    this.firstQuestion = false;
-                } else {
-                    this.deleteUser();
-                }
-            },
-            deleteUser() {
-                this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
-                this.$emit("clearCurrentUser");
-                this.closePopUp();
-            }
+          closePopUp() {
+              this.display = false;
+              this.firstQuestion = true;
+          },
+          hasVault() {
+              if (this.user.hasVault) {
+                  this.firstQuestion = false;
+              } else {
+                  this.deleteUser();
+              }
+          },
+          deleteUser() {
+              this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
+              this.$emit("clearCurrentUser");
+              this.closePopUp();
+          },
+          hide(){
+            this.$emit('display-popup');
+            this.display = false;
+          }
         },
         watch: {
             show: function () {

@@ -1,5 +1,4 @@
 <template>
-
   <div class="user-container p-ripple" v-ripple @click="signIn">
     <div class="image-container">
       <div class="image-ring " v-bind:class="{ active: userDetails.isActive }">
@@ -8,7 +7,6 @@
     </div>
     <h1 class="name-field"> {{ userDetails.name }} </h1>
     <h2 class="email-field"> {{userDetails.email }}</h2>
-
   </div>
 </template>
 

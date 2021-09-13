@@ -43,9 +43,26 @@
               @click="toggle"
           />
           <Button
+              v-if="selectedSources.length !== 0"
+              id="edit-datasource-button"
+              label="Edit Selected Sources"
+              icon="pi pi-pencil"
+              class="p-button-text"
+              @click="editSource"
+          />
+          <Button
+              v-if="selectedSources.length !== 0"
+              id="delete-datasource-button"
+              label="Delete Selected Sources"
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger"
+              @click="deleteSource"
+          />
+          <Button
+              v-if="selectedSources.length !== 0"
               id="actions-button"
               type="button"
-              label="Actions"
+              label="More Actions"
               icon="pi pi-angle-down"
               aria-haspopup="true"
               aria-controls="overlay_menu"
@@ -57,7 +74,7 @@
               ref="op"
               :showCloseIcon="true"
               :dismissable="false"
-              :breakpoints="{'960px': '70vw', '640px': '70vw'}"
+              :breakpoints="{'640px': '70vw'}"
               :style="{width: '450px'}"
           >
             <div v-if="!clicked && backend===null">
@@ -77,6 +94,11 @@
               </div>
             </div>
             <div v-else-if="!clicked && backend!=null">
+              <Button
+                  icon="pi pi-arrow-left"
+                  class="p-button-lg p-button-rounded p-button-text back-button"
+                  @click="backend=null"
+              />
               <div class="overlay-header">
                 <span>What type of source would you like to add?</span>
               </div>
@@ -113,13 +135,13 @@
               </div>
             </div>
             <div v-else-if="type==='File'">
-              <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Folder'">
-              <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Webpage'">
-              <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
             </div>
           </OverlayPanel>
         </div>
@@ -274,7 +296,7 @@
           sources: null,
           loading: false,
           backend: null,
-          selectedSources: null,
+          selectedSources: [],
           filters: {
             'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
             'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -407,7 +429,7 @@
         },
 
         deleteSource() {
-          if (this.selectedSources === null) {
+          if (this.selectedSources === null || this.selectedSources.length === 0) {
             this.$toast.add({
               severity: 'info',
               summary: 'No Sources Selected',
@@ -484,7 +506,9 @@
   }
 
   .overlay-header {
+    margin-top: 10px;
     margin-bottom: 30px;
+    margin-left: 15px;
   }
 
   .p-input-icon-left {
@@ -508,6 +532,10 @@
    bottom: 4em;
   }
 
+  .back-button{
+    /*margin-bottom: 30px;*/
+  }
+
   #add-datasource-button{
     float: right;
     margin-right: 2vw;
@@ -520,10 +548,84 @@
   }
 
   #actions-button{
+    display: none;
     float: right;
   }
 
-  @media only screen and (max-width: 960px) {
+  #edit-datasource-button{
+    float: right;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  #delete-datasource-button{
+    float: right;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-o-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-ms-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @media only screen and (max-width: 1080px) {
     #main-scroll{
       width: 93vw !important;
     }
@@ -534,6 +636,18 @@
 
     #add-datasource-button-small{
       display: block;
+    }
+
+    #actions-button{
+      display: block;
+    }
+
+    #delete-datasource-button{
+      display: none;
+    }
+
+    #edit-datasource-button{
+      display: none;
     }
   }
 </style>

@@ -1,12 +1,7 @@
 <template>
   <div class="main-container">
-    <div class="image-container">
-      <div class="image-ring">
-        <h3 class="name-initial">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
-      </div>
-    </div>
     <div class="user-detail-container">
-      <div id="name"><strong>{{ getUserInfo(getSignedInUserId).name }}</strong></div>
+      <div id="name"><strong>Hi, {{ getUserInfo(getSignedInUserId).name }}!</strong></div>
       <div id="email">{{ getUserInfo(getSignedInUserId).email }}</div>
     </div>
     <div class="backends-container">
@@ -77,62 +72,38 @@
 </script>
 
 <style scoped>
+  .user-detail-container{
+    margin-left: 25px;
+    margin-bottom: 50px;
+  }
 
-.image-container {
-  float: left;
-  margin-left: 1vw;
-  vertical-align: middle;
-  width: 50px;
-  height: 50px;
-}
+  #name{
+    margin-bottom: 8px;
+    font-size: 20px;
+  }
 
-.image-ring {
-  width: 100%;
-  height: 100%;
-  background:
-      linear-gradient(#2d2d2d, #2d2d2d) padding-box,
-      linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
-  border-radius: 50em;
-  border: 3px solid transparent;
-}
+  .backends-container{
+    margin-left: 25px;
+  }
 
-.name-initial {
-  color: #f3f3f3;
-  font-size: 25px;
-  margin: auto;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  line-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .p-inputswitch{
+    float: right;
+    margin-right: 30px;
+  }
 
-.user-detail-container{
-  margin-left: 90px;
-  margin-bottom: 50px;
-}
+  .sign-out{
+    float: right;
+    margin-right: 10px;
+  }
 
-#name{
-  margin-bottom: 8px;
-}
+  .switch-user{
+    margin-left: 10px;
+  }
 
-.backends-container{
-  margin-left: 25px;
-}
-
-.p-inputswitch{
-  float: right;
-  margin-right: 30px;
-}
-
-.sign-out{
-  float: right;
-  margin-right: 10px;
-}
-
-.switch-user{
-  margin-left: 10px;
-}
+  @media only screen and (max-width: 900px) {
+    .sign-out{
+      margin-left: 10px;
+      float: left;
+    }
+  }
 </style>
