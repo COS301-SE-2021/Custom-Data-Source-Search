@@ -45,8 +45,8 @@
           <strong>(You will require internet connection in order for this to be processed)</strong>
         </div>
         <div style="text-align: center">
-          <Button :disabled="!deleteVault" @click="deleteUser">Delete</Button>
-          <Button @click="closePopUp">Cancel</Button>
+          <Button class="p-button-danger these-buttons" :disabled="!deleteVault" @click="deleteUser">Delete</Button>
+          <Button class="p-button-text these-buttons" @click="closePopUp">Cancel</Button>
         </div>
       </div>
     </div>
@@ -146,4 +146,13 @@
   .em-dialog {
     font-size: xx-large;
   }
+
+  .these-buttons {
+    float: right;
+  }
+
+  .p-button-text {
+    color: grey;
+  }
+
 </style>
