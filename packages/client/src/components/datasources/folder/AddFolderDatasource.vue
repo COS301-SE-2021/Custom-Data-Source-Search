@@ -142,7 +142,6 @@ export default {
                   life: 3000
                 });
                 this.$emit('addFolder');
-                this.$emit("submitted");
               })
               .catch((error) => {
                 this.$toast.add({
@@ -154,6 +153,7 @@ export default {
                 this.selectedFolders = [];
               })
         }
+        this.$emit("submitted");
         this.selectedFolders = [];
       }
       else{

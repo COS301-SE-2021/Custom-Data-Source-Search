@@ -135,7 +135,7 @@
               </div>
             </div>
             <div v-else-if="type==='File'">
-              <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
+              <add-file-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Folder'">
               <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
@@ -428,6 +428,11 @@
           }
         },
 
+        submitted(){
+          this.toggle();
+          this.updateSources();
+        },
+
         deleteSource() {
           if (this.selectedSources.length === 0) {
             this.$toast.add({
@@ -465,9 +470,8 @@
                         severity: 'success',
                         summary: 'Deleted',
                         detail: "Source deleted",
-                        life: 3000
+                        life: 2000
                       });
-                      this.updateSources();
                     })
                     .catch(() => {
                       this.$toast.add({
@@ -479,6 +483,7 @@
                     })
               }
               this.selectedSources = [];
+              this.updateSources();
             }
           })
         }
