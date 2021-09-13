@@ -30,7 +30,7 @@ gitHubDataSourceRouter.post("/", async (req: Request, res: Response) => {
 /**
  * Remove a GitHub data source by it's id
  */
-// gitHubDataSourceRouter.delete("/", async (req: Request, res: Response) => {
-//     const result = await gitHubDataSourceService.removeGitHubDataSource(req.body.id);
-//     res.status(result.code).send(result.body);
-// });
+gitHubDataSourceRouter.delete("/", async (req: Request, res: Response) => {
+    const result = await gitHubDataSourceService.removeGitHubDataSource(req.body.id);
+    res.status(result.code).send(result.body);
+});

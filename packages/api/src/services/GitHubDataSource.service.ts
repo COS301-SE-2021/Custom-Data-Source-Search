@@ -13,6 +13,7 @@ import fileDataSourceService from "./FileDataSource.service";
 import {FileFromRepo, GitHubDataSource, StoredGitHubDataSource} from "../models/GitHubDataSource.interface";
 import axios from "axios";
 import shell from "shelljs";
+import path from "path";
 
 class GitHubDataSourceService {
 
@@ -54,10 +55,15 @@ class GitHubDataSourceService {
         if (e) {
             return generateDefaultHttpResponse(e);
         }
-        shell.cd(__dirname);
+        const repoName: string = path.join(__dirname, dataSource.repo.split("/").pop());
+        await fs.mkdir(repoName, (err) => {
+            if (err) {
+                return console.error(err);
+            }
+        })
+        shell.cd(repoName);
         shell.exec('git clone https://github.com/' + dataSource.repo);
-        const repoDirectory: string = __dirname + "\\" + dataSource.repo.split("/").pop();
-        for (let filePath of this.getFilesInFolder(repoDirectory)) {
+        for (let filePath of this.getFilesInFolder(repoName + "\\")) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
                 continue;
@@ -79,8 +85,9 @@ class GitHubDataSourceService {
             }
             gitHubDataSourceRepository.addFileInRepo(fileFromRepo);
         }
+        shell.cd(__dirname);
         await fs.rm(
-            repoDirectory,
+            repoName,
             {recursive: true},
             (err) => {
                 if (err) {
@@ -91,7 +98,7 @@ class GitHubDataSourceService {
         return generateDefaultHttpResponse(statusMessage(200, "Successfully added datasource"));
     }
 
-    async removeFolderDataSource(id: string): Promise<DefaultHttpResponse> {
+    async removeGitHubDataSource(id: string): Promise<DefaultHttpResponse> {
         for (let folderFileUUID of gitHubDataSourceRepository.getAllRepoFileUUIDs(id)) {
             await solrService.deleteFromSolr(folderFileUUID);
         }
@@ -105,7 +112,6 @@ class GitHubDataSourceService {
     getFilesInFolder(path: string): string[] {
         let files: string[] = [];
         this.getAllFilesRecursively(path).forEach((filePath: string) => {
-            console.log(filePath);
             if (filePath.indexOf(".") === -1 || filePath.indexOf(".git") !== -1) {
                 return;
             }
@@ -139,5 +145,5 @@ class GitHubDataSourceService {
     }
 }
 
-const folderDataSourceService = new GitHubDataSourceService();
-export default folderDataSourceService;
+const gitHubDataSourceService = new GitHubDataSourceService();
+export default gitHubDataSourceService;
