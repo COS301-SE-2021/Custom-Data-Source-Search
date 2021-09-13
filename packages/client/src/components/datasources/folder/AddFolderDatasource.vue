@@ -150,6 +150,7 @@ export default {
                   detail: error.response.data.message,
                   life: 3000
                 });
+                this.selectedFolders = null;
               })
         }
         this.selectedFolders = [];
