@@ -37,10 +37,10 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
-    import SignOutCheck from "../popups/SignOutCheck";
+  import {mapGetters} from "vuex";
+  import SignOutCheck from "../popups/SignOutCheck";
 
-    export default {
+  export default {
   name: "ProfileDropdown",
     components: {SignOutCheck},
     data(){
@@ -63,7 +63,6 @@
       this.showSignOutCheck();
     },
     switchUser() {
-      console.log(this.$store.getters.getMasterKey);
       this.$store.commit('setSignedIn', false);
       this.$router.push('/');
     }

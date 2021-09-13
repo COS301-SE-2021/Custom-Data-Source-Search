@@ -155,7 +155,7 @@
     max-width: 1000px;
     border-radius: 10px;
     padding: 5px 20px;
-    margin: 5px auto;
+    margin: 5px;
     overflow: hidden;
     position: relative;
   }
