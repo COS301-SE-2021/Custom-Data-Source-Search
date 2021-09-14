@@ -44,14 +44,6 @@
           />
           <Button
               v-if="selectedSources.length !== 0"
-              id="edit-datasource-button"
-              label="Edit Selected Sources"
-              icon="pi pi-pencil"
-              class="p-button-text"
-              @click="editSource"
-          />
-          <Button
-              v-if="selectedSources.length !== 0"
               id="delete-datasource-button"
               label="Delete Selected Sources"
               icon="pi pi-trash"
@@ -60,19 +52,11 @@
           />
           <Button
               v-if="selectedSources.length !== 0"
-              id="edit-datasource-button-small"
-              icon="pi pi-pencil"
-              class="p-button-text"
-              @click="editSource"
-          />
-          <Button
-              v-if="selectedSources.length !== 0"
               id="delete-datasource-button-small"
               icon="pi pi-trash"
               class="p-button-text p-button-danger"
               @click="deleteSource"
           />
-          <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
           <OverlayPanel
               ref="op"
               :showCloseIcon="true"
@@ -141,10 +125,10 @@
               <add-file-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Folder'">
-              <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
+              <add-folder-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Webpage'">
-              <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()" @back="clicked=!clicked"/>
+              <add-webpage-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
           </OverlayPanel>
         </div>
@@ -309,7 +293,7 @@
             'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
           },
           types: [
-            'file', 'folder', 'webpage'
+            'file', 'folder', 'webpage', 'github'
           ],
           backends: [],
         }
@@ -368,6 +352,14 @@
                       })
                 })
           }
+          if (this.sources.length === 0) {
+            this.$toast.add({
+              severity: 'warn',
+              summary: 'No sources',
+              detail: "Try adding data sources",
+              life: 3000
+            });
+          }
         },
 
         /**
@@ -385,15 +377,6 @@
             r.backend = name;
           }
           this.sources = this.sources.concat(results);
-
-          if (this.sources.length === 0) {
-            this.$toast.add({
-              severity: 'warn',
-              summary: 'No sources',
-              detail: "Try adding data sources",
-              life: 3000
-            });
-          }
           this.loading = false;
         },
 
@@ -520,10 +503,6 @@
    bottom: 4em;
   }
 
-  .back-button{
-    /*margin-bottom: 30px;*/
-  }
-
   #add-datasource-button{
     float: right;
     margin-right: 2vw;
@@ -533,15 +512,6 @@
     float: right;
     margin-right: 2vw;
     display: none;
-  }
-
-  #edit-datasource-button{
-    float: right;
-    animation: fadeIn 1s;
-    -webkit-animation: fadeIn 1s;
-    -moz-animation: fadeIn 1s;
-    -o-animation: fadeIn 1s;
-    -ms-animation: fadeIn 1s;
   }
 
   #delete-datasource-button{
@@ -554,16 +524,6 @@
   }
 
   #delete-datasource-button-small{
-    float: right;
-    display: none;
-    animation: fadeIn 1s;
-    -webkit-animation: fadeIn 1s;
-    -moz-animation: fadeIn 1s;
-    -o-animation: fadeIn 1s;
-    -ms-animation: fadeIn 1s;
-  }
-
-  #edit-datasource-button-small{
     float: right;
     display: none;
     animation: fadeIn 1s;
@@ -646,14 +606,6 @@
     }
 
     #delete-datasource-button-small{
-      display: block;
-    }
-
-    #edit-datasource-button{
-      display: none;
-    }
-
-    #edit-datasource-button-small{
       display: block;
     }
   }
