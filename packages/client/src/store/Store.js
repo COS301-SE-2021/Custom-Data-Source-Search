@@ -662,3 +662,6 @@ function decryptJsonObject(masterKey, encryptedJsonObject) {
 let masterKey = null;
 
 export default store;
+export {generateMasterKey};
+export {encryptJsonObject};
+

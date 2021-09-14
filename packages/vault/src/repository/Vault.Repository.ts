@@ -4,25 +4,27 @@ import {createHash} from "crypto";
 const db = require("../config/db.config");
 
 class VaultRepository {
-/*
-    let reqObj = {
-        email: this.userDetails.masterEmail,
-        salt: saltAndVerifier.s,
-        verifier: saltAndVerifier.v,
-        user_data: encryptedInfo.data,
-        fingerprint: createHash("md5").update(encryptedInfo.data).digest("hex"),
-        user_iv: encryptedInfo.iv,
-        user_authtag: encryptedInfo.authTag,
-        user_salt: userSalt
-    }
-
-    */
 
     async addUser(body : SRPRegistrationRequest){
         try {
             const result = await db.query(
-                'INSERT INTO "Users" (email, salt, verifier, data, fingerprint) VALUES ($1, $2, $3, $4, $5)',
-                [body.email, body.salt, body.verifier, body.data, body.fingerprint],
+                'INSERT INTO "Users" (email,' +
+                ' salt,' +
+                ' verifier,' +
+                ' user_data,' +
+                ' fingerprint,' +
+                ' user_iv,' +
+                ' user_authtag,' +
+                ' user_salt) ' +
+                ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+                [body.email,
+                    body.salt,
+                    body.verifier,
+                    body.user_data,
+                    body.fingerprint,
+                    body.user_iv,
+                    body.user_authtag,
+                    body.user_salt],
             );
             return[result, null]
         } catch (e){

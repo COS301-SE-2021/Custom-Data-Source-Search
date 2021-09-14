@@ -145,7 +145,9 @@
   import Checkbox from 'primevue/checkbox';
   import PasswordInputField from "../components/primeComponents/PasswordInputField";
   import axios from "axios";
-  import {createHash} from 'crypto'
+  import {createHash} from 'crypto';
+  import {encryptJsonObject, generateMasterKey} from "@/store/Store";
+
 
   import {
     createVerifierAndSalt, SRPParameters, SRPRoutines,
@@ -235,10 +237,11 @@
           //user_salt
           const userSalt = user.info.salt;
 
-          const masterKey = await this.$store.dispatch("generateMasterKey", {password, userSalt});
-
+          //const masterKey = await this.$store.commit("generateMasterKey", {password, userSalt});
+            const masterKey = generateMasterKey(password, userSalt);
           //user_data,user_iv,user_authtag
-          const encryptedInfo = await this.$store.dispatch("encryptJsonObject", {masterKey, user});
+         // const encryptedInfo = await this.$store.commit("encryptJsonObject", {masterKey, user});
+          const encryptedInfo = encryptJsonObject(masterKey, user);
 
           let reqObj = {
                   email: this.userDetails.masterEmail,
