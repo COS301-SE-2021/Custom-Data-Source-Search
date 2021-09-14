@@ -29,7 +29,12 @@ export interface SRPPullResponse {
     code: number,
     message: {
         error?: string,
-        data? : string
+        data? : {
+            user_data: string,
+            user_iv: string,
+            user_authtag: string,
+            user_salt: string,
+        }
     }
 }
 

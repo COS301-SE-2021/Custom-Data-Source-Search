@@ -231,24 +231,27 @@
 
           const user = await this.getUser(this.getSignedInUserId);
 
-          //user_data
-         // let userDataStr = JSON.stringify(user);
 
           //user_salt
           const userSalt = user.info.salt;
 
           //const masterKey = await this.$store.commit("generateMasterKey", {password, userSalt});
             const masterKey = generateMasterKey(password, userSalt);
+
           //user_data,user_iv,user_authtag
          // const encryptedInfo = await this.$store.commit("encryptJsonObject", {masterKey, user});
           const encryptedInfo = encryptJsonObject(masterKey, user);
+
+          const dataString = JSON.stringify(user);
+          const dataFingerprint = createHash("md5").update(dataString).digest("hex");
 
           let reqObj = {
                   email: this.userDetails.masterEmail,
                   salt: saltAndVerifier.s,
                   verifier: saltAndVerifier.v,
                   user_data: encryptedInfo.data,
-                  fingerprint: createHash("md5").update(encryptedInfo.data).digest("hex"),
+                //  fingerprint: createHash("md5").update(encryptedInfo.data).digest("hex"),
+                  fingerprint: dataFingerprint,
                   user_iv: encryptedInfo.iv,
                   user_authtag: encryptedInfo.authTag,
                   user_salt: userSalt

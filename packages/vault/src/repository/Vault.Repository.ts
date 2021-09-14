@@ -118,11 +118,11 @@ class VaultRepository {
     async getUserData(email: string){
         try {
             const data = await db.query(
-                'SELECT data FROM "Users" WHERE email = $1',
+                'SELECT user_data, user_iv, user_authtag, user_salt FROM "Users" WHERE email = $1',
                 [email],
             );
 
-            const result = data.rows[0].data;
+            const result = data.rows[0];
 
             return[result, null]
         } catch (e){

@@ -257,6 +257,7 @@
     import axios from "axios";
     import {createHash} from "crypto";
     import VaultSync from "@/components/popups/VaultSync";
+    import {encryptJsonObject, generateMasterKey} from "@/store/Store";
 
     export default {
   components: {
@@ -287,7 +288,9 @@
             'unconnectedBackendNames',
             'unconnectedBackendBool',
             'unconnectedBackendNo',
-            'getSignedIn'
+            'getSignedIn',
+            'getUser',
+            'getMasterKey'
         ])
     },
 
@@ -302,16 +305,16 @@
       checkSyncStatus(){
         if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
           console.log("Checking Sync Status");
-          const userInfo = this.getUserInfo(this.getSignedInUserId);
 
-          let payloadObj = {name: userInfo.name,
-                          content: "Test"
-          };
-          let payloadStr = JSON.stringify(payloadObj)
+          const user = this.getUser(this.getSignedInUserId);
+
+
+          const dataString = JSON.stringify(user);
+          const dataFingerprint = createHash("md5").update(dataString).digest("hex");
 
           let reqObj = {
-                  email: userInfo.email,
-                  fingerprint: createHash("md5").update(payloadStr).digest("hex")
+                  email: user.info.email,
+                  fingerprint: dataFingerprint
           }
 
           console.log("requestObject" + JSON.stringify(reqObj));

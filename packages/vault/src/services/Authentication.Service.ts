@@ -169,7 +169,12 @@ class AuthenticationService {
                         return {
                             code: 200,
                             message: {
-                                data : userData
+                                data : {
+                                    user_data: userData.user_data,
+                                    user_iv: userData.user_iv,
+                                    user_authtag: userData.user_authtag,
+                                    user_salt: userData.user_salt,
+                                }
                             }
                         }
                     }
