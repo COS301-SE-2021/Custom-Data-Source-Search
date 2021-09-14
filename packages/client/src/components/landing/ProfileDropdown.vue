@@ -1,7 +1,10 @@
 <template>
   <div class="main-container">
     <div class="user-detail-container">
-      <div id="name"><strong>Hi, {{ getUserInfo(getSignedInUserId).name }}!</strong></div>
+      <div id="name">
+        <strong>Hi, {{ getUserInfo(getSignedInUserId).name }}!</strong>
+        <div class="fade"></div>
+      </div>
       <div id="email">{{ getUserInfo(getSignedInUserId).email }}</div>
     </div>
     <div class="backends-container">
@@ -73,12 +76,23 @@
 <style scoped>
   .user-detail-container{
     margin-left: 25px;
-    margin-bottom: 50px;
+    margin-bottom: 35px;
   }
 
   #name{
     margin-bottom: 8px;
     font-size: 20px;
+    overflow:hidden;
+    position: relative;
+  }
+
+  .fade{
+    position:absolute;
+    top:0; bottom:0; right:0;
+    width:100%;
+    background:#262626;
+    animation: showHide 5s ease-in forwards;
+    animation-iteration-count: 1;
   }
 
   .backends-container{
@@ -97,6 +111,13 @@
 
   .switch-user{
     margin-left: 10px;
+  }
+
+  @keyframes showHide {
+    0% {width: 100%}
+    40% {width: 0}
+    60% {width: 0}
+    100% {width: 0%}
   }
 
   @media only screen and (max-width: 900px) {
