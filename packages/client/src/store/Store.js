@@ -41,6 +41,10 @@ const store = createStore({
             return state.users.find(user => user.id === id).info;
         },
 
+        getUser: (state) => (id) => {
+            return state.users.find(user => user.id === id);
+        },
+
         getArrUserInfo(state) {
             let users = [];
             for (let x = 0; x < state.users.length; x++) {

@@ -150,6 +150,7 @@
   import {
     createVerifierAndSalt, SRPParameters, SRPRoutines,
   } from "tssrp6a"
+  import {mapGetters} from "vuex";
 
   const zxcvbn = require('zxcvbn');
 
@@ -185,7 +186,14 @@
     computed: {
       passwordStrength() {
         return zxcvbn(this.masterPassCheck);
-      }
+      },
+      ...mapGetters ([
+        'getUserInfo',
+        'getUserBackends',
+        'getSignedInUserId',
+        'getSignedIn',
+          'getUser'
+      ])
     },
 
     methods: {
@@ -208,33 +216,39 @@
         }
 
         if(this.userDetails.backupVault === true){
+          const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
 
-            const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
+          const email = this.userDetails.masterEmail;
+          const password = this.masterPassword;
 
-            const email = this.userDetails.masterEmail;
-            const password = this.masterPassword;
-            console.log(password);
+          const saltAndVerifier = await createVerifierAndSalt(
+              srp6aNimbusRoutines,
+              email,
+              password,
+          );
 
-            const saltAndVerifier = await createVerifierAndSalt(
-                srp6aNimbusRoutines,
-                email,
-                password,
-            );
+          const user = await this.getUser(this.getSignedInUserId);
 
-          console.log(saltAndVerifier.s);
-          console.log(saltAndVerifier.v);
+          //user_data
+         // let userDataStr = JSON.stringify(user);
 
-          let payloadObj = {name: this.userDetails.userName,
-                          content: "Test"
-          };
-          let payloadStr = JSON.stringify(payloadObj)
+          //user_salt
+          const userSalt = user.info.salt;
+
+          const masterKey = await this.$store.dispatch("generateMasterKey", {password, userSalt});
+
+          //user_data,user_iv,user_authtag
+          const encryptedInfo = await this.$store.dispatch("encryptJsonObject", {masterKey, user});
 
           let reqObj = {
                   email: this.userDetails.masterEmail,
                   salt: saltAndVerifier.s,
                   verifier: saltAndVerifier.v,
-                  data: payloadStr,
-                  fingerprint: createHash("md5").update(payloadStr).digest("hex")
+                  user_data: encryptedInfo.data,
+                  fingerprint: createHash("md5").update(encryptedInfo.data).digest("hex"),
+                  user_iv: encryptedInfo.iv,
+                  user_authtag: encryptedInfo.authTag,
+                  user_salt: userSalt
           }
 
           console.log(reqObj.fingerprint);

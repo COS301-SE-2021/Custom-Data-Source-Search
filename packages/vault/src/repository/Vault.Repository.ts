@@ -1,8 +1,22 @@
 import {SRPRegistrationRequest} from "../models/request/RegistrationReq.interface";
+import {createHash} from "crypto";
 
 const db = require("../config/db.config");
 
 class VaultRepository {
+/*
+    let reqObj = {
+        email: this.userDetails.masterEmail,
+        salt: saltAndVerifier.s,
+        verifier: saltAndVerifier.v,
+        user_data: encryptedInfo.data,
+        fingerprint: createHash("md5").update(encryptedInfo.data).digest("hex"),
+        user_iv: encryptedInfo.iv,
+        user_authtag: encryptedInfo.authTag,
+        user_salt: userSalt
+    }
+
+    */
 
     async addUser(body : SRPRegistrationRequest){
         try {

@@ -8,9 +8,6 @@ import vaultRepository from "../repository/Vault.Repository";
 class RegistrationService {
 
     async register(body: SRPRegistrationRequest): Promise<SRPRegistrationResponse> {
-        console.log("salt: " + body.salt);
-        console.log("verifier: " + body.verifier);
-        console.log("fingerprint: " + body.fingerprint);
         if(this.detailsAreValid(body)){
             const [data, err] = await vaultRepository.addUser(body);
 
@@ -38,15 +35,20 @@ class RegistrationService {
         return body.hasOwnProperty("email") &&
                body.hasOwnProperty("salt") &&
                body.hasOwnProperty("verifier") &&
-               body.hasOwnProperty("data") &&
+               body.hasOwnProperty("user_data") &&
                body.hasOwnProperty("fingerprint") &&
+               body.hasOwnProperty("user_iv") &&
+               body.hasOwnProperty("user_authtag") &&
+               body.hasOwnProperty("user_salt") &&
                isNaN(Number(body.email)) &&
                !isNaN(Number(body.salt)) &&
                !isNaN(Number(body.verifier)) &&
-               isNaN(Number(body.data)) &&
-               isNaN(Number(body.fingerprint));
+               isNaN(Number(body.user_data)) &&
+               isNaN(Number(body.fingerprint)) &&
+               isNaN(Number(body.user_iv)) &&
+               isNaN(Number(body.user_authtag)) &&
+               isNaN(Number(body.user_salt));
     }
-
 }
 
 const registrationService = new RegistrationService();
