@@ -6,6 +6,7 @@ import folderDataSourceRepository from "../repositories/FolderDataSourceReposito
 import webPageDataSourceRepository from "../repositories/WebPageDataSourceRepository";
 import folderDataSourceService from "./FolderDataSource.service";
 import webPageDataSourceService from "./WebPageDataSource.service";
+import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
 
 class GeneralService {
 
@@ -253,6 +254,18 @@ class GeneralService {
                     "type": "webpage",
                     "tag1": webPageDataSource.tag1,
                     "tag2": webPageDataSource.tag2
+                });
+            }
+        }
+        let [gitHubResult, gitHubError] = gitHubDataSourceRepository.getAllDataSources();
+        if (!gitHubError) {
+            for (let gitHubDataSource of gitHubResult) {
+                array.push({
+                    "id": gitHubDataSource.uuid,
+                    "location": gitHubDataSource.repo,
+                    "type": "webpage",
+                    "tag1": gitHubDataSource.tag1,
+                    "tag2": gitHubDataSource.tag2
                 });
             }
         }
