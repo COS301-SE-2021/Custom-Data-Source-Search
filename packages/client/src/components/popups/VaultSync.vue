@@ -101,7 +101,39 @@ export default {
                   console.log(resp.data);
 
                   //verify server
-                  const step3 = await step2.step3(data.vM2);
+                  try {
+                    const step3 = await step2.step3(data.vM2);
+                  } catch (e){
+                    console.log(e);
+                  }
+
+                  //PHASE2
+                  let reqObj = {
+                    email: userInfo.email,
+                    A: clientA,
+                    verificationMessage1: clientM1
+                  }
+
+                  let reqBody = JSON.stringify(reqObj, (key, value) =>
+                      typeof value === 'bigint'
+                          ? value.toString()
+                          : value
+                  );
+
+                  axios.post("http://localhost:3002/vault/pull", reqBody,
+                      {headers: {"Content-Type": "application/json"}})
+                      .then((resp) => {
+                        console.log(resp.data.data);
+                      })
+                      .catch((error) => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error,
+                          life: 3000
+                        });
+                        console.log(error);
+                      })
 
                 })
                 .catch((error) => {
@@ -123,8 +155,6 @@ export default {
             });
             console.log(error);
           })
-      //2. authenticate
-      //3. pull
     }
   },
   computed: {

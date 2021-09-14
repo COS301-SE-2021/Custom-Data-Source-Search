@@ -106,9 +106,7 @@ class VaultRepository {
                 [email],
             );
 
-            const result = {
-                data : data.rows[0].data
-            }
+            const result = data.rows[0].data;
 
             return[result, null]
         } catch (e){
