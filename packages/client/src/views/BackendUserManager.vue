@@ -413,7 +413,6 @@
         axios
             .get("http://localhost:3001/users")
             .then((resp) => {
-              console.log(resp.data.data);
               this.tableData = resp.data.data;
               let i = 0;
               for (i; i < this.tableData.length; i++) {
@@ -598,21 +597,17 @@
       ================
       */
       onRowSelect() {
-        console.log("Selected a Row");
         this.isUserSelected = true;
       },
       onRowUnselect() {
-        console.log("Unselected a Row");
         if (this.selectedUsers.length === 0) {
           this.isUserSelected = false;
         }
       },
       onRowSelectAll() {
-        console.log("Selected all Rows");
         this.isUserSelected = true;
       },
       onRowUnselectAll() {
-        console.log("Unselected all Rows");
         this.isUserSelected = false;
       },
       /*
