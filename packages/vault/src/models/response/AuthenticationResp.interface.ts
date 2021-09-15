@@ -14,7 +14,7 @@ export interface SRPAuthResponse {
     message: string | VerificationMessage2
 }
 export interface VerificationMessage2 {
-    vM2: bigint | string
+    vM2: bigint
 }
 
 export interface CompareResponse {

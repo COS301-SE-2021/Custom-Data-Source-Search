@@ -1,5 +1,6 @@
 import {SRPRegistrationRequest} from "../models/request/RegistrationReq.interface";
 import {createHash} from "crypto";
+import {SRPPullRequest, SRPPushRequest} from "../models/request/AuthenticationReq.interface";
 
 const db = require("../config/db.config");
 
@@ -64,14 +65,18 @@ class VaultRepository {
 
     }
 
-    async updateUserData(email: string, data: string, fingerprint: string){
+    async updateUserData(body: SRPPushRequest){
+
         try {
             const result = await db.query(
                 'UPDATE "Users"' +
-                'SET  data =  $2' +
-                'SET fingerprint = $3' +
+                'SET user_data =  $2,' +
+                'fingerprint = $3,' +
+                'user_iv = $4,' +
+                'user_authtag = $5,' +
+                'user_salt = $6' +
                 'WHERE email = $1',
-                [email, data, fingerprint],
+                [body.email, body.user_data, body.fingerprint, body.user_iv, body.user_authtag, body.user_salt],
             );
             return[result, null]
         } catch (e){

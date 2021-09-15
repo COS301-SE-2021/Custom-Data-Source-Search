@@ -27,7 +27,7 @@
     </div>
   <template #footer>
     <Button type="button" icon="pi pi-arrow-down" class="p-button button-dialog" label="Pull" @click="pullFromVault" />
-    <Button type="button" icon="pi pi-arrow-up" class="p-button button-dialog" label="Push" />
+    <Button type="button" icon="pi pi-arrow-up" class="p-button button-dialog" label="Push" @click="pushToVault" />
     <Button label="Cancel" class="p-button-text button-dialog" @click="closeDialog"/>
   </template>
   </Dialog>
@@ -118,10 +118,9 @@ export default {
                 .then(async (resp) => {
 
                   console.log(resp.data);
-
                   //verify server
                   try {
-                    const step3 = await step2.step3(data.vM2);
+                    const step3 = await step2.step3(BigInt(resp.data.vM2));
                   } catch (e){
                     console.log(e);
                   }
@@ -233,7 +232,7 @@ export default {
 
                   //verify server
                   try {
-                    const step3 = await step2.step3(data.vM2);
+                    const step3 = await step2.step3(BigInt(resp.data.vM2));
                   } catch (e){
                     console.log(e);
                   }
@@ -251,9 +250,9 @@ export default {
                   const dataFingerprint = createHash("md5").update(dataString).digest("hex");
 
                   let reqObj = {
-                    email: this.userDetails.masterEmail,
+                    email: userInfo.email,
                     A: clientA,
-                    verificationMessage: clientM1,
+                    verificationMessage1: clientM1,
                     user_data: encryptedInfo.data,
                     fingerprint: dataFingerprint,
                     user_iv: encryptedInfo.iv,
@@ -290,7 +289,7 @@ export default {
                   this.$toast.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: error.response.data,
+                    detail: error,
                     life: 3000
                   });
                   console.log(error);
@@ -313,7 +312,8 @@ export default {
       'getUserInfo',
       'getUserBackends',
       'getSignedInUserId',
-      'getSignedIn'
+      'getSignedIn',
+        'getUser'
     ])
   },
 }
