@@ -276,7 +276,7 @@
       displayVaultDialog: false,
       //New version testing
       displayVaultSync: false,
-      sync: true,
+      sync: false,
     }
   },
 

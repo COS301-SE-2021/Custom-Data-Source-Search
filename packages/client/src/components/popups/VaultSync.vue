@@ -14,7 +14,6 @@
            <PasswordInputField
                id="password"
                style="width: 100%"
-               @keyup.enter="assignData"
                v-model="masterPass"
                :toggle-mask="true"
                :feedback="false"
