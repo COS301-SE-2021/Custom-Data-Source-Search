@@ -63,7 +63,7 @@ class GitHubDataSourceService {
         })
         shell.cd(repoName);
         shell.exec('git clone https://github.com/' + dataSource.repo);
-        for (let filePath of this.getFilesInFolder(repoName + "\\")) {
+        for (let filePath of this.getFilesInFolder(repoName + "/")) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
                 continue;
