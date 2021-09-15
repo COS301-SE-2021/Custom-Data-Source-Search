@@ -8,155 +8,155 @@
       </p>
     </div>
     <ScrollPanel
-      id="main-scroll"
-      style="width: 95vw; height: 80vh; bottom: 4em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
+        id="main-scroll"
+        style="width: 95vw; height: 80vh; bottom: 4em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
     >
-    <div class="admin-table-container">
-      <DataTable class="p-datatable table"
-                 @rowSelect="onRowSelect"
-                 @rowUnselect="onRowUnselect"
-                 @rowSelectAll="onRowSelectAll"
-                 @rowUnselectAll="onRowUnselectAll"
-                 v-model:selection="selectedUsers"
-                 v-model:filters="filters"
-                 :rowHover="true"
-                 :value="tableData"
-                 :scrollable="true"
-                 scrollHeight="70vh"
-                 filterDisplay="row"
-                 responsiveLayout="scroll"
-      >
-        <template #empty>
-          No users found.
-        </template>
-        <template #loading>
-          Loading user data. Please wait...
-        </template>
-        <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;"></Column>
-        <Column filterField="first_name" :showFilterMenu="false" header="Name" style="min-width:12rem">
-          <template #body="{data}">
-            {{data.first_name}}
+      <div class="admin-table-container">
+        <DataTable class="p-datatable table"
+                   @rowSelect="onRowSelect"
+                   @rowUnselect="onRowUnselect"
+                   @rowSelectAll="onRowSelectAll"
+                   @rowUnselectAll="onRowUnselectAll"
+                   v-model:selection="selectedUsers"
+                   v-model:filters="filters"
+                   :rowHover="true"
+                   :value="tableData"
+                   :scrollable="true"
+                   scrollHeight="70vh"
+                   filterDisplay="row"
+                   responsiveLayout="scroll"
+        >
+          <template #empty>
+            No users found.
           </template>
-          <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
-                v-model="filterModel.value"
-                @input="filterCallback()"
-                class="p-column-filter"
-                :placeholder="`Search by name`"
-            />
+          <template #loading>
+            Loading user data. Please wait...
           </template>
-        </Column>
-        <Column filterField="last_name" :showFilterMenu="false" header="Surname" style="min-width:12rem">
-          <template #body="{data}">
-            {{data.last_name}}
-          </template>
-          <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
-                v-model="filterModel.value"
-                @input="filterCallback()"
-                class="p-column-filter"
-                :placeholder="`Search by surname`"
-            />
-          </template>
-        </Column>
-        <Column filterField="email" :showFilterMenu="false" header="Email" style="min-width:12rem">
-          <template #body="{data}">
-            {{data.email}}
-          </template>
-          <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
-                v-model="filterModel.value"
-                @input="filterCallback()"
-                class="p-column-filter"
-                :placeholder="`Search by email`"
-            />
-          </template>
-        </Column>
-        <Column filterField="role" :showFilterMenu="false" header="Role" style="min-width:12rem">
-          <template #body="{data}">
-            {{data.role}}
-          </template>
-          <template #filter="{filterModel,filterCallback}">
-            <MultiSelect
-                v-model="filterModel.value"
-                :options="roleOptions"
-                placeholder="Any"
-                class="p-column-filter"
-                @change="filterCallback()"
-            >
-              <template #option="slotProps">
-                <div class="p-multiselect-backends-option">
+          <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;"></Column>
+          <Column filterField="first_name" :showFilterMenu="false" header="Name" style="min-width:12rem">
+            <template #body="{data}">
+              {{data.first_name}}
+            </template>
+            <template #filter="{filterModel,filterCallback}">
+              <InputText
+                  type="text"
+                  v-model="filterModel.value"
+                  @input="filterCallback()"
+                  class="p-column-filter"
+                  :placeholder="`Search by name`"
+              />
+            </template>
+          </Column>
+          <Column filterField="last_name" :showFilterMenu="false" header="Surname" style="min-width:12rem">
+            <template #body="{data}">
+              {{data.last_name}}
+            </template>
+            <template #filter="{filterModel,filterCallback}">
+              <InputText
+                  type="text"
+                  v-model="filterModel.value"
+                  @input="filterCallback()"
+                  class="p-column-filter"
+                  :placeholder="`Search by surname`"
+              />
+            </template>
+          </Column>
+          <Column filterField="email" :showFilterMenu="false" header="Email" style="min-width:12rem">
+            <template #body="{data}">
+              {{data.email}}
+            </template>
+            <template #filter="{filterModel,filterCallback}">
+              <InputText
+                  type="text"
+                  v-model="filterModel.value"
+                  @input="filterCallback()"
+                  class="p-column-filter"
+                  :placeholder="`Search by email`"
+              />
+            </template>
+          </Column>
+          <Column filterField="role" :showFilterMenu="false" header="Role" style="min-width:12rem">
+            <template #body="{data}">
+              {{data.role}}
+            </template>
+            <template #filter="{filterModel,filterCallback}">
+              <MultiSelect
+                  v-model="filterModel.value"
+                  :options="roleOptions"
+                  placeholder="Any"
+                  class="p-column-filter"
+                  @change="filterCallback()"
+              >
+                <template #option="slotProps">
+                  <div class="p-multiselect-backends-option">
                 <span class="image-text">
                   {{ slotProps.option }}
                 </span>
-                </div>
-              </template>
-            </MultiSelect>
-          </template>
-        </Column>
-        <Column filterField="reg_status" :showFilterMenu="false" header="Registration Status" style="min-width:12rem">
-          <template #body="{data}">
-            {{data.reg_status}}
-          </template>
-          <template #filter="{filterModel,filterCallback}">
-            <MultiSelect
-                v-model="filterModel.value"
-                :options="registrationStatus"
-                placeholder="Any"
-                class="p-column-filter"
-                @change="filterCallback()"
-            >
-              <template #option="slotProps">
-                <div class="p-multiselect-backends-option">
+                  </div>
+                </template>
+              </MultiSelect>
+            </template>
+          </Column>
+          <Column filterField="reg_status" :showFilterMenu="false" header="Registration Status" style="min-width:12rem">
+            <template #body="{data}">
+              {{data.reg_status}}
+            </template>
+            <template #filter="{filterModel,filterCallback}">
+              <MultiSelect
+                  v-model="filterModel.value"
+                  :options="registrationStatus"
+                  placeholder="Any"
+                  class="p-column-filter"
+                  @change="filterCallback()"
+              >
+                <template #option="slotProps">
+                  <div class="p-multiselect-backends-option">
                 <span class="image-text">
                   {{ slotProps.option }}
                 </span>
-                </div>
-              </template>
-            </MultiSelect>
-          </template>
-        </Column>
-        <Column filterField="logged_in" :showFilterMenu="false" header="Logged In" style="min-width:12rem">
-          <template #body="{data}">
-            {{data.logged_in}}
-          </template>
-          <template #filter="{filterModel,filterCallback}">
-            <MultiSelect
-                v-model="filterModel.value"
-                :options="loggedIn"
-                placeholder="Any"
-                class="p-column-filter"
-                @change="filterCallback()"
-            >
-              <template #option="slotProps">
-                <div class="p-multiselect-backends-option">
+                  </div>
+                </template>
+              </MultiSelect>
+            </template>
+          </Column>
+          <Column filterField="logged_in" :showFilterMenu="false" header="Logged In" style="min-width:12rem">
+            <template #body="{data}">
+              {{data.logged_in}}
+            </template>
+            <template #filter="{filterModel,filterCallback}">
+              <MultiSelect
+                  v-model="filterModel.value"
+                  :options="loggedIn"
+                  placeholder="Any"
+                  class="p-column-filter"
+                  @change="filterCallback()"
+              >
+                <template #option="slotProps">
+                  <div class="p-multiselect-backends-option">
                 <span class="image-text">
                   {{ slotProps.option }}
                 </span>
-                </div>
-              </template>
-            </MultiSelect>
-          </template>
-        </Column>
-        <Column filterField="reg_key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
-          <template #body="{data}">
-            {{data.reg_key}}
-          </template>
-          <template #filter="{filterModel,filterCallback}">
-            <InputText
-                type="text"
-                v-model="filterModel.value"
-                @input="filterCallback()"
-                class="p-column-filter"
-                :placeholder="`Search by registration key`"
-            />
-          </template>
-        </Column>
-      </DataTable>
-    </div>
+                  </div>
+                </template>
+              </MultiSelect>
+            </template>
+          </Column>
+          <Column filterField="reg_key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
+            <template #body="{data}">
+              {{data.reg_key}}
+            </template>
+            <template #filter="{filterModel,filterCallback}">
+              <InputText
+                  type="text"
+                  v-model="filterModel.value"
+                  @input="filterCallback()"
+                  class="p-column-filter"
+                  :placeholder="`Search by registration key`"
+              />
+            </template>
+          </Column>
+        </DataTable>
+      </div>
     </ScrollPanel>
     <div class="backend-toolbar-container">
       <Toolbar class="backend-toolbar">
@@ -279,12 +279,14 @@
       </Toolbar>
 
       <!-- Intermittently Available Elements -->
-      <Dialog header="Add User"
-              v-model:visible="displayAddUsersDialog"
-              :style="{width: '35em'}"
-              :position="addUserPos"
-              :modal="true"
-              dismissable-mask=true>
+      <Dialog
+          header="Add User"
+          v-model:visible="displayAddUsersDialog"
+          :style="{width: '35em'}"
+          :position="addUserPos"
+          :modal="true"
+          dismissable-mask=true
+      >
         <div style="display: flex; flex-direction: column;">
           <div class="p-field p-grid" style="margin-top: 0.8em; margin-left:0.8em; display: flex">
             <div class="p-field p-col-12 p-md-4">
@@ -362,17 +364,17 @@
             command: () => {
               let usersString = "";
               for (let userData of this.selectedUsers) {
-                  usersString += "Backend: " + this.backend.connect.link;
-                  usersString += ",Email: " + userData.email;
-                  usersString += ",Name: " + userData.first_name + " " + userData.last_name;
-                  usersString += ",Registration Key: " + userData.regKey + "\n";
+                usersString += "Backend: " + this.backend.connect.link;
+                usersString += ",Email: " + userData.email;
+                usersString += ",Name: " + userData.first_name + " " + userData.last_name;
+                usersString += ",Registration Key: " + userData.regKey + "\n";
               }
               navigator.clipboard.writeText(usersString);
               this.$toast.add({
-                  severity: 'success',
-                  summary: 'Success',
-                  detail: this.selectedUsers.length + " Users Copied to Clipboard",
-                  life: 3000
+                severity: 'success',
+                summary: 'Success',
+                detail: this.selectedUsers.length + " Users Copied to Clipboard",
+                life: 3000
               });
             }
           }],
@@ -413,353 +415,360 @@
             .then((resp) => {
               console.log(resp.data.data);
               this.tableData = resp.data.data;
-              let i=0;
-              for(i; i<this.tableData.length; i++){
+              let i = 0;
+              for (i; i < this.tableData.length; i++) {
                 this.tableData[i].role = this.tableData[i].role.charAt(0).toUpperCase() + this.tableData[i].role.slice(1);
                 this.tableData[i].reg_status = this.tableData[i].reg_status.charAt(0).toUpperCase() + this.tableData[i].reg_status.slice(1);
               }
             })
             .catch((error) => {
-                this.$toast.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: error.response.data.message,
-                    life: 3000
-                });
-                console.log(error);
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data.message,
+                life: 3000
+              });
+              console.log(error);
             })
       },
       addUsers() {
-          let reqUser = {
-              first_name: this.addUserFirstName,
-              last_name: this.addUserLastName,
-              email: this.addUserEmail,
-              role: this.addUserRole.toLowerCase()
-          };
-          let reqObj = {users: [reqUser]};
-          let reqBody = JSON.stringify(reqObj);
+        let reqUser = {
+          first_name: this.addUserFirstName,
+          last_name: this.addUserLastName,
+          email: this.addUserEmail,
+          role: this.addUserRole.toLowerCase()
+        };
 
-          axios
-              .post("http://localhost:3001/users", reqBody,
-              {headers: {"Content-Type": "application/json"}})
-              .then((resp) => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Added Users",
-                      life: 3000
-                  });
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
-      },
-      deleteUsers() {
-          let usersArr = this.selectedUsers.map(function (a) {
-              return {uuid: a.uuid};
-          });
-          let reqObj = {users: usersArr};
-          let reqBody = JSON.stringify(reqObj);
+        this.addUserFirstName = '';
+        this.addUserLastName = '';
+        this.addUserEmail = '';
+        this.addUserRole = '';
+        this.displayAddUsersDialog = false;
 
-          axios
-              .delete("http://localhost:3001/users",
-              {data: reqBody, headers: {"Content-Type": "application/json"}})
-              .then((resp) => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Deleted Users",
-                      life: 3000
-                  });
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
-      },
-      changeUserRoles() {
-          let usersArr = this.selectedUsers.map(function (a) {
-              return {uuid: a.uuid};
-          });
-          let reqObj = {
-              role: this.selectedRole.toLowerCase(),
-              users: usersArr
-          };
-          let reqBody = JSON.stringify(reqObj);
+        let reqObj = {users: [reqUser]};
+        let reqBody = JSON.stringify(reqObj);
 
-          axios
-              .post("http://localhost:3001/users/role", reqBody,
-              {headers: {"Content-Type": "application/json"}})
-              .then((resp) => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Updated Roles",
-                      life: 3000
-                  });
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
-      },
-      generateSelectedUserRegistrationKeys() {
-          let usersArr = this.selectedUsers.map(function (a) {
-              return {uuid: a.uuid};
-          });
-          let reqObj = {users: usersArr};
-          let reqBody = JSON.stringify(reqObj);
-
-          axios
-              .post("http://localhost:3001/users/registrationkey", reqBody,
-              {headers: {"Content-Type": "application/json"}})
-              .then((resp) => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Generated Registration Keys",
-                      life: 3000
-                  });
-
-                  console.log(resp.data);
-                  this.updateTableData();
-
-              }).catch((error) => {
+        axios
+            .post("http://localhost:3001/users", reqBody,
+                {headers: {"Content-Type": "application/json"}})
+            .then((resp) => {
               this.$toast.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: error.response.data.message,
-                  life: 3000
+                severity: 'success',
+                summary: 'Success',
+                detail: "Added Users",
+                life: 3000
+              });
+              this.updateTableData();
+            })
+            .catch((error) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data.message,
+                life: 3000
               });
               console.log(error);
-          })
+            })
+      },
+      deleteUsers() {
+        let usersArr = this.selectedUsers.map(function (a) {
+          return {uuid: a.uuid};
+        });
+        let reqObj = {users: usersArr};
+        let reqBody = JSON.stringify(reqObj);
+
+        axios
+            .delete("http://localhost:3001/users",
+                {data: reqBody, headers: {"Content-Type": "application/json"}})
+            .then((resp) => {
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Deleted Users",
+                life: 3000
+              });
+              this.updateTableData();
+            })
+            .catch((error) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data.message,
+                life: 3000
+              });
+              console.log(error);
+            })
+      },
+      changeUserRoles() {
+        let usersArr = this.selectedUsers.map(function (a) {
+          return {uuid: a.uuid};
+        });
+        let reqObj = {
+          role: this.selectedRole.toLowerCase(),
+          users: usersArr
+        };
+        let reqBody = JSON.stringify(reqObj);
+
+        axios
+            .post("http://localhost:3001/users/role", reqBody,
+                {headers: {"Content-Type": "application/json"}})
+            .then((resp) => {
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Updated Roles",
+                life: 3000
+              });
+              this.updateTableData();
+            })
+            .catch((error) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data.message,
+                life: 3000
+              });
+              console.log(error);
+            })
+      },
+      generateSelectedUserRegistrationKeys() {
+        let usersArr = this.selectedUsers.map(function (a) {
+          return {uuid: a.uuid};
+        });
+        let reqObj = {users: usersArr};
+        let reqBody = JSON.stringify(reqObj);
+
+        axios
+            .post("http://localhost:3001/users/registrationkey", reqBody,
+                {headers: {"Content-Type": "application/json"}})
+            .then((resp) => {
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Generated Registration Keys",
+                life: 3000
+              });
+
+              console.log(resp.data);
+              this.updateTableData();
+
+            }).catch((error) => {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.response.data.message,
+            life: 3000
+          });
+          console.log(error);
+        })
 
       },
       mailUsers() {
-          let usersArr = this.selectedUsers.map(function (a) {
-              return {uuid: a.uuid};
-          });
-          let reqObj = {users: usersArr};
-          let reqBody = JSON.stringify(reqObj);
+        let usersArr = this.selectedUsers.map(function (a) {
+          return {uuid: a.uuid};
+        });
+        let reqObj = {users: usersArr};
+        let reqBody = JSON.stringify(reqObj);
 
-          axios
-              .post("http://localhost:3001/users/email", reqBody,
-              {headers: {"Content-Type": "application/json"}})
-              .then((resp) => {
-                  this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: "Mailed Users",
-                      life: 3000
-                  });
-                  console.log(resp.data);
-                  this.updateTableData();
-              })
-              .catch((error) => {
-                  this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                  });
-                  console.log(error);
-              })
+        axios
+            .post("http://localhost:3001/users/email", reqBody,
+                {headers: {"Content-Type": "application/json"}})
+            .then((resp) => {
+              this.$toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Mailed Users",
+                life: 3000
+              });
+              console.log(resp.data);
+              this.updateTableData();
+            })
+            .catch((error) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data.message,
+                life: 3000
+              });
+              console.log(error);
+            })
       },
       /*
       Selection Event Handlers
       ================
       */
       onRowSelect() {
-          console.log("Selected a Row");
-          this.isUserSelected = true;
+        console.log("Selected a Row");
+        this.isUserSelected = true;
       },
       onRowUnselect() {
-          console.log("Unselected a Row");
-          if (this.selectedUsers.length === 0) {
-              this.isUserSelected = false;
-          }
+        console.log("Unselected a Row");
+        if (this.selectedUsers.length === 0) {
+          this.isUserSelected = false;
+        }
       },
       onRowSelectAll() {
-          console.log("Selected all Rows");
-          this.isUserSelected = true;
+        console.log("Selected all Rows");
+        this.isUserSelected = true;
       },
       onRowUnselectAll() {
-          console.log("Unselected all Rows");
-          this.isUserSelected = false;
+        console.log("Unselected all Rows");
+        this.isUserSelected = false;
       },
       /*
       Dialog Display Toggles
       ======================
       */
       showAddUsersDialog() {
-          this.displayAddUsersDialog = true;
+        this.displayAddUsersDialog = true;
       },
       hideAddUsersDialog() {
-          this.displayAddUsersDialog = false;
+        this.displayAddUsersDialog = false;
       },
       closeRevokeConfirmation() {
-          this.displayRevokeConfirmation = false;
+        this.displayRevokeConfirmation = false;
       },
       logoutUsersConfirmation() {
-          if (this.selectedUsers === null || this.selectedUsers.length === 0) {
-            this.$confirm.require({
-              message: "Are you sure you want to log all users out?",
-              header: 'Confirmation',
-              icon: 'pi pi-exclamation-triangle',
-              acceptClass: "p-button-danger",
-              rejectClass: "p-button-text p-button-plain",
-              accept: () => {
-                axios
-                    .post("http://localhost:3001/users/global/logout")
-                    .then(resp => {
-                      this.$toast.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: "Logged All Users Out",
-                        life: 3000
-                      });
-                      console.log(resp.data);
-                      this.updateTableData();
-                    })
-                    .catch((error) => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: error.response.data.message,
-                        life: 3000
-                      });
-                      console.log(error);
-                    })
-              }
-            })
-          } else {
-            this.$confirm.require({
-              message: "Are you sure you want to log the selected users out?\n",
-              header: 'Confirmation',
-              icon: 'pi pi-exclamation-triangle',
-              acceptClass: "p-button-danger",
-              rejectClass: "p-button-text p-button-plain",
-              accept: () => {
-                let usersArr = this.selectedUsers.map(function (a) {
-                  return {uuid: a.uuid};
-                });
-                let reqObj = {users: usersArr};
-                let reqBody = JSON.stringify(reqObj);
+        if (this.selectedUsers === null || this.selectedUsers.length === 0) {
+          this.$confirm.require({
+            message: "Are you sure you want to log all users out?",
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptClass: "p-button-danger",
+            rejectClass: "p-button-text p-button-plain",
+            accept: () => {
+              axios
+                  .post("http://localhost:3001/users/global/logout")
+                  .then(resp => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Logged All Users Out",
+                      life: 3000
+                    });
+                    console.log(resp.data);
+                    this.updateTableData();
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
+            }
+          })
+        } else {
+          this.$confirm.require({
+            message: "Are you sure you want to log the selected users out?\n",
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptClass: "p-button-danger",
+            rejectClass: "p-button-text p-button-plain",
+            accept: () => {
+              let usersArr = this.selectedUsers.map(function (a) {
+                return {uuid: a.uuid};
+              });
+              let reqObj = {users: usersArr};
+              let reqBody = JSON.stringify(reqObj);
 
-                axios
-                    .post("http://localhost:3001/users/logout", reqBody,
-                        {headers: {"Content-Type": "application/json"}})
-                    .then(resp => {
-                      this.$toast.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: "Logged Users Out",
-                        life: 3000
-                      });
-                      console.log(resp.data);
-                      this.updateTableData();
-                    })
-                    .catch((error) => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: error.response.data.message,
-                        life: 3000
-                      });
-                      console.log(error);
-                    })
-              }
-            })
-          }
+              axios
+                  .post("http://localhost:3001/users/logout", reqBody,
+                      {headers: {"Content-Type": "application/json"}})
+                  .then(resp => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Logged Users Out",
+                      life: 3000
+                    });
+                    console.log(resp.data);
+                    this.updateTableData();
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
+            }
+          })
+        }
       },
       revokeUserKeysConfirmation() {
-          if (this.selectedUsers === null || this.selectedUsers.length === 0) {
-            this.$confirm.require({
-              message: "Are you sure you want to revoke all user keys?",
-              header: 'Confirmation',
-              icon: 'pi pi-exclamation-triangle',
-              acceptClass: "p-button-danger",
-              rejectClass: "p-button-text p-button-plain",
-              accept: () => {
-                axios
-                    .post("http://localhost:3001/users/global/revoke")
-                    .then(resp => {
-                      this.$toast.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: "Revoked All User Keys",
-                        life: 3000
-                      });
-                      this.updateTableData();
-                    })
-                    .catch((error) => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: error.response.data.message,
-                        life: 3000
-                      });
-                      console.log(error);
-                    })
-              }
-            })
-          } else {
-            this.$confirm.require({
-              message: "Are you sure you want to revoke the selected user's keys?",
-              header: 'Confirmation',
-              icon: 'pi pi-exclamation-triangle',
-              acceptClass: "p-button-danger",
-              rejectClass: "p-button-text p-button-plain",
-              accept: () => {
-                let usersArr = this.selectedUsers.map(function (a) {
-                  return {uuid: a.uuid};
-                });
-                let reqObj = {users: usersArr};
-                let reqBody = JSON.stringify(reqObj);
+        if (this.selectedUsers === null || this.selectedUsers.length === 0) {
+          this.$confirm.require({
+            message: "Are you sure you want to revoke all user keys?",
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptClass: "p-button-danger",
+            rejectClass: "p-button-text p-button-plain",
+            accept: () => {
+              axios
+                  .post("http://localhost:3001/users/global/revoke")
+                  .then(resp => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Revoked All User Keys",
+                      life: 3000
+                    });
+                    this.updateTableData();
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
+            }
+          })
+        } else {
+          this.$confirm.require({
+            message: "Are you sure you want to revoke the selected user's keys?",
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptClass: "p-button-danger",
+            rejectClass: "p-button-text p-button-plain",
+            accept: () => {
+              let usersArr = this.selectedUsers.map(function (a) {
+                return {uuid: a.uuid};
+              });
+              let reqObj = {users: usersArr};
+              let reqBody = JSON.stringify(reqObj);
 
-                axios
-                    .post("http://localhost:3001/users/revoke", reqBody,
-                        {headers: {"Content-Type": "application/json"}})
-                    .then(resp => {
-                      this.$toast.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: "Revoked User Keys",
-                        life: 3000
-                      });
-                      this.updateTableData();
-                    })
-                    .catch((error) => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: error.response.data.message,
-                        life: 3000
-                      });
-                      console.log(error);
-                    })
-              }
-            })
-          }
+              axios
+                  .post("http://localhost:3001/users/revoke", reqBody,
+                      {headers: {"Content-Type": "application/json"}})
+                  .then(resp => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Revoked User Keys",
+                      life: 3000
+                    });
+                    this.updateTableData();
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
+            }
+          })
+        }
       }
     }
   }
@@ -783,7 +792,7 @@
     padding: 0;
   }
 
-  .backend-toolbar-small{
+  .backend-toolbar-small {
     display: none;
     padding: 0;
   }
@@ -823,25 +832,25 @@
     padding: 0.4rem 0.4rem;
   }
 
-  ::v-deep(.p-dropdown){
+  ::v-deep(.p-dropdown) {
     height: 36px;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
   }
 
-  ::v-deep(.p-dropdown-label){
+  ::v-deep(.p-dropdown-label) {
     padding: 6px;
   }
 
-  ::v-deep(td){
+  ::v-deep(td) {
     word-break: break-word;
   }
 
-  .p-selection-column{
+  .p-selection-column {
     margin-right: 0;
   }
 
-  .management-page-header{
+  .management-page-header {
     margin-bottom: 20px;
   }
 
@@ -860,21 +869,21 @@
   }
 
   @media only screen and (max-width: 1366px) {
-    .backend-toolbar{
+    .backend-toolbar {
       display: none;
     }
 
-    .backend-toolbar-small{
+    .backend-toolbar-small {
       display: block;
     }
   }
 
   @media only screen and (max-height: 768px) {
-    .management-page-description{
+    .management-page-description {
       display: none;
     }
 
-    .management-page-header{
+    .management-page-header {
       margin: 0;
     }
   }
