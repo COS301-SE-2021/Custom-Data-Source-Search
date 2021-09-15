@@ -296,6 +296,7 @@
             'file', 'folder', 'webpage', 'github'
           ],
           backends: [],
+          user: null
         }
       },
 
@@ -305,6 +306,16 @@
         }
         this.backends = this.$store.getters.getUserBackendNames;
         this.updateSources();
+        if (this.sources.length === 0) {
+          this.$toast.add({
+            severity: 'warn',
+            summary: 'No sources',
+            detail: "Try adding data sources",
+            life: 3000
+          });
+        }
+        this.user = this.$store.getters.getBackendJWTToken(this.$store.getters.getSignedInUserId)
+        console.log(this.user)
       },
 
       productService: null,
@@ -351,14 +362,6 @@
                         console.error(e);
                       })
                 })
-          }
-          if (this.sources.length === 0) {
-            this.$toast.add({
-              severity: 'warn',
-              summary: 'No sources',
-              detail: "Try adding data sources",
-              life: 3000
-            });
           }
         },
 
