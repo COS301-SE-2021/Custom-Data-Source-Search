@@ -1,468 +1,455 @@
 <template>
-    <div class="grid-content">
-        <Toast position="bottom-right"/>
-        <Splitter style="background:var(--surface-200);">
-            <SplitterPanel :minSize="20" :size="90">
-                <div class="search-bar">
-                    <div v-if="firstSearch" class="logo-div">
-                        <img
-                                alt=""
-                                height="150"
-                                src="../assets/search_logo.png"
-                        >
-                    </div>
-                    <div class="search-div">
+  <div class="grid-content">
+    <Toast position="bottom-right"/>
+    <Splitter style="background:var(--surface-200);">
+      <SplitterPanel :minSize="20" :size="90">
+        <div class="search-bar">
+          <div v-if="firstSearch" class="logo-div">
+            <img
+                alt=""
+                height="150"
+                src="../assets/search_logo.png"
+            >
+          </div>
+          <div class="search-div">
             <span class="p-input-icon-right">
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
-                        <span id="advanced_checkbox">
-              <checkbox v-model="advancedSolrSearch" :binary="true" class="checkbox" @click=reQuery()></checkbox>
-              Advanced Search
-            </span>
-                    </div>
-                </div>
-                <div class="search-results container">
-                    <search-result-card
-                            v-for="(r,i) in searchResults"
-                            :key="i"
-                            :="r"
-                            @snippetClicked="goToLineFetchFileIfRequired"
-                    />
-                </div>
-            </SplitterPanel>
-            <SplitterPanel :minSize="30" class="container">
-                <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or
-                    right</p>
-                <div v-else class="next-prev">
-                    <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
-                    <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
-                </div>
-                <div class="file-container">
-                    <div id="full_file" v-html="fullFileData">
-                    </div>
-                </div>
-            </SplitterPanel>
-        </Splitter>
-    </div>
+          </div>
+        </div>
+        <div class="search-results container">
+          <search-result-card
+              v-for="(r,i) in searchResults"
+              :key="i"
+              :="r"
+              @snippetClicked="goToLineFetchFileIfRequired"
+          />
+        </div>
+      </SplitterPanel>
+      <SplitterPanel :minSize="30" class="container">
+        <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
+        <div v-else class="next-prev">
+          <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
+          <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
+        </div>
+        <div class="file-container">
+          <div id="full_file" v-html="fullFileData">
+          </div>
+        </div>
+      </SplitterPanel>
+    </Splitter>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
-import {mapGetters} from 'vuex';
-import SearchResultCard from "@/components/results/SearchResultCard";
-import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
-import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+  import axios from "axios";
+  import {mapGetters} from 'vuex';
+  import SearchResultCard from "@/components/results/SearchResultCard";
+  import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+  import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
-/**
- * @typedef {Object} MatchSnippet
- * @property {string} snippet
- * @property {number} line_number
- */
+  /**
+   * @typedef {Object} MatchSnippet
+   * @property {string} snippet
+   * @property {number} line_number
+   */
 
-/**
- * @typedef {Object} SearchResult
- * @property {string} id
- * @property {string} type
- * @property {string} source
- * @property {string} datasource_name
- * @property {string} datasource_icon
- * @property {[MatchSnippet]} match_snippets
- * @property {string} link
- * @property {string} name
- * @property {number} backendId
- * @property {[number]} lineNumbers
- */
+  /**
+   * @typedef {Object} SearchResult
+   * @property {string} id
+   * @property {string} type
+   * @property {string} source
+   * @property {string} datasource_name
+   * @property {string} datasource_icon
+   * @property {[MatchSnippet]} match_snippets
+   * @property {string} link
+   * @property {string} name
+   * @property {number} backendId
+   * @property {[number]} lineNumbers
+   */
 
-/**
- * @typedef {Object} Backend
- * @property {Object} local
- * @property {Object} connect
- * @property {Object}
- */
+  /**
+   * @typedef {Object} Backend
+   * @property {Object} local
+   * @property {Object} connect
+   * @property {Object}
+   */
 
-export default {
+  export default {
     name: "SearchBar",
 
     components: {
-        IconSimpleExpandLess,
-        IconSimpleExpandMore,
-        SearchResultCard,
+      IconSimpleExpandLess,
+      IconSimpleExpandMore,
+      SearchResultCard,
     },
 
     data() {
-        return {
-            advancedSolrSearch: false,
-            fullFileLineNumbers: [],
-            currentLineNumber: -1,
-            fullFileData: "",
-            fullFileId: "",
-            notDeleted: true,
-            query: "",
-            searchResults: [],
-            name: "Search",
-            firstSearch: true,
-        }
+      return {
+        fullFileLineNumbers: [],
+        currentLineNumber: -1,
+        fullFileData: "",
+        fullFileId: "",
+        notDeleted: true,
+        query: "",
+        searchResults: [],
+        name: "Search",
+        firstSearch: true,
+      }
     },
 
     computed: {
-        ...mapGetters([
-            'unconnectedBackendNo',
-            'unconnectedBackendBool',
-            'unconnectedBackendNames'
-        ])
+      ...mapGetters([
+        'unconnectedBackendNo',
+        'unconnectedBackendBool',
+        'unconnectedBackendNames'
+      ])
     },
 
     beforeMount() {
-        if (this.$store.getters.getNewAppStatus) {
-            this.$router.push('/');
-        }
+      if (this.$store.getters.getNewAppStatus) {
+        this.$router.push('/');
+      }
     },
 
     methods: {
-        reQuery() {
-            if (this.query !== '') {
-                this.advancedSolrSearch = !this.advancedSolrSearch;
-                this.queryBackends(this.query);
-            }
-        },
-        /**
-         * Queries each active backend of the user for this.query then saves search results to this.searchResults.
-         *
-         * If a query to a backend fails due to an expired JWToken the function will refresh the token and retry the query.
-         *
-         * On no results returned from any backend a warning toast will be raised.
-         *
-         * @param {string} q the string to query verbatim
-         * @returns {Promise<void>}
-         */
-        async queryBackends(q) {
-            this.firstSearch = false;
-            this.searchResults = [];
-            for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
-                if (!backend.local.active) {
-                    continue;
-                }
-                const url = `http://${backend.connect.link}/general/?q=${
-                    encodeURIComponent(
-                        this.advancedSolrSearch ? q : this.escapeSolrControlCharacters(q)
-                    )
-                }`;
-                console.log(url);
-                let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
+      /**
+       * Queries each active backend of the user for this.query then saves search results to this.searchResults.
+       *
+       * If a query to a backend fails due to an expired JWToken the function will refresh the token and retry the query.
+       *
+       * On no results returned from any backend a warning toast will be raised.
+       *
+       * @param {string} q the string to query verbatim
+       * @returns {Promise<void>}
+       */
+      async queryBackends(q) {
+        this.firstSearch = false;
+        this.searchResults = [];
+        for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
+          if (!backend.local.active) {
+            continue;
+          }
+          const url = `http://${backend.connect.link}/general/?q=${
+              encodeURIComponent(this.escapeSolrControlCharacters(q))
+          }`;
+          let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
+          await axios
+              .get(url, {headers})
+              .then((resp) => {
+                this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
+              })
+              .catch(async () => {
+                await this.$store.dispatch("refreshJWTToken", {id: backend.local.id});
+                headers = {"Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)};
                 await axios
                     .get(url, {headers})
                     .then((resp) => {
-                        this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
+                      this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
                     })
-                    .catch(async () => {
-                        await this.$store.dispatch("refreshJWTToken", {id: backend.local.id});
-                        headers = {"Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)};
-                        await axios
-                            .get(url, {headers})
-                            .then((resp) => {
-                                this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
-                            })
-                            .catch((e) => {
-                                console.error(e);
-                            })
+                    .catch((e) => {
+                      console.error(e);
                     })
-            }
-            if (this.searchResults.length === 0) {
-                this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-            }
-        },
-
-        /**
-         * @param {string} query string that might contain special solr control characters
-         * @returns {string} string with any special control characters escaped
-         */
-        escapeSolrControlCharacters(query) {
-            return query.replace(/[{}\[\]+^\-.:()]/gm, (match) => {
-              return '\\' + match
-            });
-        },
-
-        /**
-         * For each search result object do: whitelistEscape any html; add backend data; then concat these to searchResults.
-         *
-         * @param {[SearchResult]} results search results as returned by backend
-         * @param backend backend info from store
-         */
-        augmentAndSaveSearchResults(results, backend) {
-            for (let r of results) {
-                for (let match_snippet of r.match_snippets) {
-                    match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
-                }
-                r.datasource_icon = this.whitelistEscape(r.datasource_icon);
-                r.lineNumbers = this.extractLineNumbers(r.match_snippets);
-                r.link = backend.connect.link;
-                r.backend_name = backend.local.name;
-                r.backendId = backend.local.id;
-            }
-            this.searchResults = this.searchResults.concat(results);
-        },
-
-        /**
-         * @param {[MatchSnippet]} match_snippets
-         * @return {[number]} line numbers of match_snippets
-         */
-        extractLineNumbers(match_snippets) {
-            let lineNumbers = [];
-            for (let i = 0; i < match_snippets.length; i++) {
-                lineNumbers.push(match_snippets[i].line_number);
-            }
-            return lineNumbers;
-        },
-
-        /**
-         * Go to target line in full file, load full file from backend if not already loaded.
-         *
-         * If first attempt to load file from backend fails due to an expired JWToken, the token will be refreshed and
-         * the call to the backend will be repeated.
-         *
-         * @param {string} link uri of source server
-         * @param {string} type service to use at server
-         * @param {string} id uuid of result document
-         * @param {number} backendId id of backend in user store
-         * @param {number} lineNumber line number of the result snippet the user has clicked on
-         * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
-         */
-        goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers) {
-            if (this.fullFileId === id) {
-                this.scrollFullFileLineIntoView(lineNumber);
-                return;
-            }
-            const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
-            const headers = {
-                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
-            };
-            axios
-                .get(url, {headers})
-                .then((resp) => {
-                    this.displayFullFileAtLineNumber(resp.data.data, lineNumber, lineNumbers)
-                })
-                .catch(async () => {
-                    await this.$store.dispatch("refreshJWTToken", {id: backendId});
-                    const headers = {
-                        "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
-                    };
-                    await axios
-                        .get(url, {headers})
-                        .then((resp) => {
-                            this.displayFullFileAtLineNumber(resp.data.data, lineNumber, lineNumbers);
-                        })
-                        .catch()
-                });
-            this.fullFileId = id;
-        },
-
-        /**
-         * Escape all tokens not in the whitelist defined by our whitelistRegex.
-         * Check resulting html tags to ensure all of them are correctly closed. If not, return warning html.
-         *
-         * Security Note: NEVER allow any type of closing tags in the validWord regex snippet.
-         * This would render the function unsafe.
-         *
-         * @param {html} content suspect html
-         * @returns {string} sanitised html
-         */
-        whitelistEscape(content) {
-            if (content === undefined) {
-                return ""
-            }
-            // Parts Of Regex
-            const validWord = "[\\w\\s\\-_/:;,#.]+"; // WARNING: NO closing tags allowed in here! {', ", >} are ILLEGAL here.
-            const validAttributeTypes = ["class", "title", "d", "fill", "height", "style", "viewBox", "width", "id"];
-            const validHtmlTags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg", "br"];
-            // Full Regex
-            const validAttribute = `(?:\\s(?:${validAttributeTypes.join("|")})=(?:"(?:${validWord})"|'(?:${validWord})'))*`;
-            //
-            let whitelist_production_line = [];
-            for (let i = 0; i < validHtmlTags.length; i++) {
-                whitelist_production_line.push(`<${validHtmlTags[i]}${validAttribute}>|<\/${validHtmlTags[i]}>`)
-            }
-            let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g");
-            let matches = content.match(whitelistRegex);
-            if (matches === null) {
-                return this.escapeLessThanChar(content)
-            } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
-                return this.escapeAllExceptMatches(content, matches);
-            } else {
-                return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
-            }
-        },
-
-        /**
-         * Escape all content except the ordered list of legal tokens.
-         *
-         * @param {string} content html that might be unsafe
-         * @param {[string]} legalTokens exhaustive ordered list of legal tokens that actually exist in the content
-         * @returns {string} content with only legal tokens not escaped
-         */
-        escapeAllExceptMatches(content, legalTokens) {
-            let processedString = "";
-            for (let i = 0; i < legalTokens.length; i++) {
-                let start_index_of_whitelisted_section = content.search(legalTokens[i]);
-                processedString += this.escapeLessThanChar(
-                    content.substr(0, start_index_of_whitelisted_section)
-                ) + legalTokens[i];
-                content = content.substr(start_index_of_whitelisted_section + legalTokens[i].length);
-            }
-            return processedString;
-        },
-
-        /**
-         * Html escape function only to be used where we are guaranteed to have no preceding half-created html tags.
-         *
-         * @param string html string that can be rendered by a browser
-         * @returns {string} "html" string that is "dead" to a browser
-         */
-        escapeLessThanChar(string) {
-            return string.replace(/</g, "&lt;")
-        },
-
-        /**
-         * @param {[string]} tags ordered list of tags from some html string
-         * @returns {boolean} true if all tags were closed, false otherwise
-         */
-        confirmThatAllOpenedTagsAreClosed(tags) {
-            let stack = [];
-            for (let i = 0; i < tags.length; i++) {
-                let tag = tags[i];
-                if (tag.substr(0, 2) === "</") {
-                    if (stack.length === 0 || stack.pop() !== this.extractHtmlTagName(tag)) {
-                        return false;
-                    }
-                } else {
-                    let tagName = this.extractHtmlTagName(tag);
-                    if (tagName !== "br") {
-                        stack.push(tagName);
-                    }
-                }
-            }
-            return stack.length === 0;
-        },
-
-        /**
-         * @param {string} tag html tag
-         * @returns {string}
-         */
-        extractHtmlTagName(tag) {
-            return tag.match(/[A-Za-z0-9]+/)[0];
-        },
-
-        /**
-         * @param {html} fileData the html file to display
-         * @param {number} lineNumber line number of result to go to
-         * @param {[number]} lineNumbers line numbers of all results found in file
-         */
-        displayFullFileAtLineNumber(fileData, lineNumber, lineNumbers) {
-            this.fullFileData = this.whitelistEscape(fileData);
-            this.fullFileLineNumbers = lineNumbers;
-            this.$nextTick().then(() => {
-                this.scrollFullFileLineIntoView(lineNumber);
-            })
-        },
-
-        /**
-         * @param lineNumber
-         */
-        scrollFullFileLineIntoView(lineNumber) {
-            this.currentLineNumber = lineNumber;
-            this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
-        },
-
-        scrollToPrevResult() {
-            let index = Math.max(
-                0,
-                this.fullFileLineNumbers.findIndex((item) => {
-                    return this.currentLineNumber === item
-                }) - 1
-            );
-            this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
-        },
-
-        scrollToNextResult() {
-            let index = Math.min(
-                this.fullFileLineNumbers.length - 1,
-                this.fullFileLineNumbers.findIndex((item) => {
-                    return this.currentLineNumber === item
-                }) + 1
-            );
-            this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
+              })
         }
+        if (this.searchResults.length === 0) {
+          this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+        }
+      },
+
+      /**
+       * @param {string} query string that might contain special solr control characters
+       * @returns {string} string with any special control characters escaped
+       */
+      escapeSolrControlCharacters(query) {
+        return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
+          return '\\' + match
+        })
+      },
+
+      /**
+       * For each search result object do: whitelistEscape any html; add backend data; then concat these to searchResults.
+       *
+       * @param {[SearchResult]} results search results as returned by backend
+       * @param backend backend info from store
+       */
+      augmentAndSaveSearchResults(results, backend) {
+        for (let r of results) {
+          for (let match_snippet of r.match_snippets) {
+            match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
+          }
+          r.datasource_icon = this.whitelistEscape(r.datasource_icon);
+          r.lineNumbers = this.extractLineNumbers(r.match_snippets);
+          r.link = backend.connect.link;
+          r.backend_name = backend.local.name;
+          r.backendId = backend.local.id;
+        }
+        this.searchResults = this.searchResults.concat(results);
+      },
+
+      /**
+       * @param {[MatchSnippet]} match_snippets
+       * @return {[number]} line numbers of match_snippets
+       */
+      extractLineNumbers(match_snippets) {
+        let lineNumbers = [];
+        for (let i = 0; i < match_snippets.length; i++) {
+          lineNumbers.push(match_snippets[i].line_number);
+        }
+        return lineNumbers;
+      },
+
+      /**
+       * Go to target line in full file, load full file from backend if not already loaded.
+       *
+       * If first attempt to load file from backend fails due to an expired JWToken, the token will be refreshed and
+       * the call to the backend will be repeated.
+       *
+       * @param {string} link uri of source server
+       * @param {string} type service to use at server
+       * @param {string} id uuid of result document
+       * @param {number} backendId id of backend in user store
+       * @param {number} lineNumber line number of the result snippet the user has clicked on
+       * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
+       */
+      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers) {
+        if (this.fullFileId === id) {
+          this.scrollFullFileLineIntoView(lineNumber);
+          return;
+        }
+        const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
+        };
+        axios
+            .get(url, {headers})
+            .then((resp) => {
+              this.displayFullFileAtLineNumber(resp.data.data, lineNumber, lineNumbers)
+            })
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: backendId});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
+              };
+              await axios
+                  .get(url, {headers})
+                  .then((resp) => {
+                    this.displayFullFileAtLineNumber(resp.data.data, lineNumber, lineNumbers);
+                  })
+                  .catch()
+            });
+        this.fullFileId = id;
+      },
+
+      /**
+       * Escape all tokens not in the whitelist defined by our whitelistRegex.
+       * Check resulting html tags to ensure all of them are correctly closed. If not, return warning html.
+       *
+       * Security Note: NEVER allow any type of closing tags in the validWord regex snippet.
+       * This would render the function unsafe.
+       *
+       * @param {html} content suspect html
+       * @returns {string} sanitised html
+       */
+      whitelistEscape(content) {
+        if (content === undefined) {
+          return ""
+        }
+        // Parts Of Regex
+        const validWord = "[\\w\\s\\-_/:;,#.]+"; // WARNING: NO closing tags allowed in here! {', ", >} are ILLEGAL here.
+        const validAttributeTypes = ["class", "title", "d", "fill", "height", "style", "viewBox", "width", "id"];
+        const validHtmlTags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg", "br"];
+        // Full Regex
+        const validAttribute = `(?:\\s(?:${validAttributeTypes.join("|")})=(?:"(?:${validWord})"|'(?:${validWord})'))*`;
+        //
+        let whitelist_production_line = [];
+        for (let i = 0; i < validHtmlTags.length; i++) {
+          whitelist_production_line.push(`<${validHtmlTags[i]}${validAttribute}>|<\/${validHtmlTags[i]}>`)
+        }
+        let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g");
+        let matches = content.match(whitelistRegex);
+        if (matches === null) {
+          return this.escapeLessThanChar(content)
+        } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
+          return this.escapeAllExceptMatches(content, matches);
+        } else {
+          return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
+        }
+      },
+
+      /**
+       * Escape all content except the ordered list of legal tokens.
+       *
+       * @param {string} content html that might be unsafe
+       * @param {[string]} legalTokens exhaustive ordered list of legal tokens that actually exist in the content
+       * @returns {string} content with only legal tokens not escaped
+       */
+      escapeAllExceptMatches(content, legalTokens) {
+        let processedString = "";
+        for (let i = 0; i < legalTokens.length; i++) {
+          let start_index_of_whitelisted_section = content.search(legalTokens[i]);
+          processedString += this.escapeLessThanChar(
+              content.substr(0, start_index_of_whitelisted_section)
+          ) + legalTokens[i];
+          content = content.substr(start_index_of_whitelisted_section + legalTokens[i].length);
+        }
+        return processedString;
+      },
+
+      /**
+       * Html escape function only to be used where we are guaranteed to have no preceding half-created html tags.
+       *
+       * @param string html string that can be rendered by a browser
+       * @returns {string} "html" string that is "dead" to a browser
+       */
+      escapeLessThanChar(string) {
+        return string.replace(/</g, "&lt;")
+      },
+
+      /**
+       * @param {[string]} tags ordered list of tags from some html string
+       * @returns {boolean} true if all tags were closed, false otherwise
+       */
+      confirmThatAllOpenedTagsAreClosed(tags) {
+        let stack = [];
+        for (let i = 0; i < tags.length; i++) {
+          let tag = tags[i];
+          if (tag.substr(0, 2) === "</") {
+            if (stack.length === 0 || stack.pop() !== this.extractHtmlTagName(tag)) {
+              return false;
+            }
+          } else {
+            let tagName = this.extractHtmlTagName(tag);
+            if (tagName !== "br") {
+              stack.push(tagName);
+            }
+          }
+        }
+        return stack.length === 0;
+      },
+
+      /**
+       * @param {string} tag html tag
+       * @returns {string}
+       */
+      extractHtmlTagName(tag) {
+        return tag.match(/[A-Za-z0-9]+/)[0];
+      },
+
+      /**
+       * @param {html} fileData the html file to display
+       * @param {number} lineNumber line number of result to go to
+       * @param {[number]} lineNumbers line numbers of all results found in file
+       */
+      displayFullFileAtLineNumber(fileData, lineNumber, lineNumbers) {
+        this.fullFileData = this.whitelistEscape(fileData);
+        this.fullFileLineNumbers = lineNumbers;
+        this.$nextTick().then(() => {
+          this.scrollFullFileLineIntoView(lineNumber);
+        })
+      },
+
+      /**
+       * @param lineNumber
+       */
+      scrollFullFileLineIntoView(lineNumber) {
+        this.currentLineNumber = lineNumber;
+        this.$el.querySelector(`#line_number_${lineNumber}`).scrollIntoView();
+      },
+
+      scrollToPrevResult() {
+        let index = Math.max(
+            0,
+            this.fullFileLineNumbers.findIndex((item) => {
+              return this.currentLineNumber === item
+            }) - 1
+        );
+        this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
+      },
+
+      scrollToNextResult() {
+        let index = Math.min(
+            this.fullFileLineNumbers.length - 1,
+            this.fullFileLineNumbers.findIndex((item) => {
+              return this.currentLineNumber === item
+            }) + 1
+        );
+        this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
+      }
     }
-};
+  };
 </script>
 
 <style scoped>
-@import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
+  @import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
 
-.search-bar {
+  .search-bar {
     min-height: 100px;
     border-bottom: solid;
     border-color: #4d4d4d;
     border-width: 1px;
     padding-top: 10px;
-}
+  }
 
-.search-results {
+  .search-results {
     height: 90vh;
     padding-top: 10px;
     padding-bottom: 100px;
-}
+    max-width: 60vw;
+  }
 
-.container {
+  .container {
     height: available;
     overflow-y: scroll;
     font-size: 0.9em;
-}
+  }
 
-input {
+  input {
     width: 100%;
     min-width: 0
-}
+  }
 
-.container::-webkit-scrollbar {
+  .container::-webkit-scrollbar {
     width: 0;
     height: 0;
-}
+  }
 
-.grid-content {
+  .grid-content {
     display: grid;
     grid-template-rows: 1fr;
-}
+  }
 
-.search-div {
+  .search-div {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 30px;
     max-height: 100px;
-}
+    max-width: 1000px
+  }
 
-::placeholder {
+  ::placeholder {
     color: dimgrey;
     font-style: italic;
-}
+  }
 
-.pi {
+  .pi {
     cursor: pointer;
-}
+  }
 
-.pi-search {
+  .pi-search {
     padding: 0;
-}
+  }
 
 
-.logo-div {
+  .logo-div {
     text-align: center;
     padding-top: 20px;
     margin-bottom: 10px;
-}
+  }
 
-.next-prev {
+  .next-prev {
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: fixed;
@@ -470,42 +457,37 @@ input {
     right: 10px;
     background-color: #1c1c1c;
     border-radius: 4px;
-}
+  }
 
-.clickable {
+  .clickable {
     padding: 4px;
-}
+  }
 
-.clickable:hover {
+  .clickable:hover {
     background-color: #4d4d4d;
     border-radius: 4px;
-}
+  }
 
-.file-container {
+  .file-container {
     height: 100vh;
-}
+  }
 
-.p-splitter {
+  .p-splitter {
     border: none;
-}
+  }
 
-#full_file {
+  .p-splitter-panel {
+    max-width: 60vw;
+  }
+
+  #full_file {
     padding-left: 10px;
     padding-top: 40px;
     padding-bottom: 40px;
-}
+  }
 
-.checkbox {
-    margin-left: 15px;
-    margin-right: 3px;
-}
-
-#advanced_checkbox {
-    min-width: 170px;
-}
-
-#divider_usage_message {
+  #divider_usage_message {
     color: #4d4d4d;
     padding-left: 10px;
-}
+  }
 </style>
