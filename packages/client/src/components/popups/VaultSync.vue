@@ -1,5 +1,5 @@
 <template>
-  <Dialog header="Sign In"
+  <Dialog header="Enter master password"
           v-model:visible="display"
           :draggable="true "
           :closable="true"
@@ -7,6 +7,7 @@
           :modal="true"
           @hide="closeDialog"
   >
+    We need to verify that it's you before interacting with the Vault
     <div class="p-field p-grid">
       <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
@@ -52,6 +53,7 @@ export default {
       this.masterPass = null;
       this.email = '';
       this.display = false;
+      this.$emit("closeDialog");
     },
     assignData() {
       this.$store.commit('signInUser', {email: this.email, passWord: this.masterPass});
