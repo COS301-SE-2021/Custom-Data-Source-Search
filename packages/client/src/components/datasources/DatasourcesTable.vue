@@ -1,4 +1,5 @@
 <template>
+  <Toast position="bottom-right"/>
   <ScrollPanel
       id="main-scroll"
       style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
@@ -292,7 +293,7 @@
           message: "No sources have been selected.",
           type: null,
           clicked: false,
-          sources: null,
+          sources: [],
           loading: false,
           backend: null,
           selectedSources: [],
@@ -318,6 +319,10 @@
         }
         this.backends = this.$store.getters.getUserBackendNames;
         this.updateSources();
+        console.log(this.sources.length)
+      },
+
+      mounted(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',
