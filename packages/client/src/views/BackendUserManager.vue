@@ -859,6 +859,11 @@
     background-color: #242424;
   }
 
+  #input-perm{
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+  }
+
   @media only screen and (max-width: 1366px) {
     .backend-toolbar{
       display: none;
