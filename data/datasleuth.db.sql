@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS "active_user" (
 	"email"	TEXT NOT NULL UNIQUE,
 	"refresh_token"	TEXT NOT NULL UNIQUE,
 	"valid_until"	TEXT NOT NULL,
-	FOREIGN KEY("email") REFERENCES "user"("email"),
-	PRIMARY KEY("refresh_token")
+	PRIMARY KEY("refresh_token"),
+	FOREIGN KEY("email") REFERENCES "user"("email")
 );
 DROP TABLE IF EXISTS "file_data";
 CREATE TABLE IF NOT EXISTS "file_data" (
@@ -60,6 +60,23 @@ CREATE TABLE IF NOT EXISTS "folder_file_data" (
 	"folder_uuid"	TEXT NOT NULL,
 	"uuid"	TEXT NOT NULL UNIQUE,
 	FOREIGN KEY("folder_uuid") REFERENCES "folder_data"("uuid"),
+	PRIMARY KEY("uuid")
+);
+DROP TABLE IF EXISTS "github_data";
+CREATE TABLE IF NOT EXISTS "github_data" (
+	"repo"	TEXT NOT NULL UNIQUE,
+	"uuid"	TEXT NOT NULL UNIQUE,
+	"tag1"	TEXT,
+	"tag2"	TEXT,
+	"token"	TEXT,
+	PRIMARY KEY("uuid")
+);
+DROP TABLE IF EXISTS "repo_file_data";
+CREATE TABLE IF NOT EXISTS "repo_file_data" (
+	"file_path"	TEXT NOT NULL UNIQUE,
+	"repo_uuid"	TEXT,
+	"uuid"	TEXT NOT NULL UNIQUE,
+	FOREIGN KEY("repo_uuid") REFERENCES "github_data"("uuid"),
 	PRIMARY KEY("uuid")
 );
 COMMIT;
