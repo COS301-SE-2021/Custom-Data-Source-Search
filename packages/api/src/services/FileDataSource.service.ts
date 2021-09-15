@@ -1,29 +1,22 @@
-/**
- * Data Model Interfaces
- */
-import {FileDataSource} from "../models/FileDataSource.interface";
-import {FileOccurrence, StringOccurrence} from "../models/response/searchFileResponse.interface";
+import {FileDataSource, StoredFileDataSource} from "../models/FileDataSource.interface";
 import fs from 'fs';
-import path from 'path';
 import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
-import axios from "axios";
 import hljs from "highlight.js";
-
+import solrService from "./Solr.service";
+import {
+    generateDefaultHttpResponse,
+    generateUUID,
+    getLastModifiedDateOfFile, removeFileExtension,
+    statusMessage
+} from "../general/generalFunctions";
+import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
 
 class FileDataSourceService {
 
-    /**
-     * Service Methods
-     */
     getAllFileDataSources() {
         let [result, err] = fileDataSourceRepository.getAllDataSources();
         if (err) {
-            return {
-                "code": 500,
-                "body": {
-                    "message": "Internal error"
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
         return {
             "code": 200,
@@ -34,34 +27,19 @@ class FileDataSourceService {
     getFileDataSource(uuid: string) {
         let [result, err] = fileDataSourceRepository.getDataSource(uuid);
         if (err) {
-            return {
-                "code": err.code,
-                "body": {
-                    "message": err.message
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
         return {
             "code": 200,
-            "body": {
-                "message": "Success",
-                "data": result
-            }
-        }
+            "body": result
+        };
     }
 
-    async addFileDataSource(dataSource: FileDataSource) {
-        dataSource.path = this.correctPath(dataSource.path);
+    validateDataSource(dataSource: FileDataSource): [StatusMessage, StatusMessage] {
         if (dataSource.filename === '') {
-            return [null, {
-                "code": 400,
-                "message": "No file name"
-            }]
+            return [null, statusMessage(400, "No file name")];
         } else if (dataSource.path === '') {
-            return [null, {
-                "code": 400,
-                "message": "No file path"
-            }]
+            return [null, statusMessage(400, "No file path")];
         }
         if (dataSource.path[dataSource.path.length - 1] !== '/') {
             dataSource.path += '/';
@@ -70,142 +48,116 @@ class FileDataSourceService {
             fs.readFileSync(dataSource.path + dataSource.filename);
         } catch (err) {
             if (err.code == 'ENOENT') {
-                return [null, {
-                    "code": 404,
-                    "message": "File not found"
-                }]
+                return [null, statusMessage(404, "File not found")];
             } else if (err.code == 'EACCES') {
-                return [null, {
-                    "code": 403,
-                    "message": "Access forbidden"
-                }]
+                return [null, statusMessage(403, "Access forbidden")];
             }
-            return [null, {
-                "code": 500,
-                "message": "Unknown error"
-            }];
+            return [null, statusMessage(500, "Internal server error")];
         }
-        let [, e] = await fileDataSourceRepository.addDataSource(dataSource);
-        if (e) {
-            return [null, e]
-        }
-        return [{
-            "code": 200,
-            "message": "Success"
-        }, null];
+        return [statusMessage(200, "Datasource is valid"), null];
     }
 
-    correctPath(filePath: string) {
+    async addFileDataSource(dataSource: FileDataSource): Promise<DefaultHttpResponse> {
+        dataSource.path = this.standardizePath(dataSource.path);
+        const [, validateErr] = this.validateDataSource(dataSource);
+        if (validateErr) {
+            return generateDefaultHttpResponse(validateErr);
+        }
+        const [fileContent, fileErr] = this.readFile(dataSource.path + dataSource.filename);
+        if (fileErr) {
+            return generateDefaultHttpResponse(fileErr);
+        }
+        const UUID = generateUUID();
+        const [, solrErr] = await solrService.postToSolr(
+            fileContent, UUID, removeFileExtension(dataSource.filename), "file"
+        );
+        if (solrErr) {
+            return generateDefaultHttpResponse(solrErr);
+        }
+        const storedDataSource: StoredFileDataSource = {
+            uuid: UUID,
+            filename: dataSource.filename,
+            path: dataSource.path,
+            lastModified: getLastModifiedDateOfFile(dataSource.path + dataSource.filename),
+            tag1: dataSource.tag1,
+            tag2: dataSource.tag2
+        };
+        const [success, repositoryErr] = fileDataSourceRepository.addDataSource(storedDataSource);
+        if (repositoryErr) {
+            return generateDefaultHttpResponse(repositoryErr);
+        }
+        return generateDefaultHttpResponse(success);
+    }
+
+    readFile(path: string): [Buffer, StatusMessage] {
+        try {
+            return [fs.readFileSync(path), null];
+        } catch (e) {
+            return [null, statusMessage(500, "Error reading file")];
+        }
+    }
+
+    standardizePath(filePath: string): string {
         if (filePath === undefined) {
             return filePath;
         }
         return filePath.replace(/\\/g, "/");
     }
 
-    async removeFileDataSource(uuid: string) {
-        let [result, err] = await fileDataSourceRepository.deleteDataSource(uuid);
+    async removeFileDataSource(uuid: string): Promise<DefaultHttpResponse> {
+        const [, solrErr] = await solrService.deleteFromSolr(uuid);
+        if (solrErr) {
+            return generateDefaultHttpResponse(solrErr);
+        }
+        let [result, err] = fileDataSourceRepository.deleteDataSource(uuid);
         if (err) {
-            return {
-                "code": err.code,
-                "body": {
-                    "message": err.message
-                }
-            }
+            return generateDefaultHttpResponse(err);
         }
-        return {
-            "code": 204,
-            "body": {
-                "message": result.message
-            }
-        }
+        return generateDefaultHttpResponse(result);
     }
-
-
-    async searchAllFileDataSources(searchString: string): Promise<[FileOccurrence[], Error]> {
-        try {
-            let response: any = await axios.get(
-                'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=' + searchString
-                + '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false' +
-                '&hl.simple.pre=<em style="color: %2388ffff">&hl.snippets=3'
-            );
-            let result: FileOccurrence[] = [];
-            for (let [key, value] of Object.entries(response["data"]["highlighting"])) {
-                // @ts-ignore
-                if (value["content"] != undefined) {
-                    let stringOccurrences: StringOccurrence[] = [];
-                    // @ts-ignore
-                    for (let i = 0; i < value["content"].length; i++) {
-                        // @ts-ignore
-                        stringOccurrences.push({"lineNumber": 0, "snippet": value["content"][i]});
-                    }
-                    let [datasource, err] = fileDataSourceRepository.getDataSource(key);
-                    if (err) {
-                        result.push({"type": "file", "source": key, "match_snippets": stringOccurrences});
-                    } else {
-                        result.push({
-                            "type": "file",
-                            "source": datasource.path + datasource.filename,
-                            "match_snippets": stringOccurrences
-                        });
-                    }
-                }
-            }
-            return [result, null];
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
-    async readFile(location: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            fs.readFile(path.resolve(__dirname, location), 'utf-8', (err, data) => {
-                if (err) return reject(err);
-                return resolve(data.toString());
-            })
-        })
-    }
-
 
     /**
-     * Internal Methods
+     * Reindex documents in solr that have been updated locally
+     * @async
      */
-
-
-    searchFile(fileContents: string, searchString: string): StringOccurrence[] {
-        if (searchString === "" || fileContents === "") {
-            return [];
+    async updateDatasources(): Promise<void> {
+        const [fileDataList, repositoryErr]  = fileDataSourceRepository.getAllDataSources();
+        if (repositoryErr) {
+            return;
         }
-        let stringWithStandardLineBreaks = fileContents.replace(/(\r\n|\n|\r)/gm, "\n");
-        let matches: StringOccurrence[] = [];
-        let numOccurrence: number = 0;
-        for (
-            let index = stringWithStandardLineBreaks.indexOf(searchString);
-            index >= 0;
-            index = stringWithStandardLineBreaks.indexOf(searchString, index + 1)
-        ) {
-            let lineNum = this.getLineNumber(index, stringWithStandardLineBreaks);
-            matches.push({
-                lineNumber: lineNum,
-                snippet: '...' + fileContents.substring(index - 12, index + searchString.length + 13) + '...'
-            });
-            numOccurrence++;
+        for (let fileData of fileDataList) {
+            const filePath: string = fileData.path + fileData.filename;
+            const lastModified: number = getLastModifiedDateOfFile(filePath).getTime();
+            if (fileData.lastModified.getTime() !== lastModified) {
+                try {
+                    await solrService.postToSolr(
+                        fs.readFileSync(filePath),
+                        fileData.uuid,
+                        removeFileExtension(fileData.filename),
+                        "file"
+                    );
+                    fileDataSourceRepository.updateLastModified(fileData.uuid, lastModified);
+                } catch (e) {
+                    console.error("Error posting file to solr");
+                }
+            }
         }
-        return matches;
     }
 
-    getLineNumber(index: number, fullString: string): number {
+    /**
+     * Count the newlines to determine on what line a specified index is
+     * @param index
+     * @param content
+     */
+    getLineNumber(index: number, content: string): number {
         let lineNum = 1;
-        for (
-            let index2 = fullString.indexOf('\n');
-            (index2 < index && index2 >= 0);
-            index2 = fullString.indexOf("\n", index2 + 1)
-        ) {
+        for (let i = content.indexOf('\n'); (i < index && i >= 0); i = content.indexOf("\n", i + 1)) {
             lineNum++;
         }
         return lineNum;
     }
 
-    getSnippetLineNumber(snippet: string, content: string) {
+    getSnippetLineNumber(snippet: string, content: string): number {
         snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
         snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
         let snippetIndex: number = content.indexOf(snippet);
@@ -215,8 +167,10 @@ class FileDataSourceService {
     getSearchSnippet(snippet: string, fileName: string) {
         let temp: string[] = fileName.split('.');
         let extension: string = temp[temp.length - 1];
-        if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"].indexOf(extension) != -1) {
-            //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
+        if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
+            .indexOf(extension) != -1) {
+            //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
+            // + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
             if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
@@ -231,8 +185,14 @@ class FileDataSourceService {
                 snippet = hljs.highlightAuto(snippet).value;
             }
             /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
-            snippet = snippet.replace(reg, '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>');*/
-            snippet = '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' + snippet + '</pre>';
+            snippet = snippet.replace(
+                reg,
+                '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>'
+            );*/
+            snippet =
+                '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' +
+                snippet +
+                '</pre>';
         } else {
             snippet = '<div>' + this.escapeAndHighlight(snippet) + '</div>';
         }

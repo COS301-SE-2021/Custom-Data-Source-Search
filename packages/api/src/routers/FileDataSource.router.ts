@@ -1,18 +1,7 @@
-/**
- * Required External Modules and Interfaces
- */
 import express, {Request, Response} from "express";
 import fileDataSourceService from "../services/FileDataSource.service";
 
-/**
- * Router Definition
- */
 export const fileDataSourceRouter = express.Router();
-
-/**
- * Controller Definitions
- */
-
 
 /**
  * Return the file names and paths of all File Data Sources
@@ -35,12 +24,8 @@ fileDataSourceRouter.get("/:id", (req: Request, res: Response) => {
  * Add a data source by it's path and file name
  */
 fileDataSourceRouter.post("/", async (req: Request, res: Response) => {
-    const [, err] = await fileDataSourceService.addFileDataSource(req.body);
-    if (err) {
-        res.status(err.code).send({'message': err.message});
-    } else {
-        res.status(200).send({'message':'Successfully added file datasource'});
-    }
+    const result = await fileDataSourceService.addFileDataSource(req.body);
+    res.status(result.code).send(result.body);
 });
 
 /**
