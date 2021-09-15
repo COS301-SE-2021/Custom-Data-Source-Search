@@ -60,7 +60,7 @@
             @close-dialog="closeDialog"
         />
 
-        <VaultSync :show="displayVaultSync"></VaultSync>
+        <VaultSync :show="displayVaultSync" @close-dialog="closeDialog"></VaultSync>
       </div>
     </div>
     <div id="grid-div-2">
@@ -249,7 +249,7 @@
 </style>
 
 <script>
-    import OverlayPanel from 'primevue/overlaypanel';
+  import OverlayPanel from 'primevue/overlaypanel';
     import ProfileDropdown from "@/components/landing/ProfileDropdown";
     import {mapGetters} from "vuex";
     import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
@@ -259,7 +259,7 @@
     import VaultSync from "@/components/popups/VaultSync";
     import {encryptJsonObject, generateMasterKey} from "@/store/Store";
 
-    export default {
+  export default {
   components: {
     VaultSync,
     CustomTooltip,
@@ -372,8 +372,8 @@
         this.sync = false;
       },
       closeDialog(){
-        this.displayPasswordDialog = !this.displayPasswordDialog;
-        this.displayVaultDialog = !this.displayVaultDialog;
+        this.displayPasswordDialog = false;
+        this.displayVaultSync = false;
       }
     }
   }

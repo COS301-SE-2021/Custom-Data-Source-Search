@@ -1,5 +1,5 @@
 <template>
-  <Dialog header="Sign In"
+  <Dialog header="Enter master password"
           v-model:visible="display"
           :draggable="true "
           :closable="true"
@@ -7,30 +7,45 @@
           :modal="true"
           @hide="closeDialog"
   >
+    We need to verify that it's you before interacting with the Vault
     <div class="p-field p-grid">
-      <label for="password" class="p-col-fixed" style="width:100px">Password</label>
       <div class="p-col">
-        <Password id="password" v-model="masterPass" :toggle-mask="true" :feedback="false"/>
+        <span class="p-float-label">
+           <PasswordInputField
+               id="password"
+               style="width: 100%"
+               v-model="masterPass"
+               :toggle-mask="true"
+               :feedback="false"
+           />
+        <label for="password">Password</label>
+        </span>
+        <div v-if="passwordIncorrect" class="error-message">
+          <span class="error-message">Incorrect password.</span>
+        </div>
       </div>
     </div>
-    <br>
-    <div class="p-field p-grid" style="text-align: center">
-      <Button type="button" icon="pi pi-arrow-down" class="p-button button-dialog" label="Pull" @click="pullFromVault" />
-      <Button type="button" icon="pi pi-arrow-up" class="p-button button-dialog" label="Push" />
-      <Button label="Cancel" class="p-button-text button-dialog" @click="closeDialog"/>
-    </div>
+  <template #footer>
+    <Button type="button" icon="pi pi-arrow-down" class="p-button button-dialog" label="Pull" @click="pullFromVault" />
+    <Button type="button" icon="pi pi-arrow-up" class="p-button button-dialog" label="Push" />
+    <Button label="Cancel" class="p-button-text button-dialog" @click="closeDialog"/>
+  </template>
   </Dialog>
 </template>
 
 <script>
 import axios from "axios";
 import {mapGetters} from "vuex";
+import PasswordInputField from "../primeComponents/PasswordInputField";
 import {createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
 import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 import {createHash} from "crypto";
 
 export default {
   name: "VaultSync",
+
+  components: {PasswordInputField},
+
   props: {
     show: Boolean,
   },
@@ -39,7 +54,8 @@ export default {
     return {
       masterPass: null,
       email: '',
-      display: this.show
+      display: this.show,
+      passwordIncorrect: false,
     }
   },
 
@@ -54,11 +70,13 @@ export default {
       this.masterPass = null;
       this.email = '';
       this.display = false;
+      this.$emit("closeDialog");
     },
+
     assignData() {
       this.$store.commit('signInUser', {email: this.email, passWord: this.masterPass});
-      this.display = false;
     },
+
     async pullFromVault(){
       //1. challenge
       console.log("Attempting to Pull from the vault...");
@@ -289,6 +307,7 @@ export default {
           })
     }
   },
+
   computed: {
     ...mapGetters ([
       'getUserInfo',
@@ -301,22 +320,19 @@ export default {
 </script>
 
 <style scoped>
+  .p-field {
+    margin-top: 1rem;
+  }
 
+  input {
+    width: 100%
+  }
 
-.p-field {
-  margin-top: 1rem;
-}
+  .p-button {
+    border: none;
+  }
 
-input {
-  width: 100%
-}
-
-.p-button {
-  border: none;
-}
-
-.button-dialog {
-  float: right;
-}
-
+  .button-dialog {
+    float: right;
+  }
 </style>
