@@ -23,7 +23,11 @@ export interface SRPPushRequest {
     email : string,
     A : bigint,
     verificationMessage1 : bigint
-    data : string,
+    user_data: string,
     fingerprint: string,
+    user_iv: string,
+    user_authtag: string,
+    user_salt: string,
+
 
 }
