@@ -268,18 +268,18 @@ const store = createStore({
             let newBackend = {
                 local: {
                     id: null,
-                    name: '',
+                    name: payload.name,
                     active: true,
                     color: '#41D6C5'
                 },
                 connect: {
-                    associatedEmail: '',
-                    link: '',
+                    associatedEmail: payload.associatedEmail,
+                    link: payload.link,
                     needsLogin: false,
                     keys: {
-                        encryptedSecretPair: null,
+                        encryptedSecretPair: payload.secretPair,
                         jwtToken: null,
-                        refreshToken: null
+                        refreshToken: payload.refreshToken
                     }
                 },
                 receive: {
@@ -287,14 +287,6 @@ const store = createStore({
                     connected: false
                 }
             };
-            // Local
-            newBackend.local.name = payload.name;
-            // Connect
-            newBackend.connect.associatedEmail = payload.associatedEmail;
-            newBackend.connect.link = payload.link;
-            newBackend.connect.keys.secretPair = payload.secretPair;
-            newBackend.connect.keys.refreshToken = payload.refreshToken;
-            //
             state.users[state.signedInUserId].backends.push(newBackend);
             state.signedIn = true;
             let l = state.users[state.signedInUserId].backends.length;

@@ -110,6 +110,12 @@
                     class="button p-button-raised p-button-text p-button-plain"
                     @click="clicked=!clicked; type='Webpage'"
                 />
+                <Button
+                    id="git-hub-button"
+                    label="GitHub"
+                    class="button p-button-raised p-button-text p-button-plain"
+                    @click="clicked=!clicked; type='GitHub'"
+                />
               </div>
             </div>
             <div v-else-if="type==='File'">
@@ -120,6 +126,9 @@
             </div>
             <div v-else-if="type==='Webpage'">
               <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+            </div>
+            <div v-else-if="type==='GitHub'">
+              <add-git-hub-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
             </div>
           </OverlayPanel>
         </div>
@@ -256,11 +265,13 @@
     import AddFileDatasource from "./file/AddFileDatasource";
     import AddFolderDatasource from "./folder/AddFolderDatasource";
     import AddWebpageDatasource from "./webpage/AddWebpageDatasource";
+    import AddGitHubDatasource from "./github/AddGitHubDatasource";
 
     export default {
       name: "DatasourcesTable",
 
       components: {
+        AddGitHubDatasource,
         AddFileDatasource,
         AddFolderDatasource,
         AddWebpageDatasource
