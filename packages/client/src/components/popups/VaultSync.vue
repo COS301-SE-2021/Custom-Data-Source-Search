@@ -36,7 +36,6 @@
 <script>
 import axios from "axios";
 import {mapGetters} from "vuex";
-import {SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
 import PasswordInputField from "../primeComponents/PasswordInputField";
 import {createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
 import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
