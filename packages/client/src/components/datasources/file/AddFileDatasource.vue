@@ -113,7 +113,9 @@ export default {
       if(this.filenames.length!==0){
         if(this.backend === 'Local'){
           for (let i = 0; i < this.filenames.length; i++) {
-            let respObject = {"filename": this.filenames[i], "path": this.paths[i], "tag1": this.tag1, "tag2": this.tag2};
+            let respObject = {
+              "filename": this.filenames[i], "path": this.paths[i], "file": null, "tag1": this.tag1, "tag2": this.tag2
+            };
             axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
@@ -144,6 +146,8 @@ export default {
           for (let i = 0; i < this.filenames.length; i++) {
             let formData = new FormData();
             fileStream = fs.readFileSync(this.paths[i] + this.filenames[i]);
+            formData.set('filename', this.filenames[i]);
+            formData.set('path', null);
             formData.set('file', fileStream);
             formData.set('tag1', this.tag1);
             formData.set('tag2', this.tag2);
