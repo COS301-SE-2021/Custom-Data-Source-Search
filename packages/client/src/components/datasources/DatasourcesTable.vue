@@ -122,6 +122,7 @@
                 <Button
                     id="git-hub-button"
                     label="GitHub"
+                    icon="pi pi-github"
                     class="button p-button-raised p-button-text p-button-plain"
                     @click="clicked=!clicked; type='GitHub'"
                 />
@@ -325,8 +326,6 @@
             life: 3000
           });
         }
-        this.user = this.$store.getters.getBackendJWTToken(this.$store.getters.getSignedInUserId)
-        console.log(this.user)
       },
 
       productService: null,
