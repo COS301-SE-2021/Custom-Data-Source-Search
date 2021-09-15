@@ -120,8 +120,8 @@
                     @click="clicked=!clicked; type='Webpage'"
                 />
                 <Button
-                    id="web-button"
-                    label="Webpage"
+                    id="git-hub-button"
+                    label="GitHub"
                     class="button p-button-raised p-button-text p-button-plain"
                     @click="clicked=!clicked; type='GitHub'"
                 />
