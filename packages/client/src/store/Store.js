@@ -180,6 +180,10 @@ const store = createStore({
             state.users[state.signedInUserId].info.isActive = true;
         },
 
+        setUserDetails: function (state, payload) {
+            state.users[state.signedInUserId] = payload.userData;
+        },
+
         /**
          * Check hash of a specified user master key. Return true on success.
          *
@@ -664,4 +668,5 @@ let masterKey = null;
 export default store;
 export {generateMasterKey};
 export {encryptJsonObject};
+export {decryptJsonObject};
 

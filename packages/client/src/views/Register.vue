@@ -250,7 +250,6 @@
                   salt: saltAndVerifier.s,
                   verifier: saltAndVerifier.v,
                   user_data: encryptedInfo.data,
-                //  fingerprint: createHash("md5").update(encryptedInfo.data).digest("hex"),
                   fingerprint: dataFingerprint,
                   user_iv: encryptedInfo.iv,
                   user_authtag: encryptedInfo.authTag,
