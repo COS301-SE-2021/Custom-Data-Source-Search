@@ -339,10 +339,12 @@
 
     props: {
       backendID: Number,
+      link: String
     },
 
     data() {
       return {
+        urlLink: null,
         backend: null,
         tableData: [],
         isUserSelected: false,
@@ -406,12 +408,22 @@
     beforeMount() {
       this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
       this.updateTableData();
+
+      console.log(this.link);
+      if (this.link.charAt(0) != 'h') {
+        console.log("Made it into the if");
+        this.urlLink = "http://" + this.link;
+      } else {
+        this.urlLink = this.link;
+      }
+
+      console.log(this.urlLink);
     },
 
     methods: {
       updateTableData() {
         axios
-            .get("http://localhost:3001/users")
+            .get(this.urlLink)
             .then((resp) => {
               this.tableData = resp.data.data;
               let i = 0;
@@ -448,7 +460,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users", reqBody,
+            .post(this.urlLink + "/users", reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -477,7 +489,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .delete("http://localhost:3001/users",
+            .delete(this.urlLink + "/users",
                 {data: reqBody, headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -509,7 +521,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users/role", reqBody,
+            .post(this.urlLink + "/users/role", reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -538,7 +550,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users/registrationkey", reqBody,
+            .post(this.urlLink + "/users/registrationkey", reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -570,7 +582,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users/email", reqBody,
+            .post(this.urlLink + "/users/email", reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -633,7 +645,7 @@
             rejectClass: "p-button-text p-button-plain",
             accept: () => {
               axios
-                  .post("http://localhost:3001/users/global/logout")
+                  .post(this.urlLink + "/users/global/logout")
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -670,7 +682,7 @@
               let reqBody = JSON.stringify(reqObj);
 
               axios
-                  .post("http://localhost:3001/users/logout", reqBody,
+                  .post(this.urlLink + "/users/logout", reqBody,
                       {headers: {"Content-Type": "application/json"}})
                   .then(resp => {
                     this.$toast.add({
@@ -705,7 +717,7 @@
             rejectClass: "p-button-text p-button-plain",
             accept: () => {
               axios
-                  .post("http://localhost:3001/users/global/revoke")
+                  .post(this.urlLink + "/users/global/revoke")
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -741,7 +753,7 @@
               let reqBody = JSON.stringify(reqObj);
 
               axios
-                  .post("http://localhost:3001/users/revoke", reqBody,
+                  .post(this.urlLink + "/users/revoke", reqBody,
                       {headers: {"Content-Type": "application/json"}})
                   .then(resp => {
                     this.$toast.add({
