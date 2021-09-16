@@ -6,14 +6,31 @@
         @click="$emit('back')"
     />
   </div>
-  <br><br><br>
-  <div class="main-contents">
-    <span>Enter the URL of desired webpage</span>
-    <InputText
-        id="input"
-        v-model="dataSourceURI"
-        placeholder="Add WebPage URL..."
-    />
+  <ScrollPanel>
+    <div>
+      <span>Enter your github username</span>
+      <InputText
+          class="input-fields"
+          v-model="username"
+          placeholder="GitHub username.."
+      />
+    </div>
+    <div>
+      <span>Enter the target repo name</span>
+      <InputText
+          class="input-fields"
+          v-model="repo"
+          placeholder="Repo name..."
+      />
+    </div>
+    <div>
+      <span>Enter your access token</span>
+      <InputText
+          class="input-fields"
+          v-model="token"
+          placeholder="Token..."
+      />
+    </div>
     <div>
       <span>Add optional tags</span>
       <br/>
@@ -40,14 +57,14 @@
         class="p-button-rounded p-button-text"
         @click="submitWebpage"
     />
-  </div>
+  </ScrollPanel>
 </template>
 
 <script>
 import axios from 'axios'
 
 export default {
-  name: "AddDataURI",
+  name: "AddGitHubDatasource",
 
   props:{
     backend: String,
@@ -55,7 +72,9 @@ export default {
 
   data() {
     return {
-      dataSourceURI: "",
+      username: "",
+      token: "",
+      repo: "",
       tag1: null,
       tag2: null,
       type: 'webpage'
@@ -64,11 +83,16 @@ export default {
 
   methods: {
     submitWebpage() {
-      if(this.dataSourceURI!==""){
-        let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
+      if(this.repo!==""){
+        let respObject = {
+          "repo": this.username + "/" + this.repo,
+          "token": this.token,
+          "tag1": this.tag1,
+          "tag2": this.tag2
+        };
         axios
             .post(
-                `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
+                `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/githubdatasources`,
                 respObject
             )
             .then(resp => {
@@ -77,7 +101,7 @@ export default {
                 summary: 'Success',
                 detail: resp.data.message,
                 life: 3000
-                });
+              });
               this.$emit('addWebpage');
               this.$emit("submitted");
             })
@@ -85,17 +109,16 @@ export default {
               this.$toast.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'Could Not Add Webpage.',
+                detail: 'Could Not Add GitHub Repo.',
                 life: 3000
               });
-              this.dataSourceURI = "";
             })
       }
       else{
         this.$toast.add({
           severity: 'error',
-          summary: 'No URL entered',
-          detail: 'Enter the URL of the webpage you would like to add',
+          summary: 'No GitHub Repo entered',
+          detail: 'Enter the Github Repo info you desire to search',
           life: 3000
         });
       }
@@ -112,9 +135,28 @@ export default {
     background-color: #262626;
   }
 
+  .p-text-normal {
+    display: inline-flex;
+    padding-left: 15px;
+  }
+
+  .p-button-sm {
+    vertical-align: middle;
+    margin-top: 30px;
+  }
+
   .p-inputtext:enabled:focus {
     border-color: rgba(255, 255, 255, 0.3);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
+  }
+
+  .p-button-text{
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .p-float-label{
+    margin-top: 15px;
   }
 
   .p-button-rounded{
@@ -122,23 +164,31 @@ export default {
     margin: 7px;
   }
 
-  .p-float-label{
+  .p-inputtextarea{
     margin-top: 15px;
   }
 
-  .main-contents{
+  .p-scrollpanel{
+    height: 55vh;
+    bottom: 2em;
+    padding-bottom: 1vh;
+    align-content: center;
     margin-left: 15px;
   }
 
-  #input{
-    min-width: 100%;
-    margin-top: 15px;
-    margin-bottom: 15px;
+  .p-inputtextarea{
+    background: #262626;
   }
 
   .back-button{
     float: left;
     padding: 0;
-    margin: 0;
+    margin: 0 0 10px;
+  }
+
+  .input-fields{
+    min-width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
   }
 </style>

@@ -7,14 +7,14 @@
       </div>
       <div>
         <div
-            v-if="datasource_name !== undefined" class="datasource_name"
-            @click=openFile(source)
+            v-if="datasource_name !== undefined" class="datasource-name"
+            @click=open(source)
             @mousedown.right="openFileUsing(source)"
         >
           {{ datasource_name }}
         </div>
         <small
-            @click=openFile(source)
+            @click=open(source)
             @mousedown.right="openFileUsing(source)"
         >
           {{ source }}
@@ -31,9 +31,9 @@
           @mousedown.right="toggleNumSnippetsToShow"
       />
     </div>
-    <div v-if="match_snippets.length > 1" class="expand_icon_div">
+    <div v-if="match_snippets.length > 1" class="expand-icon-div">
       <icon-simple-expand-more
-          v-if="notDisplayingAllAvailableSnippets"
+          v-if="numberOfResultsToDisplay < match_snippets.length"
           height="25"
           width="25"
           @click="showThreeMoreSnippets"
@@ -49,171 +49,181 @@
 </template>
 
 <script>
-import {shell} from "electron";
-import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
-import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
-import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+  import {shell} from "electron";
+  import SearchResultCardMatchSnippet from "@/components/results/SearchResultCardMatchSnippet";
+  import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
+  import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
 
-export default {
-  name: "SearchResultCard",
+  export default {
+    name: "SearchResultCard",
 
-  components: {
-    IconSimpleExpandLess,
-    IconSimpleExpandMore,
-    SearchResultCardMatchSnippet
-  },
-
-  props: {
-    id: String,
-    type: String,
-    source: String,
-    datasource_name: String,
-    datasource_icon: String,
-    match_snippets: Array,
-    link: String,
-    backendId: Number,
-    backend_name: String,
-    lineNumbers: Array
-  },
-
-  watch: {
-    numberOfResultsToDisplay(newNumber, oldNumber) {
-      this.updateDisplaySnippets(newNumber, oldNumber)
-    }
-  },
-
-  mounted() {
-    this.snippetsOnDisplay.push(this.match_snippets[0])
-  },
-
-  data() {
-    return {
-      unexpanded: true,
-      snippetsOnDisplay: [],
-      numberOfResultsToDisplay: 1
-    }
-  },
-
-  methods: {
-    /**
-     * @param {string} source
-     */
-    openFile(source) {
-      shell.openPath(source)
+    components: {
+      IconSimpleExpandLess,
+      IconSimpleExpandMore,
+      SearchResultCardMatchSnippet
     },
 
-    /**
-     * @param {string} source
-     */
-    openFileUsing(source) {
-      shell.showItemInFolder(source)
+    props: {
+      id: String,
+      type: String,
+      source: String,
+      datasource_name: String,
+      datasource_icon: String,
+      match_snippets: Array,
+      link: String,
+      backendId: Number,
+      backend_name: String,
+      lineNumbers: Array,
     },
 
-    /**
-     * @param {number} lineNumber
-     */
-    emitSnippetClicked(lineNumber) {
-      this.$emit('snippetClicked', this.link, this.type, this.id, this.backendId, lineNumber, this.lineNumbers)
-    },
-
-    toggleNumSnippetsToShow() {
-      if (this.numberOfResultsToDisplay === 1) {
-        this.showThreeMoreSnippets();
-      } else {
-        this.showOneSnippet();
+    watch: {
+      numberOfResultsToDisplay(newNumber, oldNumber) {
+        this.updateDisplaySnippets(newNumber, oldNumber)
       }
     },
 
-    showOneSnippet() {
-      this.numberOfResultsToDisplay = 1;
+    mounted() {
+      this.snippetsOnDisplay.push(this.match_snippets[0])
     },
 
-    /**
-     * Show (up to) three more result snippets.
-     */
-    showThreeMoreSnippets() {
-      this.numberOfResultsToDisplay += 3;
-    },
-
-    /**
-     * @return {boolean}
-     */
-    notDisplayingAllAvailableSnippets() {
-      return this.numberOfResultsToDisplay < this.match_snippets.length;
-    },
-
-    /**
-     * @param newNumber upper bound of result snippets to display
-     */
-    updateDisplaySnippets(newNumber) {
-      this.snippetsOnDisplay = []
-      for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
-        this.snippetsOnDisplay.push(this.match_snippets[i])
+    data() {
+      return {
+        unexpanded: true,
+        snippetsOnDisplay: [],
+        numberOfResultsToDisplay: 1,
       }
-    }
+    },
 
-  },
-}
+    methods: {
+      /**
+       * @param {string} source
+       */
+      open(source) {
+        if (source.match(/http\w*/gm)) {
+          open(source);
+        } else {
+          shell.openPath(source);
+        }
+      },
+
+      /**
+       * @param {string} source
+       */
+      openFileUsing(source) {
+        if (source.match(/http\w*/gm)) {
+          open(source);
+        } else {
+          shell.showItemInFolder(source)
+        }
+      },
+
+      /**
+       * @param {number} lineNumber
+       */
+      emitSnippetClicked(lineNumber) {
+        this.$emit(
+            'snippetClicked',
+            this.link,
+            this.type,
+            this.id,
+            this.backendId,
+            lineNumber,
+            this.lineNumbers,
+            this.source
+        )
+      },
+
+      toggleNumSnippetsToShow() {
+        if (this.numberOfResultsToDisplay === 1) {
+          this.showThreeMoreSnippets();
+        } else {
+          this.showOneSnippet();
+        }
+      },
+
+      showOneSnippet() {
+        this.numberOfResultsToDisplay = 1;
+      },
+
+      /**
+       * Show (up to) three more result snippets.
+       */
+      showThreeMoreSnippets() {
+        this.numberOfResultsToDisplay += 3;
+      },
+
+      /**
+       * @param newNumber upper bound of result snippets to display
+       */
+      updateDisplaySnippets(newNumber) {
+        this.snippetsOnDisplay = [];
+        for (let i = 0; i < Math.min(newNumber, this.match_snippets.length); i++) {
+          this.snippetsOnDisplay.push(this.match_snippets[i])
+        }
+      }
+
+    },
+  }
 </script>
 
 <style scoped>
-.result-card {
-  text-align: left;
-  max-width: 1000px;
-  border-radius: 10px;
-  padding: 5px 20px;
-  margin: 5px auto;
-  overflow: hidden;
-  position: relative;
-}
+  .result-card {
+    text-align: left;
+    max-width: 1000px;
+    border-radius: 10px;
+    padding: 5px 20px;
+    margin: 5px;
+    overflow: hidden;
+    position: relative;
+  }
 
-.title-card {
-  background-color: #1f1f1f;
-  padding: 10px;
-}
+  .title-card {
+    background-color: #1f1f1f;
+    padding: 10px;
+  }
 
-h1 {
-  font-size: 2em;
-}
+  h1 {
+    font-size: 2em;
+  }
 
-h2 {
-  font-size: 1.5em;
-}
+  h2 {
+    font-size: 1.5em;
+  }
 
-.card-icon {
-  text-align: right;
-  float: right;
-  padding-top: 10px;
-  width: 100px;
-}
+  .card-icon {
+    text-align: right;
+    float: right;
+    padding-top: 10px;
+    width: 100px;
+  }
 
-.expand_icon_div {
-  width: max-content;
-  margin: auto;
-  cursor: pointer;
-}
+  .expand-icon-div {
+    width: max-content;
+    margin: auto;
+    cursor: pointer;
+  }
 
-.datasource_name {
-  word-wrap: break-word;
-  padding-top: 10px;
-  padding-bottom: 5px;
-  font-size: 1.1em;
-  font-weight: bold;
-  cursor: pointer;
-}
+  .datasource-name {
+    word-wrap: break-word;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+  }
 
-small {
-  word-wrap: break-word;
-  cursor: pointer;
-  color: #7e96a1;
-  padding-bottom: 5px;
-}
+  small {
+    word-wrap: break-word;
+    cursor: pointer;
+    color: #7e96a1;
+    padding-bottom: 5px;
+  }
 
-.datasource_name:hover {
-  text-decoration: underline;
-}
+  .datasource-name:hover {
+    text-decoration: underline;
+  }
 
-small:hover {
-  text-decoration: underline;
-}
+  small:hover {
+    text-decoration: underline;
+  }
 </style>

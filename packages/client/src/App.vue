@@ -1,26 +1,54 @@
 <template>
   <div class="grid-app" v-if="this.$store.getters.getSignedIn">
     <div id="grid-div-1">
-      <div id="sidebar">
-        <router-link title="Search" class="icon" to="/search">
-          <i class="pi pi-search" style="font-size:1.5rem" aria-hidden="true"/>
-        </router-link>
+      <div id="sidebar" class="nav">
         <router-link
-            title="Data Sources" class="icon" to="/datasources">
-          <i class="pi pi-list" style="font-size:1.5rem" aria-hidden="true"/>
-        </router-link>
-        <router-link title="Backends" class="icon" to="/backends">
-          <i class="pi pi-th-large" style="font-size:1.5rem" aria-hidden="true"/>
-        </router-link>
-        <router-link title="Admin" class="icon" to="/admin">
-          <i class="pi pi-user" style="font-size:1.5rem" aria-hidden="true"/>
-        </router-link>
+            title="Search"
+            to="/search"
+            id="SearchIcon"
+            class="pi pi-search icon"
+            style="font-size:1.5rem"
+            aria-hidden="true"
+        />
+        <router-link
+            title="Data Sources"
+            to="/datasources"
+            id="DataSourcesIcon"
+            class="pi pi-list icon"
+            style="font-size:1.5rem"
+            aria-hidden="true"
+        />
+        <router-link
+            title="Backends"
+            to="/backends"
+            id="BackendIcon"
+            class="pi pi-th-large icon"
+            style="font-size:1.5rem"
+            aria-hidden="true"
+        />
+        <router-link
+            title="Admin"
+            to="/admin"
+            id="AdminIcon"
+            v-if="getIsUserAdmin"
+            class="pi pi-sitemap"
+            style="font-size:1.5rem"
+            @click="showJWTObject"
+          />
         <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
-          <i class="fas fa-sync-alt" style="font-size:1.2rem" aria-hidden="true"></i>
+          <i
+              class="fas fa-sync-alt"
+              style="font-size:1.2rem"
+              aria-hidden="true"
+          />
         </div>
         <!---
         <div v-else title="Syncing..." class="refresh-container icon">
-          <i class="fas fa-sync-alt fa-spin" style="font-size:1.2rem" aria-hidden="true"></i>
+          <i
+              class="fas fa-sync-alt fa-spin"
+              style="font-size:1.2rem"
+              aria-hidden="true"
+          />
         </div>
         --->
         <div class="icon-container" title="User" @click="toggle">
@@ -69,7 +97,6 @@
           ref="op"
           appendTo="body"
           :showCloseIcon="false"
-          :breakpoints="{'900px': '40vw'}"
           style="width: 350px"
       >
         <ProfileDropdown/>
@@ -79,6 +106,84 @@
   </div>
   <router-view v-else/>
 </template>
+
+<script>
+  import OverlayPanel from 'primevue/overlaypanel';
+  import ProfileDropdown from "@/components/landing/ProfileDropdown";
+  import {mapGetters} from "vuex";
+  import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
+  import CustomTooltip from "./components/primeComponents/CustomTooltip";
+
+  export default {
+  components: {
+    CustomTooltip,
+    ReEnterMasterPassword,
+    OverlayPanel,
+    ProfileDropdown,
+  },
+
+  data() {
+    return {
+      name: "Data Sleuth",
+      displayPasswordDialog: false,
+      displayVaultDialog: false,
+      sync: false,
+      activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
+      activePageNum: null,
+      adminStatus: false
+    }
+  },
+
+    computed: {
+        ...mapGetters ([
+            'getUserInfo',
+            'getUserBackends',
+            'getSignedInUserId',
+            'unconnectedBackendNames',
+            'unconnectedBackendBool',
+            'unconnectedBackendNo',
+            'getIsUserAdmin'
+        ])
+    },
+
+    beforeCreate() {
+        this.$store.commit('initialiseStore');
+    },
+
+    methods: {
+      showJWTObject() {
+        console.log("Is user an admin?" + this.$store.getters.getIsUserAdmin());
+      },
+
+      showAskMasterPw(){
+        if(this.$store.getters.getMasterKey === null){
+          this.showPasswordDialog();
+        }
+      },
+
+      toggle(event){
+        this.$refs.op.toggle(event);
+      },
+
+      showPasswordDialog(){
+        this.displayPasswordDialog = !this.displayPasswordDialog;
+      },
+
+      showVaultSyncDialog(){
+        this.displayVaultDialog = !this.displayVaultDialog
+      },
+
+      toggleSync(){
+        this.sync = !this.sync;
+      },
+
+      closeDialog(){
+        this.displayPasswordDialog = false;
+        this.displayVaultDialog = false;
+      }
+    }
+  }
+</script>
 
 <style lang="scss">
   html,
@@ -125,11 +230,16 @@
     height: 100%;
   }
 
+  a:-webkit-any-link {
+    text-decoration: none;
+    padding-left: 0.7em
+  }
+
   .icon {
     padding: 10px;
   }
 
-  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large{
+  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .pi-sitemap{
     color: grey;
     padding: 20px 10px 10px;
   }
@@ -139,7 +249,11 @@
     padding: 10px 10px 10px;
   }
 
-  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover {
+  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .pi-sitemap:hover {
+    color: #41B3B2;
+  }
+
+  a.router-link-active {
     color: #41B3B2;
   }
 
@@ -165,9 +279,9 @@
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     background: linear-gradient(#232323, #1a1a1a) padding-box,
-    linear-gradient(to right bottom, rgba(128, 128, 128, 0.7), rgba(168, 168, 168, 0.71)) border-box;
+    linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
     border-radius: 50em;
-    border: 2.8px solid transparent;
+    border: 2.9px solid transparent;
   }
 
   .image-ring-main:hover {
@@ -176,9 +290,9 @@
   }
 
   .name-initial-main {
-    color: grey;
+    color: rgba(204, 204, 204, 0.97);
     font-size: 20px;
-    font-weight: normal;
+    font-weight: bold;
     margin: auto;
     width: 100%;
     height: 100%;
@@ -194,7 +308,7 @@
     text-align: left;
     max-width: 30px;
     max-height: 30px;
-    padding-left: 0.7em;
+    padding-left: 0.5em;
     bottom: 2em;
     cursor: pointer;
     padding-bottom: 0.8vh;
@@ -203,7 +317,7 @@
 
   .refresh-container {
     position: fixed;
-    padding-left: 1.4em;
+    padding-left: 1.1em;
     bottom: 90px;
     cursor: pointer;
   }
@@ -224,12 +338,12 @@
   }
 
   #expiration-indicator {
-      font-size: 1.5rem;
-      color: #FFF59D;
-      position: relative;
-      display: inline-block;
-      margin-top : 0.5rem;
-      margin-bottom : 0.3rem;
+    font-size: 1.5rem;
+    color: #FFF59D;
+    position: relative;
+    display: inline-block;
+    margin-top : 0.5rem;
+    margin-bottom : 0.3rem;
   }
 
   #profile {
@@ -240,11 +354,15 @@
   }
 
   #overlay_panel {
-    margin-left: 1%;
+    margin-left: 0.5%;
   }
 
   #sidebar {
-    max-width: 4em;
+    width: 3.5em;
+  }
+
+  .pi-info-circle {
+    cursor: pointer;
   }
 </style>
 
@@ -374,5 +492,3 @@
         this.displayVaultSync = false;
       }
     }
-  }
-</script>

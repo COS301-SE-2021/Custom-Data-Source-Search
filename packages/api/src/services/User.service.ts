@@ -1,10 +1,21 @@
 import userRepository from "../repositories/UserRepository";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import {randomBytes} from "crypto";
-
+import {generateUUID} from "../general/generalFunctions";
+import fs from "fs";
 
 class UserService {
+
+    addInitialUser() {
+        if (userRepository.getAllUsers()[0]["results"].length === 0) {
+            const user = JSON.parse(fs.readFileSync(__dirname + "/initialUser.json").toString());
+            console.log(this.addUser([user]));
+            console.log(userRepository.getAllUsers()[0]["results"]);
+            const uuid: string = userRepository.getAllUsers()[0]["results"][0]["uuid"];
+            this.generateRegistrationKey([{uuid: uuid}]);
+            this.sendEncodedRegistrationKeyToUser([{uuid: uuid}]);
+        }
+    }
 
     getAllUsers() {
         const [result, err] = userRepository.getAllUsers();
@@ -313,8 +324,8 @@ class UserService {
                 }
             };
         }
-        const partialPassKey: string = randomBytes(16).toString("hex");
-        const partialSeed: string = randomBytes(16).toString("hex");
+        const partialPassKey: string = generateUUID();
+        const partialSeed: string = generateUUID();
         userRepository.setSeedAndPassKey(body.email, partialPassKey, partialSeed, secret);
         const [refreshToken, tokenErr] = userRepository.generateRefreshToken(body.email);
         if (tokenErr) {

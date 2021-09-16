@@ -1,7 +1,10 @@
 <template>
-  <div class="settings-box">
-    <div class="info-div">
+  <div class="backends-box">
+    <div class="backends-heading">
       <span><h1>Backends</h1></span>
+      <p class="backends-description">
+        Manage Backends
+      </p>
     </div>
     <div class="info-div">
       <span><strong>Personal Information</strong></span>
@@ -11,7 +14,7 @@
       <br>
     </div>
     <div class="info-div">
-      <div class="settings-subheading">
+      <div class="backends-subheading">
         <span><strong>Backends</strong></span>
         <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
       </div>
@@ -29,9 +32,9 @@
             v-for="(backend) in getUserBackends(getSignedInUserId)"
             :user-index="getSignedInUserId"
             :backend-index="backend.local.id"
-            :local=backend.local
-            :connect=backend.connect
-            :receive=backend.receive
+            :local="backend.local"
+            :connect="backend.connect"
+            :receive="backend.receive"
             :key="backend.local.id"
         />
       </div>
@@ -65,13 +68,13 @@
 </template>
 
 <script>
-    import BackendCard from "../components/backends/BackendCard";
-    import UserInfoCard from "../components/backends/BackendPageUserInfo";
-    import {mapGetters} from "vuex";
-    import AddBackendCard from "../components/backends/BackendCardAdd";
-    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
+  import BackendCard from "../components/backends/BackendCard";
+  import UserInfoCard from "../components/backends/BackendPageUserInfo";
+  import {mapGetters} from "vuex";
+  import AddBackendCard from "../components/backends/BackendCardAdd";
+  import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
 
-    export default {
+  export default {
         name: "SettingsPage",
 
         components: {
@@ -259,16 +262,26 @@
 
 <style scoped>
 
-  .settings-box {
+  .backends-box {
     padding-left: 1%;
     height: 100vh;
+  }
+
+  .backends-heading {
+    text-align: center;
+    color: #ededed;
+  }
+
+  .backends-description {
+    text-align: center;
+    color: #ededed;
   }
 
   .info-div {
     padding: 20px;
   }
 
-  .settings-subheading {
+  .backends-subheading {
     max-width: 600px;
     padding-bottom: 20px;
   }
@@ -283,7 +296,6 @@
     text-align: center;
     max-width: fit-content;
   }
-
 
   .inline {
     margin-left: 2em !important;
