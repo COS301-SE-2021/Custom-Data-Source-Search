@@ -134,10 +134,14 @@ class GeneralService {
                                         "snippet": folderDataSourceService.getSearchSnippet(occurrence, key)
                                     });
                                 }
+                                let [folderFile, folderFileErr] = folderDataSourceRepository.getFileInFolder(key);
+                                if (folderFileErr) {
+                                    continue;
+                                }
                                 result.push({
                                     "id": key,
                                     "type": currentObject["datasource_type"],
-                                    "source": folderDataSource["path"],
+                                    "source": folderFile["file_path"],
                                     "datasource_name": folderDataSource["folder_name"],
                                     "datasource_icon": "<svg height=\"24\" width=\"24\" fill=\"#f1c40f\" viewBox=\"0 " +
                                         "0 24 24\"><path d=\"M0 0h24v24H0V0z\" fill=\"none\"></path><path d=\"M9.17 6" +
