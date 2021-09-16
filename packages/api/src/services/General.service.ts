@@ -131,7 +131,7 @@ class GeneralService {
                                     folderOccurrences.push({
                                         "line_number": fileDataSourceService
                                             .getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": webPageDataSourceService.getSearchSnippet(occurrence)
+                                        "snippet": folderDataSourceService.getSearchSnippet(occurrence, key)
                                     });
                                 }
                                 result.push({
@@ -215,6 +215,13 @@ class GeneralService {
                 case "github":
                     [dataSource, err] = gitHubDataSourceRepository.getFileFromRepo(id);
                     extension = dataSource["file_path"].split(".").pop();
+                    break;
+                case "folder":
+                    [dataSource, err] = folderDataSourceRepository.getFileInFolder(id);
+                    extension = dataSource["file_path"].split(".").pop();
+                    break;
+                default:
+                    err = true;
             }
             if (err) {
                 result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
