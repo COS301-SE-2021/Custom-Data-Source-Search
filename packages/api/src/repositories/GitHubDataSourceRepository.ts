@@ -138,6 +138,23 @@ class GitHubDataSourceRepository {
             return [null, statusMessage(404, "Datasource not found")];
         }
     }
+    /**
+     * Return the FileFromRepo according to its uuid
+     *
+     * @param {string} dataSourceUUID
+     * @return {[any, StatusMessage]}
+     */
+    getFileFromRepo(dataSourceUUID: string): [any, StatusMessage] {
+        try {
+            const dataSource = db.prepare(
+                "SELECT * FROM repo_file_data WHERE uuid = ?;"
+            ).all(dataSourceUUID)[0];
+            return [dataSource, null];
+        } catch (e) {
+            console.error(e);
+            return [null, statusMessage(404, "Datasource not found")];
+        }
+    }
 }
 
 const gitHubDataSourceRepository = new GitHubDataSourceRepository();

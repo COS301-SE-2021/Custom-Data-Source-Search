@@ -41,7 +41,7 @@ class GitHubDataSourceService {
 
     async addGitHubDataSource(dataSource: GitHubDataSource): Promise<DefaultHttpResponse> {
         const fs = require('fs');
-        if (!await GitHubDataSourceService.repoExists(dataSource.repo)) {
+        if (!await GitHubDataSourceService.repoExists(dataSource.repo, dataSource.token)) {
             return generateDefaultHttpResponse(statusMessage(404, "Repo not found"));
         }
         const repoUUID: string = generateUUID();
@@ -72,10 +72,18 @@ class GitHubDataSourceService {
         }
         let file = fs.createWriteStream(repoName + "/temp.zip");
         let response: AxiosResponse;
+        let config: any = {
+            responseType: 'stream'
+        };
+        if (dataSource.token !== undefined && dataSource.token !== "") {
+            config["headers"] = {
+                Authorization: "token " + dataSource.token
+            };
+        }
         try {
             response = await axios.get(
                 "https://github.com/" + dataSource.repo + "/archive/refs/heads/" + branchName + ".zip",
-                {responseType: 'stream'}
+                config
             );
             response.data.pipe(file);
             await new Promise(fulfill => file.on("finish", fulfill));
@@ -168,14 +176,31 @@ class GitHubDataSourceService {
         return results;
     }
 
-    private static async repoExists(repo: string) {
-        return axios.get("https://api.github.com/repos/" + repo)
+    private static async repoExists(repo: string, token: string) {
+        let config: any = {};
+        if (token !== undefined && token !== ""){
+            config["headers"] = {
+                Authorization: "token " + token
+            }
+        }
+        return axios.get(
+            "https://api.github.com/repos/" + repo,
+            config)
             .then(() => {
                 return true;
             })
             .catch(() => {
                 return false;
             });
+    }
+
+    getSearchSnippet(snippet: string, dataSourceUUID: string): string {
+        const [result, err] = gitHubDataSourceRepository.getFileFromRepo(dataSourceUUID);
+        if (err) {
+            return snippet;
+        }
+        const fileName: string = result["file_path"].split("/").pop();
+        return fileDataSourceService.getSearchSnippet(snippet, fileName);
     }
 }
 
