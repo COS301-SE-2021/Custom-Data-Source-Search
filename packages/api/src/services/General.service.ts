@@ -7,6 +7,7 @@ import webPageDataSourceRepository from "../repositories/WebPageDataSourceReposi
 import folderDataSourceService from "./FolderDataSource.service";
 import webPageDataSourceService from "./WebPageDataSource.service";
 import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
+import gitHubDataSourceService from "./GitHubDataSource.service";
 
 class GeneralService {
 
@@ -156,7 +157,7 @@ class GeneralService {
                                     gitHubOccurrences.push({
                                         "line_number": fileDataSourceService
                                             .getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": webPageDataSourceService.getSearchSnippet(occurrence)
+                                        "snippet": gitHubDataSourceService.getSearchSnippet(occurrence, key)
                                     });
                                 }
                                 result.push({
