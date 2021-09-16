@@ -119,7 +119,7 @@
           <PasswordInputField
               id="password"
               style="width: 100%"
-              v-model="masterPassword"
+              v-model="vaultPassword"
               :feedback="false"
               :toggle-mask="true"
           />
@@ -131,7 +131,7 @@
               type="submit"
               style="text-align: center;"
               class="p-button-md p-button-outlined"
-              @click="loadValues"
+              @click="retrieveVaultProfile"
           />
         </div>
       </div>
@@ -146,11 +146,11 @@
   import PasswordInputField from "../components/primeComponents/PasswordInputField";
   import axios from "axios";
   import {createHash} from 'crypto';
-  import {encryptJsonObject, generateMasterKey} from "@/store/Store";
+  import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 
 
   import {
-    createVerifierAndSalt, SRPParameters, SRPRoutines,
+    createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,
   } from "tssrp6a"
   import {mapGetters} from "vuex";
 
@@ -204,6 +204,118 @@
        *
        * Present errors on failure, create new user on success.
        */
+      async retrieveVaultProfile(){
+
+        const remoteEmail = this.vaultEmail;
+        const remotePassword = this.vaultPassword;
+        console.log("Attempting to fetch user profile from the vault...");
+        const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
+        const step1 = await client.step1(remoteEmail, remotePassword);
+
+        const reqBody = {
+          email: remoteEmail
+        }
+        axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
+            {headers: {"Content-Type": "application/json"}})
+            .then(async (resp) => {
+
+              console.log(resp.data);
+              console.log("Salt: " + resp.data.salt);
+              console.log("B: " + resp.data.B);
+
+              const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
+
+              const clientA = step2.A;
+              const clientM1 = step2.M1;
+
+              let reqObj = {
+                email: remoteEmail,
+                A: clientA,
+                verificationMessage1: clientM1
+              }
+
+              let reqBody = JSON.stringify(reqObj, (key, value) =>
+                  typeof value === 'bigint'
+                      ? value.toString()
+                      : value
+              );
+
+              axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
+                  {headers: {"Content-Type": "application/json"}})
+                  .then(async (resp) => {
+
+                    console.log(resp.data);
+                    //verify server
+                    try {
+                      const step3 = await step2.step3(BigInt(resp.data.vM2));
+                    } catch (e){
+                      console.log(e);
+                    }
+
+                    //PHASE2
+                    let reqObj = {
+                      email: remoteEmail,
+                      A: clientA,
+                      verificationMessage1: clientM1
+                    }
+
+                    let reqBody = JSON.stringify(reqObj, (key, value) =>
+                        typeof value === 'bigint'
+                            ? value.toString()
+                            : value
+                    );
+
+                    axios.post("https://datasleuthvault.nw.r.appspot.com/vault/pull", reqBody,
+                        {headers: {"Content-Type": "application/json"}})
+                        .then((resp) => {
+                          console.log(resp.data.data);
+                          //decrypt data
+                          const encryptedObj =  {
+                            iv: resp.data.data.user_iv,
+                            authTag: resp.data.data.user_authtag,
+                            data: resp.data.data.user_data
+                          }
+                          //NEED TO ADD USER HERE:
+                          //
+                          const masterKey = generateMasterKey(remotePassword, resp.data.data.user_salt);
+                          const unencryptedUserData = decryptJsonObject(masterKey, encryptedObj);
+
+                          this.$store.commit('addRemoteUserToLocalList', unencryptedUserData);
+                          this.$router.push('Search');
+
+                        })
+                        .catch((error) => {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: error,
+                            life: 3000
+                          });
+                          console.log(error);
+                        })
+
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
+            })
+            .catch((error) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: error.response.data,
+                life: 3000
+              });
+              console.log(error);
+            })
+
+      },
       async loadValues(){
 
         let passFormValidation = this.formValidationChecks();

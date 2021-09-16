@@ -402,6 +402,17 @@ const store = createStore({
             state.signedInUserId = state.users.length - 1;
             state.signedIn = true;
         },
+        addRemoteUserToLocalList(state, payload) {
+            state.users.push(payload);
+            let x = 0;
+            for (let user of state.users) {
+                user.id = x;
+                user.info.id = x;
+                x++;
+            }
+            state.signedInUserId = state.users.length - 1;
+            state.signedIn = true;
+        },
 
         /**
          * @param state
