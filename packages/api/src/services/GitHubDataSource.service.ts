@@ -11,7 +11,7 @@ import {DefaultHttpResponse} from "../models/response/general.interfaces";
 import solrService from "./Solr.service";
 import fileDataSourceService from "./FileDataSource.service";
 import {FileFromRepo, GitHubDataSource, StoredGitHubDataSource} from "../models/GitHubDataSource.interface";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import shell from "shelljs";
 import path from "path";
 
@@ -40,6 +40,7 @@ class GitHubDataSourceService {
     }
 
     async addGitHubDataSource(dataSource: GitHubDataSource): Promise<DefaultHttpResponse> {
+        const fs = require('fs');
         if (!await GitHubDataSourceService.repoExists(dataSource.repo)) {
             return generateDefaultHttpResponse(statusMessage(404, "Repo not found"));
         }
@@ -56,13 +57,39 @@ class GitHubDataSourceService {
             return generateDefaultHttpResponse(e);
         }
         const repoName: string = path.join(__dirname, dataSource.repo.split("/").pop());
-        await fs.mkdir(repoName, (err) => {
+        await fs.mkdir(repoName, (err: any) => {
             if (err) {
                 return console.error(err);
             }
         })
+        let branchName: string = "master";
+        try {
+            branchName = (await axios.get(
+                "https://api.github.com/repos/" + dataSource.repo + "/branches"
+            )).data[0]["name"];
+        } catch (e) {
+            console.error(e);
+        }
+        let file = fs.createWriteStream(repoName + "/temp.zip");
+        let response: AxiosResponse;
+        try {
+            response = await axios.get("https://github.com/" + dataSource.repo + "/archive/refs/heads/" + branchName + ".zip", {responseType: 'stream'});
+            response.data.pipe(file);
+            await new Promise(fulfill => file.on("finish", fulfill));
+            file.close();
+        } catch (e) {
+            console.error(e);
+        }
         shell.cd(repoName);
-        shell.exec('git clone https://github.com/' + dataSource.repo);
+        shell.exec('tar -xf temp.zip');
+        await fs.rm(
+            repoName + "/temp.zip",
+            {recursive: true},
+            (err: any) => {
+                if (err) {
+                    console.error(err);
+                }
+            });
         for (let filePath of this.getFilesInFolder(repoName + "/")) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
@@ -85,11 +112,11 @@ class GitHubDataSourceService {
             }
             gitHubDataSourceRepository.addFileInRepo(fileFromRepo);
         }
-        shell.cd(__dirname);
+        shell.cd("../");
         await fs.rm(
             repoName,
             {recursive: true},
-            (err) => {
+            (err: any) => {
                 if (err) {
                     console.error("Unable to delete directory");
                     console.error(err);
