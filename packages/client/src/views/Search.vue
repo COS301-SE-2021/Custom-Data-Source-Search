@@ -1,8 +1,15 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter style="background:var(--surface-200);">
-      <SplitterPanel :minSize="20" :size="90">
+    <Splitter
+        style="background:var(--surface-200);"
+        @mousedown="noPointerTrue"
+        @mouseup="noPointerFalse"
+    >
+      <SplitterPanel
+          :minSize="20"
+          :size="90"
+      >
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
             <img
@@ -33,7 +40,12 @@
         </div>
       </SplitterPanel>
       <SplitterPanel :minSize="30" class="container">
-        <iframe v-if="iFrameLink !== ''" name="name_of_iframe" :src="iFrameLink"></iframe>
+        <iframe
+            :class="{ iFrameNoPointer: noPointer }"
+            v-if="iFrameLink !== ''"
+            name="name_of_iframe"
+            :src="iFrameLink"
+        ></iframe>
         <div v-else>
           <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
           <div v-else class="next-prev">
@@ -108,6 +120,7 @@
         searchResults: [],
         name: "Search",
         firstSearch: true,
+        noPointer: false
       }
     },
 
@@ -424,6 +437,14 @@
             }) + 1
         );
         this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
+      },
+
+      noPointerTrue() {
+        this.noPointer = true;
+      },
+
+      noPointerFalse() {
+        this.noPointer = false;
       }
     }
   };
@@ -544,10 +565,8 @@
     padding-left: 10px;
   }
 
-  #iframeDeadZone {
+  .iFrameNoPointer {
     pointer-events: none;
-    width: 30px;
-    height: 100vh;
   }
 
   iframe {
