@@ -6,7 +6,7 @@
     </div>
     <div class="admin-select">
       <AdminBackendCard
-          v-for="backend in getUserBackends(getSignedInUserId)"
+          v-for="(backend) in getUserRemoteBackends"
           :backend="backend"
       />
     </div>
@@ -34,7 +34,8 @@
         'getUserInfo',
         'getUserBackends',
         'getSignedInUserId',
-        'getUserAdminStatus'
+        'getUserAdminStatus',
+        'getUserRemoteBackends'
       ])
     },
 

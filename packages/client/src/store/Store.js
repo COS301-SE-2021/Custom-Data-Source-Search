@@ -73,6 +73,19 @@ const store = createStore({
       return state.users.find(user => user.id === id).backends;
     },
 
+    getRemoteBackendsBool: (state, getters) => {
+      return getters.getUserRemoteBackends().length > 0;
+    },
+
+    getUserRemoteBackends: (state) => {
+      let remoteBackends = [];
+      for (let backend of state.users[state.signedInUserId].backends) {
+        remoteBackends.push(backend);
+      }
+      remoteBackends.splice(0,1);
+      return remoteBackends;
+    },
+
     getSignedInUserBackend: (state, getters) => (id) => {
       return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.id === id)
     },
