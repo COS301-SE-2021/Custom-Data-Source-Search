@@ -108,12 +108,16 @@ export default {
 
     submitSelectedFiles(){
       if(this.filenames.length!==0){
+        let backendID = this.$store.getters.getBackendIDViaName(this.backend);
         for (let i = 0; i < this.filenames.length; i++) {
-          let respObject = {"filename": this.filenames[i], "path": this.paths[i], "tag1": this.tag1, "tag2": this.tag2};
+          let reqObject = {"filename": this.filenames[i], "path": this.paths[i], "tag1": this.tag1, "tag2": this.tag2};
+          const headers = {
+            "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+          };
           axios
               .post(
                   `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                  respObject
+                  reqObject, {headers}
               )
               .then((resp) => {
                 this.$toast.add({
@@ -122,16 +126,33 @@ export default {
                   detail: resp.data.message,
                   life: 3000
                 });
-                this.$emit('addFile');
               })
-              .catch((error) => {
-                this.$toast.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: error.response.data.message,
-                  life: 3000
-                });
-                this.filenames = [];
+              .catch(async () => {
+                await this.$store.dispatch("refreshJWTToken", {id: backendID});
+                const headers = {
+                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                };
+                await axios
+                  .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
+                  reqObject, {headers}
+                  )
+                  .then((resp) => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: resp.data.message,
+                      life: 3000
+                    });
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    this.filenames = [];
+                  })
               })
         }
         this.$emit("submitted");

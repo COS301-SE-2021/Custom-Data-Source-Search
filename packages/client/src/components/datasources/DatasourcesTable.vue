@@ -1,5 +1,4 @@
 <template>
-  <Toast position="bottom-right"/>
   <ScrollPanel
       id="main-scroll"
       style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
@@ -25,6 +24,7 @@
     >
       <template #header>
         <div class="p-d-flex p-jc-end">
+          <i class="pi pi-refresh" aria-hidden="true" v-tooltip="'Refresh'" @click="updateSources"/>
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
@@ -120,13 +120,6 @@
                     class="button p-button-raised p-button-text p-button-plain"
                     @click="clicked=!clicked; type='Webpage'"
                 />
-                <Button
-                    id="git-hub-button"
-                    label="GitHub"
-                    icon="pi pi-github"
-                    class="button p-button-raised p-button-text p-button-plain"
-                    @click="clicked=!clicked; type='GitHub'"
-                />
               </div>
             </div>
             <div v-else-if="type==='File'">
@@ -137,9 +130,6 @@
             </div>
             <div v-else-if="type==='Webpage'">
               <add-webpage-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
-            </div>
-            <div v-else-if="type==='GitHub'">
-              <add-git-hub-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
           </OverlayPanel>
         </div>
@@ -276,13 +266,11 @@
   import AddFileDatasource from "./file/AddFileDatasource";
   import AddFolderDatasource from "./folder/AddFolderDatasource";
   import AddWebpageDatasource from "./webpage/AddWebpageDatasource";
-  import AddGitHubDatasource from "@/components/datasources/github/AddGitHubDatasource";
 
   export default {
       name: "DatasourcesTable",
 
       components: {
-        AddGitHubDatasource,
         AddFileDatasource,
         AddFolderDatasource,
         AddWebpageDatasource
@@ -293,7 +281,7 @@
           message: "No sources have been selected.",
           type: null,
           clicked: false,
-          sources: [],
+          sources: null,
           loading: false,
           backend: null,
           selectedSources: [],
@@ -319,10 +307,6 @@
         }
         this.backends = this.$store.getters.getUserBackendNames;
         this.updateSources();
-        console.log(this.sources.length)
-      },
-
-      mounted(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',
@@ -336,10 +320,6 @@
       productService: null,
 
       methods: {
-        toggleMenu(event) {
-          this.$refs.menu.toggle(event);
-        },
-
         /**
          * Toggles the visibility of the overlay panel
          * @param event
@@ -440,10 +420,18 @@
             accept: () => {
               let source;
               for (source in this.selectedSources) {
+                let backendID = this.$store.getters.getBackendIDViaName(this.selectedSources[source].backend);
                 const url = `http://${this.selectedSources[source].link}/general/datasources`;
                 console.log(url);
+                console.log(this.selectedSources[source].backend)
+                const authHeaders = {
+                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                };
                 axios
                     .delete(url, {
+                      "headers": {
+                        authHeaders
+                      },
                       "data": {
                         "type": this.selectedSources[source].type,
                         "id": this.selectedSources[source].id
@@ -457,13 +445,37 @@
                         life: 2000
                       });
                     })
-                    .catch(() => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: "Could not delete source",
-                        life: 3000
-                      });
+                    .catch(async () => {
+                      await this.$store.dispatch("refreshJWTToken", {id: backendID});
+                      const headers = {
+                        "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                      };
+                      await axios
+                       .delete(url, {
+                         "headers": {
+                           authHeaders
+                         },
+                         "data": {
+                           "type": this.selectedSources[source].type,
+                           "id": this.selectedSources[source].id
+                         }
+                       })
+                          .then(() => {
+                            this.$toast.add({
+                              severity: 'success',
+                              summary: 'Deleted',
+                              detail: "Source deleted",
+                              life: 2000
+                            });
+                          })
+                      .catch((error) => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error.response.data.message,
+                          life: 3000
+                        });
+                      })
                     })
               }
               this.selectedSources = [];
@@ -519,6 +531,14 @@
 
   .data-table{
    bottom: 4em;
+  }
+
+  .pi-refresh{
+    color: #41B3B2;
+  }
+
+  .pi-refresh:hover{
+    cursor: pointer;
   }
 
   #add-datasource-button{

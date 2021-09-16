@@ -8,7 +8,7 @@ export const userRouter = express.Router();
 /**
  * Return all users that have been added to the system
  */
-userRouter.get("/", authUser("admin"), (req: Request, res: Response) => {
+userRouter.get("/", (req: Request, res: Response) => {
     const result = userService.getAllUsers();
     res.status(result.code).send(result.body);
 });
@@ -16,7 +16,7 @@ userRouter.get("/", authUser("admin"), (req: Request, res: Response) => {
 /**
  * Add new users to the system
  */
-userRouter.post("/", [check('users').isArray().custom((users: any) => {
+userRouter.post("/", authUser("admin"), [check('users').isArray().custom((users: any) => {
     for (let user of users) {
         if (
             user.hasOwnProperty("first_name") &&
@@ -34,7 +34,7 @@ userRouter.post("/", [check('users').isArray().custom((users: any) => {
             }
         }
     }
-})], authUser("admin"),  (req: Request, res: Response) => {
+})], (req: Request, res: Response) => {
     const result = userService.addUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -42,7 +42,7 @@ userRouter.post("/", [check('users').isArray().custom((users: any) => {
 /**
  * Delete users from the system
  */
-userRouter.delete("/", authUser("super"), (req: Request, res: Response) => {
+userRouter.delete("/", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.removeUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -66,7 +66,7 @@ userRouter.post("/logout", authUser("admin"), (req: Request, res: Response) => {
 /**
  * Revoke access to the system for specified users
  */
-userRouter.post("/revoke", authUser("super"), (req: Request, res: Response) => {
+userRouter.post("/revoke", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.revokeUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -82,7 +82,7 @@ userRouter.post("/global/logout", authUser("admin"), (req: Request, res: Respons
 /**
  * Revoke access for all users
  */
-userRouter.post("/global/revoke", authUser("super"), (req: Request, res: Response) => {
+userRouter.post("/global/revoke", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.revokeAllUsers();
     res.status(result.code).send(result.body);
 });
