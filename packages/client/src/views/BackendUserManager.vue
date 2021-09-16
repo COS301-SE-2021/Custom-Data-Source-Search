@@ -339,10 +339,15 @@
 
     props: {
       backendID: Number,
+      link: String
     },
 
     data() {
       return {
+        usersLink: null,
+        registrationKeyLink: null,
+        emailLink: null,
+
         backend: null,
         tableData: [],
         isUserSelected: false,
@@ -404,14 +409,18 @@
     },
 
     beforeMount() {
-      this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
-      this.updateTableData();
+      if (this.backendID) {
+        this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
+        this.updateTableData();
+      } else {
+        this.$router.push('Admin');
+      }
     },
 
     methods: {
       updateTableData() {
         axios
-            .get("http://localhost:3001/users")
+            .get(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`)
             .then((resp) => {
               this.tableData = resp.data.data;
               let i = 0;
@@ -448,7 +457,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users", reqBody,
+            .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`, reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -477,7 +486,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .delete("http://localhost:3001/users",
+            .delete(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`,
                 {data: reqBody, headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -499,6 +508,15 @@
             })
       },
       changeUserRoles() {
+        if (!this.selectedRole) {
+          this.$toast.add({
+            severity: 'info',
+            summary: "No Role Selected",
+            detail: "Please select a role to assign to the selected user(s)",
+            life: 3000
+          });
+          return;
+        }
         let usersArr = this.selectedUsers.map(function (a) {
           return {uuid: a.uuid};
         });
@@ -509,7 +527,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users/role", reqBody,
+            .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/role`, reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -538,7 +556,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users/registrationkey", reqBody,
+            .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/registrationkey`, reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -570,7 +588,7 @@
         let reqBody = JSON.stringify(reqObj);
 
         axios
-            .post("http://localhost:3001/users/email", reqBody,
+            .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/email`, reqBody,
                 {headers: {"Content-Type": "application/json"}})
             .then((resp) => {
               this.$toast.add({
@@ -633,7 +651,7 @@
             rejectClass: "p-button-text p-button-plain",
             accept: () => {
               axios
-                  .post("http://localhost:3001/users/global/logout")
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/logout`)
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -670,7 +688,7 @@
               let reqBody = JSON.stringify(reqObj);
 
               axios
-                  .post("http://localhost:3001/users/logout", reqBody,
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/logout`, reqBody,
                       {headers: {"Content-Type": "application/json"}})
                   .then(resp => {
                     this.$toast.add({
@@ -705,7 +723,7 @@
             rejectClass: "p-button-text p-button-plain",
             accept: () => {
               axios
-                  .post("http://localhost:3001/users/global/revoke")
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/revoke`)
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -741,7 +759,7 @@
               let reqBody = JSON.stringify(reqObj);
 
               axios
-                  .post("http://localhost:3001/users/revoke", reqBody,
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/revoke`, reqBody,
                       {headers: {"Content-Type": "application/json"}})
                   .then(resp => {
                     this.$toast.add({
