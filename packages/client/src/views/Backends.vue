@@ -32,9 +32,9 @@
             v-for="(backend) in getUserBackends(getSignedInUserId)"
             :user-index="getSignedInUserId"
             :backend-index="backend.local.id"
-            :local=backend.local
-            :connect=backend.connect
-            :receive=backend.receive
+            :local="backend.local"
+            :connect="backend.connect"
+            :receive="backend.receive"
             :key="backend.local.id"
         />
       </div>
