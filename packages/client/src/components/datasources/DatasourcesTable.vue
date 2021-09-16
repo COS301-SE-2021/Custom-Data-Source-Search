@@ -24,7 +24,7 @@
     >
       <template #header>
         <div class="p-d-flex p-jc-end">
-          <i class="pi pi-refresh" aria-hidden="true" @click="updateSources"/>
+          <i class="pi pi-refresh" aria-hidden="true" v-tooltip="'Refresh'" @click="updateSources"/>
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>

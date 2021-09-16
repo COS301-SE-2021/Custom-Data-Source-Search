@@ -419,8 +419,12 @@
 
     methods: {
       updateTableData() {
+        // let backendID = this.$store.getters.getBackendLink(this.backend);
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
+        };
         axios
-            .get(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`)
+            .get(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`, {headers})
             .then((resp) => {
               this.tableData = resp.data.data;
               let i = 0;
@@ -429,17 +433,38 @@
                 this.tableData[i].reg_status = this.tableData[i].reg_status.charAt(0).toUpperCase() + this.tableData[i].reg_status.slice(1);
               }
             })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response.data.message,
-                life: 3000
-              });
-              console.log(error);
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
+              };
+              await axios
+                  .get(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`, {headers})
+                  .then((resp) => {
+                    this.tableData = resp.data.data;
+                    let i = 0;
+                    for (i; i < this.tableData.length; i++) {
+                      this.tableData[i].role = this.tableData[i].role.charAt(0).toUpperCase() + this.tableData[i].role.slice(1);
+                      this.tableData[i].reg_status = this.tableData[i].reg_status.charAt(0).toUpperCase() + this.tableData[i].reg_status.slice(1);
+                    }
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
             })
       },
       addUsers() {
+        // let backendID = this.$store.getters.getBackendLink(this.backend);
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+          "Content-Type": "application/json"
+        };
         let reqUser = {
           first_name: this.addUserFirstName,
           last_name: this.addUserLastName,
@@ -458,7 +483,7 @@
 
         axios
             .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`, reqBody,
-                {headers: {"Content-Type": "application/json"}})
+                {headers})
             .then((resp) => {
               this.$toast.add({
                 severity: 'success',
@@ -468,14 +493,34 @@
               });
               this.updateTableData();
             })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response.data.message,
-                life: 3000
-              });
-              console.log(error);
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                "Content-Type": "application/json"
+              };
+              await axios
+                .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`, reqBody,
+                    {headers}
+                )
+                .then((resp) => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: "Added Users",
+                    life: 3000
+                  });
+                  this.updateTableData();
+                })
+                .catch((error) => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data.message,
+                    life: 3000
+                  });
+                  console.log(error);
+                })
             })
       },
       deleteUsers() {
