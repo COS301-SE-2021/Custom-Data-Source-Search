@@ -73,6 +73,19 @@ const store = createStore({
       return state.users.find(user => user.id === id).backends;
     },
 
+    getRemoteBackendsBool: (state, getters) => {
+      return getters.getUserRemoteBackends().length > 0;
+    },
+
+    getUserRemoteBackends: (state) => {
+      let remoteBackends = [];
+      for (let backend of state.users[state.signedInUserId].backends) {
+        remoteBackends.push(backend);
+      }
+      remoteBackends.splice(0,1);
+      return remoteBackends;
+    },
+
     getSignedInUserBackend: (state, getters) => (id) => {
       return getters.getUserBackends(getters.getSignedInUserId).find(b => b.local.id === id)
     },
@@ -602,6 +615,20 @@ const store = createStore({
         secretPair: encryptedPair,
         refreshToken: payload.refreshToken
       });
+    },
+
+    /**
+     * @param commit
+     * @param getters
+     * @param {{id: number}} payload
+     */
+    updateJWTifRequired: function ({dispatch, getters}, payload) {
+      let jwt = parseJwt(getters.getBackendJWTToken(payload.id));
+      let iat = new Date(jwt.iat).getTime() * 1000;
+      let time = Date.now();
+      if (time - iat > 60000) {
+        dispatch("refreshJWTToken", payload)
+      }
     }
   }
 });
@@ -680,9 +707,9 @@ function parseJwt(token) {
     if (token === null) {
         return;
     }
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
