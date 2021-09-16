@@ -204,12 +204,21 @@ class GeneralService {
             );
             let result: string;
             let content: string = response["data"]["response"]["docs"][0]["content"];
-            let [dataSource, err] = fileDataSourceRepository.getDataSource(id);
+            let dataSource;
+            let err;
+            let extension: string = "";
+            switch (type) {
+                case "file":
+                    [dataSource, err] = fileDataSourceRepository.getDataSource(id);
+                    extension = dataSource.filename.split(".").pop();
+                    break;
+                case "github":
+                    [dataSource, err] = gitHubDataSourceRepository.getFileFromRepo(id);
+                    extension = dataSource["file_path"].split(".").pop();
+            }
             if (err) {
                 result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
             } else {
-                let temp: string[] = dataSource.filename.split('.');
-                let extension: string = temp[temp.length - 1];
                 if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
                     .indexOf(extension) != -1) {
                     let snippet: string;
@@ -218,7 +227,9 @@ class GeneralService {
                     } catch (e) {
                         snippet = hljs.highlightAuto(content).value;
                     }
-                    result = '<pre>' + GeneralService.newLinesToBreaks(snippet) + '</pre>';
+                    result = '<pre style="font-family: Arial,sans-serif">' +
+                        GeneralService.newLinesToBreaks(snippet) +
+                        '</pre>';
                 } else {
                     result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
                 }
