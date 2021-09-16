@@ -11,6 +11,7 @@ import {generateUUID} from "./general/generalFunctions";
 import fileDataSourceService from "./services/FileDataSource.service";
 import fs from "fs";
 import {gitHubDataSourceRouter} from "./routers/GitHubDataSource.router";
+import userService from "./services/User.service";
 
 try {
     fs.readFileSync(__dirname + `/../../../.env`);
@@ -55,5 +56,7 @@ setTimeout(() => {
         process.env.JWT_SECRET_KEY = generateUUID();
     }, 60000 * 5);
 }, 500);
+
+userService.addInitialUser();
 
 export default server;
