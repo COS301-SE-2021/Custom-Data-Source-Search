@@ -1,12 +1,10 @@
 <template>
   <div class="main-container">
-    <div class="image-container">
-      <div class="image-ring">
-        <h3 class="name-initial">{{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}</h3>
-      </div>
-    </div>
     <div class="user-detail-container">
-      <div id="name"><strong>{{ getUserInfo(getSignedInUserId).name }}</strong></div>
+      <div id="name">
+        <strong>Hi, {{ getUserInfo(getSignedInUserId).name }}!</strong>
+        <div class="fade"></div>
+      </div>
       <div id="email">{{ getUserInfo(getSignedInUserId).email }}</div>
     </div>
     <div class="backends-container">
@@ -42,10 +40,10 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
-    import SignOutCheck from "../popups/SignOutCheck";
+  import {mapGetters} from "vuex";
+  import SignOutCheck from "../popups/SignOutCheck";
 
-    export default {
+  export default {
   name: "ProfileDropdown",
     components: {SignOutCheck},
     data(){
@@ -68,7 +66,6 @@
       this.showSignOutCheck();
     },
     switchUser() {
-      console.log(this.$store.getters.getMasterKey);
       this.$store.commit('setSignedIn', false);
       this.$router.push('/');
     }
@@ -77,62 +74,56 @@
 </script>
 
 <style scoped>
+  .user-detail-container{
+    margin-left: 25px;
+    margin-bottom: 35px;
+  }
 
-.image-container {
-  float: left;
-  margin-left: 1vw;
-  vertical-align: middle;
-  width: 50px;
-  height: 50px;
-}
+  #name{
+    margin-bottom: 8px;
+    font-size: 20px;
+    overflow:hidden;
+    position: relative;
+  }
 
-.image-ring {
-  width: 100%;
-  height: 100%;
-  background:
-      linear-gradient(#2d2d2d, #2d2d2d) padding-box,
-      linear-gradient(to right bottom, #2bd6c8, #3b6693) border-box;
-  border-radius: 50em;
-  border: 3px solid transparent;
-}
+  .fade{
+    position:absolute;
+    top:0; bottom:0; right:0;
+    width:100%;
+    background:#262626;
+    animation: showHide 5s ease-in forwards;
+    animation-iteration-count: 1;
+  }
 
-.name-initial {
-  color: #f3f3f3;
-  font-size: 25px;
-  margin: auto;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  line-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .backends-container{
+    margin-left: 25px;
+  }
 
-.user-detail-container{
-  margin-left: 90px;
-  margin-bottom: 50px;
-}
+  .p-inputswitch{
+    float: right;
+    margin-right: 30px;
+  }
 
-#name{
-  margin-bottom: 8px;
-}
+  .sign-out{
+    float: right;
+    margin-right: 10px;
+  }
 
-.backends-container{
-  margin-left: 25px;
-}
+  .switch-user{
+    margin-left: 10px;
+  }
 
-.p-inputswitch{
-  float: right;
-  margin-right: 30px;
-}
+  @keyframes showHide {
+    0% {width: 100%}
+    40% {width: 0}
+    60% {width: 0}
+    100% {width: 0%}
+  }
 
-.sign-out{
-  float: right;
-  margin-right: 10px;
-}
-
-.switch-user{
-  margin-left: 10px;
-}
+  @media only screen and (max-width: 900px) {
+    .sign-out{
+      margin-left: 10px;
+      float: left;
+    }
+  }
 </style>

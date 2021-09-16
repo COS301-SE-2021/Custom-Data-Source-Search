@@ -15,7 +15,7 @@
         :loading="loading"
         :globalFilterFields="['location', 'backend', 'type', 'tag1', 'tag2']"
         style="align-content: center"
-        scrollHeight="60vh"
+        scrollHeight="65vh"
         responsiveLayout="scroll"
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
@@ -43,21 +43,25 @@
               @click="toggle"
           />
           <Button
-              id="actions-button"
-              type="button"
-              label="Actions"
-              icon="pi pi-angle-down"
-              aria-haspopup="true"
-              aria-controls="overlay_menu"
-              class="p-button-text"
-              @click="toggleMenu"
+              v-if="selectedSources.length !== 0"
+              id="delete-datasource-button"
+              label="Delete Selected Sources"
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger"
+              @click="deleteSource"
           />
-          <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
+          <Button
+              v-if="selectedSources.length !== 0"
+              id="delete-datasource-button-small"
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger"
+              @click="deleteSource"
+          />
           <OverlayPanel
               ref="op"
               :showCloseIcon="true"
-              :dismissable="false"
-              :breakpoints="{'960px': '70vw', '640px': '70vw'}"
+              :dismissable="true"
+              :breakpoints="{'640px': '70vw'}"
               :style="{width: '450px'}"
           >
             <div v-if="!clicked && backend===null">
@@ -77,6 +81,11 @@
               </div>
             </div>
             <div v-else-if="!clicked && backend!=null">
+              <Button
+                  icon="pi pi-arrow-left"
+                  class="p-button-lg p-button-rounded p-button-text back-button"
+                  @click="backend=null"
+              />
               <div class="overlay-header">
                 <span>What type of source would you like to add?</span>
               </div>
@@ -113,13 +122,13 @@
               </div>
             </div>
             <div v-else-if="type==='File'">
-              <add-file-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-file-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Folder'">
-              <add-folder-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-folder-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
             <div v-else-if="type==='Webpage'">
-              <add-webpage-datasource :backend="backend" @submitted="toggle(); updateSources()"/>
+              <add-webpage-datasource :backend="backend" @submitted="submitted" @back="clicked=!clicked"/>
             </div>
           </OverlayPanel>
         </div>
@@ -130,7 +139,7 @@
       <template #loading>
         Loading data. Please wait...
       </template>
-      <Column selectionMode="multiple" headerStyle="width: 3em" style="max-width: 3em;">
+      <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;">
         <template #body="{data}">
           <Checkbox
               v-if="datasourceAdminStatus(data.backend)"
@@ -251,13 +260,13 @@
 </template>
 
 <script>
-    import axios from "axios";
-    import {FilterMatchMode} from 'primevue/api';
-    import AddFileDatasource from "./file/AddFileDatasource";
-    import AddFolderDatasource from "./folder/AddFolderDatasource";
-    import AddWebpageDatasource from "./webpage/AddWebpageDatasource";
+  import axios from "axios";
+  import {FilterMatchMode} from 'primevue/api';
+  import AddFileDatasource from "./file/AddFileDatasource";
+  import AddFolderDatasource from "./folder/AddFolderDatasource";
+  import AddWebpageDatasource from "./webpage/AddWebpageDatasource";
 
-    export default {
+  export default {
       name: "DatasourcesTable",
 
       components: {
@@ -274,7 +283,7 @@
           sources: null,
           loading: false,
           backend: null,
-          selectedSources: null,
+          selectedSources: [],
           filters: {
             'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
             'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -284,29 +293,10 @@
             'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
           },
           types: [
-            'file', 'folder', 'webpage'
+            'file', 'folder', 'webpage', 'github'
           ],
           backends: [],
-          items: [
-            {
-              label: 'Choose an action',
-              items: [{
-                label: 'Delete Selected',
-                icon: 'pi pi-trash',
-                command: () => {
-                  this.deleteSource();
-                }
-              },
-                {
-                  label: 'Edit Selected',
-                  icon: 'pi pi-pencil',
-                  command: () => {
-                    // this.editSource();
-                  }
-                }
-              ]
-            }
-          ]
+          user: null
         }
       },
 
@@ -315,8 +305,15 @@
           this.$router.push('/');
         }
         this.backends = this.$store.getters.getUserBackendNames;
-        console.log(this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId));
         this.updateSources();
+        if (this.sources.length === 0) {
+          this.$toast.add({
+            severity: 'warn',
+            summary: 'No sources',
+            detail: "Try adding data sources",
+            life: 3000
+          });
+        }
       },
 
       productService: null,
@@ -381,15 +378,6 @@
             r.backend = name;
           }
           this.sources = this.sources.concat(results);
-
-          if (this.sources.length === 0) {
-            this.$toast.add({
-              severity: 'warn',
-              summary: 'No sources',
-              detail: "Try adding data sources",
-              life: 3000
-            });
-          }
           this.loading = false;
         },
 
@@ -407,8 +395,13 @@
           }
         },
 
+        submitted(){
+          this.toggle();
+          this.updateSources();
+        },
+
         deleteSource() {
-          if (this.selectedSources === null) {
+          if (this.selectedSources.length === 0) {
             this.$toast.add({
               severity: 'info',
               summary: 'No Sources Selected',
@@ -444,9 +437,8 @@
                         severity: 'success',
                         summary: 'Deleted',
                         detail: "Source deleted",
-                        life: 3000
+                        life: 2000
                       });
-                      this.updateSources();
                     })
                     .catch(() => {
                       this.$toast.add({
@@ -457,7 +449,8 @@
                       });
                     })
               }
-              this.selectedSources = null;
+              this.selectedSources = [];
+              this.updateSources();
             }
           })
         }
@@ -485,7 +478,9 @@
   }
 
   .overlay-header {
+    margin-top: 10px;
     margin-bottom: 30px;
+    margin-left: 15px;
   }
 
   .p-input-icon-left {
@@ -520,11 +515,81 @@
     display: none;
   }
 
-  #actions-button{
+  #delete-datasource-button{
     float: right;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
   }
 
-  @media only screen and (max-width: 960px) {
+  #delete-datasource-button-small{
+    float: right;
+    display: none;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-o-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @-ms-keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @media only screen and (max-width: 1080px) {
     #main-scroll{
       width: 93vw !important;
     }
@@ -534,6 +599,14 @@
     }
 
     #add-datasource-button-small{
+      display: block;
+    }
+
+    #delete-datasource-button{
+      display: none;
+    }
+
+    #delete-datasource-button-small{
       display: block;
     }
   }
