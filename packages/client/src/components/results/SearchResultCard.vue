@@ -8,13 +8,13 @@
       <div>
         <div
             v-if="datasource_name !== undefined" class="datasource-name"
-            @click=openFile(source)
+            @click=open(source)
             @mousedown.right="openFileUsing(source)"
         >
           {{ datasource_name }}
         </div>
         <small
-            @click=openFile(source)
+            @click=open(source)
             @mousedown.right="openFileUsing(source)"
         >
           {{ source }}
@@ -98,15 +98,23 @@
       /**
        * @param {string} source
        */
-      openFile(source) {
-        shell.openPath(source)
+      open(source) {
+        if (source.match(/http\w*/gm)) {
+          open(source);
+        } else {
+          shell.openPath(source);
+        }
       },
 
       /**
        * @param {string} source
        */
       openFileUsing(source) {
-        shell.showItemInFolder(source)
+        if (source.match(/http\w*/gm)) {
+          open(source);
+        } else {
+          shell.showItemInFolder(source)
+        }
       },
 
       /**
