@@ -621,7 +621,7 @@ const store = createStore({
       let jwt = parseJwt(getters.getBackendJWTToken(payload.id));
       let iat = new Date(jwt.iat).getTime() * 1000;
       let time = Date.now();
-      if (time - iat > 55000) {
+      if (time - iat > 60000) {
         dispatch("refreshJWTToken", payload)
       }
     }
