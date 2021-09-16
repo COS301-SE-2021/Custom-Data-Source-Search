@@ -409,26 +409,16 @@
     },
 
     beforeMount() {
-      if (!this.backendID) {
-        console.log("No backend ID");
+      if (this.backendID) {
+        this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
+        this.updateTableData();
+      } else {
         this.$router.push('Admin');
       }
-      this.backend = this.getUserBackends(this.getSignedInUserId)[this.backendID];
-      this.updateTableData();
-
-      console.log(this.link);
-      if (this.link.charAt(0) != 'h') {
-        this.usersLink = "http://" + this.link + "/users";
-      } else {
-        this.usersLink = this.link + "/users";
-      }
-
-      console.log(this.usersLink);
     },
 
     methods: {
       updateTableData() {
-      console.log(JSON.stringify(this.backendID));
         axios
             .get(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`)
             .then((resp) => {
@@ -518,6 +508,15 @@
             })
       },
       changeUserRoles() {
+        if (!this.selectedRole) {
+          this.$toast.add({
+            severity: 'info',
+            summary: "No Role Selected",
+            detail: "Please select a role to assign to the selected user(s)",
+            life: 3000
+          });
+          return;
+        }
         let usersArr = this.selectedUsers.map(function (a) {
           return {uuid: a.uuid};
         });

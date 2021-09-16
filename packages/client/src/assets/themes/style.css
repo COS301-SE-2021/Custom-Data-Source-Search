@@ -1908,7 +1908,7 @@
     box-shadow: none;
 }
 .p-button.p-button-warning:enabled:active, .p-buttonset.p-button-warning > .p-button:enabled:active, .p-splitbutton.p-button-warning > .p-button:enabled:active {
-    background: rgba(255, 245, 157, 0.68);
+    background: rgba(255, 245, 157, 0.92);
     color: #212121;
     border-color: transparent;
 }
