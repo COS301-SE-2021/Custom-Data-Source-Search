@@ -52,6 +52,7 @@
   import SearchResultCard from "@/components/results/SearchResultCard";
   import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
   import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+  import {min} from "lodash/math";
 
   /**
    * @typedef {Object} MatchSnippet
@@ -188,6 +189,7 @@
        * @param backend backend info from store
        */
       augmentAndSaveSearchResults(results, backend) {
+        console.log("augment!");
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -198,7 +200,24 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResults = this.searchResults.concat(results);
+        this.searchResults = this.mergeLists(this.searchResults, results);
+      },
+
+      /**
+       * @param {[]} a
+       * @param {[]} b
+       *
+       * @return {[]}
+       */
+      mergeLists(a, b) {
+        let newList = [];
+        for (let i = 0; i < min([a.length, b.length]); i++) {
+          newList.push(a.pop())
+          newList.push(b.pop())
+        }
+        newList = newList.concat(a);
+        newList = newList.concat(b);
+        return newList;
       },
 
       /**
