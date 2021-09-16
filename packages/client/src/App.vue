@@ -305,9 +305,7 @@
       checkSyncStatus(){
         if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
           console.log("Checking Sync Status");
-
           const user = this.getUser(this.getSignedInUserId);
-
 
           const dataString = JSON.stringify(user);
           const dataFingerprint = createHash("md5").update(dataString).digest("hex");

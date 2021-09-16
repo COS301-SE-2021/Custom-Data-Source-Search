@@ -88,6 +88,7 @@
             hasVault() {
                 if (this.user.hasVault) {
                     this.firstQuestion = false;
+
                 } else {
                     this.deleteUser();
                 }

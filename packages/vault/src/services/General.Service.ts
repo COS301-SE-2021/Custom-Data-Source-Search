@@ -1,5 +1,4 @@
 class GeneralService {
-
     test(id: String){
         return {
             code : 200,
