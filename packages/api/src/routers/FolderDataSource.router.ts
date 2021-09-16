@@ -1,17 +1,7 @@
-/**
- * Required External Modules and Interfaces
- */
 import express, {Request, Response} from "express";
 import folderDataSourceService from "../services/FolderDataSource.service";
 
-/**
- * Router Definition
- */
 export const folderDataSourceRouter = express.Router();
-
-/**
- * Controller Definitions
- */
 
 /**
  * Return the file names and paths of all folder Data Sources

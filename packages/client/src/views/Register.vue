@@ -108,18 +108,18 @@
       <div class="input-fields">
         <span class="p-float-label">
           <InputText
-              id="emailVualt"
+              id="emailVault"
               type="text"
               v-model="vaultEmail"
               style="width: 100%"
           />
-          <label for="emailVualt">Email</label>
+          <label for="emailVault">Email</label>
         </span>
         <span class="p-float-label">
           <PasswordInputField
               id="password"
               style="width: 100%"
-              v-model="masterPassword"
+              v-model="vaultPassword"
               :feedback="false"
               :toggle-mask="true"
           />

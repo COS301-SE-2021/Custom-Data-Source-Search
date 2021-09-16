@@ -1,9 +1,8 @@
-import {randomBytes} from "crypto";
-
 const db = require("better-sqlite3")('../../data/datasleuth.db');
 import {createHmac} from 'crypto';
 import bcrypt from 'bcrypt';
 import { authenticator } from 'otplib';
+import {generateUUID} from "../general/generalFunctions";
 
 
 class UserRepository {
@@ -168,7 +167,7 @@ class UserRepository {
                 failedUsers.push(user);
             }
         }
-        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+        process.env.JWT_SECRET_KEY = generateUUID();
         if (failedUsers.length !== 0) {
             return [null, {
                 "code": 400,
@@ -206,7 +205,7 @@ class UserRepository {
                 "users": failedUsers
             }];
         }
-        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+        process.env.JWT_SECRET_KEY = generateUUID();
         return [{
             "code": 200,
             "message": "Successfully revoked access for specified users"
@@ -223,7 +222,7 @@ class UserRepository {
                 "message": "Failed to logout all users",
             }];
         }
-        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+        process.env.JWT_SECRET_KEY = generateUUID();
         return [{
             "code": 200,
             "message": "Successfully logged out all users"
@@ -240,7 +239,7 @@ class UserRepository {
                 "message": "Failed to revoke access for all users",
             }];
         }
-        process.env.JWT_SECRET_KEY = randomBytes(16).toString("hex");
+        process.env.JWT_SECRET_KEY = generateUUID();
         return [{
             "code": 200,
             "message": "Successfully revoked access for all users"
@@ -284,7 +283,7 @@ class UserRepository {
     generateRefreshToken(email: string) {
         try {
             db.prepare('DELETE FROM active_user WHERE email = ?').run(email);
-            const refreshToken = randomBytes(16).toString("hex");
+            const refreshToken = generateUUID();
             const expirationTimeSeconds = parseInt(process.env.LOGIN_EXPIRATION_TIME_MINUTES) * 60;
             const newDate = new Date(new Date().getTime() + expirationTimeSeconds * 1000).getTime();
             db.prepare(
@@ -347,14 +346,16 @@ class UserRepository {
                         'INSERT INTO pending_user (email, single_use_registration_token, secret) VALUES (?,?,?);'
                     ).run(
                         user["email"],
-                        randomBytes(16).toString("hex"),
-                        randomBytes(16).toString("hex")
+                        generateUUID(),
+                        generateUUID()
                     );
                 } catch (e) {
                     db.prepare(
                         'UPDATE pending_user SET single_use_registration_token = ? WHERE email = ?'
                     ).run(
-                        randomBytes(16).toString("hex") + '.' + randomBytes(16).toString("hex"),
+                        generateUUID() +
+                        '.' +
+                        generateUUID(),
                         user["email"]
                     );
                 }
