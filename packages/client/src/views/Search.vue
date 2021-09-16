@@ -127,8 +127,8 @@
 
     methods: {
       reRunQuery() {
+        this.advancedSearch = !this.advancedSearch;
         if (this.query !== "") {
-          this.searchResults = [];
           this.queryBackends(this.query)
         }
       },
