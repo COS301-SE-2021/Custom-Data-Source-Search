@@ -73,7 +73,10 @@ class GitHubDataSourceService {
         let file = fs.createWriteStream(repoName + "/temp.zip");
         let response: AxiosResponse;
         try {
-            response = await axios.get("https://github.com/" + dataSource.repo + "/archive/refs/heads/" + branchName + ".zip", {responseType: 'stream'});
+            response = await axios.get(
+                "https://github.com/" + dataSource.repo + "/archive/refs/heads/" + branchName + ".zip",
+                {responseType: 'stream'}
+            );
             response.data.pipe(file);
             await new Promise(fulfill => file.on("finish", fulfill));
             file.close();
@@ -81,7 +84,11 @@ class GitHubDataSourceService {
             console.error(e);
         }
         shell.cd(repoName);
-        shell.exec('tar -xf temp.zip');
+        if (process.platform === "win32") {
+            shell.exec('tar -xf temp.zip');
+        } else {
+            shell.exec('unzip temp.zip');
+        }
         await fs.rm(
             repoName + "/temp.zip",
             {recursive: true},
