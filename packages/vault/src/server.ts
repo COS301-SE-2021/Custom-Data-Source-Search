@@ -11,9 +11,9 @@ app.use(express.json());
 app.set('json replacer', customStringify)
 app.use("/vault", generalRouter)
 
-import * as dotenv from "dotenv";
+//import * as dotenv from "dotenv";
 
-dotenv.config({path:  __dirname + `/../../../../.env`});
+//dotenv.config({path:  __dirname + `/../../../../.env`});
 
 
 function customStringify(key: any, value: any){
@@ -26,7 +26,7 @@ function customStringify(key: any, value: any){
 const port = process.env.VAULT_PORT || 8080;
 const server = app.listen(port , () => {
     console.log("Server Started");
-    console.log(`Listening on port 3002`);
+    console.log(`Listening on port ` + port);
 });
 
 export default server

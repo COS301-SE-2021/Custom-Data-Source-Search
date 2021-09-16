@@ -318,7 +318,7 @@
           }
 
           console.log("requestObject" + JSON.stringify(reqObj));
-          axios.post("http://localhost:3002/vault/compare", reqObj,
+          axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
               {headers: {"Content-Type": "application/json"}})
               .then((resp) => {
                 console.log("Out Of Sync: " +resp.data.isOutOfSync);

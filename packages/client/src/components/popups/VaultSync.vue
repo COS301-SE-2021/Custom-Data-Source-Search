@@ -88,7 +88,7 @@ export default {
       const reqBody = {
         email: userInfo.email
       }
-      axios.post("http://localhost:3002/vault/challenge", reqBody,
+      axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
           {headers: {"Content-Type": "application/json"}})
           .then(async (resp) => {
 
@@ -113,7 +113,7 @@ export default {
                     : value
             );
 
-            axios.post("http://localhost:3002/vault/authenticate", reqBody,
+            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                 {headers: {"Content-Type": "application/json"}})
                 .then(async (resp) => {
 
@@ -138,7 +138,7 @@ export default {
                           : value
                   );
 
-                  axios.post("http://localhost:3002/vault/pull", reqBody,
+                  axios.post("https://datasleuthvault.nw.r.appspot.com/vault/pull", reqBody,
                       {headers: {"Content-Type": "application/json"}})
                       .then((resp) => {
                         console.log(resp.data.data);
@@ -198,7 +198,7 @@ export default {
       const reqBody = {
         email: userInfo.email
       }
-      axios.post("http://localhost:3002/vault/challenge", reqBody,
+      axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
           {headers: {"Content-Type": "application/json"}})
           .then(async (resp) => {
 
@@ -224,7 +224,7 @@ export default {
                     : value
             );
 
-            axios.post("http://localhost:3002/vault/authenticate", reqBody,
+            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                 {headers: {"Content-Type": "application/json"}})
                 .then(async (resp) => {
 
@@ -269,7 +269,7 @@ export default {
 
 
 
-                  axios.post("http://localhost:3002/vault/push", reqBody,
+                  axios.post("https://datasleuthvault.nw.r.appspot.com/vault/push", reqBody,
                       {headers: {"Content-Type": "application/json"}})
                       .then((resp) => {
                         console.log(resp.data.data);

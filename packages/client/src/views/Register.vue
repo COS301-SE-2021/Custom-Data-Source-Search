@@ -263,7 +263,7 @@
               : value
         );
 
-          axios.post("http://localhost:3002/vault/register", reqBody,
+          axios.post("https://datasleuthvault.nw.r.appspot.com/vault/register", reqBody,
               {headers: {"Content-Type": "application/json"}})
               .then((resp) => {
                 this.$toast.add({

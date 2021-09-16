@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start-ts": "ts-node src/server.ts",
+    "gcp-build": "tsc",
+    "start": "node ./build/server.js",
     "test": "jest --coverage --verbose"
   },
   "engines": {
@@ -14,7 +16,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
     "@babel/preset-typescript": "^7.15.0",

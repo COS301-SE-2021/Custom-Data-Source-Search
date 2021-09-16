@@ -8,7 +8,8 @@ class VaultRepository {
 
     async addUser(body : SRPRegistrationRequest){
         try {
-            const result = await db.query(
+            const client = await db.connect();
+            const result = await client.query(
                 'INSERT INTO "Users" (email,' +
                 ' salt,' +
                 ' verifier,' +
@@ -27,6 +28,7 @@ class VaultRepository {
                     body.user_authtag,
                     body.user_salt],
             );
+            client.release()
             return[result, null]
         } catch (e){
             console.log(e.stack);
@@ -36,7 +38,8 @@ class VaultRepository {
 
     async getSaltAndVerifier(email: string){
         try {
-            const data = await db.query(
+            const client = await db.connect();
+            const data = await client.query(
                 'SELECT salt, verifier FROM "Users" WHERE email = $1',
                 [email],
             );
@@ -44,6 +47,7 @@ class VaultRepository {
                 salt: data.rows[0].salt,
                 verifier: data.rows[0].verifier
             }
+            client.release();
             return[result, null]
         } catch (e){
             console.log(e.stack);
@@ -53,10 +57,12 @@ class VaultRepository {
 
     async getFingerprint(email: string){
         try {
-            const data = await db.query(
+            const client = await db.connect();
+            const data = await client.query(
                 'SELECT fingerprint FROM "Users" WHERE email = $1',
                 [email],
             );
+            client.release()
             return[data, null]
         } catch (e){
             console.log(e.stack);
@@ -68,7 +74,8 @@ class VaultRepository {
     async updateUserData(body: SRPPushRequest){
 
         try {
-            const result = await db.query(
+            const client = await db.connect();
+            const result = await client.query(
                 'UPDATE "Users"' +
                 'SET user_data =  $2,' +
                 'fingerprint = $3,' +
@@ -78,6 +85,7 @@ class VaultRepository {
                 'WHERE email = $1',
                 [body.email, body.user_data, body.fingerprint, body.user_iv, body.user_authtag, body.user_salt],
             );
+            client.release();
             return[result, null]
         } catch (e){
             console.log(e.stack);
@@ -87,7 +95,8 @@ class VaultRepository {
 
     async storeServerState(email: string, state: string){
         try {
-            const data = await db.query(
+            const client = await db.connect();
+            const data = await client.query(
                 'INSERT INTO "SRPSessionStates" (email, "Step1State")' +
                 'VALUES($1, $2) ' +
                 'ON CONFLICT (email) DO UPDATE ' +
@@ -95,7 +104,7 @@ class VaultRepository {
                 '"Step1State"=$2',
                 [email,state],
             );
-
+            client.release();
             return[data, null]
         } catch (e){
             console.log(e.stack);
@@ -105,7 +114,8 @@ class VaultRepository {
 
     async retrieveServerState(email: string){
         try {
-            const data = await db.query(
+            const client = await db.connect();
+            const data = await client.query(
                 'SELECT "Step1State" FROM "SRPSessionStates" WHERE email = $1',
                 [email],
             );
@@ -113,6 +123,7 @@ class VaultRepository {
             const result = {
                 Step1State : data.rows[0].Step1State
             }
+            client.release();
             return[result, null]
         } catch (e){
             console.log(e.stack);
@@ -122,13 +133,14 @@ class VaultRepository {
 
     async getUserData(email: string){
         try {
-            const data = await db.query(
+            const client = await db.connect();
+            const data = await client.query(
                 'SELECT user_data, user_iv, user_authtag, user_salt FROM "Users" WHERE email = $1',
                 [email],
             );
 
             const result = data.rows[0];
-
+            client.release();
             return[result, null]
         } catch (e){
             console.log(e.stack);
