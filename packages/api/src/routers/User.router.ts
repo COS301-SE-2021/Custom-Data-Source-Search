@@ -8,7 +8,7 @@ export const userRouter = express.Router();
 /**
  * Return all users that have been added to the system
  */
-userRouter.get("/", (req: Request, res: Response) => {
+userRouter.get("/", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.getAllUsers();
     res.status(result.code).send(result.body);
 });
