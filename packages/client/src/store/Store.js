@@ -87,21 +87,25 @@ const store = createStore({
     },
 
     getUserAdminStatus: (state, getters) => (backendID) => {
-      console.log("In get User admin status");
       let jwtToken = getters.getBackendJWTToken(backendID);
-      console.log("JWT TOKEN: " + JSON.stringify(jwtToken));
       let backendJSON = parseJwt(jwtToken);
       if (jwtToken != null) {
         console.log("ROLE: " + JSON.stringify(backendJSON.role));
         return backendJSON.role;
+      } else {
+        return null;
       }
     },
 
-    getBackendJWTObject: (state, getters) => {
-      let remoteBackend = getters.getUserBackends(state.signedInUserId);
-      for (let backend of remoteBackend) {
-        console.log(JSON.stringify(getters.getUserAdminStatus(backend.local.id)));
+    getIsUserAdmin: (state, getters) => {
+      let admin = false;
+      for (let backend of getters.getUserBackends(state.signedInUserId)) {
+        if (getters.getUserAdminStatus(backend.local.id) != null) {
+          admin = true;
+        }
       }
+      console.log ("IN STORE - ADMIN: " + admin);
+      return admin;
     },
 
     /*

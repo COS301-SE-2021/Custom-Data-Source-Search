@@ -30,6 +30,7 @@
             title="Admin"
             to="/admin"
             id="AdminIcon"
+            v-if="getIsUserAdmin"
             class="pi pi-sitemap"
             style="font-size:1.5rem"
             @click="showJWTObject"
@@ -124,7 +125,8 @@
       displayVaultDialog: false,
       sync: false,
       activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
-      activePageNum: null
+      activePageNum: null,
+      adminStatus: false
     }
   },
 
@@ -135,7 +137,8 @@
             'getSignedInUserId',
             'unconnectedBackendNames',
             'unconnectedBackendBool',
-            'unconnectedBackendNo'
+            'unconnectedBackendNo',
+            'getIsUserAdmin'
         ])
     },
 
@@ -145,8 +148,7 @@
 
     methods: {
       showJWTObject() {
-        console.log("Call in App");
-        this.$store.getters.getBackendJWTObject();
+        console.log("Is user an admin?" + this.$store.getters.getIsUserAdmin());
       },
 
       showAskMasterPw(){
