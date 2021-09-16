@@ -32,6 +32,7 @@
             id="AdminIcon"
             class="pi pi-sitemap"
             style="font-size:1.5rem"
+            @click="showJWTObject"
           />
         <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
@@ -143,6 +144,11 @@
     },
 
     methods: {
+      showJWTObject() {
+        console.log("Call in App");
+        this.$store.getters.getBackendJWTObject();
+      },
+
       showAskMasterPw(){
         if(this.$store.getters.getMasterKey === null){
           this.showPasswordDialog();
