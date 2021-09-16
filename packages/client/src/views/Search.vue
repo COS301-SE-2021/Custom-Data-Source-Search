@@ -16,6 +16,10 @@
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
+            <span id="advanced_search_toggle">
+              <checkbox v-model="advancedSearch" :binary="true" @click="reRunQuery"></checkbox>
+              Advanced Search
+            </span>
           </div>
         </div>
         <div class="search-results container">
@@ -87,6 +91,7 @@
 
     data() {
       return {
+        advancedSearch: false,
         fullFileLineNumbers: [],
         currentLineNumber: -1,
         fullFileData: "",
@@ -114,6 +119,12 @@
     },
 
     methods: {
+      reRunQuery() {
+        if (this.query !== "") {
+          this.searchResults = [];
+          this.queryBackends(this.query)
+        }
+      },
       /**
        * Queries each active backend of the user for this.query then saves search results to this.searchResults.
        *
@@ -132,7 +143,9 @@
             continue;
           }
           const url = `http://${backend.connect.link}/general/?q=${
-              encodeURIComponent(this.escapeSolrControlCharacters(q))
+              encodeURIComponent(
+                  this.advancedSearch ? q : this.escapeSolrControlCharacters(q)
+              )
           }`;
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
           await axios
@@ -484,6 +497,11 @@
     padding-left: 10px;
     padding-top: 40px;
     padding-bottom: 40px;
+  }
+
+  #advanced_search_toggle {
+    padding-left: 15px;
+    min-width: 170px;
   }
 
   #divider_usage_message {
