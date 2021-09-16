@@ -99,6 +99,7 @@
         fullFileId: "",
         notDeleted: true,
         query: "",
+        searchResultsBuffer: [],
         searchResults: [],
         name: "Search",
         firstSearch: true,
@@ -138,6 +139,7 @@
        */
       async queryBackends(q) {
         this.firstSearch = false;
+        this.searchResultsBuffer = [];
         this.searchResults = [];
         for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
           if (!backend.local.active) {
@@ -167,6 +169,7 @@
                     })
               })
         }
+        this.searchResults = this.searchResultsBuffer;
         if (this.searchResults.length === 0) {
           this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
         }
@@ -200,7 +203,7 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResults = this.mergeLists(this.searchResults, results);
+        this.searchResultsBuffer = this.mergeLists(this.searchResultsBuffer, results);
       },
 
       /**
