@@ -16,6 +16,10 @@
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
+            <span id="advanced_search_toggle">
+              <checkbox v-model="advancedSearch" :binary="true" @click="reRunQuery"></checkbox>
+              Advanced Search
+            </span>
           </div>
         </div>
         <div class="search-results container">
@@ -52,6 +56,7 @@
   import SearchResultCard from "@/components/results/SearchResultCard";
   import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
   import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+  import {min} from "lodash/math";
 
   /**
    * @typedef {Object} MatchSnippet
@@ -91,6 +96,7 @@
 
     data() {
       return {
+        advancedSearch: false,
         iFrameLink: '',
         fullFileLineNumbers: [],
         currentLineNumber: -1,
@@ -98,6 +104,7 @@
         fullFileId: "",
         notDeleted: true,
         query: "",
+        searchResultsBuffer: [],
         searchResults: [],
         name: "Search",
         firstSearch: true,
@@ -119,6 +126,12 @@
     },
 
     methods: {
+      reRunQuery() {
+        if (this.query !== "") {
+          this.searchResults = [];
+          this.queryBackends(this.query)
+        }
+      },
       /**
        * Queries each active backend of the user for this.query then saves search results to this.searchResults.
        *
@@ -131,13 +144,16 @@
        */
       async queryBackends(q) {
         this.firstSearch = false;
+        this.searchResultsBuffer = [];
         this.searchResults = [];
         for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
           if (!backend.local.active) {
             continue;
           }
           const url = `http://${backend.connect.link}/general/?q=${
-              encodeURIComponent(this.escapeSolrControlCharacters(q))
+              encodeURIComponent(
+                  this.advancedSearch ? q : this.escapeSolrControlCharacters(q)
+              )
           }`;
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
           await axios
@@ -158,6 +174,7 @@
                     })
               })
         }
+        this.searchResults = this.searchResultsBuffer;
         if (this.searchResults.length === 0) {
           this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
         }
@@ -190,7 +207,24 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResults = this.searchResults.concat(results);
+        this.searchResultsBuffer = this.mergeLists(this.searchResultsBuffer, results);
+      },
+
+      /**
+       * @param {[]} a
+       * @param {[]} b
+       *
+       * @return {[]}
+       */
+      mergeLists(a, b) {
+        let newList = [];
+        for (let i = 0; i < min([a.length, b.length]); i++) {
+          newList.push(a.pop())
+          newList.push(b.pop())
+        }
+        newList = newList.concat(a);
+        newList = newList.concat(b);
+        return newList;
       },
 
       /**
@@ -498,6 +532,11 @@
     padding-left: 10px;
     padding-top: 40px;
     padding-bottom: 40px;
+  }
+
+  #advanced_search_toggle {
+    padding-left: 15px;
+    min-width: 170px;
   }
 
   #divider_usage_message {
