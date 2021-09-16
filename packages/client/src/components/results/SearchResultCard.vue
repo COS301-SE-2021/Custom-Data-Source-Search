@@ -121,7 +121,16 @@
        * @param {number} lineNumber
        */
       emitSnippetClicked(lineNumber) {
-        this.$emit('snippetClicked', this.link, this.type, this.id, this.backendId, lineNumber, this.lineNumbers)
+        this.$emit(
+            'snippetClicked',
+            this.link,
+            this.type,
+            this.id,
+            this.backendId,
+            lineNumber,
+            this.lineNumbers,
+            this.source
+        )
       },
 
       toggleNumSnippetsToShow() {

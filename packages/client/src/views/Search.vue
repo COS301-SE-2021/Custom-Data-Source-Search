@@ -24,17 +24,21 @@
               :key="i"
               :="r"
               @snippetClicked="goToLineFetchFileIfRequired"
+              @webSnippetClicked="openIframe"
           />
         </div>
       </SplitterPanel>
       <SplitterPanel :minSize="30" class="container">
-        <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
-        <div v-else class="next-prev">
-          <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
-          <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
-        </div>
-        <div class="file-container">
-          <div id="full_file" v-html="fullFileData">
+        <iframe v-if="iFrameLink !== ''" name="name_of_iframe" :src="iFrameLink"></iframe>
+        <div v-else>
+          <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
+          <div v-else class="next-prev">
+            <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
+            <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
+          </div>
+          <div class="file-container">
+            <div id="full_file" v-html="fullFileData">
+            </div>
           </div>
         </div>
       </SplitterPanel>
@@ -87,6 +91,7 @@
 
     data() {
       return {
+        iFrameLink: '',
         fullFileLineNumbers: [],
         currentLineNumber: -1,
         fullFileData: "",
@@ -213,7 +218,11 @@
        * @param {number} lineNumber line number of the result snippet the user has clicked on
        * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
        */
-      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers) {
+      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source) {
+        if (type === "webpage"){
+          this.openIframe(source);
+          return;
+        }
         if (this.fullFileId === id) {
           this.scrollFullFileLineIntoView(lineNumber);
           return;
@@ -240,6 +249,11 @@
                   .catch()
             });
         this.fullFileId = id;
+        this.iFrameLink = '';
+      },
+
+      openIframe(link) {
+        this.iFrameLink = link;
       },
 
       /**
@@ -489,5 +503,10 @@
   #divider_usage_message {
     color: #4d4d4d;
     padding-left: 10px;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
   }
 </style>
