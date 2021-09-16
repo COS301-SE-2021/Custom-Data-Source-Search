@@ -153,6 +153,11 @@ const store = createStore({
           .find(b => b.local.name === name).connect.link;
     },
 
+    getBackendIDViaName: (state,getters) => (name) => {
+      return getters.getUserBackends(getters.getSignedInUserId)
+          .find(b => b.local.name === name).local.id;
+    },
+
     getBackendJWTToken: (state, getters) => (id) => {
         return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
     },
