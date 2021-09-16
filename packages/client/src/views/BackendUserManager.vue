@@ -784,8 +784,11 @@
             acceptClass: "p-button-danger",
             rejectClass: "p-button-text p-button-plain",
             accept: () => {
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
+              };
               axios
-                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/logout`)
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/logout`, headers)
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -796,14 +799,32 @@
                     console.log(resp.data);
                     this.updateTableData();
                   })
-                  .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                    });
-                    console.log(error);
+                  .catch(async () => {
+                    await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+                    const headers = {
+                      "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
+                    };
+                    await axios
+                        .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/logout`, authHeaders)
+                        .then(resp => {
+                          this.$toast.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: "Logged All Users Out",
+                            life: 3000
+                          });
+                          console.log(resp.data);
+                          this.updateTableData();
+                        })
+                        .catch((error) => {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: error.response.data.message,
+                            life: 3000
+                          });
+                          console.log(error);
+                        })
                   })
             }
           })
@@ -820,10 +841,13 @@
               });
               let reqObj = {users: usersArr};
               let reqBody = JSON.stringify(reqObj);
-
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                "Content-Type": "application/json"
+              };
               axios
                   .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/logout`, reqBody,
-                      {headers: {"Content-Type": "application/json"}})
+                      {headers: headers})
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -834,14 +858,33 @@
                     console.log(resp.data);
                     this.updateTableData();
                   })
-                  .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                    });
-                    console.log(error);
+                  .catch(async () => {
+                    await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+                    const headers = {
+                      "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
+                    };
+                    await axios
+                        .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/logout`, reqBody,
+                            {headers: headers})
+                        .then(resp => {
+                          this.$toast.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: "Logged Users Out",
+                            life: 3000
+                          });
+                          console.log(resp.data);
+                          this.updateTableData();
+                        })
+                        .catch((error) => {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: error.response.data.message,
+                            life: 3000
+                          });
+                          console.log(error);
+                        })
                   })
             }
           })
@@ -856,8 +899,11 @@
             acceptClass: "p-button-danger",
             rejectClass: "p-button-text p-button-plain",
             accept: () => {
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
+              };
               axios
-                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/revoke`)
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/revoke`, {}, {headers: {headers}})
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -867,14 +913,31 @@
                     });
                     this.updateTableData();
                   })
-                  .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                    });
-                    console.log(error);
+                  .catch(async () => {
+                    await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+                    const headers = {
+                      "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
+                    };
+                    await axios
+                        .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/global/revoke`, {}, {headers: {headers}})
+                        .then(resp => {
+                          this.$toast.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: "Revoked All User Keys",
+                            life: 3000
+                          });
+                          this.updateTableData();
+                        })
+                        .catch((error) => {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: error.response.data.message,
+                            life: 3000
+                          });
+                          console.log(error);
+                        })
                   })
             }
           })
@@ -891,10 +954,13 @@
               });
               let reqObj = {users: usersArr};
               let reqBody = JSON.stringify(reqObj);
-
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                "Content-Type": "application/json"
+              };
               axios
                   .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/revoke`, reqBody,
-                      {headers: {"Content-Type": "application/json"}})
+                      {headers})
                   .then(resp => {
                     this.$toast.add({
                       severity: 'success',
@@ -904,14 +970,33 @@
                     });
                     this.updateTableData();
                   })
-                  .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data.message,
-                      life: 3000
-                    });
-                    console.log(error);
+                  .catch(async () => {
+                    await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+                    const headers = {
+                      "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                      "Content-Type": "application/json"
+                    };
+                    await axios
+                        .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/revoke`, reqBody,
+                            {headers})
+                        .then(resp => {
+                          this.$toast.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: "Revoked User Keys",
+                            life: 3000
+                          });
+                          this.updateTableData();
+                        })
+                        .catch((error) => {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: error.response.data.message,
+                            life: 3000
+                          });
+                          console.log(error);
+                        })
                   })
             }
           })
