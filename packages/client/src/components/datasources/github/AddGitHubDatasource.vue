@@ -1,49 +1,63 @@
 <template>
   <div>
-    <span>Enter your github username</span>
-    <InputText
-        id="name"
-        v-model="username"
-        placeholder="GitHub username.."
+    <Button
+        icon="pi pi-arrow-left"
+        class="p-button-lg p-button-rounded p-button-text back-button"
+        @click="$emit('back')"
     />
-    <span>Enter the target repo name</span>
-    <InputText
-        id="repo"
-        v-model="repo"
-        placeholder="Repo name..."
-    />
-    <span>Enter you access token</span>
-    <InputText
-        id="token"
-        v-model="token"
-        placeholder="Token..."
-    />
+  </div>
+  <ScrollPanel>
+    <div>
+      <span>Enter your github username</span>
+      <InputText
+          class="input-fields"
+          v-model="username"
+          placeholder="GitHub username.."
+      />
+    </div>
+    <div>
+      <span>Enter the target repo name</span>
+      <InputText
+          class="input-fields"
+          v-model="repo"
+          placeholder="Repo name..."
+      />
+    </div>
+    <div>
+      <span>Enter your access token</span>
+      <InputText
+          class="input-fields"
+          v-model="token"
+          placeholder="Token..."
+      />
+    </div>
     <div>
       <span>Add optional tags</span>
       <br/>
       <span class="p-float-label">
-          <InputText
-              id="tag1"
-              v-model="tag1"
-              type="text"
-          />
-          <label for="tag1">Tag 1</label>
-        </span>
+        <InputText
+            id="tag1"
+            v-model="tag1"
+            type="text"
+        />
+        <label for="tag1">Tag 1</label>
+      </span>
       <span class="p-float-label">
-          <InputText
-              id="tag2"
-              v-model="tag2"
-              type="text"
-          />
-          <label for="tag2">Tag 2</label>
-        </span>
+        <InputText
+            id="tag2"
+            v-model="tag2"
+            type="text"
+        />
+        <label for="tag2">Tag 2</label>
+      </span>
     </div>
     <Button
+        label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitWebpage"
     />
-  </div>
+  </ScrollPanel>
 </template>
 
 <script>
@@ -114,29 +128,67 @@ export default {
 </script>
 
 <style scoped>
-input {
-  font-size: 15px;
-  font-style: italic;
-  height: 5px;
-  background-color: #262626;
-}
+  input {
+    font-size: 15px;
+    font-style: italic;
+    height: 5px;
+    background-color: #262626;
+  }
 
-.p-inputtext:enabled:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
-}
+  .p-text-normal {
+    display: inline-flex;
+    padding-left: 15px;
+  }
 
-.p-button-rounded{
-  float: right;
-  margin: 7px;
-}
+  .p-button-sm {
+    vertical-align: middle;
+    margin-top: 30px;
+  }
 
-.p-float-label{
-  margin-top: 15px;
-}
-Input {
-  min-width: 100%;
-  margin-top: 5px;
-  margin-bottom: 15px;
-}
+  .p-inputtext:enabled:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3)
+  }
+
+  .p-button-text{
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .p-float-label{
+    margin-top: 15px;
+  }
+
+  .p-button-rounded{
+    float: right;
+    margin: 7px;
+  }
+
+  .p-inputtextarea{
+    margin-top: 15px;
+  }
+
+  .p-scrollpanel{
+    height: 55vh;
+    bottom: 2em;
+    padding-bottom: 1vh;
+    align-content: center;
+    margin-left: 15px;
+  }
+
+  .p-inputtextarea{
+    background: #262626;
+  }
+
+  .back-button{
+    float: left;
+    padding: 0;
+    margin: 0 0 10px;
+  }
+
+  .input-fields{
+    min-width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
 </style>
