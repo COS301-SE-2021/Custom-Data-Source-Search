@@ -1,5 +1,6 @@
 import express, {Request, Response} from "express";
 import gitHubDataSourceService from "../services/GitHubDataSource.service";
+import {authUser} from "../authentication/authentication";
 
 export const gitHubDataSourceRouter = express.Router();
 
@@ -22,7 +23,7 @@ gitHubDataSourceRouter.get("/:id", (req: Request, res: Response) => {
 /**
  * Add a GitHub data source
  */
-gitHubDataSourceRouter.post("/", async (req: Request, res: Response) => {
+gitHubDataSourceRouter.post("/", authUser("editor"), async (req: Request, res: Response) => {
     const result = await gitHubDataSourceService.addGitHubDataSource(req.body);
     res.status(result.code).send(result.body);
 });
@@ -30,7 +31,7 @@ gitHubDataSourceRouter.post("/", async (req: Request, res: Response) => {
 /**
  * Remove a GitHub data source by it's id
  */
-gitHubDataSourceRouter.delete("/", async (req: Request, res: Response) => {
+gitHubDataSourceRouter.delete("/", authUser("editor"), async (req: Request, res: Response) => {
     const result = await gitHubDataSourceService.removeGitHubDataSource(req.body.id);
     res.status(result.code).send(result.body);
 });
