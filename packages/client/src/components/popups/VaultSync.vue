@@ -253,7 +253,7 @@ export default {
                   const encryptedInfo = encryptJsonObject(masterKey, user);
 
                   const dataString = JSON.stringify(user);
-                  const dataFingerprint = createHash("md5").update(dataString).digest("hex");
+                  const dataFingerprint = createHash("sha256").update(dataString).digest("hex");
 
                   let reqObj = {
                     email: userInfo.email,

@@ -347,16 +347,11 @@
 
           //user_salt
           const userSalt = user.info.salt;
-
-          //const masterKey = await this.$store.commit("generateMasterKey", {password, userSalt});
-            const masterKey = generateMasterKey(password, userSalt);
-
-          //user_data,user_iv,user_authtag
-         // const encryptedInfo = await this.$store.commit("encryptJsonObject", {masterKey, user});
+          const masterKey = generateMasterKey(password, userSalt);
           const encryptedInfo = encryptJsonObject(masterKey, user);
 
           const dataString = JSON.stringify(user);
-          const dataFingerprint = createHash("md5").update(dataString).digest("hex");
+          const dataFingerprint = createHash("sha256").update(dataString).digest("hex");
 
           let reqObj = {
                   email: this.userDetails.masterEmail,
@@ -386,7 +381,7 @@
                   life: 2500
                 });
                 console.log(resp.data);
-                
+
               })
               .catch((error) => {
                 this.$toast.add({
