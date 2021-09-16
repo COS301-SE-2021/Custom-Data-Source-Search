@@ -419,7 +419,6 @@
 
     methods: {
       updateTableData() {
-        // let backendID = this.$store.getters.getBackendLink(this.backend);
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
         };
@@ -460,7 +459,6 @@
             })
       },
       addUsers() {
-        // let backendID = this.$store.getters.getBackendLink(this.backend);
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
           "Content-Type": "application/json"
@@ -524,6 +522,10 @@
             })
       },
       deleteUsers() {
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+          "Content-Type": "application/json"
+        };
         let usersArr = this.selectedUsers.map(function (a) {
           return {uuid: a.uuid};
         });
@@ -532,7 +534,7 @@
 
         axios
             .delete(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`,
-                {data: reqBody, headers: {"Content-Type": "application/json"}})
+                {data: reqBody, headers: headers})
             .then((resp) => {
               this.$toast.add({
                 severity: 'success',
@@ -542,14 +544,33 @@
               });
               this.updateTableData();
             })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response.data.message,
-                life: 3000
-              });
-              console.log(error);
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                "Content-Type": "application/json"
+              };
+              await axios
+                .delete(`http://${this.$store.getters.getBackendLink(this.backendID)}/users`,
+                    {data: reqBody, headers: headers})
+                .then((resp) => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: "Deleted Users",
+                    life: 3000
+                  });
+                  this.updateTableData();
+                })
+                .catch((error) => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data.message,
+                    life: 3000
+                  });
+                  console.log(error);
+                })
             })
       },
       changeUserRoles() {
@@ -570,10 +591,14 @@
           users: usersArr
         };
         let reqBody = JSON.stringify(reqObj);
-
+        console.log(this.$store.getters.getUserAdminStatus(this.backendID))
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+          "Content-Type": "application/json"
+        };
         axios
             .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/role`, reqBody,
-                {headers: {"Content-Type": "application/json"}})
+                {headers: headers})
             .then((resp) => {
               this.$toast.add({
                 severity: 'success',
@@ -583,14 +608,33 @@
               });
               this.updateTableData();
             })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response.data.message,
-                life: 3000
-              });
-              console.log(error);
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                "Content-Type": "application/json"
+              };
+              await axios
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/role`, reqBody,
+                      {headers: headers})
+                  .then((resp) => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Updated Roles",
+                      life: 3000
+                    });
+                    this.updateTableData();
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
             })
       },
       generateSelectedUserRegistrationKeys() {
@@ -599,10 +643,13 @@
         });
         let reqObj = {users: usersArr};
         let reqBody = JSON.stringify(reqObj);
-
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+          "Content-Type": "application/json"
+        };
         axios
             .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/registrationkey`, reqBody,
-                {headers: {"Content-Type": "application/json"}})
+                {headers: headers})
             .then((resp) => {
               this.$toast.add({
                 severity: 'success',
@@ -610,18 +657,37 @@
                 detail: "Generated Registration Keys",
                 life: 3000
               });
-
               console.log(resp.data);
               this.updateTableData();
-
-            }).catch((error) => {
-          this.$toast.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.response.data.message,
-            life: 3000
-          });
-          console.log(error);
+            })
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                "Content-Type": "application/json"
+              };
+              await axios
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/registrationkey`, reqBody,
+                      {headers: headers})
+                  .then((resp) => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Generated Registration Keys",
+                      life: 3000
+                    });
+                    console.log(resp.data);
+                    this.updateTableData();
+                  })
+                  .catch((error) =>{
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
         })
 
       },
@@ -631,10 +697,13 @@
         });
         let reqObj = {users: usersArr};
         let reqBody = JSON.stringify(reqObj);
-
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+          "Content-Type": "application/json"
+        };
         axios
             .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/email`, reqBody,
-                {headers: {"Content-Type": "application/json"}})
+                {headers: headers})
             .then((resp) => {
               this.$toast.add({
                 severity: 'success',
@@ -645,14 +714,34 @@
               console.log(resp.data);
               this.updateTableData();
             })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.response.data.message,
-                life: 3000
-              });
-              console.log(error);
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: this.backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
+                "Content-Type": "application/json"
+              };
+              await axios
+                  .post(`http://${this.$store.getters.getBackendLink(this.backendID)}/users/email`, reqBody,
+                      {headers: headers})
+                  .then((resp) => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: "Mailed Users",
+                      life: 3000
+                    });
+                    console.log(resp.data);
+                    this.updateTableData();
+                  })
+                  .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                    console.log(error);
+                  })
             })
       },
       /*
