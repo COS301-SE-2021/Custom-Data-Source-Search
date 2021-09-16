@@ -1,5 +1,6 @@
 <template>
   <div class="registration-grid">
+    <Toast position="bottom-right"/>
     <div>
       <div style="margin-top: 10%;">
         <Button
@@ -288,7 +289,7 @@
                           this.$toast.add({
                             severity: 'error',
                             summary: 'Error',
-                            detail: error,
+                            detail: error.response.data,
                             life: 3000
                           });
                           console.log(error);
@@ -309,7 +310,7 @@
               this.$toast.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: error.response.data,
+                detail: 'Could not find user',
                 life: 3000
               });
               console.log(error);
@@ -382,10 +383,10 @@
                   severity: 'success',
                   summary: 'Success',
                   detail: "User Added to Vault",
-                  life: 3000
+                  life: 2500
                 });
                 console.log(resp.data);
-                this.updateTableData();
+                
               })
               .catch((error) => {
                 this.$toast.add({

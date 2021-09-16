@@ -155,12 +155,18 @@ export default {
                           userData : unencryptedUserData
                         }
                         this.$store.commit('setUserDetails', payload);
+                        this.$toast.add({
+                          severity: 'success',
+                          summary: 'Success',
+                          detail: "Successfully Pulled From Vault",
+                          life: 2500
+                        });
                       })
                       .catch((error) => {
                         this.$toast.add({
                           severity: 'error',
                           summary: 'Error',
-                          detail: error,
+                          detail: error.response.data,
                           life: 3000
                         });
                         console.log(error);
@@ -273,12 +279,18 @@ export default {
                       {headers: {"Content-Type": "application/json"}})
                       .then((resp) => {
                         console.log(resp.data.data);
+                        this.$toast.add({
+                          severity: 'success',
+                          summary: 'Success',
+                          detail: "Successfully Pushed To Vault",
+                          life: 2500
+                        });
                       })
                       .catch((error) => {
                         this.$toast.add({
                           severity: 'error',
                           summary: 'Error',
-                          detail: error,
+                          detail: error.response.data,
                           life: 3000
                         });
                         console.log(error);
@@ -289,7 +301,7 @@ export default {
                   this.$toast.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: error,
+                    detail: error.response.data,
                     life: 3000
                   });
                   console.log(error);

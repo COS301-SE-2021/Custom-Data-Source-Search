@@ -69,7 +69,7 @@
           </CustomTooltip>
         </div>
         <ReEnterMasterPassword
-            :show="displayPasswordDialog"
+            :show="displayVaultDialog"
             :unconnected-backend-icon="true"
             :header="'Enter Master Password'"
             :body="'Continue Sleuthin\' all your favourite backends!'"
@@ -113,9 +113,14 @@
   import {mapGetters} from "vuex";
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
   import CustomTooltip from "./components/primeComponents/CustomTooltip";
+  import axios from "axios";
+  import {createHash} from "crypto";
+  import VaultSync from "@/components/popups/VaultSync";
+  import {encryptJsonObject, generateMasterKey} from "@/store/Store";
 
   export default {
   components: {
+    VaultSync,
     CustomTooltip,
     ReEnterMasterPassword,
     OverlayPanel,
@@ -128,6 +133,7 @@
       displayPasswordDialog: false,
       displayVaultDialog: false,
       sync: false,
+      displayVaultSync: false,
       activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
       activePageNum: null,
       adminStatus: false
@@ -142,19 +148,57 @@
             'unconnectedBackendNames',
             'unconnectedBackendBool',
             'unconnectedBackendNo',
-            'getIsUserAdmin'
+            'getIsUserAdmin',
+          'getSignedIn',
+          'getUser',
+          'getMasterKey'
         ])
     },
 
     beforeCreate() {
         this.$store.commit('initialiseStore');
     },
+    mounted() {
+      this.interval = setInterval(() => this.checkSyncStatus(), 25000);
+    },
 
     methods: {
       showJWTObject() {
         console.log("Is user an admin?" + this.$store.getters.getIsUserAdmin());
       },
+      checkSyncStatus(){
+        if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
+          console.log("Checking Sync Status");
+          const user = this.getUser(this.getSignedInUserId);
 
+          const dataString = JSON.stringify(user);
+          const dataFingerprint = createHash("md5").update(dataString).digest("hex");
+
+          let reqObj = {
+            email: user.info.email,
+            fingerprint: dataFingerprint
+          }
+
+          console.log("requestObject" + JSON.stringify(reqObj));
+          axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                console.log("Out Of Sync: " +resp.data.isOutOfSync);
+
+                if(resp.data.isOutOfSync){
+                  this.showOutOfSync();
+                }else {
+                  this.hideOutOfSync();
+                }
+
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+
+        }
+
+      },
       showAskMasterPw(){
         if(this.$store.getters.getMasterKey === null){
           this.showPasswordDialog();
@@ -170,16 +214,21 @@
       },
 
       showVaultSyncDialog(){
-        this.displayVaultDialog = !this.displayVaultDialog
+        this.displayVaultSync = !this.displayVaultSync;
       },
 
       toggleSync(){
         this.sync = !this.sync;
       },
-
+      showOutOfSync(){
+        this.sync = true;
+      },
+      hideOutOfSync() {
+        this.sync = false;
+      },
       closeDialog(){
         this.displayPasswordDialog = false;
-        this.displayVaultDialog = false;
+        this.displayVaultSync = false;
       }
     }
   }
@@ -366,129 +415,3 @@
   }
 </style>
 
-<script>
-  import OverlayPanel from 'primevue/overlaypanel';
-    import ProfileDropdown from "@/components/landing/ProfileDropdown";
-    import {mapGetters} from "vuex";
-    import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
-    import CustomTooltip from "./components/primeComponents/CustomTooltip";
-    import axios from "axios";
-    import {createHash} from "crypto";
-    import VaultSync from "@/components/popups/VaultSync";
-    import {encryptJsonObject, generateMasterKey} from "@/store/Store";
-
-  export default {
-  components: {
-    VaultSync,
-    CustomTooltip,
-    ReEnterMasterPassword,
-    OverlayPanel,
-    ProfileDropdown,
-    // Button
-  },
-
-  data() {
-    return {
-      name: "Data Sleuth",
-      displayPasswordDialog: false,
-      displayVaultDialog: false,
-      //New version testing
-      displayVaultSync: false,
-      sync: false,
-    }
-  },
-
-    computed: {
-        ...mapGetters ([
-            'getUserInfo',
-            'getUserBackends',
-            'getSignedInUserId',
-            'unconnectedBackendNames',
-            'unconnectedBackendBool',
-            'unconnectedBackendNo',
-            'getSignedIn',
-            'getUser',
-            'getMasterKey'
-        ])
-    },
-
-    beforeCreate() {
-        this.$store.commit('initialiseStore');
-    },
-    mounted() {
-      this.interval = setInterval(() => this.checkSyncStatus(), 25000);
-    },
-
-      methods: {
-      checkSyncStatus(){
-        if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
-          console.log("Checking Sync Status");
-          const user = this.getUser(this.getSignedInUserId);
-
-          const dataString = JSON.stringify(user);
-          const dataFingerprint = createHash("md5").update(dataString).digest("hex");
-
-          let reqObj = {
-                  email: user.info.email,
-                  fingerprint: dataFingerprint
-          }
-
-          console.log("requestObject" + JSON.stringify(reqObj));
-          axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
-              {headers: {"Content-Type": "application/json"}})
-              .then((resp) => {
-                console.log("Out Of Sync: " +resp.data.isOutOfSync);
-
-                if(resp.data.isOutOfSync){
-                  this.showOutOfSync();
-                }else {
-                  this.hideOutOfSync();
-                }
-
-              })
-              .catch((error) => {
-                console.log(error);
-              })
-
-        }
-
-      },
-      showAskMasterPw(){
-        if(this.$store.getters.getMasterKey === null){
-          this.showPasswordDialog();
-        }
-        else{
-          if (this.$store.getters.unconnectedBackendBool) {
-            console.log("Error in credentials");
-            console.log(JSON.stringify(this.$store.getters.getMasterKey));
-          }
-        }
-      },
-
-      toggle(event){
-        this.$refs.op.toggle(event);
-      },
-
-      showPasswordDialog(){
-        this.displayPasswordDialog = !this.displayPasswordDialog;
-      },
-
-      showVaultSyncDialog(){
-        console.log("It does execute");
-        this.displayVaultSync = !this.displayVaultSync;
-      },
-
-      toggleSync(){
-        this.sync = !this.sync;
-      },
-      showOutOfSync(){
-        this.sync = true;
-      },
-      hideOutOfSync(){
-        this.sync = false;
-      },
-      closeDialog(){
-        this.displayPasswordDialog = false;
-        this.displayVaultSync = false;
-      }
-    }
