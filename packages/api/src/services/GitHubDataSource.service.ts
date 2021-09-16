@@ -149,7 +149,7 @@ class GitHubDataSourceService {
             if (filePath.indexOf(".") === -1 || filePath.indexOf(".git") !== -1) {
                 return;
             }
-            files.push(path + "\\" + filePath);
+            files.push(path + filePath);
         })
         return files;
     }
