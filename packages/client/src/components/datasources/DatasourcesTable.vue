@@ -24,6 +24,7 @@
     >
       <template #header>
         <div class="p-d-flex p-jc-end">
+          <i class="pi pi-refresh" aria-hidden="true" @click="updateSources"/>
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
@@ -319,10 +320,6 @@
       productService: null,
 
       methods: {
-        toggleMenu(event) {
-          this.$refs.menu.toggle(event);
-        },
-
         /**
          * Toggles the visibility of the overlay panel
          * @param event
@@ -423,10 +420,18 @@
             accept: () => {
               let source;
               for (source in this.selectedSources) {
+                let backendID = this.$store.getters.getBackendIDViaName(this.selectedSources[source].backend);
                 const url = `http://${this.selectedSources[source].link}/general/datasources`;
                 console.log(url);
+                console.log(this.selectedSources[source].backend)
+                const authHeaders = {
+                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                };
                 axios
                     .delete(url, {
+                      "headers": {
+                        authHeaders
+                      },
                       "data": {
                         "type": this.selectedSources[source].type,
                         "id": this.selectedSources[source].id
@@ -440,13 +445,37 @@
                         life: 2000
                       });
                     })
-                    .catch(() => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: "Could not delete source",
-                        life: 3000
-                      });
+                    .catch(async () => {
+                      await this.$store.dispatch("refreshJWTToken", {id: backendID});
+                      const headers = {
+                        "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                      };
+                      await axios
+                       .delete(url, {
+                         "headers": {
+                           authHeaders
+                         },
+                         "data": {
+                           "type": this.selectedSources[source].type,
+                           "id": this.selectedSources[source].id
+                         }
+                       })
+                          .then(() => {
+                            this.$toast.add({
+                              severity: 'success',
+                              summary: 'Deleted',
+                              detail: "Source deleted",
+                              life: 2000
+                            });
+                          })
+                      .catch((error) => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error.response.data.message,
+                          life: 3000
+                        });
+                      })
                     })
               }
               this.selectedSources = [];
@@ -502,6 +531,14 @@
 
   .data-table{
    bottom: 4em;
+  }
+
+  .pi-refresh{
+    color: #41B3B2;
+  }
+
+  .pi-refresh:hover{
+    cursor: pointer;
   }
 
   #add-datasource-button{
