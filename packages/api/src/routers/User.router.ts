@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 import userService from "../services/User.service";
 import {check} from "express-validator";
+import {authUser} from "../authentication/authentication";
 
 export const userRouter = express.Router();
 
@@ -33,7 +34,7 @@ userRouter.post("/", [check('users').isArray().custom((users: any) => {
             }
         }
     }
-})], (req: Request, res: Response) => {
+})], authUser("admin"),  (req: Request, res: Response) => {
     const result = userService.addUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -41,7 +42,7 @@ userRouter.post("/", [check('users').isArray().custom((users: any) => {
 /**
  * Delete users from the system
  */
-userRouter.delete("/", (req: Request, res: Response) => {
+userRouter.delete("/", authUser("super"), (req: Request, res: Response) => {
     const result = userService.removeUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -49,7 +50,7 @@ userRouter.delete("/", (req: Request, res: Response) => {
 /**
  * Set the role for users in the system
  */
-userRouter.post("/role", (req: Request, res: Response) => {
+userRouter.post("/role", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.setRole(req.body);
     res.status(result.code).send(result.body);
 });
@@ -57,7 +58,7 @@ userRouter.post("/role", (req: Request, res: Response) => {
 /**
  * Logout specified users from using the system
  */
-userRouter.post("/logout", (req: Request, res: Response) => {
+userRouter.post("/logout", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.logoutUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -65,7 +66,7 @@ userRouter.post("/logout", (req: Request, res: Response) => {
 /**
  * Revoke access to the system for specified users
  */
-userRouter.post("/revoke", (req: Request, res: Response) => {
+userRouter.post("/revoke", authUser("super"), (req: Request, res: Response) => {
     const result = userService.revokeUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -73,7 +74,7 @@ userRouter.post("/revoke", (req: Request, res: Response) => {
 /**
  * Logout all users from the system
  */
-userRouter.post("/global/logout", (req: Request, res: Response) => {
+userRouter.post("/global/logout", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.logoutAllUsers();
     res.status(result.code).send(result.body);
 });
@@ -81,7 +82,7 @@ userRouter.post("/global/logout", (req: Request, res: Response) => {
 /**
  * Revoke access for all users
  */
-userRouter.post("/global/revoke", (req: Request, res: Response) => {
+userRouter.post("/global/revoke", authUser("super"), (req: Request, res: Response) => {
     const result = userService.revokeAllUsers();
     res.status(result.code).send(result.body);
 });
@@ -105,7 +106,7 @@ userRouter.post("/login", (req: Request, res: Response) => {
 /**
  * Generate registration keys for specified users
  */
-userRouter.post("/registrationkey", (req: Request, res: Response) => {
+userRouter.post("/registrationkey", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.generateRegistrationKey(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -113,7 +114,7 @@ userRouter.post("/registrationkey", (req: Request, res: Response) => {
 /**
  * Send registration keys via email to specified users
  */
-userRouter.post("/email", (req: Request, res: Response) => {
+userRouter.post("/email", authUser("admin"), (req: Request, res: Response) => {
     const result = userService.sendEncodedRegistrationKeyToUser(req.body.users);
     res.status(result.code).send(result.body);
 });
