@@ -273,54 +273,46 @@ const store = createStore({
     },
 
 
-    /**
-     * @param state
-     * @param {{
-     *      name: string,
-     *      associatedEmail: string,
-     *      link: string,
-     *      secretPair: Object,
-     *      refreshToken: string
-     *  }} payload
-     */
-    addBackend(state, payload) {
-      let newBackend = {
-        local: {
-          id: null,
-          name: '',
-          active: true,
-          color: '#41D6C5'
+        /**
+         * @param state
+         * @param {{
+         *      name: string,
+         *      associatedEmail: string,
+         *      link: string,
+         *      secretPair: Object,
+         *      refreshToken: string
+         *  }} payload
+         */
+        addBackend(state, payload){
+            let newBackend = {
+                local: {
+                    id: null,
+                    name: payload.name,
+                    active: true,
+                    color: '#41D6C5'
+                },
+                connect: {
+                    associatedEmail: payload.associatedEmail,
+                    link: payload.link,
+                    needsLogin: false,
+                    keys: {
+                        encryptedSecretPair: payload.secretPair,
+                        jwtToken: null,
+                        refreshToken: payload.refreshToken
+                    }
+                },
+                receive: {
+                    admin: null,
+                    connected: false
+                }
+            };
+            state.users[state.signedInUserId].backends.push(newBackend);
+            state.signedIn = true;
+            let l = state.users[state.signedInUserId].backends.length;
+            for(let x = 0; x < l; x++) {
+                state.users[state.signedInUserId].backends[x].local.id = x;
+            }
         },
-        connect: {
-          associatedEmail: '',
-          link: '',
-          needsLogin: false,
-          keys: {
-            encryptedSecretPair: null,
-            jwtToken: null,
-            refreshToken: null
-          }
-        },
-        receive: {
-          admin: null,
-          connected: false
-        }
-      };
-      // Local
-      newBackend.local.name = payload.name;
-      // Connect
-      newBackend.connect.associatedEmail = payload.associatedEmail;
-      newBackend.connect.link = payload.link;
-      newBackend.connect.keys.encryptedSecretPair = payload.secretPair;
-      newBackend.connect.keys.refreshToken = payload.refreshToken;
-      //
-      state.users[state.signedInUserId].backends.push(newBackend);
-      state.signedIn = true;
-      let l = state.users[state.signedInUserId].backends.length;
-      for (let x = 0; x < l; x++) {
-        state.users[state.signedInUserId].backends[x].local.id = x;
-      }
-    },
 
     deleteBackend(state, payload) {
       state.users[state.signedInUserId].backends.splice(payload, 1);

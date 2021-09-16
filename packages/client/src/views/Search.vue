@@ -16,6 +16,10 @@
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
+            <span id="advanced_search_toggle">
+              <checkbox v-model="advancedSearch" :binary="true" @click="reRunQuery"></checkbox>
+              Advanced Search
+            </span>
           </div>
         </div>
         <div class="search-results container">
@@ -48,6 +52,7 @@
   import SearchResultCard from "@/components/results/SearchResultCard";
   import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
   import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
+  import {min} from "lodash/math";
 
   /**
    * @typedef {Object} MatchSnippet
@@ -87,6 +92,7 @@
 
     data() {
       return {
+        advancedSearch: false,
         fullFileLineNumbers: [],
         currentLineNumber: -1,
         fullFileData: "",
@@ -114,6 +120,12 @@
     },
 
     methods: {
+      reRunQuery() {
+        if (this.query !== "") {
+          this.searchResults = [];
+          this.queryBackends(this.query)
+        }
+      },
       /**
        * Queries each active backend of the user for this.query then saves search results to this.searchResults.
        *
@@ -132,7 +144,9 @@
             continue;
           }
           const url = `http://${backend.connect.link}/general/?q=${
-              encodeURIComponent(this.escapeSolrControlCharacters(q))
+              encodeURIComponent(
+                  this.advancedSearch ? q : this.escapeSolrControlCharacters(q)
+              )
           }`;
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
           await axios
@@ -175,6 +189,7 @@
        * @param backend backend info from store
        */
       augmentAndSaveSearchResults(results, backend) {
+        console.log("augment!");
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -185,7 +200,24 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResults = this.searchResults.concat(results);
+        this.searchResults = this.mergeLists(this.searchResults, results);
+      },
+
+      /**
+       * @param {[]} a
+       * @param {[]} b
+       *
+       * @return {[]}
+       */
+      mergeLists(a, b) {
+        let newList = [];
+        for (let i = 0; i < min([a.length, b.length]); i++) {
+          newList.push(a.pop())
+          newList.push(b.pop())
+        }
+        newList = newList.concat(a);
+        newList = newList.concat(b);
+        return newList;
       },
 
       /**
@@ -484,6 +516,11 @@
     padding-left: 10px;
     padding-top: 40px;
     padding-bottom: 40px;
+  }
+
+  #advanced_search_toggle {
+    padding-left: 15px;
+    min-width: 170px;
   }
 
   #divider_usage_message {

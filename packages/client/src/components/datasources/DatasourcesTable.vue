@@ -314,8 +314,6 @@
             life: 3000
           });
         }
-        this.user = this.$store.getters.getBackendJWTToken(this.$store.getters.getSignedInUserId)
-        console.log(this.user)
       },
 
       productService: null,
