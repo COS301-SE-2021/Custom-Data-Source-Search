@@ -158,6 +158,8 @@ const store = createStore({
     },
 
     getBackendLink: (state, getters) => (id) => {
+      console.log(JSON.stringify(id));
+      console.log(JSON.stringify(getters.getSignedInUserBackend(id)));
       return getters.getSignedInUserBackend(id).connect.link;
     },
 
