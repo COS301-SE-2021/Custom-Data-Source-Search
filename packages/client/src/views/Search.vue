@@ -544,8 +544,15 @@
     padding-left: 10px;
   }
 
+  #iframeDeadZone {
+    pointer-events: none;
+    width: 30px;
+    height: 100vh;
+  }
+
   iframe {
     width: 100%;
-    height: 100%;
+    height: 100vh;
   }
+
 </style>
