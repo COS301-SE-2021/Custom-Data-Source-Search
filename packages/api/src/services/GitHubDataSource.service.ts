@@ -41,7 +41,7 @@ class GitHubDataSourceService {
 
     async addGitHubDataSource(dataSource: GitHubDataSource): Promise<DefaultHttpResponse> {
         const fs = require('fs');
-        if (!await GitHubDataSourceService.repoExists(dataSource.repo)) {
+        if (!await GitHubDataSourceService.repoExists(dataSource.repo, dataSource.token)) {
             return generateDefaultHttpResponse(statusMessage(404, "Repo not found"));
         }
         const repoUUID: string = generateUUID();
@@ -75,7 +75,12 @@ class GitHubDataSourceService {
         try {
             response = await axios.get(
                 "https://github.com/" + dataSource.repo + "/archive/refs/heads/" + branchName + ".zip",
-                {responseType: 'stream'}
+                {
+                    responseType: 'stream',
+                    headers: {
+                        Authorization: "token " + dataSource.token
+                    }
+                }
             );
             response.data.pipe(file);
             await new Promise(fulfill => file.on("finish", fulfill));
@@ -168,8 +173,14 @@ class GitHubDataSourceService {
         return results;
     }
 
-    private static async repoExists(repo: string) {
-        return axios.get("https://api.github.com/repos/" + repo)
+    private static async repoExists(repo: string, token: string) {
+        return axios.get(
+            "https://api.github.com/repos/" + repo,
+            {
+                headers: {
+                    Authorization: "token " + token
+                }
+            })
             .then(() => {
                 return true;
             })
