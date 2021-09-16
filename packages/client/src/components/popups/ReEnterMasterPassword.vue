@@ -35,9 +35,9 @@
 </template>
 
 <script>
-    import PasswordInputField from "../primeComponents/PasswordInputField";
+  import PasswordInputField from "../primeComponents/PasswordInputField";
 
-    export default {
+  export default {
         name: "ReEnterMasterPassword",
 
         components: {PasswordInputField},
@@ -75,10 +75,8 @@
             updateBackendLogin () {
                 this.storeThisUser();
                 for (let backend of this.$store.getters.unconnectedBackendObjects) {
-                    console.log(JSON.stringify(backend))
                     this.$store.dispatch('backendLogin', backend.local);
                 }
-                console.log(this.$store.getters.unconnectedBackendBool);
             },
             storeAUser() {
                 if (this.masterPass === null) {

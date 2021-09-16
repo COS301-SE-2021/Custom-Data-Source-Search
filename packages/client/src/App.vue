@@ -147,10 +147,6 @@
     },
 
     methods: {
-      showJWTObject() {
-        console.log("Is user an admin?" + this.$store.getters.getIsUserAdmin());
-      },
-
       showAskMasterPw(){
         if(this.$store.getters.getMasterKey === null){
           this.showPasswordDialog();
