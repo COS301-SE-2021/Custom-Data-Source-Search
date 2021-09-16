@@ -18,10 +18,6 @@ generalRouter.get("/",async (req: Request, res: Response) => {
     res.status(400).send({result : "Success"});
 });
 
-generalRouter.get("/test/:id",async (req: Request, res: Response) => {
-     const result =  generalService.test(req.params.id);
-     res.status(result.code).send(result.body);
-});
 
 generalRouter.post("/register",async (req: Request, res: Response) => {
     const result = await registrationService.register(req.body)

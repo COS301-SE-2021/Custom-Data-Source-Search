@@ -1,12 +1,4 @@
 class GeneralService {
-    test(id: String){
-        return {
-            code : 200,
-            body : {
-                message : id
-            }
-        }
-    }
 
 }
 
