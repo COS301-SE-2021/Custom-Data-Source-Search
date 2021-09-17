@@ -143,7 +143,7 @@
       <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;">
         <template #body="{data}">
           <Checkbox
-              v-if="datasourceAdminStatus(data.backend)"
+              v-if="datasourceAdminStatus(data.backend)!=='viewer'"
               :key="data.id"
               v-model="selectedSources"
               name="source"
@@ -385,10 +385,11 @@
          * @returns {boolean|*} - returns a boolean indicating whether a user has admin privileges (true) or not (false)
          */
         datasourceAdminStatus(source) {
+          let backendID = this.$store.getters.getBackendIDViaName(source);
           if (source === "Local") {
             return true;
           } else {
-            return this.$store.getters.getBackendAdminStatus(source);
+            return this.$store.getters.getUserAdminStatus(backendID);
           }
         },
 
