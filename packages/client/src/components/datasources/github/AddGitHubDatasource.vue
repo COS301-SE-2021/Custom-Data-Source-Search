@@ -70,16 +70,20 @@ export default {
   methods: {
     submitWebpage() {
       if(this.repo!==""){
+        let backendID = this.$store.getters.getBackendIDViaName(this.backend);
         let respObject = {
           "repo": this.username + "/" + this.repo,
           "token": this.token,
           "tag1": this.tag1,
           "tag2": this.tag2
         };
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+        };
         axios
             .post(
                 `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/githubdatasources`,
-                respObject
+                respObject, {headers}
             )
             .then(resp => {
               this.$toast.add({
@@ -91,13 +95,34 @@ export default {
               this.$emit('addWebpage');
               this.$emit("submitted");
             })
-            .catch(() => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Could Not Add GitHub Repo.',
-                life: 3000
-              });
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+              };
+              await axios
+                  .post(
+                      `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/githubdatasources`,
+                      respObject, {headers}
+                  )
+                  .then(resp => {
+                    this.$toast.add({
+                      severity: 'success',
+                      summary: 'Success',
+                      detail: resp.data.message,
+                      life: 3000
+                    });
+                    this.$emit('addWebpage');
+                    this.$emit("submitted");
+                  })
+                  .catch(() =>{
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: 'Could Not Add GitHub Repo.',
+                      life: 3000
+                    });
+                  })
             })
       }
       else{

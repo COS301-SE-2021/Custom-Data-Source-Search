@@ -30,8 +30,10 @@
             title="Admin"
             to="/admin"
             id="AdminIcon"
+            v-if="getIsUserAdmin"
             class="pi pi-sitemap"
             style="font-size:1.5rem"
+            @click="showJWTObject"
           />
         <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
@@ -123,7 +125,8 @@
       displayVaultDialog: false,
       sync: false,
       activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
-      activePageNum: null
+      activePageNum: null,
+      adminStatus: false
     }
   },
 
@@ -134,7 +137,8 @@
             'getSignedInUserId',
             'unconnectedBackendNames',
             'unconnectedBackendBool',
-            'unconnectedBackendNo'
+            'unconnectedBackendNo',
+            'getIsUserAdmin'
         ])
     },
 
