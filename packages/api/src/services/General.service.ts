@@ -342,6 +342,8 @@ class GeneralService {
                 return await folderDataSourceService.removeFolderDataSource(id);
             case "webpage":
                 return webPageDataSourceService.removeWebPageDataSource(id);
+            case "github":
+                return gitHubDataSourceService.removeGitHubDataSource(id);
             default:
                 return {
                     "code": 400,
