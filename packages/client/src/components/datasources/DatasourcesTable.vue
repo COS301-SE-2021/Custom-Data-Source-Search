@@ -69,13 +69,23 @@
               <div class="overlay-header">
                 <span>Which backend would you like to add to?</span>
               </div>
-              <div class="overlay-buttons">
+              <div class="overlay-buttons" v-for="i in backends">
                 <Button
-                    v-for="i in backends"
+                    v-if="datasourceAdminStatus(i)!=='viewer'"
                     :key="i.id"
                     label="Backend"
                     class="button p-button-raised p-button-text p-button-plain"
                     @click="backend= i"
+                >
+                  {{ i }}
+                </Button>
+                <Button
+                    v-else
+                    :key="i.id"
+                    label="Backend"
+                    class="button p-button-raised p-button-text p-button-plain disabled_backend_button"
+                    @click="backend= i"
+                    disabled="disabled"
                 >
                   {{ i }}
                 </Button>
@@ -572,6 +582,14 @@
     -ms-animation: fadeIn 1s;
   }
 
+  .disabled_backend_button:hover{
+    cursor: not-allowed;
+  }
+
+  .overlay-buttons{
+    display: inline-block;
+  }
+  
   @keyframes fadeIn {
     0% {
       opacity: 0;
