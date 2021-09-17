@@ -26,8 +26,8 @@ class AuthenticationService {
                     message: err
                 }
             } else {
-                console.log("uploaded fingerprint" + body.fingerprint);
-                console.log("db fingerprint" + data.rows[0].fingerprint.replace(/-/g, ""));
+                console.log("uploaded fingerprint: " + body.fingerprint);
+                console.log("db fingerprint: " + data.rows[0].fingerprint.replace(/-/g, ""));
                 if(body.fingerprint === data.rows[0].fingerprint.replace(/-/g, "")){
                     return {
                         code: 200,

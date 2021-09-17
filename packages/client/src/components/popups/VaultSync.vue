@@ -253,14 +253,17 @@ export default {
                   const encryptedInfo = encryptJsonObject(masterKey, user);
 
                   const dataString = JSON.stringify(user);
-                  //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+                  const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+                 /*
                   const dataFingerprint = pbkdf2Sync(
                       dataString,
                       userSalt,
                       10000,
-                      64,
+                      32,
                       'sha256'
                   ).toString('hex');
+
+                  */
 
                   let reqObj = {
                     email: userInfo.email,

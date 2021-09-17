@@ -8,6 +8,7 @@ import vaultRepository from "../repository/Vault.Repository";
 class RegistrationService {
 
     async register(body: SRPRegistrationRequest): Promise<SRPRegistrationResponse> {
+        console.log("Registering User");
         if(this.detailsAreValid(body)){
             const [data, err] = await vaultRepository.addUser(body);
 
