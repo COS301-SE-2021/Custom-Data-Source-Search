@@ -7,6 +7,7 @@ import webPageDataSourceRepository from "../repositories/WebPageDataSourceReposi
 import folderDataSourceService from "./FolderDataSource.service";
 import webPageDataSourceService from "./WebPageDataSource.service";
 import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
+import gitHubDataSourceService from "./GitHubDataSource.service";
 
 class GeneralService {
 
@@ -319,6 +320,8 @@ class GeneralService {
                 return await folderDataSourceService.removeFolderDataSource(id);
             case "webpage":
                 return webPageDataSourceService.removeWebPageDataSource(id);
+            case "github":
+                return gitHubDataSourceService.removeGitHubDataSource(id);
             default:
                 return {
                     "code": 400,
