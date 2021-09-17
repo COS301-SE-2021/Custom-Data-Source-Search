@@ -322,6 +322,17 @@
         console.log(this.sources.length)
       },
 
+      after(){
+        if (this.sources.length === 0) {
+          this.$toast.add({
+            severity: 'warn',
+            summary: 'No sources',
+            detail: "Try adding data sources",
+            life: 3000
+          });
+        }
+      },
+
       productService: null,
 
       methods: {
