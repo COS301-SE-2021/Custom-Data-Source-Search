@@ -7,7 +7,7 @@ export const fileDataSourceRouter = express.Router();
 /**
  * Return the file names and paths of all File Data Sources
  */
-fileDataSourceRouter.get("/", authUser("viewer"), (req: Request, res: Response) => {
+fileDataSourceRouter.get("/", (req: Request, res: Response) => {
     const result = fileDataSourceService.getAllFileDataSources();
     res.status(result.code).send(result.body);
 });
@@ -15,7 +15,7 @@ fileDataSourceRouter.get("/", authUser("viewer"), (req: Request, res: Response) 
 /**
  * Return the file names and paths of a single File Data Source
  */
-fileDataSourceRouter.get("/:id", authUser("viewer"), (req: Request, res: Response) => {
+fileDataSourceRouter.get("/:id", (req: Request, res: Response) => {
     const result = fileDataSourceService.getFileDataSource(req.params.id);
     res.status(result.code).send(result.body);
 });

@@ -131,17 +131,13 @@ class GeneralService {
                                     folderOccurrences.push({
                                         "line_number": fileDataSourceService
                                             .getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": folderDataSourceService.getSearchSnippet(occurrence, key)
+                                        "snippet": webPageDataSourceService.getSearchSnippet(occurrence)
                                     });
-                                }
-                                let [folderFile, folderFileErr] = folderDataSourceRepository.getFileInFolder(key);
-                                if (folderFileErr) {
-                                    continue;
                                 }
                                 result.push({
                                     "id": key,
                                     "type": currentObject["datasource_type"],
-                                    "source": folderFile["file_path"],
+                                    "source": folderDataSource["path"],
                                     "datasource_name": folderDataSource["folder_name"],
                                     "datasource_icon": "<svg height=\"24\" width=\"24\" fill=\"#f1c40f\" viewBox=\"0 " +
                                         "0 24 24\"><path d=\"M0 0h24v24H0V0z\" fill=\"none\"></path><path d=\"M9.17 6" +
@@ -161,14 +157,14 @@ class GeneralService {
                                     gitHubOccurrences.push({
                                         "line_number": fileDataSourceService
                                             .getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": gitHubDataSourceService.getSearchSnippet(occurrence, key)
+                                        "snippet": webPageDataSourceService.getSearchSnippet(occurrence)
                                     });
                                 }
                                 result.push({
                                     "id": key,
                                     "type": currentObject["datasource_type"],
-                                    "source": "https://github.com/" + gitHubDataSource["repo"],
-                                    "datasource_name": gitHubDataSource["repo"].split("/").pop(),
+                                    "source": gitHubDataSource["repo"],
+                                    "datasource_name": gitHubDataSource["repo"],
                                     "datasource_icon": '<svg fill="#ffffff" viewBox="0 0 24 24" width="28px" height="' +
                                         '28px"><path d="M10.9,2.1c-4.6,0.5-8.3,4.2-8.8,8.7c-0.5,4.7,2.2,8.9,6.3,10.5C' +
                                         '8.7,21.4,9,21.2,9,20.8v-1.6c0,0-0.4,0.1-0.9,0.1 c-1.4,0-2-1.2-2.1-1.9c-0.1-0' +
@@ -208,28 +204,12 @@ class GeneralService {
             );
             let result: string;
             let content: string = response["data"]["response"]["docs"][0]["content"];
-            let dataSource;
-            let err;
-            let extension: string = "";
-            switch (type) {
-                case "file":
-                    [dataSource, err] = fileDataSourceRepository.getDataSource(id);
-                    extension = dataSource.filename.split(".").pop();
-                    break;
-                case "github":
-                    [dataSource, err] = gitHubDataSourceRepository.getFileFromRepo(id);
-                    extension = dataSource["file_path"].split(".").pop();
-                    break;
-                case "folder":
-                    [dataSource, err] = folderDataSourceRepository.getFileInFolder(id);
-                    extension = dataSource["file_path"].split(".").pop();
-                    break;
-                default:
-                    err = true;
-            }
+            let [dataSource, err] = fileDataSourceRepository.getDataSource(id);
             if (err) {
                 result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
             } else {
+                let temp: string[] = dataSource.filename.split('.');
+                let extension: string = temp[temp.length - 1];
                 if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
                     .indexOf(extension) != -1) {
                     let snippet: string;
@@ -238,9 +218,7 @@ class GeneralService {
                     } catch (e) {
                         snippet = hljs.highlightAuto(content).value;
                     }
-                    result = '<pre style="font-family: Arial,sans-serif">' +
-                        GeneralService.newLinesToBreaks(snippet) +
-                        '</pre>';
+                    result = '<pre>' + GeneralService.newLinesToBreaks(snippet) + '</pre>';
                 } else {
                     result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
                 }
@@ -342,6 +320,8 @@ class GeneralService {
                 return await folderDataSourceService.removeFolderDataSource(id);
             case "webpage":
                 return webPageDataSourceService.removeWebPageDataSource(id);
+            case "github":
+                return gitHubDataSourceService.removeGitHubDataSource(id);
             default:
                 return {
                     "code": 400,

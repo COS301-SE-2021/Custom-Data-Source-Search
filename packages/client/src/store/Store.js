@@ -116,8 +116,11 @@ const store = createStore({
 
     getIsUserAdmin: (state, getters) => {
       let admin = false;
-      for (let backend of getters.getUserBackends(state.signedInUserId)) {
-        if (getters.getUserAdminStatus(backend.local.id) != null) {
+      let backends = getters.getUserRemoteBackends;
+      for (let backend of backends) {
+        if (getters.getUserAdminStatus(backend.local.id) !== 'viewer'
+            && getters.getUserAdminStatus(backend.local.id) !== 'editor')
+        {
           admin = true;
         }
       }
@@ -168,6 +171,11 @@ const store = createStore({
     getBackendLinkViaName: (state, getters) => (name) => {
       return getters.getUserBackends(getters.getSignedInUserId)
           .find(b => b.local.name === name).connect.link;
+    },
+
+    getBackendIDViaName: (state,getters) => (name) => {
+      return getters.getUserBackends(getters.getSignedInUserId)
+          .find(b => b.local.name === name).local.id;
     },
 
     getBackendJWTToken: (state, getters) => (id) => {
@@ -626,6 +634,20 @@ const store = createStore({
         secretPair: encryptedPair,
         refreshToken: payload.refreshToken
       });
+    },
+
+    /**
+     * @param commit
+     * @param getters
+     * @param {{id: number}} payload
+     */
+    updateJWTifRequired: function ({dispatch, getters}, payload) {
+      let jwt = parseJwt(getters.getBackendJWTToken(payload.id));
+      let iat = new Date(jwt.iat).getTime() * 1000;
+      let time = Date.now();
+      if (time - iat > 60000) {
+        dispatch("refreshJWTToken", payload)
+      }
     }
   }
 });
@@ -704,9 +726,9 @@ function parseJwt(token) {
     if (token === null) {
         return;
     }
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 

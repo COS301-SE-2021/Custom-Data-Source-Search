@@ -1,15 +1,8 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter
-        style="background:var(--surface-200);"
-        @mousedown="noPointerTrue"
-        @mouseup="noPointerFalse"
-    >
-      <SplitterPanel
-          :minSize="20"
-          :size="90"
-      >
+    <Splitter style="background:var(--surface-200);">
+      <SplitterPanel :minSize="20" :size="90">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
             <img
@@ -35,26 +28,17 @@
               :key="i"
               :="r"
               @snippetClicked="goToLineFetchFileIfRequired"
-              @webSnippetClicked="openIframe"
           />
         </div>
       </SplitterPanel>
       <SplitterPanel :minSize="30" class="container">
-        <iframe
-            :class="{ iFrameNoPointer: noPointer }"
-            v-if="iFrameLink !== ''"
-            name="name_of_iframe"
-            :src="iFrameLink"
-        ></iframe>
-        <div v-else>
-          <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
-          <div v-else class="next-prev">
-            <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
-            <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
-          </div>
-          <div class="file-container">
-            <div id="full_file" v-html="fullFileData">
-            </div>
+        <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
+        <div v-else class="next-prev">
+          <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
+          <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
+        </div>
+        <div class="file-container">
+          <div id="full_file" v-html="fullFileData">
           </div>
         </div>
       </SplitterPanel>
@@ -109,18 +93,15 @@
     data() {
       return {
         advancedSearch: false,
-        iFrameLink: '',
         fullFileLineNumbers: [],
         currentLineNumber: -1,
         fullFileData: "",
         fullFileId: "",
         notDeleted: true,
         query: "",
-        searchResultsBuffer: [],
         searchResults: [],
         name: "Search",
         firstSearch: true,
-        noPointer: false
       }
     },
 
@@ -133,6 +114,7 @@
     },
 
     beforeMount() {
+      this.$store.dispatch("updateJWTifRequired", {id: 1});
       if (this.$store.getters.getNewAppStatus) {
         this.$router.push('/');
       }
@@ -140,8 +122,8 @@
 
     methods: {
       reRunQuery() {
-        this.advancedSearch = !this.advancedSearch;
         if (this.query !== "") {
+          this.searchResults = [];
           this.queryBackends(this.query)
         }
       },
@@ -157,7 +139,6 @@
        */
       async queryBackends(q) {
         this.firstSearch = false;
-        this.searchResultsBuffer = [];
         this.searchResults = [];
         for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
           if (!backend.local.active) {
@@ -168,6 +149,10 @@
                   this.advancedSearch ? q : this.escapeSolrControlCharacters(q)
               )
           }`;
+          //LAUREN
+          if (backend.local.id !== 0) {
+            await this.$store.dispatch("updateJWTifRequired", backend.local.id);
+          }
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
           await axios
               .get(url, {headers})
@@ -187,7 +172,6 @@
                     })
               })
         }
-        this.searchResults = this.searchResultsBuffer;
         if (this.searchResults.length === 0) {
           this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
         }
@@ -210,6 +194,7 @@
        * @param backend backend info from store
        */
       augmentAndSaveSearchResults(results, backend) {
+        console.log("augment!");
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -220,7 +205,7 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResultsBuffer = this.mergeLists(this.searchResultsBuffer, results);
+        this.searchResults = this.mergeLists(this.searchResults, results);
       },
 
       /**
@@ -265,11 +250,7 @@
        * @param {number} lineNumber line number of the result snippet the user has clicked on
        * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
        */
-      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source) {
-        if (type === "webpage"){
-          this.openIframe(source);
-          return;
-        }
+      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers) {
         if (this.fullFileId === id) {
           this.scrollFullFileLineIntoView(lineNumber);
           return;
@@ -296,11 +277,6 @@
                   .catch()
             });
         this.fullFileId = id;
-        this.iFrameLink = '';
-      },
-
-      openIframe(link) {
-        this.iFrameLink = link;
       },
 
       /**
@@ -437,14 +413,6 @@
             }) + 1
         );
         this.scrollFullFileLineIntoView(this.fullFileLineNumbers[index]);
-      },
-
-      noPointerTrue() {
-        this.noPointer = true;
-      },
-
-      noPointerFalse() {
-        this.noPointer = false;
       }
     }
   };
@@ -564,14 +532,4 @@
     color: #4d4d4d;
     padding-left: 10px;
   }
-
-  .iFrameNoPointer {
-    pointer-events: none;
-  }
-
-  iframe {
-    width: 100%;
-    height: 100vh;
-  }
-
 </style>
