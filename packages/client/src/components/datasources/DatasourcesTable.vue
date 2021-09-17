@@ -69,13 +69,23 @@
               <div class="overlay-header">
                 <span>Which backend would you like to add to?</span>
               </div>
-              <div class="overlay-buttons">
+              <div class="overlay-buttons" v-for="i in backends">
                 <Button
-                    v-for="i in backends"
+                    v-if="datasourceAdminStatus(i)!=='viewer'"
                     :key="i.id"
                     label="Backend"
                     class="button p-button-raised p-button-text p-button-plain"
                     @click="backend= i"
+                >
+                  {{ i }}
+                </Button>
+                <Button
+                    v-else
+                    :key="i.id"
+                    label="Backend"
+                    class="button p-button-raised p-button-text p-button-plain disabled_backend_button"
+                    @click="backend= i"
+                    disabled="disabled"
                 >
                   {{ i }}
                 </Button>
@@ -143,7 +153,7 @@
       <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;">
         <template #body="{data}">
           <Checkbox
-              v-if="datasourceAdminStatus(data.backend)"
+              v-if="datasourceAdminStatus(data.backend)!=='viewer'"
               :key="data.id"
               v-model="selectedSources"
               name="source"
@@ -385,10 +395,11 @@
          * @returns {boolean|*} - returns a boolean indicating whether a user has admin privileges (true) or not (false)
          */
         datasourceAdminStatus(source) {
+          let backendID = this.$store.getters.getBackendIDViaName(source);
           if (source === "Local") {
             return true;
           } else {
-            return this.$store.getters.getBackendAdminStatus(source);
+            return this.$store.getters.getUserAdminStatus(backendID);
           }
         },
 
@@ -569,6 +580,14 @@
     -moz-animation: fadeIn 1s;
     -o-animation: fadeIn 1s;
     -ms-animation: fadeIn 1s;
+  }
+
+  .disabled_backend_button:hover{
+    cursor: not-allowed;
+  }
+
+  .overlay-buttons{
+    display: inline-block;
   }
 
   @keyframes fadeIn {

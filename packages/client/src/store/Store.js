@@ -112,8 +112,11 @@ const store = createStore({
 
     getIsUserAdmin: (state, getters) => {
       let admin = false;
-      for (let backend of getters.getUserBackends(state.signedInUserId)) {
-        if (getters.getUserAdminStatus(backend.local.id) != null) {
+      let backends = getters.getUserRemoteBackends;
+      for (let backend of backends) {
+        if (getters.getUserAdminStatus(backend.local.id) !== 'viewer'
+            && getters.getUserAdminStatus(backend.local.id) !== 'editor')
+        {
           admin = true;
         }
       }
