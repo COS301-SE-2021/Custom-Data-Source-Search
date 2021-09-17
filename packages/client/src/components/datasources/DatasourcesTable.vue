@@ -322,7 +322,7 @@
         console.log(this.sources.length)
       },
 
-      mounted(){
+      after(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',
