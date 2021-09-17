@@ -133,7 +133,6 @@
     },
 
     beforeMount() {
-      this.$store.dispatch("updateJWTifRequired", {id: 1});
       if (this.$store.getters.getNewAppStatus) {
         this.$router.push('/');
       }
