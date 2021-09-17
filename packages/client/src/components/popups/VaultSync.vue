@@ -39,7 +39,7 @@ import {mapGetters} from "vuex";
 import PasswordInputField from "../primeComponents/PasswordInputField";
 import {createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
 import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
-import {createHash} from "crypto";
+import {createHash, pbkdf2Sync} from "crypto";
 
 export default {
   name: "VaultSync",
@@ -253,7 +253,14 @@ export default {
                   const encryptedInfo = encryptJsonObject(masterKey, user);
 
                   const dataString = JSON.stringify(user);
-                  const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+                  //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+                  const dataFingerprint = pbkdf2Sync(
+                      dataString,
+                      userSalt,
+                      10000,
+                      64,
+                      'sha256'
+                  ).toString('hex');
 
                   let reqObj = {
                     email: userInfo.email,

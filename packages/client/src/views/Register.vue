@@ -146,7 +146,7 @@
   import Checkbox from 'primevue/checkbox';
   import PasswordInputField from "../components/primeComponents/PasswordInputField";
   import axios from "axios";
-  import {createHash} from 'crypto';
+  import {createHash, pbkdf2Sync} from 'crypto';
   import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 
 
@@ -351,7 +351,14 @@
           const encryptedInfo = encryptJsonObject(masterKey, user);
 
           const dataString = JSON.stringify(user);
-          const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+         // const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+          const dataFingerprint = pbkdf2Sync(
+              dataString,
+              userSalt,
+              10000,
+              64,
+              'sha256'
+          ).toString('hex');
 
           let reqObj = {
                   email: this.userDetails.masterEmail,

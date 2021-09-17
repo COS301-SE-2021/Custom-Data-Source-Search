@@ -114,7 +114,7 @@
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
   import CustomTooltip from "./components/primeComponents/CustomTooltip";
   import axios from "axios";
-  import {createHash} from "crypto";
+  import {createHash, pbkdf2Sync} from "crypto";
   import VaultSync from "@/components/popups/VaultSync";
   import {encryptJsonObject, generateMasterKey} from "@/store/Store";
 
@@ -172,7 +172,15 @@
           const user = this.getUser(this.getSignedInUserId);
 
           const dataString = JSON.stringify(user);
-          const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+          //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+          const dataFingerprint = pbkdf2Sync(
+              dataString,
+              user.info.salt,
+              10000,
+              64,
+              'sha256'
+          ).toString('hex');
+
 
           let reqObj = {
             email: user.info.email,
