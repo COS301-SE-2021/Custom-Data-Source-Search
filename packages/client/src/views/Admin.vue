@@ -4,9 +4,9 @@
       <h1 class="admin-heading"> User Administration</h1>
       <p class="admin-description"> Select a backend to manage users for.</p>
     </div>
-    <div class="admin-select">
+    <div v-for="(backend) in getUserRemoteBackends" class="admin-select" >
       <AdminBackendCard
-          v-for="(backend) in getUserRemoteBackends"
+          v-if="datasourceAdminStatus(backend.local.id)!=='viewer' && datasourceAdminStatus(backend.local.id)!=='editor'"
           :backend="backend"
       />
     </div>
@@ -45,7 +45,10 @@
       },
       showBackendManager() {
         this.$router.push({name: 'BackendManager', params: {}});
-      }
+      },
+      datasourceAdminStatus(source) {
+          return this.$store.getters.getUserAdminStatus(source);
+      },
     }
   }
 </script>

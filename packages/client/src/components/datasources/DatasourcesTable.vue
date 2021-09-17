@@ -589,7 +589,7 @@
   .overlay-buttons{
     display: inline-block;
   }
-  
+
   @keyframes fadeIn {
     0% {
       opacity: 0;
