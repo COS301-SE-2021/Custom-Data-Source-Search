@@ -116,13 +116,10 @@ export default {
             let respObject = {
               "filename": this.filenames[i], "path": this.paths[i], "file": null, "tag1": this.tag1, "tag2": this.tag2
             };
-            const headers = {
-            "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-            };
             axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                    respObject, {headers}
+                    respObject
                 )
                 .then((resp) => {
                   this.$toast.add({
@@ -133,39 +130,22 @@ export default {
                   });
                   this.$emit('addFile');
                 })
-                .catch(async () => {
-                  await this.$store.dispatch("refreshJWTToken", {id: backendID});
-                  const headers = {
-                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-                  };
-                  await axios
-                  .post(
-                    `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                    respObject, {headers}
-                  )
-                  .then((resp) => {
+                .catch((error) => {
                     this.$toast.add({
-                      severity: 'success',
-                      summary: 'Success',
-                      detail: resp.data.message,
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
                       life: 3000
                     });
-                    this.$emit('addFile');
-                  })
-                  .catch((error) => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: error.response.data.message,
-                        life: 3000
-                      });
-                      this.filenames = [];
-                  })
+                    this.filenames = [];
                 })
+
           }
+          this.$emit("submitted");
         }
         else{
           let fileStream;
+          let backendID = this.$store.getters.getBackendIDViaName(this.backend);
           for (let i = 0; i < this.filenames.length; i++) {
             let formData = new FormData();
             fileStream = fs.readFileSync(this.paths[i] + this.filenames[i]);
