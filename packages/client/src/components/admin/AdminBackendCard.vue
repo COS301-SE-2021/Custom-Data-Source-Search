@@ -17,9 +17,8 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
 
-export default {
+  export default {
   name: "AdminBackendCard",
   props: {
     backend: {
@@ -38,7 +37,6 @@ export default {
         admin: Boolean,
         connected: Boolean
       }
-
     }
   },
   computed: {

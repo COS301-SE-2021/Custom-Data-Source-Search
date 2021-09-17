@@ -7,7 +7,12 @@
                     <em v-if="!connect.needsLogin"  :style="connectedStyle" class="pi pi-circle-on" />
                     <em v-if="connect.needsLogin" class="pi pi-circle-off" />
                     <span> {{local.name}} </span>
-                    <span v-if="receive.admin" style="float: right; padding-top: 3px">{{receive.admin}}</span>
+                    <span
+                        v-if="receive.admin"
+                        style="float: right; padding-top: 3px"
+                    >
+                        {{getUserAdminStatus(backendIndex)}}
+                    </span>
                 </div>
                 <div>
                     <InputSwitch id="inputswitch" style="float: right; margin-top: 3px"  v-model="local.active"/>
