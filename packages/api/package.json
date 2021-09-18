@@ -8,7 +8,7 @@
     "start": "ts-node src/server.ts",
     "build-prod": "tsc",
     "run-prod": "node build/server.js",
-    "test": "jest --coverage --verbose && coveralls < coverage/lcov.info"
+    "test": "jest --coverage --verbose"
   },
   "repository": {
     "type": "git",
