@@ -10,6 +10,7 @@ import {generateUUID} from "./general/generalFunctions";
 import fileDataSourceService from "./services/FileDataSource.service";
 import fs from "fs";
 import {gitHubDataSourceRouter} from "./routers/GitHubDataSource.router";
+const cors = require('cors');
 
 try {
     fs.readFileSync(__dirname + `/../../../.env`);
@@ -25,7 +26,7 @@ if (!process.env.PORT) {
 
 const PORT: number = parseInt(process.env.PORT as string, 10);
 const app = express();
-
+app.use(cors({origin: 'http://localhost:8080'}))
 app.use(helmet());
 app.use(express.json());
 app.use("/general", generalRouter);
