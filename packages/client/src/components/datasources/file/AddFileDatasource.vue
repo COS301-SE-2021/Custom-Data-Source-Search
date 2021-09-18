@@ -121,13 +121,13 @@ export default {
       if(this.filenames.length!==0){
         if(this.backend === 'Local'){
           for (let i = 0; i < this.filenames.length; i++) {
-            let respObject = {
+            let reqObject = {
               "filename": this.filenames[i], "path": this.paths[i], "file": null, "tag1": this.tag1, "tag2": this.tag2
             };
             await axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                    respObject
+                    reqObject
                 )
                 .then((resp) => {
                   this.$toast.add({
