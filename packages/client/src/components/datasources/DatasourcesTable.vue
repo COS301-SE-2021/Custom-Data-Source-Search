@@ -317,6 +317,10 @@
         }
         this.backends = this.$store.getters.getUserBackendNames;
         this.updateSources();
+        console.log(this.sources.length)
+      },
+
+      after(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',

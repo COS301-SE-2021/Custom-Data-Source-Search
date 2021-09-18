@@ -114,7 +114,6 @@
     },
 
     beforeMount() {
-      this.$store.dispatch("updateJWTifRequired", {id: 1});
       if (this.$store.getters.getNewAppStatus) {
         this.$router.push('/');
       }
@@ -149,10 +148,6 @@
                   this.advancedSearch ? q : this.escapeSolrControlCharacters(q)
               )
           }`;
-          //LAUREN
-          if (backend.local.id !== 0) {
-            await this.$store.dispatch("updateJWTifRequired", backend.local.id);
-          }
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
           await axios
               .get(url, {headers})
