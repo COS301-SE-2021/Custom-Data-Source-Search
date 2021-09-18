@@ -142,20 +142,24 @@ class FolderDataSourceService {
             return []
         }
         let results: string[] = [];
-        for (let folderItem of fs.readdirSync(path)) {
-            if (folderItem.indexOf(".") === -1 && ignoreFolders.indexOf(folderItem) === -1) {
-                this.getAllFilesRecursively(
-                    path + folderItem + "/",
-                    ignoreFolders,
-                    depth - 1
-                ).forEach((continuedPath) => {
-                    results.push(folderItem + "/" + continuedPath);
-                })
-            } else if (folderItem.indexOf(".ini") === -1) {
-                results.push(folderItem);
+        try {
+            for (let folderItem of fs.readdirSync(path)) {
+                if (folderItem.indexOf(".") === -1 && ignoreFolders.indexOf(folderItem) === -1) {
+                    this.getAllFilesRecursively(
+                        path + folderItem + "/",
+                        ignoreFolders,
+                        depth - 1
+                    ).forEach((continuedPath) => {
+                        results.push(folderItem + "/" + continuedPath);
+                    })
+                } else if (folderItem.indexOf(".ini") === -1) {
+                    results.push(folderItem);
+                }
             }
+            return results;
+        } catch (e) {
+            return [];
         }
-        return results;
     }
 
     getSearchSnippet(snippet: string, dataSourceUUID: string): string {

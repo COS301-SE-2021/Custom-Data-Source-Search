@@ -117,6 +117,7 @@ describe("Folder data source service: addFolderDataSource function", () => {
     });
     it("Should call repository with path that has / appended to the end if the path did not end in /", () => {
         //given
+        jest.spyOn(folderDataSourceService, "getFilesInFolder").mockReturnValueOnce([]);
         jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [null, null];
@@ -183,6 +184,7 @@ describe("Folder data source service: addFolderDataSource function", () => {
     it("Should return \"Successfully added datasource\" when data source was successfully added to repository", async () => {
         //given
         jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
+        jest.spyOn(folderDataSourceService, "getFilesInFolder").mockReturnValueOnce([]);
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [{
                 "code": 200,
@@ -190,7 +192,6 @@ describe("Folder data source service: addFolderDataSource function", () => {
                 "uuid": "uuidstring"
             }, null];
         });
-        jest.spyOn(folderDataSourceService, "getFilesInFolder").mockReturnValueOnce([]);
         jest.spyOn(folderDataSourceRepository, "addFileInFolder").mockImplementation(() => {
             return [statusMessage(200, "Test"), null];
         });
