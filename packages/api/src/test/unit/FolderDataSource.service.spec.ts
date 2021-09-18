@@ -3,15 +3,17 @@ import folderDataSourceRepository from "../../repositories/FolderDataSourceRepos
 import {FolderDataSource, StoredFolderDataSource} from "../../models/FolderDataSource.interface";
 import fileDataSourceRepository from "../../repositories/FileDataSourceRepository";
 import fs from "fs";
+import {statusMessage} from "../../general/generalFunctions";
 
 describe("Folder data source service: getAllFolderDataSources function", () => {
     it("Should return same object in the body that was returned by repository if no error occurred", () => {
         //given
         const object: StoredFolderDataSource[] = [{
-            "uuid": "testUUID",
-            "path": "testPath/",
-            "tag1": "test tag",
-            "tag2": "other test tag"
+            uuid: "testUUID",
+            path: "testPath/",
+            tag1: "test tag",
+            tag2: "other test tag",
+            dotIgnore: ""
         }];
         jest.spyOn(folderDataSourceRepository, "getAllDataSources").mockImplementation(() => {
             return [object, null];
@@ -51,7 +53,7 @@ describe("Folder data source service: getAllFolderDataSources function", () => {
         expect(result.code).toEqual(500);
         expect(result.body.hasOwnProperty("message")).toEqual(true);
         // @ts-ignore
-        expect(result.body.message).toEqual("Internal error");
+        expect(result.body.message).toEqual("Internal error occurred");
     });
 });
 describe("Folder data source service: getFolderDataSource function", () => {
@@ -61,7 +63,8 @@ describe("Folder data source service: getFolderDataSource function", () => {
             "uuid": "testUUID",
             "path": "testPath/",
             "tag1": "tag1",
-            "tag2": "tag2"
+            "tag2": "tag2",
+            dotIgnore: "",
         };
         jest.spyOn(folderDataSourceRepository, "getDataSource").mockImplementation(() => {
             return [object, null];
@@ -71,8 +74,7 @@ describe("Folder data source service: getFolderDataSource function", () => {
         //then
         expect(result).not.toEqual({});
         expect(result.code).toEqual(200);
-        expect(result.body.message).toEqual("Success");
-        expect(result.body.data).toEqual(object);
+        expect(result.body).toEqual(object);
     });
     it("Should return 404 error when datasource is not found", () => {
         //given
@@ -88,6 +90,7 @@ describe("Folder data source service: getFolderDataSource function", () => {
         //then
         expect(result).not.toEqual({});
         expect(result.code).toEqual(404);
+        // @ts-ignore
         expect(result.body.message).toEqual("Folder datasource not found");
         expect(result.body.hasOwnProperty("data")).toEqual(false);
     });
@@ -95,6 +98,7 @@ describe("Folder data source service: getFolderDataSource function", () => {
 describe("Folder data source service: addFolderDataSource function", () => {
     it("Should call repository with same path if it ends in /", () => {
         //given
+        jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [null, null];
         });
@@ -102,15 +106,18 @@ describe("Folder data source service: addFolderDataSource function", () => {
         const dataSource: FolderDataSource = {
             path: path,
             tag1: "random tag",
-            tag2: "radom tag2"
+            tag2: "radom tag2",
+            dotIgnore: "",
+            depth: 1
         };
         //when
         folderDataSourceService.addFolderDataSource(dataSource);
         //then
-        expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
+        expect(folderDataSourceRepository.addDataSource).toBeCalled();
     });
     it("Should call repository with path that has / appended to the end if the path did not end in /", () => {
         //given
+        jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [null, null];
         });
@@ -118,28 +125,30 @@ describe("Folder data source service: addFolderDataSource function", () => {
         const dataSource: FolderDataSource = {
             path: path + "/",
             tag1: "random tag",
-            tag2: "radom tag2"
+            tag2: "radom tag2",
+            dotIgnore: "",
+            depth: 1
         };
         //when
         folderDataSourceService.addFolderDataSource(dataSource);
         //then
-        expect(folderDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
+        expect(folderDataSourceRepository.addDataSource).toBeCalled();
     });
     it("Should return \"Folder datasource already exists\" error when data source already exists in the repository", async () => {
         //given
+        jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [null, {
                 "code": 400,
                 "message": "Folder datasource already exists"
             }];
         });
-        jest.spyOn(folderDataSourceRepository, "addFileInFolder").mockImplementation(() => {
-            return Promise.resolve([]);
-        });
         const dataSource: FolderDataSource = {
             path: "test/path/",
             tag1: "",
-            tag2: ""
+            tag2: "",
+            dotIgnore: "",
+            depth: 1
         }
         //when
         const result = await folderDataSourceService.addFolderDataSource(dataSource);
@@ -156,12 +165,14 @@ describe("Folder data source service: addFolderDataSource function", () => {
             }];
         });
         jest.spyOn(folderDataSourceRepository, "addFileInFolder").mockImplementation(() => {
-            return Promise.resolve([]);
+            return [statusMessage(200, "Test"), null];
         });
         const dataSource: FolderDataSource = {
             path: "test/path/",
             tag1: "",
-            tag2: ""
+            tag2: "",
+            dotIgnore: "",
+            depth: 1
         }
         //when
         const result = await folderDataSourceService.addFolderDataSource(dataSource);
@@ -171,6 +182,7 @@ describe("Folder data source service: addFolderDataSource function", () => {
     });
     it("Should return \"Successfully added datasource\" when data source was successfully added to repository", async () => {
         //given
+        jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [{
                 "code": 200,
@@ -178,13 +190,16 @@ describe("Folder data source service: addFolderDataSource function", () => {
                 "uuid": "uuidstring"
             }, null];
         });
+        jest.spyOn(folderDataSourceService, "getFilesInFolder").mockReturnValueOnce([]);
         jest.spyOn(folderDataSourceRepository, "addFileInFolder").mockImplementation(() => {
-            return Promise.resolve([]);
+            return [statusMessage(200, "Test"), null];
         });
         const dataSource: FolderDataSource = {
             path: "test/path/",
             tag1: "",
-            tag2: ""
+            tag2: "",
+            dotIgnore: "",
+            depth: 1
         }
         //when
         const result = await folderDataSourceService.addFolderDataSource(dataSource);
@@ -197,10 +212,10 @@ describe("Folder data source service: removeFolderDataSource function", () => {
     it("Should return success code and message when removing from repository was successful", async () => {
         //given
         jest.spyOn(folderDataSourceRepository, "deleteDataSource").mockImplementation(() => {
-            return Promise.resolve([{
+            return [{
                 "code": 204,
                 "message": "Successfully deleted folder datasource"
-            }, null]);
+            }, null];
         });
         const id: string = "someTestUUID";
         //when
@@ -209,13 +224,13 @@ describe("Folder data source service: removeFolderDataSource function", () => {
         expect(result.code).toEqual(204);
         expect(result.body.message).toEqual("Successfully deleted folder datasource");
     });
-    it("Should return \"Folder datasource not found\" error when repository does not contain datasource", async () => {
+    it("Should return \"Folder datasource not found\" error when repository does not contain datasource", async() => {
         //given
         jest.spyOn(folderDataSourceRepository, "deleteDataSource").mockImplementation(() => {
-            return Promise.resolve([null, {
+            return [null, {
                 "code": 404,
                 "message": "Folder datasource not found"
-            }]);
+            }];
         });
         const id: string = "someTestUUID";
         //when
@@ -255,9 +270,9 @@ describe("Folder data source service: getFilesInFolder function", () => {
                 }
             ], null];
         });
-        const path: string = "testPath/";
+        const path: string = "some/test/path/";
         //when
-        const results = folderDataSourceService.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path, "", 1);
         //then
         expect(results).toEqual([]);
     });
@@ -288,7 +303,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = folderDataSourceService.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path, "", 1);
         //then
         expect(results).toEqual([]);
     });
@@ -323,7 +338,7 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = folderDataSourceService.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path, "", 1);
         //then
         expect(results).toEqual([]);
     });
@@ -356,11 +371,11 @@ describe("Folder data source service: getFilesInFolder function", () => {
                 }
             ], null];
         });
-        const path: string = "testPath/";
+        const path: string = "some/test/path/";
         //when
-        const results = folderDataSourceService.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path, "", 1);
         //then
-        expect(results).toEqual(["fileThatShouldBeInResults.txt"]);
+        expect(results).toEqual(["some/test/path/fileThatShouldBeInResults.txt"]);
     });
     it("Should return all files in folder if they are not in file datasource repository", () => {
         //given
@@ -376,11 +391,11 @@ describe("Folder data source service: getFilesInFolder function", () => {
         });
         const path: string = "testPath/";
         //when
-        const results = folderDataSourceService.getFilesInFolder(path)
+        const results = folderDataSourceService.getFilesInFolder(path, "", 1);
         //then
         expect(results).toEqual([
-            "testFile1.txt",
-            "testFile2.txt",
+            "testPath/testFile1.txt",
+            "testPath/testFile2.txt",
         ]);
     });
 });
