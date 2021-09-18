@@ -291,7 +291,7 @@
           message: "No sources have been selected.",
           type: null,
           clicked: false,
-          sources: null,
+          sources: [],
           loading: false,
           backend: null,
           selectedSources: [],
@@ -345,6 +345,7 @@
         },
 
         updateSources() {
+          console.log("updating...");
           this.loading = true;
           this.sources = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -390,8 +391,20 @@
           }
           this.sources = this.sources.concat(results);
           this.loading = false;
+
         },
 
+        removeDuplicatesInArray(arr) {
+          let a = arr.concat();
+          for(let i=0; i<a.length; ++i) {
+            for(let j=i+1; j<a.length; ++j) {
+              if(a[i] === a[j])
+                a.splice(j--, 1);
+            }
+          }
+
+          return a;
+        },
         /**
          * Queries the store to check the admin status associated with the user for a specific backend.
          *

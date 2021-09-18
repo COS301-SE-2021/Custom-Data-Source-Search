@@ -49,10 +49,16 @@
       </span>
     </div>
     <Button
+        v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFiles()"
+    />
+    <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        class="p-button-rounded p-button-text"
     />
   </ScrollPanel>
 </template>
@@ -77,7 +83,8 @@ export default {
       tag2: null,
       type: 'file',
       filenames: [],
-      paths: []
+      paths: [],
+      submitting: false
     }
   },
 
@@ -109,17 +116,18 @@ export default {
           })
     },
 
-    submitSelectedFiles(){
+    async submitSelectedFiles(){
+      this.submitting = true;
       if(this.filenames.length!==0){
         if(this.backend === 'Local'){
           for (let i = 0; i < this.filenames.length; i++) {
-            let respObject = {
+            let reqObject = {
               "filename": this.filenames[i], "path": this.paths[i], "file": null, "tag1": this.tag1, "tag2": this.tag2
             };
-            axios
+            await axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                    respObject
+                    reqObject
                 )
                 .then((resp) => {
                   this.$toast.add({
@@ -128,7 +136,6 @@ export default {
                     detail: resp.data.message,
                     life: 3000
                   });
-                  this.$emit('addFile');
                 })
                 .catch((error) => {
                     this.$toast.add({
@@ -137,10 +144,10 @@ export default {
                       detail: error.response.data.message,
                       life: 3000
                     });
-                    this.filenames = [];
                 })
 
           }
+          this.submitting = false;
           this.$emit("submitted");
         }
         else{
@@ -158,7 +165,7 @@ export default {
             "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID),
             "Content-Type": "multipart/form-data"
             };
-            axios
+            await axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
                     formData, {headers}
@@ -170,7 +177,6 @@ export default {
                     detail: resp.data.message,
                     life: 3000
                   });
-                  this.$emit('addFile');
                 })
                 .catch(async() => {
                   await this.$store.dispatch("refreshJWTToken", {id: backendID});
@@ -198,12 +204,12 @@ export default {
                         detail: error.response.data.message,
                         life: 3000
                       });
-                      this.filenames = [];
                     })
                 })
           }
+          this.submitting = false;
+          this.$emit("submitted");
         }
-        this.$emit("submitted");
       }
       else{
         this.$toast.add({

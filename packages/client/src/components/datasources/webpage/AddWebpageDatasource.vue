@@ -35,10 +35,16 @@
       </span>
     </div>
     <Button
+        v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
-        @click="submitWebpage"
+        @click="submitSelectedFolders"
+    />
+    <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        class="p-button-rounded p-button-text"
     />
   </div>
 </template>
@@ -58,12 +64,14 @@ export default {
       dataSourceURI: "",
       tag1: null,
       tag2: null,
-      type: 'webpage'
+      type: 'webpage',
+      submitting: false
     }
   },
 
   methods: {
     submitWebpage() {
+      this.submitting = true;
       if(this.dataSourceURI!==""){
         let backendID = this.$store.getters.getBackendIDViaName(this.backend);
         let reqObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
@@ -101,7 +109,7 @@ export default {
                     detail: resp.data.message,
                     life: 3000
                   });
-                  this.$emit('addWebpage');
+                  this.submitting = false;
                   this.$emit("submitted");
                 })
               .catch((error) =>{

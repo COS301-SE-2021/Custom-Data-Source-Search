@@ -17,7 +17,12 @@
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
             <span id="advanced_search_toggle">
-              <checkbox v-model="advancedSearch" :binary="true" @click="reRunQuery"></checkbox>
+              <checkbox
+                  v-model="advancedSearch"
+                  :binary="true"
+                  v-tooltip.bottom="'Placeholder tooltip'"
+                  @click="reRunQuery">
+              </checkbox>
               Advanced Search
             </span>
           </div>
