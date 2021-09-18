@@ -1092,12 +1092,12 @@
   }
 
   .p-multiselect {
-    background-color: #242424;
+    background-color: #262626;
     height: 34px;
   }
 
   .p-inputtext {
-    background-color: #242424;
+    background-color: #262626;
   }
 
   #input-perm{
