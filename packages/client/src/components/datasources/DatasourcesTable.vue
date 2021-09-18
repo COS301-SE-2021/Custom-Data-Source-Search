@@ -384,10 +384,22 @@
             r.backendId = id;
             r.backend = name;
           }
-          this.sources = this.sources.concat(results);
+          // this.sources = this.sources.concat(results);
+          this.sources = this.removeDuplicatesInArray(this.sources.concat(results));
           this.loading = false;
         },
 
+        removeDuplicatesInArray(arr) {
+          let a = arr.concat();
+          for(let i=0; i<a.length; ++i) {
+            for(let j=i+1; j<a.length; ++j) {
+              if(a[i] === a[j])
+                a.splice(j--, 1);
+            }
+          }
+
+          return a;
+        },
         /**
          * Queries the store to check the admin status associated with the user for a specific backend.
          *
