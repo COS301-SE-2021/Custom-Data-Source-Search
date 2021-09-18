@@ -172,8 +172,8 @@
           const user = this.getUser(this.getSignedInUserId);
 
           const dataString = JSON.stringify(user);
-          const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
-          /*
+          //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+
           const dataFingerprint = pbkdf2Sync(
               dataString,
               user.info.salt,
@@ -182,7 +182,6 @@
               'sha256'
           ).toString('hex');
 
-           */
 
 
           let reqObj = {

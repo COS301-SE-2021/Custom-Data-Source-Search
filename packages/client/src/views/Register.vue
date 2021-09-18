@@ -349,9 +349,9 @@
             const encryptedInfo = encryptJsonObject(masterKey, user);
 
             const dataString = JSON.stringify(user);
-            const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+           // const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
             console.log("creating fingerprint with datastring:" + dataString + " userSalt:" + userSalt);
-            /*
+
              const dataFingerprint = pbkdf2Sync(
                  dataString,
                  userSalt,
@@ -360,7 +360,7 @@
                  'sha256'
              ).toString('hex');
 
-             */
+
 
             console.log("created fingerprint:" + dataFingerprint);
 
