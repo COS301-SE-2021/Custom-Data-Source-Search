@@ -49,10 +49,16 @@
       </span>
     </div>
     <Button
+        v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFiles()"
+    />
+    <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        class="p-button-rounded p-button-text"
     />
   </ScrollPanel>
 </template>
@@ -77,7 +83,8 @@ export default {
       tag2: null,
       type: 'file',
       filenames: [],
-      paths: []
+      paths: [],
+      submitting: false
     }
   },
 
@@ -110,6 +117,7 @@ export default {
     },
 
     async submitSelectedFiles(){
+      this.submitting = true;
       if(this.filenames.length!==0){
         if(this.backend === 'Local'){
           for (let i = 0; i < this.filenames.length; i++) {
@@ -128,8 +136,6 @@ export default {
                     detail: resp.data.message,
                     life: 3000
                   });
-                  this.$emit('addFile');
-                  console.log("success");
                 })
                 .catch((error) => {
                     this.$toast.add({
@@ -141,6 +147,7 @@ export default {
                 })
 
           }
+          this.submitting = false;
           this.$emit("submitted");
         }
         else{
@@ -170,7 +177,6 @@ export default {
                     detail: resp.data.message,
                     life: 3000
                   });
-                  this.$emit('addFile');
                 })
                 .catch(async() => {
                   await this.$store.dispatch("refreshJWTToken", {id: backendID});
@@ -201,6 +207,7 @@ export default {
                     })
                 })
           }
+          this.submitting = false;
           this.$emit("submitted");
         }
       }

@@ -133,13 +133,13 @@
 
     computed: {
         ...mapGetters ([
-            'getUserInfo',
-            'getUserBackends',
-            'getSignedInUserId',
-            'unconnectedBackendNames',
-            'unconnectedBackendBool',
-            'unconnectedBackendNo',
-            'getIsUserAdmin',
+          'getUserInfo',
+          'getUserBackends',
+          'getSignedInUserId',
+          'unconnectedBackendNames',
+          'unconnectedBackendBool',
+          'unconnectedBackendNo',
+          'getIsUserAdmin',
           'getSignedIn',
           'getUser',
           'getMasterKey'
