@@ -1,6 +1,6 @@
 import express from "express"
 import * as dotenv from "dotenv";
-//import cors from "cors";
+import cors from "cors";
 import helmet from "helmet";
 import { fileDataSourceRouter } from "./routers/FileDataSource.router";
 import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
@@ -28,7 +28,7 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 const app = express();
 
 app.use(helmet());
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
 app.use("/general", generalRouter);
 app.use("/users", userRouter);
