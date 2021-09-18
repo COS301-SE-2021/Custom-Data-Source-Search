@@ -142,6 +142,7 @@ export default {
                   life: 3000
                 });
                 this.$emit('addFolder');
+                console.log("success")
               })
               .catch((error) => {
                 this.$toast.add({

@@ -109,14 +109,14 @@ export default {
           })
     },
 
-    submitSelectedFiles(){
+    async submitSelectedFiles(){
       if(this.filenames.length!==0){
         if(this.backend === 'Local'){
           for (let i = 0; i < this.filenames.length; i++) {
             let respObject = {
               "filename": this.filenames[i], "path": this.paths[i], "file": null, "tag1": this.tag1, "tag2": this.tag2
             };
-            axios
+            await axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
                     respObject
@@ -129,7 +129,7 @@ export default {
                     life: 3000
                   });
                   this.$emit('addFile');
-                  this.$emit("submitted");
+                  console.log("success");
                 })
                 .catch((error) => {
                     this.$toast.add({
@@ -141,6 +141,7 @@ export default {
                 })
 
           }
+          this.$emit("submitted");
         }
         else{
           let fileStream;
@@ -157,7 +158,7 @@ export default {
             "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID),
             "Content-Type": "multipart/form-data"
             };
-            axios
+            await axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
                     formData, {headers}
@@ -200,8 +201,8 @@ export default {
                     })
                 })
           }
+          this.$emit("submitted");
         }
-        this.$emit("submitted");
       }
       else{
         this.$toast.add({

@@ -291,7 +291,7 @@
           message: "No sources have been selected.",
           type: null,
           clicked: false,
-          sources: null,
+          sources: [],
           loading: false,
           backend: null,
           selectedSources: [],
@@ -345,6 +345,7 @@
         },
 
         updateSources() {
+          console.log("updating...");
           this.loading = true;
           this.sources = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -388,9 +389,9 @@
             r.backendId = id;
             r.backend = name;
           }
-          // this.sources = this.sources.concat(results);
-          this.sources = this.removeDuplicatesInArray(this.sources.concat(results));
+          this.sources = this.sources.concat(results);
           this.loading = false;
+
         },
 
         removeDuplicatesInArray(arr) {
