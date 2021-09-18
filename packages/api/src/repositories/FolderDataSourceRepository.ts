@@ -169,24 +169,6 @@ class FolderDataSourceRepository {
             return [null, statusMessage(404, "Datasource not found")];
         }
     }
-
-    /**
-     * Return FolderFile by its uuid
-     *
-     * @param {string} uuid
-     * @return {[any, StatusMessage]}
-     */
-    getFileInFolder(uuid: string): [any, StatusMessage] {
-        try {
-            const dataSource = db.prepare(
-                "SELECT * FROM folder_file_data WHERE uuid = ?;"
-            ).all(uuid)[0];
-            return [dataSource, null];
-        } catch (e) {
-            console.error(e);
-            return [null, statusMessage(404, "Datasource not found")];
-        }
-    }
 }
 
 const folderDataSourceRepository = new FolderDataSourceRepository();

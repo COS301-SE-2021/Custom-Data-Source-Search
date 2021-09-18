@@ -8,13 +8,13 @@
       <div>
         <div
             v-if="datasource_name !== undefined" class="datasource-name"
-            @click=open(source)
+            @click=openFile(source)
             @mousedown.right="openFileUsing(source)"
         >
           {{ datasource_name }}
         </div>
         <small
-            @click=open(source)
+            @click=openFile(source)
             @mousedown.right="openFileUsing(source)"
         >
           {{ source }}
@@ -98,39 +98,22 @@
       /**
        * @param {string} source
        */
-      open(source) {
-        if (source.match(/http\w*/gm)) {
-          open(source);
-        } else {
-          shell.openPath(source);
-        }
+      openFile(source) {
+        shell.openPath(source)
       },
 
       /**
        * @param {string} source
        */
       openFileUsing(source) {
-        if (source.match(/http\w*/gm)) {
-          open(source);
-        } else {
-          shell.showItemInFolder(source)
-        }
+        shell.showItemInFolder(source)
       },
 
       /**
        * @param {number} lineNumber
        */
       emitSnippetClicked(lineNumber) {
-        this.$emit(
-            'snippetClicked',
-            this.link,
-            this.type,
-            this.id,
-            this.backendId,
-            lineNumber,
-            this.lineNumbers,
-            this.source
-        )
+        this.$emit('snippetClicked', this.link, this.type, this.id, this.backendId, lineNumber, this.lineNumbers)
       },
 
       toggleNumSnippetsToShow() {
