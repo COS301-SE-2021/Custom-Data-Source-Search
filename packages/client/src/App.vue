@@ -42,15 +42,6 @@
               aria-hidden="true"
           />
         </div>
-        <!---
-        <div v-else title="Syncing..." class="refresh-container icon">
-          <i
-              class="fas fa-sync-alt fa-spin"
-              style="font-size:1.2rem"
-              aria-hidden="true"
-          />
-        </div>
-        --->
         <div class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
             <h3 class="name-initial-main">
@@ -170,10 +161,8 @@
         if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
           console.log("Checking Sync Status");
           const user = this.getUser(this.getSignedInUserId);
-
           const dataString = JSON.stringify(user);
           //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
-
           const dataFingerprint = pbkdf2Sync(
               dataString,
               user.info.salt,
@@ -181,14 +170,10 @@
               32,
               'sha256'
           ).toString('hex');
-
-
-
           let reqObj = {
             email: user.info.email,
             fingerprint: dataFingerprint
           }
-
           console.log("requestObject" + JSON.stringify(reqObj));
           axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
               {headers: {"Content-Type": "application/json"}})
@@ -200,14 +185,11 @@
                 }else {
                   this.hideOutOfSync();
                 }
-
               })
               .catch((error) => {
                 console.log(error);
               })
-
         }
-
       },
       showAskMasterPw(){
         if(this.$store.getters.getMasterKey === null){
