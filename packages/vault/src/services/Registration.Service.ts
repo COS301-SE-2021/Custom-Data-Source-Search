@@ -6,12 +6,10 @@ import {SRPRegistrationResponse} from "../models/response/RegistrationResp.inter
 import vaultRepository from "../repository/Vault.Repository";
 
 class RegistrationService {
-
     async register(body: SRPRegistrationRequest): Promise<SRPRegistrationResponse> {
         console.log("Registering User");
         if(this.detailsAreValid(body)){
             const [data, err] = await vaultRepository.addUser(body);
-
             if (err) {
                 return {
                     code: 400,
@@ -32,7 +30,6 @@ class RegistrationService {
     }
 
     detailsAreValid(body : SRPRegistrationRequest) : boolean {
-
         return body.hasOwnProperty("email") &&
                body.hasOwnProperty("salt") &&
                body.hasOwnProperty("verifier") &&

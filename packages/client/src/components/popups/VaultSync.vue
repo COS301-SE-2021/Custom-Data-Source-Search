@@ -233,28 +233,19 @@ export default {
             axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                 {headers: {"Content-Type": "application/json"}})
                 .then(async (resp) => {
-
-                  console.log(resp.data);
-
-                  //verify server
+                  //verify authenticity of server
                   try {
                     const step3 = await step2.step3(BigInt(resp.data.vM2));
                   } catch (e){
                     console.log(e);
                   }
-
+                  //Authentication Details
                   const password = this.masterPass;
                   const user = await this.getUser(this.getSignedInUserId);
-
                   const userSalt = user.info.salt;
-
                   const masterKey = generateMasterKey(password, userSalt);
-
                   const encryptedInfo = encryptJsonObject(masterKey, user);
-
                   const dataString = JSON.stringify(user);
-                  //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
-
                   const dataFingerprint = pbkdf2Sync(
                       dataString,
                       userSalt,
@@ -262,8 +253,6 @@ export default {
                       32,
                       'sha256'
                   ).toString('hex');
-
-
 
                   let reqObj = {
                     email: userInfo.email,
@@ -276,14 +265,11 @@ export default {
                     user_salt: userSalt
                   };
 
-                  console.log(reqObj.fingerprint);
                   let reqBody = JSON.stringify(reqObj, (key, value) =>
                       typeof value === 'bigint'
                           ? value.toString()
                           : value
                   );
-
-
 
                   axios.post("https://datasleuthvault.nw.r.appspot.com/vault/push", reqBody,
                       {headers: {"Content-Type": "application/json"}})
@@ -305,7 +291,6 @@ export default {
                         });
                         console.log(error);
                       })
-
                 })
                 .catch((error) => {
                   this.$toast.add({

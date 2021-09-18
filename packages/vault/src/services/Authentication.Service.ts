@@ -16,7 +16,6 @@ import {
 import vaultRepository from "../repository/Vault.Repository";
 
 class AuthenticationService {
-
     async compare(body: CompareRequest): Promise<CompareResponse>{
         if(this.compareDetailsAreValid(body)){
             const [data, err] = await vaultRepository.getFingerprint(body.email);
@@ -44,7 +43,6 @@ class AuthenticationService {
                     }
                 }
             }
-
         } else {
             return {
                 code:400,
@@ -65,17 +63,13 @@ class AuthenticationService {
                     message: emailErr
                 }
             } else {
-
                 const s = BigInt(emailData.salt);
                 const v = BigInt(emailData.verifier)
-
                 const server = new SRPServerSession(new SRPRoutines(new SRPParameters()));
                 const serverStep1 = await server.step1(body.email, s, v);
                 const serializedServerStep1 = JSON.stringify(serverStep1);
-
                 //Store serialized sever state at this point
                 const [stateData , stateErr ] = await vaultRepository.storeServerState(body.email, serializedServerStep1)
-
                 if(stateErr){
                     return {
                         code : 400,
@@ -100,7 +94,6 @@ class AuthenticationService {
     }
 
     async authenticate(body: SRPAuthRequest): Promise<SRPAuthResponse> {
-
             //retrieve server state from db
             const [ stateData, stateErr] = await vaultRepository.retrieveServerState(body.email);
             if(stateErr){
@@ -113,7 +106,6 @@ class AuthenticationService {
                 const serverStep1 = SRPServerSessionStep1.fromState(
                     new SRPRoutines(new SRPParameters()),
                     JSON.parse(stateData.Step1State),);
-
                 //Attempt Verification of User Credentials
                 try {
                     const verificationMessage2 = await serverStep1.step2(BigInt(body.A), BigInt(body.verificationMessage1));
@@ -178,8 +170,6 @@ class AuthenticationService {
                             }
                         }
                     }
-
-                    //should delete server state
                 }
             } else {
                 return {

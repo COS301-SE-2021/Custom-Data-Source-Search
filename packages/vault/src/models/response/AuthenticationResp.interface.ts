@@ -4,7 +4,6 @@ export interface SRPChallengeResponse {
 }
 
 export interface SRPSaltAndB{
-
     salt: bigint,
     B: bigint
 }

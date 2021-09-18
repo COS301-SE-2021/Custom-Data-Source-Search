@@ -11,13 +11,9 @@ import authenticationService from "../services/Authentication.Service";
  */
 export const generalRouter = express.Router();
 
-/**
- * Return all the search results from available data sources
- */
 generalRouter.get("/",async (req: Request, res: Response) => {
     res.status(400).send({result : "Success"});
 });
-
 
 generalRouter.post("/register",async (req: Request, res: Response) => {
     const result = await registrationService.register(req.body)
@@ -28,7 +24,6 @@ generalRouter.post("/challenge",async (req: Request, res: Response) => {
     const result = await authenticationService.challenge(req.body);
     res.status(result.code).send(result.message);
 });
-
 
 generalRouter.post("/authenticate",async (req: Request, res: Response) => {
     const result = await authenticationService.authenticate(req.body)

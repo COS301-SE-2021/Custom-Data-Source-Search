@@ -9,11 +9,6 @@ app.use(express.json());
 app.set('json replacer', customStringify)
 app.use("/vault", generalRouter)
 
-//import * as dotenv from "dotenv";
-
-//dotenv.config({path:  __dirname + `/../../../../.env`});
-
-
 function customStringify(key: any, value: any){
         if(typeof value === 'bigint') {
             return value.toString()

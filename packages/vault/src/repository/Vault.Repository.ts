@@ -1,11 +1,9 @@
 import {SRPRegistrationRequest} from "../models/request/RegistrationReq.interface";
 import {createHash} from "crypto";
 import {SRPPullRequest, SRPPushRequest} from "../models/request/AuthenticationReq.interface";
-
 const db = require("../config/db.config");
 
 class VaultRepository {
-
     async addUser(body : SRPRegistrationRequest){
         try {
             const client = await db.connect();
@@ -72,7 +70,6 @@ class VaultRepository {
     }
 
     async updateUserData(body: SRPPushRequest){
-
         try {
             const client = await db.connect();
             const result = await client.query(

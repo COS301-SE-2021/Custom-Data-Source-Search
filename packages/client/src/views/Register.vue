@@ -321,7 +321,6 @@
 
         let passFormValidation = this.formValidationChecks();
         if (passFormValidation) {
-
           await this.$store.dispatch("addNewUser", {
             name: this.userDetails.userName,
             email: this.userDetails.masterEmail,
@@ -331,38 +330,26 @@
 
           if(this.userDetails.backupVault === true){
             const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
-
             const email = this.userDetails.masterEmail;
             const password = this.masterPassword;
-
             const saltAndVerifier = await createVerifierAndSalt(
                 srp6aNimbusRoutines,
                 email,
                 password,
             );
-
             const user = await this.getUser(this.getSignedInUserId);
-
-            //user_salt
+            //Registration Fields
             const userSalt = user.info.salt;
             const masterKey = generateMasterKey(password, userSalt);
             const encryptedInfo = encryptJsonObject(masterKey, user);
-
             const dataString = JSON.stringify(user);
-           // const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
-            console.log("creating fingerprint with datastring:" + dataString + " userSalt:" + userSalt);
-
-             const dataFingerprint = pbkdf2Sync(
+            const dataFingerprint = pbkdf2Sync(
                  dataString,
                  userSalt,
                  10000,
                  32,
                  'sha256'
              ).toString('hex');
-
-
-
-            console.log("created fingerprint:" + dataFingerprint);
 
             let reqObj = {
               email: this.userDetails.masterEmail,
@@ -375,8 +362,6 @@
               user_salt: userSalt
             }
 
-
-            console.log(reqObj);
             let reqBody = JSON.stringify(reqObj, (key, value) =>
                 typeof value === 'bigint'
                     ? value.toString()
@@ -407,8 +392,6 @@
           }
           await this.$router.push({name: 'ContinueView'});
         }
-
-
       },
       formValidationChecks() {
         this.errors = [];
