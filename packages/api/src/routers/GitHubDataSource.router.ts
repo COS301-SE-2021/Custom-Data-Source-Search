@@ -7,7 +7,7 @@ export const gitHubDataSourceRouter = express.Router();
 /**
  * Return the all GitHub datasources
  */
-gitHubDataSourceRouter.get("/", (req: Request, res: Response) => {
+gitHubDataSourceRouter.get("/", authUser("viewer"), (req: Request, res: Response) => {
     const result = gitHubDataSourceService.getAllGitHubDataSources();
     res.status(result.code).send(result.body);
 });
@@ -15,7 +15,7 @@ gitHubDataSourceRouter.get("/", (req: Request, res: Response) => {
 /**
  * Return a single GitHub datasource specified by the id
  */
-gitHubDataSourceRouter.get("/:id", (req: Request, res: Response) => {
+gitHubDataSourceRouter.get("/:id", authUser("viewer"), (req: Request, res: Response) => {
     const result = gitHubDataSourceService.getGitHubDataSource(req.params.id);
     res.status(result.code).send(result.body);
 });

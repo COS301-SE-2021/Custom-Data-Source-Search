@@ -65,15 +65,11 @@ export default {
   methods: {
     submitWebpage() {
       if(this.dataSourceURI!==""){
-        let backendID = this.$store.getters.getBackendIDViaName(this.backend);
-        let reqObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
-        const headers = {
-          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-        };
+        let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
         axios
             .post(
                 `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
-                reqObject, {headers}
+                respObject
             )
             .then(resp => {
               this.$toast.add({
@@ -85,34 +81,14 @@ export default {
               this.$emit('addWebpage');
               this.$emit("submitted");
             })
-            .catch(async () => {
-              await this.$store.dispatch("refreshJWTToken", {id: backendID});
-              const headers = {
-                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-              };
-              await axios
-                .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
-                    reqObject, {headers}
-                )
-                .then(resp => {
-                  this.$toast.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: resp.data.message,
-                    life: 3000
-                  });
-                  this.$emit('addWebpage');
-                  this.$emit("submitted");
-                })
-              .catch((error) =>{
-                this.$toast.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: error.response.data.message,
-                  life: 3000
-                });
-                this.dataSourceURI = "";
-              })
+            .catch(() => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Could Not Add Webpage.',
+                life: 3000
+              });
+              this.dataSourceURI = "";
             })
       }
       else{

@@ -1,6 +1,5 @@
 <template>
   <div class="registration-grid">
-    <Toast position="bottom-right"/>
     <div>
       <div style="margin-top: 10%;">
         <Button
@@ -132,7 +131,7 @@
               type="submit"
               style="text-align: center;"
               class="p-button-md p-button-outlined"
-              @click="retrieveVaultProfile"
+              @click="loadValues"
           />
         </div>
       </div>
@@ -145,15 +144,6 @@
   import SignIn from "../components/popups/SignIn";
   import Checkbox from 'primevue/checkbox';
   import PasswordInputField from "../components/primeComponents/PasswordInputField";
-  import axios from "axios";
-  import {createHash, pbkdf2Sync} from 'crypto';
-  import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
-
-
-  import {
-    createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,
-  } from "tssrp6a"
-  import {mapGetters} from "vuex";
 
   const zxcvbn = require('zxcvbn');
 
@@ -189,14 +179,7 @@
     computed: {
       passwordStrength() {
         return zxcvbn(this.masterPassCheck);
-      },
-      ...mapGetters ([
-        'getUserInfo',
-        'getUserBackends',
-        'getSignedInUserId',
-        'getSignedIn',
-          'getUser'
-      ])
+      }
     },
 
     methods: {
@@ -205,192 +188,16 @@
        *
        * Present errors on failure, create new user on success.
        */
-      async retrieveVaultProfile(){
-
-        const remoteEmail = this.vaultEmail;
-        const remotePassword = this.vaultPassword;
-        console.log("Attempting to fetch user profile from the vault...");
-        const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
-        const step1 = await client.step1(remoteEmail, remotePassword);
-
-        const reqBody = {
-          email: remoteEmail
-        }
-        axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
-            {headers: {"Content-Type": "application/json"}})
-            .then(async (resp) => {
-
-              console.log(resp.data);
-              console.log("Salt: " + resp.data.salt);
-              console.log("B: " + resp.data.B);
-
-              const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
-
-              const clientA = step2.A;
-              const clientM1 = step2.M1;
-
-              let reqObj = {
-                email: remoteEmail,
-                A: clientA,
-                verificationMessage1: clientM1
-              }
-
-              let reqBody = JSON.stringify(reqObj, (key, value) =>
-                  typeof value === 'bigint'
-                      ? value.toString()
-                      : value
-              );
-
-              axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
-                  {headers: {"Content-Type": "application/json"}})
-                  .then(async (resp) => {
-
-                    console.log(resp.data);
-                    //verify server
-                    try {
-                      const step3 = await step2.step3(BigInt(resp.data.vM2));
-                    } catch (e){
-                      console.log(e);
-                    }
-
-                    //PHASE2
-                    let reqObj = {
-                      email: remoteEmail,
-                      A: clientA,
-                      verificationMessage1: clientM1
-                    }
-
-                    let reqBody = JSON.stringify(reqObj, (key, value) =>
-                        typeof value === 'bigint'
-                            ? value.toString()
-                            : value
-                    );
-
-                    axios.post("https://datasleuthvault.nw.r.appspot.com/vault/pull", reqBody,
-                        {headers: {"Content-Type": "application/json"}})
-                        .then(async (resp) => {
-                          console.log(resp.data.data);
-                          //decrypt data
-                          const encryptedObj =  {
-                            iv: resp.data.data.user_iv,
-                            authTag: resp.data.data.user_authtag,
-                            data: resp.data.data.user_data
-                          }
-                          //NEED TO ADD USER HERE:
-                          //
-                          const masterKey = generateMasterKey(remotePassword, resp.data.data.user_salt);
-                          const unencryptedUserData = decryptJsonObject(masterKey, encryptedObj);
-
-                          this.$store.commit('addRemoteUserToLocalList', unencryptedUserData);
-                          await this.$router.push({name: 'ContinueView'});
-
-                        })
-                        .catch((error) => {
-                          this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data,
-                            life: 3000
-                          });
-                          console.log(error);
-                        })
-
-                  })
-                  .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data,
-                      life: 3000
-                    });
-                    console.log(error);
-                  })
-            })
-            .catch((error) => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Could not find user',
-                life: 3000
-              });
-              console.log(error);
-            })
-
-      },
-      async loadValues(){
-
+      loadValues() {
         let passFormValidation = this.formValidationChecks();
         if (passFormValidation) {
-          await this.$store.dispatch("addNewUser", {
+          this.$store.dispatch("addNewUser", {
             name: this.userDetails.userName,
             email: this.userDetails.masterEmail,
             masterPassword: this.masterPassword,
             hasVault: this.userDetails.backupVault
           });
-
-          if(this.userDetails.backupVault === true){
-            const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
-            const email = this.userDetails.masterEmail;
-            const password = this.masterPassword;
-            const saltAndVerifier = await createVerifierAndSalt(
-                srp6aNimbusRoutines,
-                email,
-                password,
-            );
-            const user = await this.getUser(this.getSignedInUserId);
-            //Registration Fields
-            const userSalt = user.info.salt;
-            const masterKey = generateMasterKey(password, userSalt);
-            const encryptedInfo = encryptJsonObject(masterKey, user);
-            const dataString = JSON.stringify(user);
-            const dataFingerprint = pbkdf2Sync(
-                 dataString,
-                 userSalt,
-                 10000,
-                 32,
-                 'sha256'
-             ).toString('hex');
-
-            let reqObj = {
-              email: this.userDetails.masterEmail,
-              salt: saltAndVerifier.s,
-              verifier: saltAndVerifier.v,
-              user_data: encryptedInfo.data,
-              fingerprint: dataFingerprint,
-              user_iv: encryptedInfo.iv,
-              user_authtag: encryptedInfo.authTag,
-              user_salt: userSalt
-            }
-
-            let reqBody = JSON.stringify(reqObj, (key, value) =>
-                typeof value === 'bigint'
-                    ? value.toString()
-                    : value
-            );
-
-            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/register", reqBody,
-                {headers: {"Content-Type": "application/json"}})
-                .then((resp) => {
-                  this.$toast.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: "User Added to Vault",
-                    life: 2500
-                  });
-                  console.log(resp.data);
-
-                })
-                .catch((error) => {
-                  this.$toast.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: error.response.data.message,
-                    life: 3000
-                  });
-                  console.log(error);
-                })
-          }
-          await this.$router.push({name: 'ContinueView'});
+          this.$router.push({name: 'ContinueView'});
         }
       },
       formValidationChecks() {

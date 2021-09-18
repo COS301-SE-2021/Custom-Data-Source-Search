@@ -41,17 +41,13 @@ const store = createStore({
       return state.users.find(user => user.id === id).info;
     },
 
-        getUser: (state) => (id) => {
-            return state.users.find(user => user.id === id);
-        },
-
-        getArrUserInfo(state) {
-            let users = [];
-            for (let x = 0; x < state.users.length; x++) {
-                users.push(state.users[x].info);
-            }
-            return users;
-        },
+    getArrUserInfo(state) {
+      let users = [];
+      for (let x = 0; x < state.users.length; x++) {
+        users.push(state.users[x].info);
+      }
+      return users;
+    },
 
     getSignedInUserId(state) {
       return state.signedInUserId;
@@ -116,11 +112,8 @@ const store = createStore({
 
     getIsUserAdmin: (state, getters) => {
       let admin = false;
-      let backends = getters.getUserRemoteBackends;
-      for (let backend of backends) {
-        if (getters.getUserAdminStatus(backend.local.id) !== 'viewer'
-            && getters.getUserAdminStatus(backend.local.id) !== 'editor')
-        {
+      for (let backend of getters.getUserBackends(state.signedInUserId)) {
+        if (getters.getUserAdminStatus(backend.local.id) != null) {
           admin = true;
         }
       }
@@ -171,11 +164,6 @@ const store = createStore({
     getBackendLinkViaName: (state, getters) => (name) => {
       return getters.getUserBackends(getters.getSignedInUserId)
           .find(b => b.local.name === name).connect.link;
-    },
-
-    getBackendIDViaName: (state,getters) => (name) => {
-      return getters.getUserBackends(getters.getSignedInUserId)
-          .find(b => b.local.name === name).local.id;
     },
 
     getBackendJWTToken: (state, getters) => (id) => {
@@ -430,18 +418,6 @@ const store = createStore({
       state.signedInUserId = state.users.length - 1;
       state.signedIn = true;
     },
-
-    addRemoteUserToLocalList(state, payload) {
-      state.users.push(payload);
-      let x = 0;
-      for (let user of state.users) {
-          user.id = x;
-          user.info.id = x;
-          x++;
-      }
-      state.signedInUserId = state.users.length - 1;
-      state.signedIn = true;
-  },
 
     /**
      * @param state
@@ -740,7 +716,3 @@ function parseJwt(token) {
 let masterKey = null;
 
 export default store;
-export {generateMasterKey};
-export {encryptJsonObject};
-export {decryptJsonObject};
-
