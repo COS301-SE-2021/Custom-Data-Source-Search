@@ -57,6 +57,7 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "spectron": "14.0.0",
+    "tssrp6a": "^3.0.0",
     "typescript": "~3.9.3",
     "vue-cli-plugin-electron-builder": "~2.0.0",
     "vue-jest": "^5.0.0-0"
