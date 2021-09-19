@@ -462,19 +462,14 @@
               for (source in this.selectedSources) {
                 let backendID = this.$store.getters.getBackendIDViaName(this.selectedSources[source].backend);
                 const url = `http://${this.selectedSources[source].link}/general/datasources`;
-                console.log(url);
-                console.log(this.selectedSources[source].backend)
-                const authHeaders = {
-                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-                };
                 axios
                     .delete(url, {
-                      "headers": {
-                        authHeaders
+                      headers: {
+                        Authorization: "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
                       },
-                      "data": {
-                        "type": this.selectedSources[source].type,
-                        "id": this.selectedSources[source].id
+                      data: {
+                        type: this.selectedSources[source].type,
+                        id: this.selectedSources[source].id
                       }
                     })
                     .then(() => {
@@ -484,20 +479,20 @@
                         detail: "Source deleted",
                         life: 2000
                       });
+                      this.selectedSources = [];
+                      this.updateSources();
                     })
                     .catch(async () => {
+                      console.warn("ERROR");
                       await this.$store.dispatch("refreshJWTToken", {id: backendID});
-                      const headers = {
-                        "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-                      };
                       await axios
                        .delete(url, {
-                         "headers": {
-                           authHeaders
+                         headers: {
+                           Authorization: "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
                          },
-                         "data": {
-                           "type": this.selectedSources[source].type,
-                           "id": this.selectedSources[source].id
+                         data: {
+                           type: this.selectedSources[source].type,
+                           id: this.selectedSources[source].id
                          }
                        })
                           .then(() => {
@@ -507,6 +502,8 @@
                               detail: "Source deleted",
                               life: 2000
                             });
+                            this.selectedSources = [];
+                            this.updateSources();
                           })
                       .catch((error) => {
                         this.$toast.add({
@@ -515,11 +512,10 @@
                           detail: error.response.data.message,
                           life: 3000
                         });
+                        this.selectedSources = [];
                       })
                     })
               }
-              this.selectedSources = [];
-              this.updateSources();
             }
           })
         }
