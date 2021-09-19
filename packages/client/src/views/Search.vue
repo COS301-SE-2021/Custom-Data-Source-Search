@@ -1,7 +1,11 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter style="background:var(--surface-200);">
+    <Splitter
+        style="background:var(--surface-200);"
+        @mousedown="noPointerTrue"
+        @mouseup="noPointerFalse"
+    >
       <SplitterPanel :minSize="20" :size="90">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
@@ -461,7 +465,7 @@
     height: 90vh;
     padding-top: 10px;
     padding-bottom: 100px;
-    max-width: 60vw;
+    max-width: 40vw;
   }
 
   .container {
