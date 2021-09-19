@@ -4,7 +4,7 @@ on:
     branches: [ development ]
 jobs:
   build:
-    working_directory: ~/repo/packages/client
+    working_directory: ~/repo
     docker:
       - image: circleci/node:11-browsers
     steps:
@@ -15,6 +15,8 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm install
+          path: packages/client
       - run:
           name: Run tests
           command: npm run test
+          path: packages/client
