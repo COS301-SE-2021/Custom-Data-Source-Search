@@ -266,6 +266,7 @@
     grid-template-columns: 1fr 30fr;
     grid-template-rows: 0;
     height: 100%;
+    width: 100%;
   }
 
   a:-webkit-any-link {

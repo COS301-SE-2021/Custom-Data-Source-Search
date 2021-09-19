@@ -6,7 +6,7 @@
         @mousedown="noPointerTrue"
         @mouseup="noPointerFalse"
     >
-      <SplitterPanel :minSize="20" :size="90">
+      <SplitterPanel :minSize="20" :size="40">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
             <img
@@ -40,7 +40,7 @@
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel :minSize="30" class="container">
+      <SplitterPanel :minSize="40" class="container">
         <iframe
             :class="{ iFrameNoPointer: noPointer }"
             v-if="iFrameLink !== ''"
@@ -465,12 +465,13 @@
     height: 90vh;
     padding-top: 10px;
     padding-bottom: 100px;
-    max-width: 40vw;
+    max-width: 100%;
   }
 
   .container {
     height: available;
     overflow-y: scroll;
+    overflow-x: scroll;
     font-size: 0.9em;
   }
 
@@ -494,7 +495,6 @@
     justify-content: center;
     align-items: center;
     padding: 30px;
-    max-height: 100px;
     max-width: 1000px
   }
 
