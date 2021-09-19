@@ -44,13 +44,6 @@
     >
       <SplitterPanel :minSize="20" :size="40">
         <div class="search-bar">
-          <div v-if="firstSearch" class="logo-div">
-            <img
-                alt=""
-                height="150"
-                src="../assets/search_logo.png"
-            >
-          </div>
           <div class="search-div">
             <span class="p-input-icon-right">
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
@@ -85,8 +78,7 @@
             :src="iFrameLink"
         ></iframe>
         <div v-else>
-          <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
-          <div v-else class="next-prev">
+          <div class="next-prev">
             <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
             <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
           </div>
