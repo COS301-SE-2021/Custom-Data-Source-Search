@@ -342,6 +342,12 @@
       link: String
     },
 
+    watch: {
+      state(newState){
+        this.updateTableData();
+      }
+    },
+
     data() {
       return {
         usersLink: null,
@@ -405,7 +411,10 @@
       ...mapGetters([
         'getUserBackends',
         'getSignedInUserId',
-      ])
+      ]),
+      state(){
+        return this.$store.getters.getRefreshState;
+      }
     },
 
     beforeMount() {
