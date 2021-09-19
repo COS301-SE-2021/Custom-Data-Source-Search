@@ -33,7 +33,6 @@
             v-if="getIsUserAdmin"
             class="pi pi-sitemap"
             style="font-size:1.5rem"
-            @click="showJWTObject"
           />
         <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
@@ -60,7 +59,7 @@
           </CustomTooltip>
         </div>
         <ReEnterMasterPassword
-            :show="displayVaultDialog"
+            :show="displayPasswordDialog"
             :unconnected-backend-icon="true"
             :header="'Enter Master Password'"
             :body="'Continue Sleuthin\' all your favourite backends!'"
@@ -155,9 +154,6 @@
     },
 
     methods: {
-      showJWTObject() {
-        console.log("Is user an admin?" + this.$store.getters.getIsUserAdmin());
-      },
 
       checkSyncStatus(){
         if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
@@ -195,6 +191,7 @@
       },
 
       showAskMasterPw(){
+        console.log(this.$store.getters.getMasterKey);
         if(this.$store.getters.getMasterKey === null){
           this.showPasswordDialog();
         }
