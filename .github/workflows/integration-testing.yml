@@ -1,6 +1,6 @@
 name: Backend Continuous Integration
 
-on: [workflow_dispatch]
+on: [push]
 
 jobs:
   test-development-pr:
