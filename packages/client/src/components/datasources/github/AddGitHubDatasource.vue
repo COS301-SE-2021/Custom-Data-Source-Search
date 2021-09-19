@@ -52,10 +52,16 @@
       </span>
     </div>
     <Button
+        v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitWebpage"
+    />
+    <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        class="p-button-rounded p-button-text p-button-lg"
     />
   </ScrollPanel>
 </template>
@@ -77,13 +83,15 @@ export default {
       repo: "",
       tag1: null,
       tag2: null,
-      type: 'webpage'
+      type: 'webpage',
+      submitting: false
     }
   },
 
   methods: {
     async submitWebpage() {
       if(this.repo!==""){
+        this.submitting = true;
         let backendID = this.$store.getters.getBackendIDViaName(this.backend);
         let respObject = {
           "repo": this.username + "/" + this.repo,
@@ -106,7 +114,7 @@ export default {
                 detail: resp.data.message,
                 life: 3000
               });
-              this.$emit('addWebpage');
+              this.submitting = false;
               this.$emit("submitted");
             })
             .catch(async () => {
@@ -126,7 +134,7 @@ export default {
                       detail: resp.data.message,
                       life: 3000
                     });
-                    this.$emit('addWebpage');
+                    this.submitting = false;
                     this.$emit("submitted");
                   })
                   .catch(() =>{
