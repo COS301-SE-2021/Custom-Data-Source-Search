@@ -16,8 +16,8 @@
                 <input-text type="text" id="registration-string" v-model="registrationString"/>
                 <div></div>
                 <div>
-                    <Button @click="connectToBackendChecks" style="float: right" class="p-button p-button-outlined">Connect</Button>
-                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
+                    <Button @click="connectToBackendChecks" style="float: right" class="p-button">Connect</Button>
+                    <Button @click="cancelChanges" style="float: right" class="p-button-text">Cancel</Button>
                 </div>
             </div>
         </div>
@@ -88,13 +88,7 @@
                 this.editBackendBool = !this.editBackendBool;
             },
             connectToBackendChecks(){
-                this.extractEncodedData(this.registrationString);
-                if (
-                    this.tempBackendInfo.link === '' ||
-                    this.tempBackendInfo.associatedEmail === '' ||
-                    this.tempBackendInfo.secret === '' ||
-                    this.tempBackendInfo.oneTimeKey === ''
-                ) {
+                if (this.tempBackendInfo.name === '' ||  this.registrationString === '') {
                     this.$toast.add(
                         {
                             severity:'error',
@@ -104,6 +98,7 @@
                         });
                 }
                 else {
+                    this.extractEncodedData(this.registrationString);
                     this.connectToBackend();
                 }
             },
