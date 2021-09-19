@@ -27,7 +27,7 @@
           <i class="pi pi-refresh" aria-hidden="true" v-tooltip="'Refresh'" @click="updateSources"/>
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
-            <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
+            <InputText ref="Global" v-model="filters['global'].value" placeholder="Keyword Search"/>
           </span>
           <Button
               id="add-datasource-button"
@@ -332,7 +332,11 @@
         console.log(this.sources.length)
       },
 
-      after(){
+    mounted(){
+      this.$refs.Global.$el.focus();
+    },
+
+    after(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',
