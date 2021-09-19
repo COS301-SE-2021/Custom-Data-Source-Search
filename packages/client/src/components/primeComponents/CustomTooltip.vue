@@ -4,8 +4,7 @@
     <div class="tooltip">
       <div class="text" v-for="text in (unconnectedBackendNames)">
         <span>{{ text }}</span>
-        <br>
-        <span> _ </span>
+        <Divider/>
       </div>
     </div>
   </div>
