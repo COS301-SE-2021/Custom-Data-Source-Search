@@ -54,7 +54,12 @@
 </template>
 
 <script>
-    export default {
+import {SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
+import axios from "axios";
+import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
+import {pbkdf2Sync} from "crypto";
+
+export default {
         name: "DeleteUserAreYouSure",
         props: {
           show: Boolean,
@@ -92,10 +97,10 @@
                   this.deleteUser();
               }
           },
-          deleteUser() {
-              this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
-              this.$emit("clearCurrentUser");
-              this.closePopUp();
+          async deleteUser() {
+            this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
+            this.$emit("clearCurrentUser");
+            this.closePopUp();
           },
           hide(){
             this.$emit('display-popup');
