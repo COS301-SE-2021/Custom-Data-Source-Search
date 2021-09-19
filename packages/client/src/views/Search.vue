@@ -12,7 +12,8 @@
         </div>
         <div class="search-div-initial">
             <span class="p-input-icon-right">
-                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <i v-if="!loading" aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <i v-else aria-hidden="true" class="pi pi-spin pi-spinner"/>
                 <InputText
                     v-model="query"
                     placeholder="Sleuth..."
@@ -159,7 +160,8 @@
         name: "Search",
         firstSearch: true,
         noPointer: false,
-        iFrameLink: ''
+        iFrameLink: '',
+        loading: false
       }
     },
 
@@ -209,6 +211,7 @@
        */
       async queryBackends(q) {
         this.firstSearch = false;
+        this.loading = true;
         this.searchResultsBuffer = [];
         this.searchResults = [];
         for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -243,6 +246,7 @@
         if (this.searchResults.length === 0) {
           this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
         }
+        this.loading = false;
       },
 
       /**
