@@ -25,9 +25,8 @@
               <checkbox
                   v-model="advancedSearch"
                   :binary="true"
-                  v-tooltip.top="'Allows you to construct advanced queries using logical operators and brackets: ' +
-                   'e.g. (some code AND (john OR Dave)) AND return. If not turned on, brackets will be seen as part ' +
-                    'of your search query. I.e. the system will match on brackets.'"
+                  v-tooltip.top="'Allows you to construct advanced queries using logical operators and brackets\n ' +
+                   'For Example: \nHello AND (John OR Dave))'"
                   @click="reRunQuery">
               </checkbox>
               Advanced Search
