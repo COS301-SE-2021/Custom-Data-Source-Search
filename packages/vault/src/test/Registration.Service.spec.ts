@@ -3,7 +3,7 @@ import {randomBytes} from "crypto";
 
 const service = registrationService
 
-describe("Registration Service : Detail Validation",  () => {
+describe("Registration Service: Detail Validation",  () => {
     it("Should Return False if Request Body is null", async () => {
         //given
         const body = {};
