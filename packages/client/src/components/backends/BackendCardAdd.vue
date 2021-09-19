@@ -16,8 +16,8 @@
                 <input-text type="text" id="registration-string" v-model="registrationString"/>
                 <div></div>
                 <div>
-                    <Button @click="connectToBackendChecks" style="float: right" class="p-button p-button-outlined">Connect</Button>
-                    <Button @click="cancelChanges" style="float: right" class="p-button p-button-outlined">Cancel</Button>
+                    <Button @click="connectToBackendChecks" style="float: right" class="p-button">Connect</Button>
+                    <Button @click="cancelChanges" style="float: right" class="p-button-text">Cancel</Button>
                 </div>
             </div>
         </div>
