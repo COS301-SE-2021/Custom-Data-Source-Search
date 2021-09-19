@@ -19,7 +19,7 @@
               <checkbox
                   v-model="advancedSearch"
                   :binary="true"
-                  v-tooltip.bottom="'Placeholder tooltip'"
+                  v-tooltip.top="'Placeholder tooltip'"
                   @click="reRunQuery">
               </checkbox>
               Advanced Search
@@ -53,7 +53,7 @@
               <checkbox
                   v-model="advancedSearch"
                   :binary="true"
-                  v-tooltip.bottom="'Placeholder tooltip'"
+                  v-tooltip.top="'Placeholder tooltip'"
                   @click="reRunQuery">
               </checkbox>
               Advanced Search
