@@ -1,30 +1,63 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
+    <div v-if="fullFileData === ''">
+      <div class="search-bar">
+        <div v-if="firstSearch" class="logo-div">
+          <img
+              alt=""
+              height="250"
+              src="../assets/search_logo.png"
+          >
+        </div>
+        <div class="search-div-initial">
+            <span class="p-input-icon-right">
+                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <InputText v-model="query" placeholder="Sleuth..." size="100" @keyup.enter="queryBackends(query)"/>
+            </span>
+          <span class="advanced-search-toggle">
+              <checkbox
+                  v-model="advancedSearch"
+                  :binary="true"
+                  v-tooltip.top="'Allows you to construct advanced queries using logical operators and brackets: ' +
+                   'e.g. (some code AND (john OR Dave)) AND return. If not turned on, brackets will be seen as part ' +
+                    'of your search query. I.e. the system will match on brackets.'"
+                  @click="reRunQuery">
+              </checkbox>
+              Advanced Search
+            </span>
+        </div>
+      </div>
+      <div class="search-results container">
+        <search-result-card
+            v-for="(r,i) in searchResults"
+            :key="i"
+            :="r"
+            :small=false
+            @snippetClicked="goToLineFetchFileIfRequired"
+        />
+      </div>
+    </div>
     <Splitter
+        v-else
         style="background:var(--surface-200);"
         @mousedown="noPointerTrue"
         @mouseup="noPointerFalse"
     >
       <SplitterPanel :minSize="20" :size="40">
         <div class="search-bar">
-          <div v-if="firstSearch" class="logo-div">
-            <img
-                alt=""
-                height="150"
-                src="../assets/search_logo.png"
-            >
-          </div>
           <div class="search-div">
             <span class="p-input-icon-right">
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
-            <span id="advanced_search_toggle">
+            <span class="advanced-search-toggle">
               <checkbox
                   v-model="advancedSearch"
                   :binary="true"
-                  v-tooltip.bottom="'Placeholder tooltip'"
+                  v-tooltip.top="'Allows you to construct advanced queries using logical operators and brackets: ' +
+                   'e.g. (some code AND (john OR Dave)) AND return. If not turned on, brackets will be seen as part ' +
+                    'of your search query. I.e. the system will match on brackets.'"
                   @click="reRunQuery">
               </checkbox>
               Advanced Search
@@ -36,6 +69,7 @@
               v-for="(r,i) in searchResults"
               :key="i"
               :="r"
+              :small=true
               @snippetClicked="goToLineFetchFileIfRequired"
           />
         </div>
@@ -48,8 +82,7 @@
             :src="iFrameLink"
         ></iframe>
         <div v-else>
-          <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
-          <div v-else class="next-prev">
+          <div class="next-prev">
             <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
             <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
           </div>
@@ -479,7 +512,7 @@
 
   input {
     width: 100%;
-    min-width: 0
+    min-width: 0;
   }
 
   .container::-webkit-scrollbar {
@@ -497,7 +530,14 @@
     justify-content: center;
     align-items: center;
     padding: 30px;
-    max-width: 1000px
+    max-width: 1000px;
+  }
+
+  .search-div-initial{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
   }
 
   ::placeholder {
@@ -557,7 +597,7 @@
     padding-bottom: 40px;
   }
 
-  #advanced_search_toggle {
+  .advanced-search-toggle {
     padding-left: 15px;
     min-width: 170px;
   }
