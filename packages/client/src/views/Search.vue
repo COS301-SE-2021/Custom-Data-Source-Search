@@ -168,7 +168,16 @@
         'unconnectedBackendNo',
         'unconnectedBackendBool',
         'unconnectedBackendNames'
-      ])
+      ]),
+      state(){
+        return this.$store.getters.getRefreshState;
+      }
+    },
+
+    watch: {
+      state(newState){
+        this.reRunQuery();
+      }
     },
 
     beforeMount() {
