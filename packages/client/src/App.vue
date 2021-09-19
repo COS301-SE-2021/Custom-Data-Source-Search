@@ -191,10 +191,7 @@
       },
 
       showAskMasterPw(){
-        console.log(this.$store.getters.getMasterKey);
-        if(this.$store.getters.getMasterKey === null){
-          this.showPasswordDialog();
-        }
+        this.showPasswordDialog();
       },
 
       toggle(event){
