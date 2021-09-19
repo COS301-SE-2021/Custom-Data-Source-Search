@@ -7,7 +7,7 @@ export const webPageDataSourceRouter = express.Router();
 /**
  * Return all folder Data Sources
  */
-webPageDataSourceRouter.get("/", (req: Request, res: Response) => {
+webPageDataSourceRouter.get("/", authUser("viewer"), (req: Request, res: Response) => {
     const result = webPageDataSourceService.getAllWebPageDataSources();
     res.status(result.code).send(result.body);
 });
@@ -15,7 +15,7 @@ webPageDataSourceRouter.get("/", (req: Request, res: Response) => {
 /**
  * Return a single webpage Data Source specified by the id
  */
-webPageDataSourceRouter.get("/:id", (req: Request, res: Response) => {
+webPageDataSourceRouter.get("/:id", authUser("viewer"), (req: Request, res: Response) => {
     const result = webPageDataSourceService.getWebPageDataSource(req.params.id);
     res.status(result.code).send(result.body);
 });

@@ -149,6 +149,7 @@
     beforeCreate() {
        this.$store.commit('initialiseStore');
     },
+
     mounted() {
       this.interval = setInterval(() => this.checkSyncStatus(), 25000);
     },
@@ -157,6 +158,7 @@
       showJWTObject() {
         console.log("Is user an admin?" + this.$store.getters.getIsUserAdmin());
       },
+
       checkSyncStatus(){
         if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
           console.log("Checking Sync Status");
@@ -191,6 +193,7 @@
               })
         }
       },
+
       showAskMasterPw(){
         if(this.$store.getters.getMasterKey === null){
           this.showPasswordDialog();
