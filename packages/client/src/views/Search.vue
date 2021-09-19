@@ -624,4 +624,8 @@
     width: 100%;
     height: 100vh;
   }
+
+  .search-results{
+    color: rgba(255, 255, 255, 0.87);
+  }
 </style>
