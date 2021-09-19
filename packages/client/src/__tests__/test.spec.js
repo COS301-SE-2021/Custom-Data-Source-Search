@@ -18,7 +18,7 @@ test('Window Loads Properly', async () => {
             return app.stop();
         }
     });
-    
+
     // Window was created
     expect(await client.getWindowCount()).toBe(1)
     // It is not minimized
