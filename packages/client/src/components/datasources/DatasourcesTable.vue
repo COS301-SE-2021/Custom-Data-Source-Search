@@ -27,7 +27,7 @@
           <i class="pi pi-refresh" aria-hidden="true" v-tooltip="'Refresh'" @click="updateSources"/>
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
-            <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
+            <InputText ref="Global" v-model="filters['global'].value" placeholder="Keyword Search"/>
           </span>
           <Button
               id="add-datasource-button"
@@ -289,50 +289,69 @@
   import AddGitHubDatasource from "@/components/datasources/github/AddGitHubDatasource";
 
   export default {
-      name: "DatasourcesTable",
+    name: "DatasourcesTable",
 
-      components: {
-        AddGitHubDatasource,
-        AddFileDatasource,
-        AddFolderDatasource,
-        AddWebpageDatasource
-      },
+    components: {
+      AddGitHubDatasource,
+      AddFileDatasource,
+      AddFolderDatasource,
+      AddWebpageDatasource
+    },
 
-      data() {
-        return {
-          message: "No sources have been selected.",
-          type: null,
-          clicked: false,
-          sources: [],
-          loading: false,
-          backend: null,
-          selectedSources: [],
-          filters: {
-            'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-            'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
-            'backend': {value: null, matchMode: FilterMatchMode.IN},
-            'type': {value: null, matchMode: FilterMatchMode.IN},
-            'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
-            'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
-          },
-          types: [
-            'file', 'folder', 'webpage', 'github'
-          ],
-          backends: [],
-          user: null
-        }
-      },
+    computed:{
+      state(){
+        return this.$store.getters.getRefreshState;
+      }
+    },
 
-      beforeMount() {
-        if (this.$store.getters.getNewAppStatus) {
-          this.$router.push('/');
-        }
-        this.backends = this.$store.getters.getUserBackendNames;
+    watch: {
+      state(newState){
         this.updateSources();
-        console.log(this.sources.length)
-      },
+      }
+    },
 
-      after(){
+    data() {
+      return {
+        message: "No sources have been selected.",
+        type: null,
+        clicked: false,
+        sources: [],
+        loading: false,
+        backend: null,
+        selectedSources: [],
+        filters: {
+          'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+          'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
+          'backend': {value: null, matchMode: FilterMatchMode.IN},
+          'type': {value: null, matchMode: FilterMatchMode.IN},
+          'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+          'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        },
+        types: [
+          'file', 'folder', 'webpage', 'github'
+        ],
+        backends: [],
+        user: null
+      }
+    },
+
+    beforeMount() {
+      if (this.$store.getters.getNewAppStatus) {
+        this.$router.push('/');
+      }
+      this.backends = this.$store.getters.getUserBackendNames;
+      this.updateSources();
+      console.log(this.sources.length)
+    },
+
+    mounted(){
+      this.$refs.Global.$el.focus();
+      // this.$root.$on('globalUpdate', () => {
+      //       this.updateSources();
+      //     });
+    },
+
+    after(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',
@@ -457,24 +476,19 @@
             icon: 'pi pi-exclamation-triangle',
             acceptClass: "p-button-danger",
             rejectClass: "p-button-text p-button-plain",
-            accept: () => {
+            accept:() => {
               let source;
               for (source in this.selectedSources) {
                 let backendID = this.$store.getters.getBackendIDViaName(this.selectedSources[source].backend);
                 const url = `http://${this.selectedSources[source].link}/general/datasources`;
-                console.log(url);
-                console.log(this.selectedSources[source].backend)
-                const authHeaders = {
-                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-                };
-                axios
+                 axios
                     .delete(url, {
-                      "headers": {
-                        authHeaders
+                      headers: {
+                        Authorization: "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
                       },
-                      "data": {
-                        "type": this.selectedSources[source].type,
-                        "id": this.selectedSources[source].id
+                      data: {
+                        type: this.selectedSources[source].type,
+                        id: this.selectedSources[source].id
                       }
                     })
                     .then(() => {
@@ -487,17 +501,14 @@
                     })
                     .catch(async () => {
                       await this.$store.dispatch("refreshJWTToken", {id: backendID});
-                      const headers = {
-                        "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
-                      };
                       await axios
                        .delete(url, {
-                         "headers": {
-                           authHeaders
+                         headers: {
+                           Authorization: "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
                          },
-                         "data": {
-                           "type": this.selectedSources[source].type,
-                           "id": this.selectedSources[source].id
+                         data: {
+                           type: this.selectedSources[source].type,
+                           id: this.selectedSources[source].id
                          }
                        })
                           .then(() => {
@@ -515,6 +526,7 @@
                           detail: error.response.data.message,
                           life: 3000
                         });
+                        this.selectedSources = [];
                       })
                     })
               }

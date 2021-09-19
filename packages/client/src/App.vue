@@ -102,11 +102,10 @@
   import ProfileDropdown from "@/components/landing/ProfileDropdown";
   import {mapGetters} from "vuex";
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
-  import CustomTooltip from "./components/primeComponents/CustomTooltip";
+  import CustomTooltip from "./components/customComponents/CustomTooltip";
   import axios from "axios";
-  import {createHash, pbkdf2Sync} from "crypto";
+  import {pbkdf2Sync} from "crypto";
   import VaultSync from "@/components/popups/VaultSync";
-  import {encryptJsonObject, generateMasterKey} from "@/store/Store";
 
   export default {
   components: {
@@ -171,7 +170,7 @@
           let reqObj = {
             email: user.info.email,
             fingerprint: dataFingerprint
-          }
+          };
           console.log("requestObject" + JSON.stringify(reqObj));
           axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
               {headers: {"Content-Type": "application/json"}})
@@ -266,11 +265,18 @@
     grid-template-columns: 1fr 30fr;
     grid-template-rows: 0;
     height: 100%;
+    width: 100%;
   }
 
   a:-webkit-any-link {
     text-decoration: none;
-    padding-left: 0.7em
+    margin-left: 0.3em;
+    padding-top: 0.5em;
+    margin-top: 0.4em;
+  }
+
+  a:focus {
+    outline-color: #41B3B2;
   }
 
   .icon {

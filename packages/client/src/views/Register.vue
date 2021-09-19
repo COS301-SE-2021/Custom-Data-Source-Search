@@ -2,18 +2,19 @@
   <div class="registration-grid">
     <Toast position="bottom-right"/>
     <div>
-      <div style="margin-top: 10%;">
+      <div style="margin-top: 3vh;">
         <Button
             icon="pi pi-arrow-left"
             class="p-button-lg p-button-rounded p-button-text"
             @click="back"
         />
       </div>
-      <div style="font-size: xx-large; color: #f9f6ee; text-align: center">
-        <span>Register</span>
-      </div>
-      <form @submit="loadValues">
-        <div class="input-fields" style="max-height: 20vh">
+      <div style="margin-top: 5vh;">
+        <div style="font-size: xx-large; color: #f9f6ee; text-align: center">
+          <span>Register</span>
+        </div>
+        <form @submit="loadValues">
+          <div class="input-fields" style="max-height: 20vh">
           <span class="p-float-label">
               <InputText
                   id="Name"
@@ -24,7 +25,7 @@
               />
             <label for="Name">Name</label>
           </span>
-          <span class="p-float-label">
+            <span class="p-float-label">
             <InputText
                 id="Email"
                 type="email"
@@ -33,7 +34,7 @@
             />
             <label for="Email" >Email</label>
           </span>
-          <div>
+            <div>
             <span class="p-float-label">
               <PasswordInputField
                   id="masterPassword"
@@ -44,13 +45,13 @@
               />
               <label for="masterPassword">Master Password</label>
             </span>
-            <span style="font-size: small; margin-top: 30px">
+              <span style="font-size: small; margin-top: 30px">
                 The master password is the password you use to access your vault.
                 It is very important that you do not forget your master password.
                 There is no way to recover the password in the event that you forget it.
             </span>
-          </div>
-          <div>
+            </div>
+            <div>
            <span class="p-float-label">
               <PasswordInputField
                   id="masterPassCheck"
@@ -61,38 +62,39 @@
               />
              <label for="masterPassCheck">Repeat Password</label>
            </span>
-          </div>
-          <div>
-            <Checkbox
-                id="checkbox"
-                name="checkbox"
-                v-model="userDetails.backupVault"
-                :binary="true"/>
-            <label for="checkbox">Enable remote access to account?</label>
-            <br>
-            <span style="font-size: small;">
+            </div>
+            <div>
+              <Checkbox
+                  id="checkbox"
+                  name="checkbox"
+                  v-model="userDetails.backupVault"
+                  :binary="true"/>
+              <label for="checkbox">Enable remote access to account?</label>
+              <br>
+              <span style="font-size: small;">
                 Remote access enables the user to log into their
                 account on the web browser version of DataSleuth.
             </span>
+            </div>
+            <div style="text-align: center; margin-top: 5%;">
+              <Button
+                  label="Register"
+                  type="submit"
+                  style="text-align: center;"
+                  class="p-button-md p-button-outlined"
+                  @click="loadValues"
+              />
+            </div>
+            <div v-if="errors.length" style="max-height: 0.05vh">
+              <span> <strong>Please correct the following error(s):</strong></span>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+            </div>
           </div>
-          <div style="text-align: center; margin-top: 5%;">
-            <Button
-                label="Register"
-                type="submit"
-                style="text-align: center;"
-                class="p-button-md p-button-outlined"
-                @click="loadValues"
-            />
-          </div>
-          <div v-if="errors.length" style="max-height: 0.05vh">
-            <span> <strong>Please correct the following error(s):</strong></span>
-            <ul>
-              <li v-for="error in errors">{{ error }}</li>
-            </ul>
-          </div>
-        </div>
-        <SignIn :show="displaySignIn" @display-popup="showSignIn"></SignIn>
-      </form>
+          <SignIn :show="displaySignIn" @display-popup="showSignIn"></SignIn>
+        </form>
+      </div>
     </div>
     <div>
       <Divider layout="vertical">
@@ -144,7 +146,7 @@
   import InputText from 'primevue/inputtext'
   import SignIn from "../components/popups/SignIn";
   import Checkbox from 'primevue/checkbox';
-  import PasswordInputField from "../components/primeComponents/PasswordInputField";
+  import PasswordInputField from "../components/customComponents/PasswordInputField";
   import axios from "axios";
   import {createHash, pbkdf2Sync} from 'crypto';
   import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";

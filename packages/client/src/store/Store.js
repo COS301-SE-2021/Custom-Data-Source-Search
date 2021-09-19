@@ -21,10 +21,14 @@ const store = createStore({
   state: {
     signedInUserId: null,
     signedIn: null,
-    users: []
+    users: [],
+    refresh: false
   },
 
   getters: {
+    getRefreshState(state) {
+      return state.refresh;
+    },
     /*
     User information related getters
     ================================
@@ -41,17 +45,17 @@ const store = createStore({
       return state.users.find(user => user.id === id).info;
     },
 
-        getUser: (state) => (id) => {
-            return state.users.find(user => user.id === id);
-        },
+    getUser: (state) => (id) => {
+        return state.users.find(user => user.id === id);
+    },
 
-        getArrUserInfo(state) {
-            let users = [];
-            for (let x = 0; x < state.users.length; x++) {
-                users.push(state.users[x].info);
-            }
-            return users;
-        },
+    getArrUserInfo(state) {
+        let users = [];
+        for (let x = 0; x < state.users.length; x++) {
+            users.push(state.users[x].info);
+        }
+        return users;
+    },
 
     getSignedInUserId(state) {
       return state.signedInUserId;
@@ -208,6 +212,10 @@ const store = createStore({
             Object.assign(state, JSON.parse(localStorage.getItem('store')))
         );
       }
+    },
+
+    alterRefreshState(state) {
+      state.refresh = !state.refresh;
     },
 
     /*

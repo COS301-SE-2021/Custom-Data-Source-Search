@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import PasswordInputField from "../primeComponents/PasswordInputField";
+  import PasswordInputField from "../customComponents/PasswordInputField";
 
   export default {
         name: "ReEnterMasterPassword",
@@ -71,6 +71,7 @@
                     this.storeThisUser();
                 }
                 this.passwordIncorrectCheck();
+                this.$store.commit("alterRefreshState");
             },
             updateBackendLogin () {
                 this.storeThisUser();

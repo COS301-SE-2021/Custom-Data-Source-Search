@@ -1,26 +1,69 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <Splitter style="background:var(--surface-200);">
-      <SplitterPanel :minSize="20" :size="90">
+    <div v-if="fullFileData === '' && iFrameLink === ''">
+      <div class="search-bar">
+        <div v-if="firstSearch" class="logo-div">
+          <img
+              alt=""
+              height="250"
+              src="../assets/search_logo.png"
+          >
+        </div>
+        <div class="search-div-initial">
+            <span class="p-input-icon-right">
+                <i v-if="!loading" aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <i v-else aria-hidden="true" class="pi pi-spin pi-spinner"/>
+                <InputText
+                    v-model="query"
+                    placeholder="Sleuth..."
+                    ref="Sleuth"
+                    size="100"
+                    @keyup.enter="queryBackends(query)"
+                />
+            </span>
+          <span class="advanced-search-toggle">
+              <checkbox
+                  v-model="advancedSearch"
+                  :binary="true"
+                  v-tooltip.top="'Allows you to construct advanced queries using logical operators and brackets\n ' +
+                   'For Example: \nHello AND (John OR Dave))'"
+                  @click="reRunQuery">
+              </checkbox>
+              Advanced Search
+            </span>
+        </div>
+      </div>
+      <div class="search-results container">
+        <search-result-card
+            v-for="(r,i) in searchResults"
+            :key="i"
+            :="r"
+            :small=false
+            @snippetClicked="goToLineFetchFileIfRequired"
+        />
+      </div>
+    </div>
+    <Splitter
+        v-else
+        style="background:var(--surface-200);"
+        @mousedown="noPointerTrue"
+        @mouseup="noPointerFalse"
+    >
+      <SplitterPanel :minSize="20" :size="40">
         <div class="search-bar">
-          <div v-if="firstSearch" class="logo-div">
-            <img
-                alt=""
-                height="150"
-                src="../assets/search_logo.png"
-            >
-          </div>
           <div class="search-div">
             <span class="p-input-icon-right">
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
-            <span id="advanced_search_toggle">
+            <span class="advanced-search-toggle">
               <checkbox
                   v-model="advancedSearch"
                   :binary="true"
-                  v-tooltip.bottom="'Placeholder tooltip'"
+                  v-tooltip.top="'Allows you to construct advanced queries using logical operators and brackets: ' +
+                   'e.g. (some code AND (john OR Dave)) AND return. If not turned on, brackets will be seen as part ' +
+                    'of your search query. I.e. the system will match on brackets.'"
                   @click="reRunQuery">
               </checkbox>
               Advanced Search
@@ -32,11 +75,12 @@
               v-for="(r,i) in searchResults"
               :key="i"
               :="r"
+              :small=true
               @snippetClicked="goToLineFetchFileIfRequired"
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel :minSize="30" class="container">
+      <SplitterPanel :minSize="40" class="container">
         <iframe
             :class="{ iFrameNoPointer: noPointer }"
             v-if="iFrameLink !== ''"
@@ -44,8 +88,7 @@
             :src="iFrameLink"
         ></iframe>
         <div v-else>
-          <p v-if='fullFileData === ""' id="divider_usage_message">to adjust size of panel drag divider left or right</p>
-          <div v-else class="next-prev">
+          <div class="next-prev">
             <icon-simple-expand-more class="clickable" @click="scrollToNextResult"/>
             <icon-simple-expand-less class="clickable" @click="scrollToPrevResult"/>
           </div>
@@ -113,10 +156,12 @@
         notDeleted: true,
         query: "",
         searchResults: [],
+        searchResultsBuffer: [],
         name: "Search",
         firstSearch: true,
         noPointer: false,
-        iFrameLink: ''
+        iFrameLink: '',
+        loading: false
       }
     },
 
@@ -125,13 +170,26 @@
         'unconnectedBackendNo',
         'unconnectedBackendBool',
         'unconnectedBackendNames'
-      ])
+      ]),
+      state(){
+        return this.$store.getters.getRefreshState;
+      }
+    },
+
+    watch: {
+      state(newState){
+        this.reRunQuery();
+      }
     },
 
     beforeMount() {
       if (this.$store.getters.getNewAppStatus) {
         this.$router.push('/');
       }
+    },
+
+    mounted(){
+      this.$refs.Sleuth.$el.focus();
     },
 
     methods: {
@@ -153,6 +211,8 @@
        */
       async queryBackends(q) {
         this.firstSearch = false;
+        this.loading = true;
+        this.searchResultsBuffer = [];
         this.searchResults = [];
         for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
           if (!backend.local.active) {
@@ -182,9 +242,11 @@
                     })
               })
         }
+        this.searchResults = this.searchResultsBuffer;
         if (this.searchResults.length === 0) {
           this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
         }
+        this.loading = false;
       },
 
       /**
@@ -204,7 +266,6 @@
        * @param backend backend info from store
        */
       augmentAndSaveSearchResults(results, backend) {
-        console.log("augment!");
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -215,7 +276,7 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResults = this.mergeLists(this.searchResults, results);
+        this.searchResultsBuffer = this.mergeLists(this.searchResultsBuffer, results);
       },
 
       /**
@@ -461,18 +522,19 @@
     height: 90vh;
     padding-top: 10px;
     padding-bottom: 100px;
-    max-width: 60vw;
+    max-width: 100%;
   }
 
   .container {
     height: available;
     overflow-y: scroll;
+    overflow-x: scroll;
     font-size: 0.9em;
   }
 
   input {
     width: 100%;
-    min-width: 0
+    min-width: 0;
   }
 
   .container::-webkit-scrollbar {
@@ -490,8 +552,14 @@
     justify-content: center;
     align-items: center;
     padding: 30px;
-    max-height: 100px;
-    max-width: 1000px
+    max-width: 1000px;
+  }
+
+  .search-div-initial{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
   }
 
   ::placeholder {
@@ -551,7 +619,7 @@
     padding-bottom: 40px;
   }
 
-  #advanced_search_toggle {
+  .advanced-search-toggle {
     padding-left: 15px;
     min-width: 170px;
   }
@@ -568,5 +636,9 @@
   iframe {
     width: 100%;
     height: 100vh;
+  }
+
+  .search-results{
+    color: rgba(255, 255, 255, 0.87);
   }
 </style>

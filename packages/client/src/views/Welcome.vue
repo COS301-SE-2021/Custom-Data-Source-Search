@@ -48,142 +48,138 @@
 </template>
 
 <script>
-    import UserCard from "../components/users/UserCard";
-    import AddUserCard from "../components/users/AddUserCard";
-    import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
-    import SignOutCheck from "../components/popups/SignOutCheck";
-    import SignIn from "../components/popups/SignIn";
-    import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
-    import {mapGetters} from "vuex";
-    import _ from 'lodash';
-    import axios from "axios";
+  import UserCard from "../components/users/UserCard";
+  import AddUserCard from "../components/users/AddUserCard";
+  import DeleteUserAreYouSure from "../components/popups/DeleteUserAreYouSure";
+  import SignOutCheck from "../components/popups/SignOutCheck";
+  import SignIn from "../components/popups/SignIn";
+  import ReEnterMasterPassword from "../components/popups/ReEnterMasterPassword";
+  import {mapGetters} from "vuex";
+  import _ from 'lodash';
 
-    export default {
-        name: "Welcome",
+  export default {
+    name: "Welcome",
 
-        components: {ReEnterMasterPassword, SignIn, SignOutCheck, DeleteUserAreYouSure, AddUserCard, UserCard},
+    components: {
+      ReEnterMasterPassword,
+      SignIn,
+      SignOutCheck,
+      DeleteUserAreYouSure,
+      AddUserCard,
+      UserCard
+    },
 
-        data() {
-            return {
-                displayMasterPwInput: false,
-                displaySignIn: false,
-                displayDeleteCheck: false,
-                displaySignOutCheck: false,
-                isSignedIn: true,
-                execProcess: null,
-                stopProcess: null,
-                removeBoolean: false,
-                selectedUser: null,
-                deleteVaultFedIn: null,
-                firstQuestionFedIn: true,
-                randomId: null,
-                items: [
-                    {
-                        label: 'Sign Out', icon: 'pi pi-sign-out', command: () => {
-                        this.$confirm.require({
-                          message: "Are you sure you want to sign out, " + this.selectedUser.name + "?",
-                          header: 'Confirmation',
-                          icon: 'pi pi-exclamation-triangle',
-                          acceptClass: "p-button-danger",
-                          rejectClass: "p-button-text p-button-plain",
-                          accept: () => {
-                            axios
-                                .post("http://localhost:3001/users/global/logout")
-                                .then(resp => {
-                                  this.$store.commit('signOutUser', {userID: this.selectedUser.id});
-                                  this.closePopUp();
-                                  this.$router.push('/');
-                                })
-                                .catch((error) => {
-                                  this.$toast.add({
-                                    severity: 'error',
-                                    summary: 'Error',
-                                    detail: 'Could not sign out user',
-                                    life: 3000
-                                  });
-                                  console.log(error);
-                                })
-                          }
-                        })
-                        }
-                    },
-                    {
-                        label: 'Remove', icon: 'pi pi-trash', command: () => {
-                            this.displayDeleteCheck = !this.displayDeleteCheck;
-                        }
-                    }
-                ],
-                tips: [
-                    "Want to fuzzy search? Place ~ at the end of your search!",
-                    "Click on a search result to view the file contents in DataSleuth",
-                    "Dividers can be dragged left and right to resize panels"
-                ]
-            }
-        },
-
-        computed: {
-            ...mapGetters([
-                'getArrUserInfo',
-                'getNewAppStatus'
-            ])
-        },
-
-        beforeMount() {
-            if (this.$store.getters.getSignedIn) {
-                this.$router.push('Search');
-            }
-        },
-
-        mounted() {
-            this.isSignedIn = this.$store.getters.getSignedIn;
-            this.shuffleArray();
-        },
-
-        methods: {
-            showReEnterMasterPass() {
-                this.displayMasterPwInput = !this.displayMasterPwInput;
-            },
-
-            signInThisUser() {
-                this.$router.push('Search');
-                this.$store.commit('setSignedIn', true);
-            },
-
-            showSignIn() {
-                this.displaySignIn = !this.displaySignIn
-            },
-
-            clearCurrentUser() {
-                this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
-            },
-
-            cleanPopUp() {
-                if (this.displayDeleteCheck) {
-                    this.firstQuestionFedIn = true;
-                    this.deleteVaultFedIn = true;
+    data() {
+      return {
+        displayMasterPwInput: false,
+        displaySignIn: false,
+        displayDeleteCheck: false,
+        displaySignOutCheck: false,
+        isSignedIn: true,
+        execProcess: null,
+        stopProcess: null,
+        removeBoolean: false,
+        selectedUser: null,
+        deleteVaultFedIn: null,
+        firstQuestionFedIn: true,
+        randomId: null,
+        items: [
+          {
+            label: 'Sign Out',
+            icon: 'pi pi-sign-out',
+            command: () => {
+              this.$confirm.require({
+                message: "Are you sure you want to sign out, " + this.selectedUser.name + "?",
+                header: 'Confirmation',
+                icon: 'pi pi-exclamation-triangle',
+                acceptClass: "p-button-danger",
+                rejectClass: "p-button-text p-button-plain",
+                accept: () => {
+                  this.$store.commit('signOutUser', {userID: this.selectedUser.id});
+                  this.$router.push('/');
                 }
-            },
+              })
+            }
+          },
+          {
+            label: 'Remove',
+            icon: 'pi pi-trash',
+            command: () => {
+              this.displayDeleteCheck = !this.displayDeleteCheck;
+            }
+          }
+        ],
+        tips: [
+          "Want to fuzzy search? Place ~ at the end of your search!",
+          "Click on a search result to view the file contents in DataSleuth",
+          "Dividers can be dragged left and right to resize panels"
+        ]
+      }
+    },
 
-            showSignOutCheck() {
-                this.displaySignOutCheck = !this.displaySignOutCheck;
-            },
+    computed: {
+      ...mapGetters([
+        'getArrUserInfo',
+        'getNewAppStatus'
+      ])
+    },
 
-            showPopup() {
-                this.displayDeleteCheck = !this.displayDeleteCheck;
-            },
+    beforeMount() {
+      if (this.$store.getters.getSignedIn) {
+        this.$router.push('Search');
+      }
+    },
 
-            updateSelectedUser(user) {
-                this.selectedUser = user;
-            },
+    mounted() {
+      this.isSignedIn = this.$store.getters.getSignedIn;
+      this.shuffleArray();
+    },
 
-            onUserCardRightClick(event) {
-                this.$refs.deleteOption.show(event);
-            },
-            shuffleArray() {
-                this.tips = _.shuffle(this.tips)
-            },
+    methods: {
+      showReEnterMasterPass() {
+        this.displayMasterPwInput = !this.displayMasterPwInput;
+      },
+
+      signInThisUser() {
+        this.$router.push('Search');
+        this.$store.commit('setSignedIn', true);
+      },
+
+      showSignIn() {
+        this.displaySignIn = !this.displaySignIn
+      },
+
+      clearCurrentUser() {
+        this.$store.commit('setSignedInUserID', {userID: null, signedIn: null});
+      },
+
+      cleanPopUp() {
+        if (this.displayDeleteCheck) {
+          this.firstQuestionFedIn = true;
+          this.deleteVaultFedIn = true;
         }
+      },
+
+      showSignOutCheck() {
+        this.displaySignOutCheck = !this.displaySignOutCheck;
+      },
+
+      showPopup() {
+        this.displayDeleteCheck = !this.displayDeleteCheck;
+      },
+
+      updateSelectedUser(user) {
+        this.selectedUser = user;
+      },
+
+      onUserCardRightClick(event) {
+        this.$refs.deleteOption.show(event);
+      },
+      shuffleArray() {
+        this.tips = _.shuffle(this.tips)
+      },
     }
+  }
 </script>
 
 <style scoped>
