@@ -2,9 +2,9 @@
   <div class="tooltip-box">
     <slot/>
     <div class="tooltip">
-      <div class="text" v-for="text in (unconnectedBackendNames)">
-        <span>{{ text }}</span>
-        <Divider/>
+      <div class="text" v-for="(text, index) in (unconnectedBackendNames)">
+        <span>{{text}}</span>
+        <Divider v-if="index!==unconnectedBackendNames.length-1"/>
       </div>
     </div>
   </div>

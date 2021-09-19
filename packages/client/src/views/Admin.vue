@@ -4,11 +4,13 @@
       <h1 class="admin-heading"> User Administration</h1>
       <p class="admin-description"> Select a backend to manage users for.</p>
     </div>
-    <div v-for="(backend) in getUserRemoteBackends" class="admin-select" >
-      <AdminBackendCard
-          v-if="datasourceAdminStatus(backend.local.id)!=='viewer' && datasourceAdminStatus(backend.local.id)!=='editor'"
-          :backend="backend"
-      />
+    <div class="container">
+      <div v-for="(backend) in getUserRemoteBackends" class="admin-select" >
+        <AdminBackendCard
+            v-if="datasourceAdminStatus(backend.local.id)!=='viewer' && datasourceAdminStatus(backend.local.id)!=='editor'"
+            :backend="backend"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -58,12 +60,6 @@
   .page {
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-rows: 1fr 3fr 1fr;
-  }
-
-  .admin-header {
-    grid-row-start: 1;
   }
 
   .admin-heading {
@@ -77,13 +73,17 @@
   }
 
   .admin-select {
-    grid-row-start: 2;
-    display: flex;
+    display: inline-block;
     flex-direction: column;
-    justify-content: center;
     flex-wrap: wrap;
     padding-top: 1vw;
     align-content: center;
+    margin-right: 5vw;
   }
 
+  .container{
+    margin-top: 10vh;
+    margin-left: 5%;
+    text-align: center;
+  }
 </style>

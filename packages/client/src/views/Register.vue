@@ -146,7 +146,7 @@
   import InputText from 'primevue/inputtext'
   import SignIn from "../components/popups/SignIn";
   import Checkbox from 'primevue/checkbox';
-  import PasswordInputField from "../components/primeComponents/PasswordInputField";
+  import PasswordInputField from "../components/customComponents/PasswordInputField";
   import axios from "axios";
   import {createHash, pbkdf2Sync} from 'crypto';
   import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";

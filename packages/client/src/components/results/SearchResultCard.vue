@@ -1,5 +1,5 @@
 <template>
-  <div class="result-card" v-bind:class="{ small: small }">
+  <div class="result-card" v-bind:class="{ 'result-card-small': small }">
     <div class="title-card">
       <small>{{ backend_name }}</small>
       <div class="card-icon">
@@ -178,7 +178,7 @@ export default {
   position: relative;
 }
 
-.small {
+.result-card-small {
   text-align: left;
   max-width: 1000px;
   border-radius: 10px;

@@ -102,7 +102,7 @@
   import ProfileDropdown from "@/components/landing/ProfileDropdown";
   import {mapGetters} from "vuex";
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
-  import CustomTooltip from "./components/primeComponents/CustomTooltip";
+  import CustomTooltip from "./components/customComponents/CustomTooltip";
   import axios from "axios";
   import {pbkdf2Sync} from "crypto";
   import VaultSync from "@/components/popups/VaultSync";
