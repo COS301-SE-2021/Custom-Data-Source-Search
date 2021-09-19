@@ -88,13 +88,7 @@
                 this.editBackendBool = !this.editBackendBool;
             },
             connectToBackendChecks(){
-                this.extractEncodedData(this.registrationString);
-                if (
-                    this.tempBackendInfo.link === '' ||
-                    this.tempBackendInfo.associatedEmail === '' ||
-                    this.tempBackendInfo.secret === '' ||
-                    this.tempBackendInfo.oneTimeKey === ''
-                ) {
+                if (this.tempBackendInfo.name === '' ||  this.registrationString === '') {
                     this.$toast.add(
                         {
                             severity:'error',
@@ -104,6 +98,7 @@
                         });
                 }
                 else {
+                    this.extractEncodedData(this.registrationString);
                     this.connectToBackend();
                 }
             },
