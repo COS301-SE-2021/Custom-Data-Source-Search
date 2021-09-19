@@ -1,11 +1,11 @@
-name: Vault Continuous Integration
+name: Vault Unit Tests
 
 on:
   pull_request:
     branches: [ development ]
 
 jobs:
-  test-development-pr:
+  vault-test-development-pr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

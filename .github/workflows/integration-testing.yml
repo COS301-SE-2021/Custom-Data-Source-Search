@@ -1,9 +1,11 @@
-name: Backend Continuous Integration
+name: Integration Testing
 
-on: [push]
+on:
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  test-development-pr:
+  test-master-pr:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

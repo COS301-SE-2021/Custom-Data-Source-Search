@@ -1,11 +1,11 @@
-name: Backend Continuous Integration
+name: Backend Unit Testing
 
 on:
   pull_request:
     branches: [ development ]
 
 jobs:
-  test-development-pr:
+  backend-test-development-pr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
