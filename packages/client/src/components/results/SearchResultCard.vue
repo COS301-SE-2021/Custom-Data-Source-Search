@@ -1,5 +1,5 @@
 <template>
-  <div class="result-card" v-bind:class="{ small: small }">
+  <div class="result-card">
     <div class="title-card">
       <small>{{ backend_name }}</small>
       <div class="card-icon">
@@ -74,7 +74,6 @@ export default {
     backendId: Number,
     backend_name: String,
     lineNumbers: Array,
-    small: Boolean
   },
 
   watch: {
@@ -169,16 +168,6 @@ export default {
 
 <style scoped>
 .result-card {
-  text-align: left;
-  margin-right: 10%;
-  margin-left: 10%;
-  border-radius: 10px;
-  padding: 5px 20px;
-  overflow: hidden;
-  position: relative;
-}
-
-.small {
   text-align: left;
   max-width: 1000px;
   border-radius: 10px;

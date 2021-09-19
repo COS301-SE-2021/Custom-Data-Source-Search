@@ -44,7 +44,7 @@
     <Button
         v-else
         icon="pi pi-spin pi-spinner"
-        class="p-button-rounded p-button-text p-button-lg"
+        class="p-button-rounded p-button-text"
     />
   </div>
 </template>
@@ -70,15 +70,15 @@ export default {
   },
 
   methods: {
-    async submitWebpage() {
+    submitWebpage() {
+      this.submitting = true;
       if(this.dataSourceURI!==""){
-        this.submitting = true;
         let backendID = this.$store.getters.getBackendIDViaName(this.backend);
         let reqObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
         };
-        await axios
+        axios
             .post(
                 `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
                 reqObject, {headers}
@@ -90,7 +90,7 @@ export default {
                 detail: resp.data.message,
                 life: 3000
                 });
-              this.submitting = false;
+              this.$emit('addWebpage');
               this.$emit("submitted");
             })
             .catch(async () => {
