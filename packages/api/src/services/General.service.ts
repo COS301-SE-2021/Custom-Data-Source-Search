@@ -307,7 +307,7 @@ class GeneralService {
                 array.push({
                     "id": webPageDataSource.uuid,
                     "location": webPageDataSource.url,
-                    "type": "github",
+                    "type": "webpage",
                     "tag1": webPageDataSource.tag1,
                     "tag2": webPageDataSource.tag2
                 });
@@ -319,7 +319,7 @@ class GeneralService {
                 array.push({
                     "id": gitHubDataSource.uuid,
                     "location": gitHubDataSource.repo,
-                    "type": "webpage",
+                    "type": "github",
                     "tag1": gitHubDataSource.tag1,
                     "tag2": gitHubDataSource.tag2
                 });
