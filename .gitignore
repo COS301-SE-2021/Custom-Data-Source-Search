@@ -41,4 +41,7 @@ pnpm-debug.log*
 /data/*
 !/data/datasleuth_reference.db
 !/data/datasleuth.db.sql
+/packages/vault/env_variables.yaml
 !/data/datasleuth_update.db.sql
+
+.idea/vcs.xml

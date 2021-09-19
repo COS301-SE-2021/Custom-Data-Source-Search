@@ -49,17 +49,24 @@
       </span>
     </div>
     <Button
+        v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFiles()"
+    />
+    <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        class="p-button-rounded p-button-text"
     />
   </ScrollPanel>
 </template>
 
 <script>
 import axios from 'axios';
-
+const fs = require('fs')
+const FormData = require('form-data');
 const electron = require('@electron/remote');
 
 export default {
@@ -76,7 +83,8 @@ export default {
       tag2: null,
       type: 'file',
       filenames: [],
-      paths: []
+      paths: [],
+      submitting: false
     }
   },
 
@@ -101,40 +109,107 @@ export default {
                 p = str.split("/");
                 this.filenames.push(p.pop());
                 this.paths.push(p.join("/"));
+                this.paths[i] += "/";
               }
+              console.log(this.paths);
             }
           })
     },
 
-    submitSelectedFiles(){
+    async submitSelectedFiles(){
+      this.submitting = true;
       if(this.filenames.length!==0){
-        for (let i = 0; i < this.filenames.length; i++) {
-          let respObject = {"filename": this.filenames[i], "path": this.paths[i], "tag1": this.tag1, "tag2": this.tag2};
-          axios
-              .post(
-                  `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                  respObject
-              )
-              .then((resp) => {
-                this.$toast.add({
-                  severity: 'success',
-                  summary: 'Success',
-                  detail: resp.data.message,
-                  life: 3000
-                });
-                this.$emit('addFile');
-              })
-              .catch((error) => {
-                this.$toast.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: error.response.data.message,
-                  life: 3000
-                });
-                this.filenames = [];
-              })
+        if(this.backend === 'Local'){
+          for (let i = 0; i < this.filenames.length; i++) {
+            let reqObject = {
+              "filename": this.filenames[i], "path": this.paths[i], "file": null, "tag1": this.tag1, "tag2": this.tag2
+            };
+            await axios
+                .post(
+                    `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
+                    reqObject
+                )
+                .then((resp) => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: resp.data.message,
+                    life: 3000
+                  });
+                })
+                .catch((error) => {
+                    this.$toast.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: error.response.data.message,
+                      life: 3000
+                    });
+                })
+
+          }
+          this.submitting = false;
+          this.$emit("submitted");
         }
-        this.$emit("submitted");
+        else{
+          let fileStream;
+          let backendID = this.$store.getters.getBackendIDViaName(this.backend);
+          for (let i = 0; i < this.filenames.length; i++) {
+            let formData = new FormData();
+            fileStream = fs.readFileSync(this.paths[i] + this.filenames[i]);
+            formData.set('filename', this.filenames[i]);
+            formData.set('path', null);
+            formData.set('file', fileStream);
+            formData.set('tag1', this.tag1);
+            formData.set('tag2', this.tag2);
+            const headers = {
+            "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID),
+            "Content-Type": "multipart/form-data"
+            };
+            await axios
+                .post(
+                    `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
+                    formData, {headers}
+                )
+                .then((resp) => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: resp.data.message,
+                    life: 3000
+                  });
+                })
+                .catch(async() => {
+                  await this.$store.dispatch("refreshJWTToken", {id: backendID});
+                  const headers = {
+                  "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                  };
+                  await axios
+                    .post(
+                      `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
+                      formData, {headers}
+                    )
+                    .then((resp) => {
+                      this.$toast.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: resp.data.message,
+                        life: 3000
+                      });
+                      this.$emit('addFile');
+                    })
+                    .catch((error) => {
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: error.response.data.message,
+                        life: 3000
+                      });
+                    })
+                })
+          }
+          this.submitting = false;
+          this.$emit("submitted");
+        }
       }
       else{
         this.$toast.add({

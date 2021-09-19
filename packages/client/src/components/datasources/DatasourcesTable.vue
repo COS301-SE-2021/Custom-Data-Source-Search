@@ -1,5 +1,4 @@
 <template>
-  <Toast position="bottom-right"/>
   <ScrollPanel
       id="main-scroll"
       style="width: 95vw; height: 80vh; bottom: 2em; padding-bottom: 1vh; align-content: center; padding-right: 1em;"
@@ -25,6 +24,7 @@
     >
       <template #header>
         <div class="p-d-flex p-jc-end">
+          <i class="pi pi-refresh" aria-hidden="true" v-tooltip="'Refresh'" @click="updateSources"/>
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
             <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
@@ -69,13 +69,23 @@
               <div class="overlay-header">
                 <span>Which backend would you like to add to?</span>
               </div>
-              <div class="overlay-buttons">
+              <div class="overlay-buttons" v-for="i in backends">
                 <Button
-                    v-for="i in backends"
+                    v-if="datasourceAdminStatus(i)!=='viewer'"
                     :key="i.id"
                     label="Backend"
                     class="button p-button-raised p-button-text p-button-plain"
                     @click="backend= i"
+                >
+                  {{ i }}
+                </Button>
+                <Button
+                    v-else
+                    :key="i.id"
+                    label="Backend"
+                    class="button p-button-raised p-button-text p-button-plain disabled_backend_button"
+                    @click="backend= i"
+                    disabled="disabled"
                 >
                   {{ i }}
                 </Button>
@@ -153,7 +163,7 @@
       <Column selectionMode="multiple" headerStyle="min-width: 3em" style="max-width: 3em;">
         <template #body="{data}">
           <Checkbox
-              v-if="datasourceAdminStatus(data.backend)"
+              v-if="datasourceAdminStatus(data.backend)!=='viewer'"
               :key="data.id"
               v-model="selectedSources"
               name="source"
@@ -322,7 +332,7 @@
         console.log(this.sources.length)
       },
 
-      mounted(){
+      after(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',
@@ -336,10 +346,6 @@
       productService: null,
 
       methods: {
-        toggleMenu(event) {
-          this.$refs.menu.toggle(event);
-        },
-
         /**
          * Toggles the visibility of the overlay panel
          * @param event
@@ -351,6 +357,7 @@
         },
 
         updateSources() {
+          console.log("updating...");
           this.loading = true;
           this.sources = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
@@ -396,8 +403,20 @@
           }
           this.sources = this.sources.concat(results);
           this.loading = false;
+
         },
 
+        removeDuplicatesInArray(arr) {
+          let a = arr.concat();
+          for(let i=0; i<a.length; ++i) {
+            for(let j=i+1; j<a.length; ++j) {
+              if(a[i] === a[j])
+                a.splice(j--, 1);
+            }
+          }
+
+          return a;
+        },
         /**
          * Queries the store to check the admin status associated with the user for a specific backend.
          *
@@ -405,10 +424,11 @@
          * @returns {boolean|*} - returns a boolean indicating whether a user has admin privileges (true) or not (false)
          */
         datasourceAdminStatus(source) {
+          let backendID = this.$store.getters.getBackendIDViaName(source);
           if (source === "Local") {
             return true;
           } else {
-            return this.$store.getters.getBackendAdminStatus(source);
+            return this.$store.getters.getUserAdminStatus(backendID);
           }
         },
 
@@ -440,13 +460,16 @@
             accept: () => {
               let source;
               for (source in this.selectedSources) {
+                let backendID = this.$store.getters.getBackendIDViaName(this.selectedSources[source].backend);
                 const url = `http://${this.selectedSources[source].link}/general/datasources`;
-                console.log(url);
                 axios
                     .delete(url, {
-                      "data": {
-                        "type": this.selectedSources[source].type,
-                        "id": this.selectedSources[source].id
+                      headers: {
+                        Authorization: "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                      },
+                      data: {
+                        type: this.selectedSources[source].type,
+                        id: this.selectedSources[source].id
                       }
                     })
                     .then(() => {
@@ -456,18 +479,43 @@
                         detail: "Source deleted",
                         life: 2000
                       });
+                      this.selectedSources = [];
+                      this.updateSources();
                     })
-                    .catch(() => {
-                      this.$toast.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: "Could not delete source",
-                        life: 3000
-                      });
+                    .catch(async () => {
+                      console.warn("ERROR");
+                      await this.$store.dispatch("refreshJWTToken", {id: backendID});
+                      await axios
+                       .delete(url, {
+                         headers: {
+                           Authorization: "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+                         },
+                         data: {
+                           type: this.selectedSources[source].type,
+                           id: this.selectedSources[source].id
+                         }
+                       })
+                          .then(() => {
+                            this.$toast.add({
+                              severity: 'success',
+                              summary: 'Deleted',
+                              detail: "Source deleted",
+                              life: 2000
+                            });
+                            this.selectedSources = [];
+                            this.updateSources();
+                          })
+                      .catch((error) => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error.response.data.message,
+                          life: 3000
+                        });
+                        this.selectedSources = [];
+                      })
                     })
               }
-              this.selectedSources = [];
-              this.updateSources();
             }
           })
         }
@@ -521,6 +569,14 @@
    bottom: 4em;
   }
 
+  .pi-refresh{
+    color: #41B3B2;
+  }
+
+  .pi-refresh:hover{
+    cursor: pointer;
+  }
+
   #add-datasource-button{
     float: right;
     margin-right: 2vw;
@@ -549,6 +605,14 @@
     -moz-animation: fadeIn 1s;
     -o-animation: fadeIn 1s;
     -ms-animation: fadeIn 1s;
+  }
+
+  .disabled_backend_button:hover{
+    cursor: not-allowed;
+  }
+
+  .overlay-buttons{
+    display: inline-block;
   }
 
   @keyframes fadeIn {

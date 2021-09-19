@@ -91,7 +91,7 @@
     top:0; bottom:0; right:0;
     width:100%;
     background:#262626;
-    animation: showHide 5s ease-in forwards;
+    animation: showHide 3s ease-in forwards;
     animation-iteration-count: 1;
   }
 

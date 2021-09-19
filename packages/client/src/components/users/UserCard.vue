@@ -44,6 +44,7 @@ export default {
 .user-container {
   margin-left: 1vw;
   margin-right: 1vw;
+  margin-top: 1vw;
   width: 10vw;
   height: 12vw;
   border-radius: 7px ;

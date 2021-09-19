@@ -33,18 +33,10 @@
             v-if="getIsUserAdmin"
             class="pi pi-sitemap"
             style="font-size:1.5rem"
-            @click="showJWTObject"
           />
-        <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
+        <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
               class="fas fa-sync-alt"
-              style="font-size:1.2rem"
-              aria-hidden="true"
-          />
-        </div>
-        <div v-else title="Syncing..." class="refresh-container icon">
-          <i
-              class="fas fa-sync-alt fa-spin"
               style="font-size:1.2rem"
               aria-hidden="true"
           />
@@ -85,6 +77,8 @@
             @sync-vault="toggleSync"
             @close-dialog="closeDialog"
         />
+
+        <VaultSync :show="displayVaultSync" @close-dialog="closeDialog"></VaultSync>
       </div>
     </div>
     <div id="grid-div-2">
@@ -109,9 +103,14 @@
   import {mapGetters} from "vuex";
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
   import CustomTooltip from "./components/primeComponents/CustomTooltip";
+  import axios from "axios";
+  import {createHash, pbkdf2Sync} from "crypto";
+  import VaultSync from "@/components/popups/VaultSync";
+  import {encryptJsonObject, generateMasterKey} from "@/store/Store";
 
   export default {
   components: {
+    VaultSync,
     CustomTooltip,
     ReEnterMasterPassword,
     OverlayPanel,
@@ -124,6 +123,7 @@
       displayPasswordDialog: false,
       displayVaultDialog: false,
       sync: false,
+      displayVaultSync: false,
       activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
       activePageNum: null,
       adminStatus: false
@@ -132,25 +132,66 @@
 
     computed: {
         ...mapGetters ([
-            'getUserInfo',
-            'getUserBackends',
-            'getSignedInUserId',
-            'unconnectedBackendNames',
-            'unconnectedBackendBool',
-            'unconnectedBackendNo',
-            'getIsUserAdmin'
+          'getUserInfo',
+          'getUserBackends',
+          'getSignedInUserId',
+          'unconnectedBackendNames',
+          'unconnectedBackendBool',
+          'unconnectedBackendNo',
+          'getIsUserAdmin',
+          'getSignedIn',
+          'getUser',
+          'getMasterKey'
         ])
     },
 
     beforeCreate() {
-        this.$store.commit('initialiseStore');
+       this.$store.commit('initialiseStore');
+    },
+
+    mounted() {
+      this.interval = setInterval(() => this.checkSyncStatus(), 25000);
     },
 
     methods: {
-      showAskMasterPw(){
-        if(this.$store.getters.getMasterKey === null){
-          this.showPasswordDialog();
+
+      checkSyncStatus(){
+        if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
+          console.log("Checking Sync Status");
+          const user = this.getUser(this.getSignedInUserId);
+          const dataString = JSON.stringify(user);
+          //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+          const dataFingerprint = pbkdf2Sync(
+              dataString,
+              user.info.salt,
+              10000,
+              32,
+              'sha256'
+          ).toString('hex');
+          let reqObj = {
+            email: user.info.email,
+            fingerprint: dataFingerprint
+          }
+          console.log("requestObject" + JSON.stringify(reqObj));
+          axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                console.log("Out Of Sync: " +resp.data.isOutOfSync);
+
+                if(resp.data.isOutOfSync){
+                  this.showOutOfSync();
+                }else {
+                  this.hideOutOfSync();
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              })
         }
+      },
+
+      showAskMasterPw(){
+        this.showPasswordDialog();
       },
 
       toggle(event){
@@ -162,16 +203,21 @@
       },
 
       showVaultSyncDialog(){
-        this.displayVaultDialog = !this.displayVaultDialog
+        this.displayVaultSync = !this.displayVaultSync;
       },
 
       toggleSync(){
         this.sync = !this.sync;
       },
-
+      showOutOfSync(){
+        this.sync = true;
+      },
+      hideOutOfSync() {
+        this.sync = false;
+      },
       closeDialog(){
         this.displayPasswordDialog = false;
-        this.displayVaultDialog = false;
+        this.displayVaultSync = false;
       }
     }
   }
@@ -220,6 +266,7 @@
     grid-template-columns: 1fr 30fr;
     grid-template-rows: 0;
     height: 100%;
+    width: 100%;
   }
 
   a:-webkit-any-link {
@@ -357,3 +404,4 @@
     cursor: pointer;
   }
 </style>
+

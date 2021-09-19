@@ -6,10 +6,7 @@
         @mousedown="noPointerTrue"
         @mouseup="noPointerFalse"
     >
-      <SplitterPanel
-          :minSize="20"
-          :size="90"
-      >
+      <SplitterPanel :minSize="20" :size="40">
         <div class="search-bar">
           <div v-if="firstSearch" class="logo-div">
             <img
@@ -24,7 +21,12 @@
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
             <span id="advanced_search_toggle">
-              <checkbox v-model="advancedSearch" :binary="true" @click="reRunQuery"></checkbox>
+              <checkbox
+                  v-model="advancedSearch"
+                  :binary="true"
+                  v-tooltip.bottom="'Placeholder tooltip'"
+                  @click="reRunQuery">
+              </checkbox>
               Advanced Search
             </span>
           </div>
@@ -35,11 +37,10 @@
               :key="i"
               :="r"
               @snippetClicked="goToLineFetchFileIfRequired"
-              @webSnippetClicked="openIframe"
           />
         </div>
       </SplitterPanel>
-      <SplitterPanel :minSize="30" class="container">
+      <SplitterPanel :minSize="40" class="container">
         <iframe
             :class="{ iFrameNoPointer: noPointer }"
             v-if="iFrameLink !== ''"
@@ -109,18 +110,18 @@
     data() {
       return {
         advancedSearch: false,
-        iFrameLink: '',
         fullFileLineNumbers: [],
         currentLineNumber: -1,
         fullFileData: "",
         fullFileId: "",
         notDeleted: true,
         query: "",
-        searchResultsBuffer: [],
         searchResults: [],
+        searchResultsBuffer: [],
         name: "Search",
         firstSearch: true,
-        noPointer: false
+        noPointer: false,
+        iFrameLink: ''
       }
     },
 
@@ -133,7 +134,6 @@
     },
 
     beforeMount() {
-      this.$store.dispatch("updateJWTifRequired", {id: 1});
       if (this.$store.getters.getNewAppStatus) {
         this.$router.push('/');
       }
@@ -141,8 +141,8 @@
 
     methods: {
       reRunQuery() {
-        this.advancedSearch = !this.advancedSearch;
         if (this.query !== "") {
+          this.searchResults = [];
           this.queryBackends(this.query)
         }
       },
@@ -265,6 +265,7 @@
        * @param {number} backendId id of backend in user store
        * @param {number} lineNumber line number of the result snippet the user has clicked on
        * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
+       * @param {string} source the location of the original datasource
        */
       goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source) {
         if (type === "webpage"){
@@ -466,12 +467,13 @@
     height: 90vh;
     padding-top: 10px;
     padding-bottom: 100px;
-    max-width: 60vw;
+    max-width: 100%;
   }
 
   .container {
     height: available;
     overflow-y: scroll;
+    overflow-x: scroll;
     font-size: 0.9em;
   }
 
@@ -495,7 +497,6 @@
     justify-content: center;
     align-items: center;
     padding: 30px;
-    max-height: 100px;
     max-width: 1000px
   }
 
@@ -574,5 +575,4 @@
     width: 100%;
     height: 100vh;
   }
-
 </style>
