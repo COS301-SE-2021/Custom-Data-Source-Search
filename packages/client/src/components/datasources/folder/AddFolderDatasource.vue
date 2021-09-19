@@ -80,7 +80,7 @@
     <Button
         v-else
         icon="pi pi-spin pi-spinner"
-        class="p-button-rounded p-button-text p-button-lg"
+        class="p-button-rounded p-button-text"
     />
   </ScrollPanel>
 </template>
@@ -133,14 +133,14 @@ export default {
           })
     },
 
-    async submitSelectedFolders() {
+    submitSelectedFolders() {
+      this.submitting = true;
       if(this.selectedFolders.length!==0){
-        this.submitting = true;
         let i;
         for (i of this.selectedFolders) {
           let reqObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2, "dotIgnore": this.ignore, "depth": this.depth};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
-          await axios
+          axios
               .post(url, reqObject)
               .then((resp) => {
                 this.$toast.add({

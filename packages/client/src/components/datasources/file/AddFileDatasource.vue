@@ -58,7 +58,7 @@
     <Button
         v-else
         icon="pi pi-spin pi-spinner"
-        class="p-button-rounded p-button-text p-button-lg"
+        class="p-button-rounded p-button-text"
     />
   </ScrollPanel>
 </template>
@@ -117,8 +117,8 @@ export default {
     },
 
     async submitSelectedFiles(){
+      this.submitting = true;
       if(this.filenames.length!==0){
-        this.submitting = true;
         if(this.backend === 'Local'){
           for (let i = 0; i < this.filenames.length; i++) {
             let reqObject = {
