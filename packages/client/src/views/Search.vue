@@ -13,7 +13,13 @@
         <div class="search-div-initial">
             <span class="p-input-icon-right">
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
-                <InputText v-model="query" placeholder="Sleuth..." size="100" @keyup.enter="queryBackends(query)"/>
+                <InputText
+                    v-model="query"
+                    placeholder="Sleuth..."
+                    ref="Sleuth"
+                    size="100"
+                    @keyup.enter="queryBackends(query)"
+                />
             </span>
           <span class="advanced-search-toggle">
               <checkbox
@@ -170,6 +176,10 @@
       if (this.$store.getters.getNewAppStatus) {
         this.$router.push('/');
       }
+    },
+
+    mounted(){
+      this.$refs.Sleuth.$el.focus();
     },
 
     methods: {
