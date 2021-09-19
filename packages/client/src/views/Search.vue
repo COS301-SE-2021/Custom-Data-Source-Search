@@ -146,6 +146,7 @@
         notDeleted: true,
         query: "",
         searchResults: [],
+        searchResultsBuffer: [],
         name: "Search",
         firstSearch: true,
         noPointer: false,
@@ -186,6 +187,7 @@
        */
       async queryBackends(q) {
         this.firstSearch = false;
+        this.searchResultsBuffer = [];
         this.searchResults = [];
         for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
           if (!backend.local.active) {
@@ -215,6 +217,7 @@
                     })
               })
         }
+        this.searchResults = this.searchResultsBuffer;
         if (this.searchResults.length === 0) {
           this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
         }
@@ -237,7 +240,6 @@
        * @param backend backend info from store
        */
       augmentAndSaveSearchResults(results, backend) {
-        console.log("augment!");
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -248,7 +250,7 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResults = this.mergeLists(this.searchResults, results);
+        this.searchResultsBuffer = this.mergeLists(this.searchResultsBuffer, results);
       },
 
       /**
