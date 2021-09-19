@@ -1,7 +1,7 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
-    <div v-if="fullFileData === ''">
+    <div v-if="fullFileData === '' && iFrameLink === ''">
       <div class="search-bar">
         <div v-if="firstSearch" class="logo-div">
           <img
