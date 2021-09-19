@@ -457,12 +457,12 @@
             icon: 'pi pi-exclamation-triangle',
             acceptClass: "p-button-danger",
             rejectClass: "p-button-text p-button-plain",
-            accept: async () => {
+            accept:() => {
               let source;
               for (source in this.selectedSources) {
                 let backendID = this.$store.getters.getBackendIDViaName(this.selectedSources[source].backend);
                 const url = `http://${this.selectedSources[source].link}/general/datasources`;
-                await axios
+                 axios
                     .delete(url, {
                       headers: {
                         Authorization: "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
@@ -479,8 +479,6 @@
                         detail: "Source deleted",
                         life: 2000
                       });
-                      this.selectedSources = [];
-                      this.updateSources();
                     })
                     .catch(async () => {
                       console.warn("ERROR");
@@ -502,8 +500,6 @@
                               detail: "Source deleted",
                               life: 2000
                             });
-                            this.selectedSources = [];
-                            this.updateSources();
                           })
                       .catch((error) => {
                         this.$toast.add({
@@ -516,6 +512,8 @@
                       })
                     })
               }
+              this.selectedSources = [];
+              this.updateSources();
             }
           })
         }
