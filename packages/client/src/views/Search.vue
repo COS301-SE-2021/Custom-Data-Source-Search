@@ -1,7 +1,43 @@
 <template>
   <div class="grid-content">
     <Toast position="bottom-right"/>
+    <div v-if="fullFileData === ''">
+      <div class="search-bar">
+        <div v-if="firstSearch" class="logo-div">
+          <img
+              alt=""
+              height="250"
+              src="../assets/search_logo.png"
+          >
+        </div>
+        <div class="search-div-initial">
+            <span class="p-input-icon-right">
+                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <InputText v-model="query" placeholder="Sleuth..." size="100" @keyup.enter="queryBackends(query)"/>
+            </span>
+          <span class="advanced-search-toggle">
+              <checkbox
+                  v-model="advancedSearch"
+                  :binary="true"
+                  v-tooltip.bottom="'Placeholder tooltip'"
+                  @click="reRunQuery">
+              </checkbox>
+              Advanced Search
+            </span>
+        </div>
+      </div>
+      <div class="search-results container">
+        <search-result-card
+            v-for="(r,i) in searchResults"
+            :key="i"
+            :="r"
+            :small=false
+            @snippetClicked="goToLineFetchFileIfRequired"
+        />
+      </div>
+    </div>
     <Splitter
+        v-else
         style="background:var(--surface-200);"
         @mousedown="noPointerTrue"
         @mouseup="noPointerFalse"
@@ -20,7 +56,7 @@
                 <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
-            <span id="advanced_search_toggle">
+            <span class="advanced-search-toggle">
               <checkbox
                   v-model="advancedSearch"
                   :binary="true"
@@ -36,6 +72,7 @@
               v-for="(r,i) in searchResults"
               :key="i"
               :="r"
+              :small=true
               @snippetClicked="goToLineFetchFileIfRequired"
           />
         </div>
@@ -477,7 +514,7 @@
 
   input {
     width: 100%;
-    min-width: 0
+    min-width: 0;
   }
 
   .container::-webkit-scrollbar {
@@ -495,7 +532,14 @@
     justify-content: center;
     align-items: center;
     padding: 30px;
-    max-width: 1000px
+    max-width: 1000px;
+  }
+
+  .search-div-initial{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
   }
 
   ::placeholder {
@@ -555,7 +599,7 @@
     padding-bottom: 40px;
   }
 
-  #advanced_search_toggle {
+  .advanced-search-toggle {
     padding-left: 15px;
     min-width: 170px;
   }
