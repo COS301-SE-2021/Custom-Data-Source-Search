@@ -107,7 +107,6 @@ const store = createStore({
       let jwtToken = getters.getBackendJWTToken(backendID);
       let backendJSON = parseJwt(jwtToken);
       if (jwtToken != null) {
-        console.log("ROLE: " + JSON.stringify(backendJSON.role));
         return backendJSON.role;
       } else {
         return null;
@@ -124,7 +123,6 @@ const store = createStore({
           admin = true;
         }
       }
-      console.log ("IN STORE - ADMIN: " + admin);
       return admin;
     },
 

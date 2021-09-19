@@ -11,7 +11,7 @@ import {DefaultHttpResponse} from "../models/response/general.interfaces";
 import solrService from "./Solr.service";
 import fileDataSourceService from "./FileDataSource.service";
 import {FileFromRepo, GitHubDataSource, StoredGitHubDataSource} from "../models/GitHubDataSource.interface";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import shell from "shelljs";
 import path from "path";
 
@@ -40,7 +40,8 @@ class GitHubDataSourceService {
     }
 
     async addGitHubDataSource(dataSource: GitHubDataSource): Promise<DefaultHttpResponse> {
-        if (!await GitHubDataSourceService.repoExists(dataSource.repo)) {
+        const fs = require('fs');
+        if (!await GitHubDataSourceService.repoExists(dataSource.repo, dataSource.token)) {
             return generateDefaultHttpResponse(statusMessage(404, "Repo not found"));
         }
         const repoUUID: string = generateUUID();
@@ -56,13 +57,54 @@ class GitHubDataSourceService {
             return generateDefaultHttpResponse(e);
         }
         const repoName: string = path.join(__dirname, dataSource.repo.split("/").pop());
-        await fs.mkdir(repoName, (err) => {
+        await fs.mkdir(repoName, (err: any) => {
             if (err) {
                 return console.error(err);
             }
         })
+        let branchName: string = "master";
+        try {
+            branchName = (await axios.get(
+                "https://api.github.com/repos/" + dataSource.repo + "/branches"
+            )).data[0]["name"];
+        } catch (e) {
+            console.error(e);
+        }
+        let file = fs.createWriteStream(repoName + "/temp.zip");
+        let response: AxiosResponse;
+        let config: any = {
+            responseType: 'stream'
+        };
+        if (dataSource.token !== undefined && dataSource.token !== "") {
+            config["headers"] = {
+                Authorization: "token " + dataSource.token
+            };
+        }
+        try {
+            response = await axios.get(
+                "https://github.com/" + dataSource.repo + "/archive/refs/heads/" + branchName + ".zip",
+                config
+            );
+            response.data.pipe(file);
+            await new Promise(fulfill => file.on("finish", fulfill));
+            file.close();
+        } catch (e) {
+            console.error(e);
+        }
         shell.cd(repoName);
-        shell.exec('git clone https://github.com/' + dataSource.repo);
+        if (process.platform === "win32") {
+            shell.exec('tar -xf temp.zip');
+        } else {
+            shell.exec('unzip temp.zip');
+        }
+        await fs.rm(
+            repoName + "/temp.zip",
+            {recursive: true},
+            (err: any) => {
+                if (err) {
+                    console.error(err);
+                }
+            });
         for (let filePath of this.getFilesInFolder(repoName + "/")) {
             const [fileContent, fileErr] = fileDataSourceService.readFile(filePath);
             if (fileErr) {
@@ -85,11 +127,11 @@ class GitHubDataSourceService {
             }
             gitHubDataSourceRepository.addFileInRepo(fileFromRepo);
         }
-        shell.cd(__dirname);
+        shell.cd("../");
         await fs.rm(
             repoName,
             {recursive: true},
-            (err) => {
+            (err: any) => {
                 if (err) {
                     console.error("Unable to delete directory");
                     console.error(err);
@@ -115,7 +157,7 @@ class GitHubDataSourceService {
             if (filePath.indexOf(".") === -1 || filePath.indexOf(".git") !== -1) {
                 return;
             }
-            files.push(path + "\\" + filePath);
+            files.push(path + filePath);
         })
         return files;
     }
@@ -134,14 +176,31 @@ class GitHubDataSourceService {
         return results;
     }
 
-    private static async repoExists(repo: string) {
-        return axios.get("https://api.github.com/repos/" + repo)
+    private static async repoExists(repo: string, token: string) {
+        let config: any = {};
+        if (token !== undefined && token !== ""){
+            config["headers"] = {
+                Authorization: "token " + token
+            }
+        }
+        return axios.get(
+            "https://api.github.com/repos/" + repo,
+            config)
             .then(() => {
                 return true;
             })
             .catch(() => {
                 return false;
             });
+    }
+
+    getSearchSnippet(snippet: string, dataSourceUUID: string): string {
+        const [result, err] = gitHubDataSourceRepository.getFileFromRepo(dataSourceUUID);
+        if (err) {
+            return snippet;
+        }
+        const fileName: string = result["file_path"].split("/").pop();
+        return fileDataSourceService.getSearchSnippet(snippet, fileName);
     }
 }
 
