@@ -457,7 +457,7 @@
             icon: 'pi pi-exclamation-triangle',
             acceptClass: "p-button-danger",
             rejectClass: "p-button-text p-button-plain",
-            accept: () => {
+            accept: async () => {
               let source;
               for (source in this.selectedSources) {
                 let backendID = this.$store.getters.getBackendIDViaName(this.selectedSources[source].backend);
@@ -467,7 +467,7 @@
                 const authHeaders = {
                   "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
                 };
-                axios
+                await axios
                     .delete(url, {
                       "headers": {
                         authHeaders

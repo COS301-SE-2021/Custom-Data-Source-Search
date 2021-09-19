@@ -68,7 +68,7 @@ export default {
   },
 
   methods: {
-    submitWebpage() {
+    async submitWebpage() {
       if(this.repo!==""){
         let backendID = this.$store.getters.getBackendIDViaName(this.backend);
         let respObject = {
@@ -80,7 +80,7 @@ export default {
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
         };
-        axios
+        await axios
             .post(
                 `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/githubdatasources`,
                 respObject, {headers}

@@ -70,7 +70,7 @@ export default {
   },
 
   methods: {
-    submitWebpage() {
+    async submitWebpage() {
       this.submitting = true;
       if(this.dataSourceURI!==""){
         let backendID = this.$store.getters.getBackendIDViaName(this.backend);
@@ -78,7 +78,7 @@ export default {
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
         };
-        axios
+        await axios
             .post(
                 `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
                 reqObject, {headers}

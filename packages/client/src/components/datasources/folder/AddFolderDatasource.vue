@@ -133,14 +133,14 @@ export default {
           })
     },
 
-    submitSelectedFolders() {
+    async submitSelectedFolders() {
       this.submitting = true;
       if(this.selectedFolders.length!==0){
         let i;
         for (i of this.selectedFolders) {
           let reqObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2, "dotIgnore": this.ignore, "depth": this.depth};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
-          axios
+          await axios
               .post(url, reqObject)
               .then((resp) => {
                 this.$toast.add({
