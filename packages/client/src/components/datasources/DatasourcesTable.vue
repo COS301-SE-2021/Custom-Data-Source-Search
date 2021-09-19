@@ -481,7 +481,6 @@
                       });
                     })
                     .catch(async () => {
-                      console.warn("ERROR");
                       await this.$store.dispatch("refreshJWTToken", {id: backendID});
                       await axios
                        .delete(url, {
