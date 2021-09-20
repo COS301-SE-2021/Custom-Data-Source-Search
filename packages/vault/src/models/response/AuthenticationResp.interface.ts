@@ -41,3 +41,9 @@ export interface SRPPushResponse {
     code: number,
     message: string
 }
+
+
+export interface SRPDeleteResponse {
+    code: number,
+    message: string
+}
