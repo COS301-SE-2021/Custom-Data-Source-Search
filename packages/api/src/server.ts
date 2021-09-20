@@ -44,13 +44,15 @@ const server = app.listen(PORT , () => {
 });
 
 setTimeout(() => {
-    setInterval(async () => {
-        try {
-            await fileDataSourceService.updateDatasources();
-        } catch (e) {
-            console.log("Error encountered.");
-        }
-    }, 10000);
+    if (process.env.LOCAL_BACKEND) {
+        setInterval(async () => {
+            try {
+                await fileDataSourceService.updateDatasources();
+            } catch (e) {
+                console.log("Error encountered.");
+            }
+        }, 10000);
+    }
     process.env.JWT_SECRET_KEY = generateUUID();
     setInterval(async () => {
         process.env.JWT_SECRET_KEY = generateUUID();
