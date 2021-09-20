@@ -56,7 +56,7 @@
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
-        @click="submitWebpage"
+        @click="submitGitRepo"
     />
     <Button
         v-else
@@ -89,7 +89,7 @@ export default {
   },
 
   methods: {
-    async submitWebpage() {
+    async submitGitRepo() {
       if(this.repo!==""){
         this.submitting = true;
         let backendID = this.$store.getters.getBackendIDViaName(this.backend);
@@ -137,11 +137,11 @@ export default {
                     this.submitting = false;
                     this.$emit("submitted");
                   })
-                  .catch(() =>{
+                  .catch((e) =>{
                     this.$toast.add({
                       severity: 'error',
                       summary: 'Error',
-                      detail: 'Could Not Add GitHub Repo.',
+                      detail: e.response.data.message,
                       life: 3000
                     });
                   })
