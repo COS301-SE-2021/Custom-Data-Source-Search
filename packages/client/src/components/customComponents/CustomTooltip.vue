@@ -2,40 +2,41 @@
   <div class="tooltip-box">
     <slot/>
     <div class="tooltip">
-      <div class="text" v-for="text in unconnectedBackendNames">
-        <span>{{ text }}</span>
+      <div class="text" v-for="(text, index) in (unconnectedBackendNames)">
+        <span>{{text}}</span>
+        <Divider v-if="index!==unconnectedBackendNames.length-1"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+  import {mapGetters} from 'vuex';
 
-    export default {
-        name: 'CustomTooltip',
-        props: {
-            text: {
-                type: Array,
-                required: true
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'unconnectedBackendNames'
-            ])
-        }
-    };
+  export default {
+    name: 'CustomTooltip',
+    props: {
+      text: {
+        type: Array,
+        required: true
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'unconnectedBackendNames'
+      ])
+    }
+  };
 </script>
 
 <style scoped>
   .tooltip-box {
-      position: relative;
-      display: inline-block;
+    position: relative;
+    display: inline-block;
   }
 
-  .tooltip-box:hover .tooltip{
-      opacity: 1;
+  .tooltip-box:hover .tooltip {
+    opacity: 1;
     display: block;
   }
 
@@ -56,7 +57,7 @@
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   }
 
-  .tooltip:after{
+  .tooltip:after {
     content: "";
     width: 20px;
     height: 20px;

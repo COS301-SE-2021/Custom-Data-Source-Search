@@ -27,7 +27,7 @@
           <i class="pi pi-refresh" aria-hidden="true" v-tooltip="'Refresh'" @click="updateSources"/>
           <span class="p-input-icon-left ">
             <i class="pi pi-search" aria-hidden="true"/>
-            <InputText v-model="filters['global'].value" placeholder="Keyword Search"/>
+            <InputText ref="Global" v-model="filters['global'].value" placeholder="Keyword Search"/>
           </span>
           <Button
               id="add-datasource-button"
@@ -289,50 +289,69 @@
   import AddGitHubDatasource from "@/components/datasources/github/AddGitHubDatasource";
 
   export default {
-      name: "DatasourcesTable",
+    name: "DatasourcesTable",
 
-      components: {
-        AddGitHubDatasource,
-        AddFileDatasource,
-        AddFolderDatasource,
-        AddWebpageDatasource
-      },
+    components: {
+      AddGitHubDatasource,
+      AddFileDatasource,
+      AddFolderDatasource,
+      AddWebpageDatasource
+    },
 
-      data() {
-        return {
-          message: "No sources have been selected.",
-          type: null,
-          clicked: false,
-          sources: [],
-          loading: false,
-          backend: null,
-          selectedSources: [],
-          filters: {
-            'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-            'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
-            'backend': {value: null, matchMode: FilterMatchMode.IN},
-            'type': {value: null, matchMode: FilterMatchMode.IN},
-            'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
-            'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
-          },
-          types: [
-            'file', 'folder', 'webpage', 'github'
-          ],
-          backends: [],
-          user: null
-        }
-      },
+    computed:{
+      state(){
+        return this.$store.getters.getRefreshState;
+      }
+    },
 
-      beforeMount() {
-        if (this.$store.getters.getNewAppStatus) {
-          this.$router.push('/');
-        }
-        this.backends = this.$store.getters.getUserBackendNames;
+    watch: {
+      state(newState){
         this.updateSources();
-        console.log(this.sources.length)
-      },
+      }
+    },
 
-      after(){
+    data() {
+      return {
+        message: "No sources have been selected.",
+        type: null,
+        clicked: false,
+        sources: [],
+        loading: false,
+        backend: null,
+        selectedSources: [],
+        filters: {
+          'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+          'location': {value: null, matchMode: FilterMatchMode.CONTAINS},
+          'backend': {value: null, matchMode: FilterMatchMode.IN},
+          'type': {value: null, matchMode: FilterMatchMode.IN},
+          'tag1': {value: null, matchMode: FilterMatchMode.CONTAINS},
+          'tag2': {value: null, matchMode: FilterMatchMode.CONTAINS},
+        },
+        types: [
+          'file', 'folder', 'webpage', 'github'
+        ],
+        backends: [],
+        user: null
+      }
+    },
+
+    beforeMount() {
+      if (this.$store.getters.getNewAppStatus) {
+        this.$router.push('/');
+      }
+      this.backends = this.$store.getters.getUserBackendNames;
+      this.updateSources();
+      console.log(this.sources.length)
+    },
+
+    mounted(){
+      this.$refs.Global.$el.focus();
+      // this.$root.$on('globalUpdate', () => {
+      //       this.updateSources();
+      //     });
+    },
+
+    after(){
         if (this.sources.length === 0) {
           this.$toast.add({
             severity: 'warn',

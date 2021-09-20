@@ -21,10 +21,14 @@ const store = createStore({
   state: {
     signedInUserId: null,
     signedIn: null,
-    users: []
+    users: [],
+    refresh: false
   },
 
   getters: {
+    getRefreshState(state) {
+      return state.refresh;
+    },
     /*
     User information related getters
     ================================
@@ -208,6 +212,10 @@ const store = createStore({
             Object.assign(state, JSON.parse(localStorage.getItem('store')))
         );
       }
+    },
+
+    alterRefreshState(state) {
+      state.refresh = !state.refresh;
     },
 
     /*

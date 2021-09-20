@@ -303,7 +303,7 @@
   .start-stop {
     width: 100%;
     position: fixed;
-    bottom: 0;
+    margin-left: 40px;
   }
 
   .inline {
