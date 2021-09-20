@@ -3,7 +3,15 @@
  */
 import spectron from 'spectron'
 import { testWithSpectron } from 'vue-cli-plugin-electron-builder'
+import fs from "fs";
+import * as dotenv from "dotenv";
 jest.setTimeout(50000)
+
+try {
+    fs.readFileSync(__dirname + `/../../../../.env`);
+    dotenv.config({path: __dirname + `/../../../../.env`});
+    console.log(__dirname);
+} catch (e) {}
 
 describe("Startup Electron App", () => {
 
@@ -11,15 +19,14 @@ describe("Startup Electron App", () => {
     let win;
     let client;
 
-    console.log("-------------------------------")
-    console.log(process.env.DS_TEST_VIEWER_EMAIL)
-    console.log(process.env.DS_TEST_VIEWER_PW)
 
     test('Window Loads Properly', async () => {
         // Wait for dev server to start
         spectronTest = await testWithSpectron(spectron)
         win = spectronTest.app.browserWindow
         client = spectronTest.app.client
+
+        expect(process.env.DS_TEST_VIEWER_EMAIL.toEqual("datasleuth.test.viewer@gmail.com"))
 
         // Window was created
         expect(await client.getWindowCount()).toBe(1)
