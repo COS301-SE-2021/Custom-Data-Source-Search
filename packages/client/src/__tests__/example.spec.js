@@ -5,7 +5,6 @@ import spectron from 'spectron'
 import { testWithSpectron } from 'vue-cli-plugin-electron-builder'
 import fs from "fs";
 import * as dotenv from "dotenv";
-import {randomBytes} from "crypto";
 jest.setTimeout(50000)
 
 try {
@@ -14,16 +13,12 @@ try {
     console.log(__dirname);
 } catch (e) {}
 
-
-describe("Vault Functionality", () => {
+describe("Startup Electron App", () => {
 
     let spectronTest;
     let win;
     let client;
 
-
-    let email = "testing-v-" + randomBytes(5).toString('hex') + "@" + randomBytes(7).toString('hex') + ".com";
-    let password = randomBytes(14).toString('hex');
 
     test('Window Loads Properly', async () => {
         // Wait for dev server to start
@@ -42,6 +37,9 @@ describe("Vault Functionality", () => {
         expect(width).toBeGreaterThan(0)
         expect(height).toBeGreaterThan(0)
         // App is loaded properly
+
+
+       // await spectronTest.stopServe();
     })
 
     test('Register A User', async () => {
@@ -53,13 +51,13 @@ describe("Vault Functionality", () => {
         nameField.setValue("Test Name");
 
         const emailField = await client.$('#Email');
-        emailField.setValue(email);
+        emailField.setValue("test@datasleutmail.com");
 
         const passwordField = await client.$('#masterPassword');
-        passwordField.setValue(password);
+        passwordField.setValue("datasleuthtestingpassword123");
 
         const checkPasswordField = await client.$('#masterPassCheck');
-        checkPasswordField.setValue(password);
+        checkPasswordField.setValue("datasleuthtestingpassword123");
 
         const vaultCheckBox = await client.$('.p-checkbox-box');
         vaultCheckBox.click();
