@@ -111,6 +111,7 @@ class GitHubDataSourceService {
                 continue;
             }
             const fileFromRepoUUID: string = generateUUID()
+            console.log(filePath);
             const [, solrErr] = await solrService.postToSolr(
                 fileContent,
                 fileFromRepoUUID,
@@ -163,15 +164,20 @@ class GitHubDataSourceService {
     }
 
     getAllFilesRecursively(path: string): string[] {
+        let ignoreFolders: string[] = [".idea", ".git", "coverage", "node_modules"];
         let results: string[] = [];
-        for (let folderItem of fs.readdirSync(path)) {
-            if (folderItem.indexOf(".") === -1) {
-                this.getAllFilesRecursively(path + folderItem + "/").forEach((continuedPath) => {
-                    results.push(folderItem + "/" + continuedPath);
-                });
-            } else if (folderItem.indexOf(".ini") === -1) {
-                results.push(folderItem);
+        try {
+            for (let folderItem of fs.readdirSync(path)) {
+                if (fs.lstatSync(path + folderItem).isDirectory() && ignoreFolders.indexOf(folderItem) === -1) {
+                    this.getAllFilesRecursively(path + folderItem + "/").forEach((continuedPath) => {
+                        results.push(folderItem + "/" + continuedPath);
+                    });
+                } else if (folderItem.indexOf(".ini") === -1) {
+                    results.push(folderItem);
+                }
             }
+        } catch (e) {
+            console.error(e);
         }
         return results;
     }

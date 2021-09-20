@@ -7,11 +7,12 @@ import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 import {userRouter} from "./routers/User.router";
-import {generateUUID} from "./general/generalFunctions";
+import {generateUUID, isLocalBackend} from "./general/generalFunctions";
 import fileDataSourceService from "./services/FileDataSource.service";
 import fs from "fs";
 import {gitHubDataSourceRouter} from "./routers/GitHubDataSource.router";
 import userService from "./services/User.service";
+import bodyParser from "body-parser";
 
 try {
     fs.readFileSync(__dirname + `/../../../.env`);
@@ -30,7 +31,9 @@ const app = express();
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
 app.use("/general", generalRouter);
 app.use("/users", userRouter);
 app.use("/filedatasources", fileDataSourceRouter);
@@ -44,13 +47,15 @@ const server = app.listen(PORT , () => {
 });
 
 setTimeout(() => {
-    setInterval(async () => {
-        try {
-            await fileDataSourceService.updateDatasources();
-        } catch (e) {
-            console.log("Error encountered.");
-        }
-    }, 10000);
+    if (isLocalBackend()) {
+        setInterval(async () => {
+            try {
+                await fileDataSourceService.updateDatasources();
+            } catch (e) {
+                console.log("Error encountered.");
+            }
+        }, 10000);
+    }
     process.env.JWT_SECRET_KEY = generateUUID();
     setInterval(async () => {
         process.env.JWT_SECRET_KEY = generateUUID();

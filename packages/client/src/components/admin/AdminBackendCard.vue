@@ -80,7 +80,6 @@
   border-width: 1px;
   border-color: rgba(158,41,34,0);
   padding-top: 0.5em;
-  padding-left: 0.6em;
   background-color: #2c2c2c;
   box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
 
@@ -98,7 +97,9 @@
   width : 25em;
   height : 2.4em;
   margin-top : 0;
+  margin-left: 135px;
   overflow: hidden;
+  text-align: left;
 }
 
 .name {

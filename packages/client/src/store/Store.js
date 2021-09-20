@@ -21,10 +21,14 @@ const store = createStore({
   state: {
     signedInUserId: null,
     signedIn: null,
-    users: []
+    users: [],
+    refresh: false
   },
 
   getters: {
+    getRefreshState(state) {
+      return state.refresh;
+    },
     /*
     User information related getters
     ================================
@@ -41,12 +45,16 @@ const store = createStore({
       return state.users.find(user => user.id === id).info;
     },
 
+    getUser: (state) => (id) => {
+        return state.users.find(user => user.id === id);
+    },
+
     getArrUserInfo(state) {
-      let users = [];
-      for (let x = 0; x < state.users.length; x++) {
-        users.push(state.users[x].info);
-      }
-      return users;
+        let users = [];
+        for (let x = 0; x < state.users.length; x++) {
+            users.push(state.users[x].info);
+        }
+        return users;
     },
 
     getSignedInUserId(state) {
@@ -103,7 +111,6 @@ const store = createStore({
       let jwtToken = getters.getBackendJWTToken(backendID);
       let backendJSON = parseJwt(jwtToken);
       if (jwtToken != null) {
-        console.log("ROLE: " + JSON.stringify(backendJSON.role));
         return backendJSON.role;
       } else {
         return null;
@@ -112,12 +119,14 @@ const store = createStore({
 
     getIsUserAdmin: (state, getters) => {
       let admin = false;
-      for (let backend of getters.getUserBackends(state.signedInUserId)) {
-        if (getters.getUserAdminStatus(backend.local.id) != null) {
+      let backends = getters.getUserRemoteBackends;
+      for (let backend of backends) {
+        if (getters.getUserAdminStatus(backend.local.id) !== 'viewer'
+            && getters.getUserAdminStatus(backend.local.id) !== 'editor')
+        {
           admin = true;
         }
       }
-      console.log ("IN STORE - ADMIN: " + admin);
       return admin;
     },
 
@@ -166,6 +175,11 @@ const store = createStore({
           .find(b => b.local.name === name).connect.link;
     },
 
+    getBackendIDViaName: (state,getters) => (name) => {
+      return getters.getUserBackends(getters.getSignedInUserId)
+          .find(b => b.local.name === name).local.id;
+    },
+
     getBackendJWTToken: (state, getters) => (id) => {
         return getters.getSignedInUserBackend(id).connect.keys.jwtToken;
     },
@@ -198,6 +212,10 @@ const store = createStore({
             Object.assign(state, JSON.parse(localStorage.getItem('store')))
         );
       }
+    },
+
+    alterRefreshState(state) {
+      state.refresh = !state.refresh;
     },
 
     /*
@@ -418,6 +436,18 @@ const store = createStore({
       state.signedInUserId = state.users.length - 1;
       state.signedIn = true;
     },
+
+    addRemoteUserToLocalList(state, payload) {
+      state.users.push(payload);
+      let x = 0;
+      for (let user of state.users) {
+          user.id = x;
+          user.info.id = x;
+          x++;
+      }
+      state.signedInUserId = state.users.length - 1;
+      state.signedIn = true;
+  },
 
     /**
      * @param state
@@ -716,3 +746,7 @@ function parseJwt(token) {
 let masterKey = null;
 
 export default store;
+export {generateMasterKey};
+export {encryptJsonObject};
+export {decryptJsonObject};
+

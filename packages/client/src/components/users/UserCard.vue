@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import CustomTooltip from "../primeComponents/CustomTooltip";
+import CustomTooltip from "../customComponents/CustomTooltip";
 
 export default {
   name: "UserCard",

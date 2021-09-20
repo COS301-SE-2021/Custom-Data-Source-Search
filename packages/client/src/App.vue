@@ -22,7 +22,7 @@
             title="Backends"
             to="/backends"
             id="BackendIcon"
-            class="pi pi-th-large icon"
+            class="pi pi-sitemap icon"
             style="font-size:1.5rem"
             aria-hidden="true"
         />
@@ -31,20 +31,12 @@
             to="/admin"
             id="AdminIcon"
             v-if="getIsUserAdmin"
-            class="pi pi-sitemap"
+            class="pi pi-id-card"
             style="font-size:1.5rem"
-            @click="showJWTObject"
           />
-        <div v-if="!sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
+        <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
               class="fas fa-sync-alt"
-              style="font-size:1.2rem"
-              aria-hidden="true"
-          />
-        </div>
-        <div v-else title="Syncing..." class="refresh-container icon">
-          <i
-              class="fas fa-sync-alt fa-spin"
               style="font-size:1.2rem"
               aria-hidden="true"
           />
@@ -85,6 +77,8 @@
             @sync-vault="toggleSync"
             @close-dialog="closeDialog"
         />
+
+        <VaultSync :show="displayVaultSync" @close-dialog="closeDialog"></VaultSync>
       </div>
     </div>
     <div id="grid-div-2">
@@ -108,10 +102,14 @@
   import ProfileDropdown from "@/components/landing/ProfileDropdown";
   import {mapGetters} from "vuex";
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
-  import CustomTooltip from "./components/primeComponents/CustomTooltip";
+  import CustomTooltip from "./components/customComponents/CustomTooltip";
+  import axios from "axios";
+  import {pbkdf2Sync} from "crypto";
+  import VaultSync from "@/components/popups/VaultSync";
 
   export default {
   components: {
+    VaultSync,
     CustomTooltip,
     ReEnterMasterPassword,
     OverlayPanel,
@@ -124,6 +122,7 @@
       displayPasswordDialog: false,
       displayVaultDialog: false,
       sync: false,
+      displayVaultSync: false,
       activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
       activePageNum: null,
       adminStatus: false
@@ -132,25 +131,66 @@
 
     computed: {
         ...mapGetters ([
-            'getUserInfo',
-            'getUserBackends',
-            'getSignedInUserId',
-            'unconnectedBackendNames',
-            'unconnectedBackendBool',
-            'unconnectedBackendNo',
-            'getIsUserAdmin'
+          'getUserInfo',
+          'getUserBackends',
+          'getSignedInUserId',
+          'unconnectedBackendNames',
+          'unconnectedBackendBool',
+          'unconnectedBackendNo',
+          'getIsUserAdmin',
+          'getSignedIn',
+          'getUser',
+          'getMasterKey'
         ])
     },
 
     beforeCreate() {
-        this.$store.commit('initialiseStore');
+       this.$store.commit('initialiseStore');
+    },
+
+    mounted() {
+      this.interval = setInterval(() => this.checkSyncStatus(), 25000);
     },
 
     methods: {
-      showAskMasterPw(){
-        if(this.$store.getters.getMasterKey === null){
-          this.showPasswordDialog();
+
+      checkSyncStatus(){
+        if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
+          console.log("Checking Sync Status");
+          const user = this.getUser(this.getSignedInUserId);
+          const dataString = JSON.stringify(user);
+          //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
+          const dataFingerprint = pbkdf2Sync(
+              dataString,
+              user.info.salt,
+              10000,
+              32,
+              'sha256'
+          ).toString('hex');
+          let reqObj = {
+            email: user.info.email,
+            fingerprint: dataFingerprint
+          };
+          console.log("requestObject" + JSON.stringify(reqObj));
+          axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
+              {headers: {"Content-Type": "application/json"}})
+              .then((resp) => {
+                console.log("Out Of Sync: " +resp.data.isOutOfSync);
+
+                if(resp.data.isOutOfSync){
+                  this.showOutOfSync();
+                }else {
+                  this.hideOutOfSync();
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              })
         }
+      },
+
+      showAskMasterPw(){
+        this.showPasswordDialog();
       },
 
       toggle(event){
@@ -162,16 +202,21 @@
       },
 
       showVaultSyncDialog(){
-        this.displayVaultDialog = !this.displayVaultDialog
+        this.displayVaultSync = !this.displayVaultSync;
       },
 
       toggleSync(){
         this.sync = !this.sync;
       },
-
+      showOutOfSync(){
+        this.sync = true;
+      },
+      hideOutOfSync() {
+        this.sync = false;
+      },
       closeDialog(){
         this.displayPasswordDialog = false;
-        this.displayVaultDialog = false;
+        this.displayVaultSync = false;
       }
     }
   }
@@ -220,18 +265,25 @@
     grid-template-columns: 1fr 30fr;
     grid-template-rows: 0;
     height: 100%;
+    width: 100%;
   }
 
   a:-webkit-any-link {
     text-decoration: none;
-    padding-left: 0.7em
+    margin-left: 0.3em;
+    padding-top: 0.5em;
+    margin-top: 0.4em;
+  }
+
+  a:focus {
+    outline-color: #41B3B2;
   }
 
   .icon {
     padding: 10px;
   }
 
-  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .pi-sitemap{
+  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-sitemap, .pi-id-card{
     color: grey;
     padding: 20px 10px 10px;
   }
@@ -241,7 +293,7 @@
     padding: 10px 10px 10px;
   }
 
-  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .pi-sitemap:hover {
+  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-sitemap:hover, .pi-id-card:hover {
     color: #41B3B2;
   }
 
@@ -357,3 +409,4 @@
     cursor: pointer;
   }
 </style>
+

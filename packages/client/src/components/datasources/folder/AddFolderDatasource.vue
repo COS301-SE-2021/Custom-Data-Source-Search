@@ -71,10 +71,16 @@
       </span>
     </div>
     <Button
+        v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFolders"
+    />
+    <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        class="p-button-rounded p-button-text p-button-lg"
     />
   </ScrollPanel>
 </template>
@@ -94,6 +100,7 @@ export default {
 
   data() {
     return {
+      submitting: false,
       dataSourceURI: "",
       tag1: null,
       tag2: null,
@@ -126,13 +133,14 @@ export default {
           })
     },
 
-    submitSelectedFolders() {
+    async submitSelectedFolders() {
       if(this.selectedFolders.length!==0){
+        this.submitting = true;
         let i;
         for (i of this.selectedFolders) {
           let reqObject = {"path": i, "tag1": this.tag1, "tag2": this.tag2, "dotIgnore": this.ignore, "depth": this.depth};
           const url = `http://${this.$store.getters.getBackendLinkViaName(this.backend)}/folderdatasources`;
-          axios
+          await axios
               .post(url, reqObject)
               .then((resp) => {
                 this.$toast.add({
@@ -141,7 +149,6 @@ export default {
                   detail: resp.data.message,
                   life: 3000
                 });
-                this.$emit('addFolder');
               })
               .catch((error) => {
                 this.$toast.add({
@@ -153,6 +160,7 @@ export default {
                 this.selectedFolders = [];
               })
         }
+        this.submitting = false;
         this.$emit("submitted");
         this.selectedFolders = [];
       }

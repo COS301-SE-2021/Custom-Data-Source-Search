@@ -35,10 +35,16 @@
       </span>
     </div>
     <Button
+        v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitWebpage"
+    />
+    <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        class="p-button-rounded p-button-text p-button-lg"
     />
   </div>
 </template>
@@ -58,18 +64,24 @@ export default {
       dataSourceURI: "",
       tag1: null,
       tag2: null,
-      type: 'webpage'
+      type: 'webpage',
+      submitting: false
     }
   },
 
   methods: {
-    submitWebpage() {
+    async submitWebpage() {
       if(this.dataSourceURI!==""){
-        let respObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
-        axios
+        this.submitting = true;
+        let backendID = this.$store.getters.getBackendIDViaName(this.backend);
+        let reqObject = {"url": this.dataSourceURI, "tag1": this.tag1, "tag2": this.tag2};
+        const headers = {
+          "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+        };
+        await axios
             .post(
                 `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
-                respObject
+                reqObject, {headers}
             )
             .then(resp => {
               this.$toast.add({
@@ -78,17 +90,37 @@ export default {
                 detail: resp.data.message,
                 life: 3000
                 });
-              this.$emit('addWebpage');
+              this.submitting = false;
               this.$emit("submitted");
             })
-            .catch(() => {
-              this.$toast.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Could Not Add Webpage.',
-                life: 3000
-              });
-              this.dataSourceURI = "";
+            .catch(async () => {
+              await this.$store.dispatch("refreshJWTToken", {id: backendID});
+              const headers = {
+                "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
+              };
+              await axios
+                .post(`http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/webpagedatasources`,
+                    reqObject, {headers}
+                )
+                .then(resp => {
+                  this.$toast.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: resp.data.message,
+                    life: 3000
+                  });
+                  this.submitting = false;
+                  this.$emit("submitted");
+                })
+              .catch((error) =>{
+                this.$toast.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: error.response.data.message,
+                  life: 3000
+                });
+                this.dataSourceURI = "";
+              })
             })
       }
       else{
