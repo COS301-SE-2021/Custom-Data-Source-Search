@@ -6,7 +6,7 @@ import solrService from "./Solr.service";
 import {
     generateDefaultHttpResponse,
     generateUUID,
-    getLastModifiedDateOfFile, removeFileExtension,
+    getLastModifiedDateOfFile, isLocalBackend, removeFileExtension,
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
@@ -60,7 +60,8 @@ class FileDataSourceService {
     async addFileDataSource(dataSource: FileDataSource): Promise<DefaultHttpResponse> {
         const UUID = generateUUID();
         let storedDataSource: StoredFileDataSource;
-        if (process.env.LOCAL_BACKEND) {
+        if (isLocalBackend()) {
+            console.log("Should not be here because it is remote");
             dataSource.path = this.standardizePath(dataSource.path);
             const [, validateErr] = this.validateDataSource(dataSource);
             if (validateErr) {
@@ -85,6 +86,7 @@ class FileDataSourceService {
                 tag2: dataSource.tag2
             };
         } else {
+            console.log("This is correct because remote");
             const [, solrErr] = await solrService.postToSolr(
                 Buffer.from(dataSource.file), UUID, removeFileExtension(dataSource.filename), "file"
             );
