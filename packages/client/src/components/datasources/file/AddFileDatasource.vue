@@ -151,24 +151,22 @@ export default {
           this.$emit("submitted");
         }
         else{
-          let fileStream;
           let backendID = this.$store.getters.getBackendIDViaName(this.backend);
           for (let i = 0; i < this.filenames.length; i++) {
-            let formData = new FormData();
-            fileStream = fs.readFileSync(this.paths[i] + this.filenames[i]);
-            formData.set('filename', this.filenames[i]);
-            formData.set('path', null);
-            formData.set('file', fileStream);
-            formData.set('tag1', this.tag1);
-            formData.set('tag2', this.tag2);
+            let reqObject = {
+              "filename": this.filenames[i],
+              "path": null,
+              "file": fs.readFileSync(this.paths[i] + this.filenames[i]).toString(),
+              "tag1": this.tag1,
+              "tag2": this.tag2
+            };
             const headers = {
             "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID),
-            "Content-Type": "multipart/form-data"
             };
             await axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                    formData, {headers}
+                    reqObject, {headers}
                 )
                 .then((resp) => {
                   this.$toast.add({
@@ -261,14 +259,6 @@ export default {
   .selection-list{
     display: block;
     margin-bottom: 2px;
-  }
-
-  .p-scrollpanel{
-    height: 45vh;
-    bottom: 2em;
-    padding-bottom: 1vh;
-    align-content: center;
-    margin-left:15px;
   }
 
   .back-button{

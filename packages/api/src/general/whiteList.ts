@@ -41,7 +41,9 @@ export const whiteList = {
     d: "",
     lgo: "",
     pdf: "",
-    word: "",
+    rtf: "",
     md: "",
-    txt: ""
+    txt: "",
+    odt: "",
+    docx: ""
 }
