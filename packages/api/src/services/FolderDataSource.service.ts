@@ -143,7 +143,7 @@ class FolderDataSourceService {
         }
         let results: string[] = [];
         for (let folderItem of fs.readdirSync(path)) {
-            if (folderItem.indexOf(".") === -1 && ignoreFolders.indexOf(folderItem) === -1) {
+            if (fs.lstatSync(path + folderItem).isDirectory() && ignoreFolders.indexOf(folderItem) === -1) {
                 this.getAllFilesRecursively(
                     path + folderItem + "/",
                     ignoreFolders,

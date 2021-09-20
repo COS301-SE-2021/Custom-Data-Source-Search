@@ -166,7 +166,6 @@ class GitHubDataSourceService {
     getAllFilesRecursively(path: string): string[] {
         let results: string[] = [];
         for (let folderItem of fs.readdirSync(path)) {
-
             if (fs.lstatSync(path + folderItem).isDirectory()) {
                 this.getAllFilesRecursively(path + folderItem + "/").forEach((continuedPath) => {
                     results.push(folderItem + "/" + continuedPath);
