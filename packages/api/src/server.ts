@@ -7,7 +7,7 @@ import {webPageDataSourceRouter} from "./routers/WebPageDataSource.router";
 import {generalRouter} from "./routers/General.router";
 import {folderDataSourceRouter} from "./routers/FolderDataSource.router";
 import {userRouter} from "./routers/User.router";
-import {generateUUID} from "./general/generalFunctions";
+import {generateUUID, isLocalBackend} from "./general/generalFunctions";
 import fileDataSourceService from "./services/FileDataSource.service";
 import fs from "fs";
 import {gitHubDataSourceRouter} from "./routers/GitHubDataSource.router";
@@ -44,13 +44,15 @@ const server = app.listen(PORT , () => {
 });
 
 setTimeout(() => {
-    setInterval(async () => {
-        try {
-            await fileDataSourceService.updateDatasources();
-        } catch (e) {
-            console.log("Error encountered.");
-        }
-    }, 10000);
+    if (isLocalBackend()) {
+        setInterval(async () => {
+            try {
+                await fileDataSourceService.updateDatasources();
+            } catch (e) {
+                console.log("Error encountered.");
+            }
+        }, 10000);
+    }
     process.env.JWT_SECRET_KEY = generateUUID();
     setInterval(async () => {
         process.env.JWT_SECRET_KEY = generateUUID();
