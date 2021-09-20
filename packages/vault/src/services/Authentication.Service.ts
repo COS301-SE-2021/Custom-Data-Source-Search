@@ -2,14 +2,14 @@ import {SRPParameters, SRPRoutines, SRPServerSession, SRPServerSessionStep1} fro
 import {
     CompareRequest,
     SRPAuthRequest,
-    SRPChallengeRequest,
+    SRPChallengeRequest, SRPDeleteRequest,
     SRPPullRequest,
     SRPPushRequest,
 } from "../models/request/AuthenticationReq.interface";
 import {
     CompareResponse,
     SRPAuthResponse,
-    SRPChallengeResponse,
+    SRPChallengeResponse, SRPDeleteResponse,
     SRPPullResponse,
     SRPPushResponse
 } from "../models/response/AuthenticationResp.interface";
@@ -225,6 +225,48 @@ class AuthenticationService {
             }
         }
 
+    async delete(body: SRPDeleteRequest): Promise<SRPDeleteResponse> {
+        if(this.deleteDetailsAreValid(body)){
+            const [stateData, stateErr] = await vaultRepository.retrieveServerState(body.email);
+            if(stateErr){
+                return {
+                    code: 400,
+                    message: "Unable To Access Database"
+                }
+            } else {
+                const serverStep1 = SRPServerSessionStep1.fromState(
+                    new SRPRoutines(new SRPParameters()),
+                    JSON.parse(stateData.Step1State),);
+                //Attempt Verification of User Credentials
+                try {
+                    await serverStep1.step2(BigInt(body.A), BigInt(body.verificationMessage1));
+                } catch(e) {
+                    return {
+                        code : 400,
+                        message : "Server Error"
+                    }
+                }
+                const [userData, error] = await vaultRepository.deleteUserData(body.email);
+                if(error){
+                    return {
+                        code : 400,
+                        message : "Database Error"
+                    }
+                }else {
+                    return {
+                        code: 200,
+                        message: "Successfully Deleted User"
+                    }
+                }
+            }
+        } else {
+            return {
+                code:400,
+                message: "Details Invalid"
+            }
+        }
+    }
+
     challengeDetailsAreValid(body: SRPChallengeRequest): boolean{
         return body.hasOwnProperty("email") && isNaN(Number(body.email));
     }
@@ -264,6 +306,15 @@ class AuthenticationService {
     }
 
     pullDetailsAreValid(body: SRPPullRequest): boolean{
+        return body.hasOwnProperty("email") &&
+            body.hasOwnProperty("A") &&
+            body.hasOwnProperty("verificationMessage1") &&
+            isNaN(Number(body.email)) &&
+            !isNaN(Number(body.A)) &&
+            !isNaN(Number(body.verificationMessage1));
+    }
+
+    deleteDetailsAreValid(body: SRPDeleteRequest): boolean{
         return body.hasOwnProperty("email") &&
             body.hasOwnProperty("A") &&
             body.hasOwnProperty("verificationMessage1") &&

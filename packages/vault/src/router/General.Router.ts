@@ -44,3 +44,8 @@ generalRouter.post("/push",async (req: Request, res: Response) => {
     const result = await authenticationService.push(req.body)
     res.status(result.code).send(result.message);
 });
+
+generalRouter.post("/delete", async (req: Request, res: Response) => {
+    const result = await authenticationService.delete(req.body)
+    res.status(result.code).send(result.message);
+});

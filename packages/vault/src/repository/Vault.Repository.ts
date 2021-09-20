@@ -144,6 +144,29 @@ class VaultRepository {
             return[null, e]
         }
     }
+
+    async deleteUserData(email: string){
+        try {
+            const client = await db.connect();
+            await client.query(
+                'DELETE FROM "Users"' +
+                'WHERE email = $1 ',
+                [email],
+            );
+            await client.query(
+                'DELETE FROM "SRPSessionStates"' +
+                'WHERE email = $1 ',
+                [email],
+            );
+            client.release();
+            return["Success", null]
+        } catch (e){
+            console.log(e.stack);
+            return[null, e]
+        }
+    }
+
+
 }
 
 const vaultRepository = new VaultRepository();

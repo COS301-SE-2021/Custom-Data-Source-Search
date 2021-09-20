@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "jest": {
+    "testPathIgnorePatterns": ["build"]
+  },
   "scripts": {
     "start-ts": "ts-node src/server.ts",
     "gcp-build": "tsc",
