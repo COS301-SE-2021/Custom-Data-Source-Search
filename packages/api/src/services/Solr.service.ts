@@ -15,6 +15,9 @@ class SolrService {
      * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
      */
     async postToSolr(content: Buffer, id: string, sourceName: string, type: string) {
+        if (content.length > 40000) {
+            return [null, statusMessage(400, "File too large")];
+        }
         let formData = new FormData();
         formData.append("file", content, sourceName);
         try {

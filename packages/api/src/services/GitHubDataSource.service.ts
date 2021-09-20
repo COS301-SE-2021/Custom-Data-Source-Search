@@ -111,6 +111,7 @@ class GitHubDataSourceService {
                 continue;
             }
             const fileFromRepoUUID: string = generateUUID()
+            console.log(filePath);
             const [, solrErr] = await solrService.postToSolr(
                 fileContent,
                 fileFromRepoUUID,
@@ -165,7 +166,8 @@ class GitHubDataSourceService {
     getAllFilesRecursively(path: string): string[] {
         let results: string[] = [];
         for (let folderItem of fs.readdirSync(path)) {
-            if (folderItem.indexOf(".") === -1) {
+
+            if (fs.lstatSync(path + folderItem).isDirectory()) {
                 this.getAllFilesRecursively(path + folderItem + "/").forEach((continuedPath) => {
                     results.push(folderItem + "/" + continuedPath);
                 });
