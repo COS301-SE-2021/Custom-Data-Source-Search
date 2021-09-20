@@ -35,7 +35,7 @@ class SolrService {
                     }
                 });
         } catch (e) {
-            console.error(e)
+            console.error("Posting to solr failed");
             return [null, {
                 "code": 500,
                 "message": "Could not post document to solr"

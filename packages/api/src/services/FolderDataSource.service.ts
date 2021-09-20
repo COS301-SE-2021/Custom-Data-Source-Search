@@ -11,6 +11,7 @@ import {
 import {DefaultHttpResponse} from "../models/response/general.interfaces";
 import solrService from "./Solr.service";
 import fileDataSourceService from "./FileDataSource.service";
+import {whiteList} from "../general/whiteList";
 
 class FolderDataSourceService {
 
@@ -121,6 +122,9 @@ class FolderDataSourceService {
         let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
         let files: string[] = [];
         this.getAllFilesRecursively(path, ignoreFolders, depth).forEach((filePath: string) => {
+            if (!whiteList.hasOwnProperty(filePath.split(".").pop().toLocaleLowerCase())) {
+                return;
+            }
             if (ignoreFileTypes.indexOf("." + filePath.split(".").pop()) !== -1) {
                 return;
             }

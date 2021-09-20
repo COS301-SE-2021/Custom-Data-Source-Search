@@ -164,10 +164,11 @@ class GitHubDataSourceService {
     }
 
     getAllFilesRecursively(path: string): string[] {
+        let ignoreFolders: string[] = [".idea", ".git", "coverage", "node_modules"];
         let results: string[] = [];
         try {
             for (let folderItem of fs.readdirSync(path)) {
-                if (fs.lstatSync(path + folderItem).isDirectory()) {
+                if (fs.lstatSync(path + folderItem).isDirectory() && ignoreFolders.indexOf(folderItem) === -1) {
                     this.getAllFilesRecursively(path + folderItem + "/").forEach((continuedPath) => {
                         results.push(folderItem + "/" + continuedPath);
                     });
