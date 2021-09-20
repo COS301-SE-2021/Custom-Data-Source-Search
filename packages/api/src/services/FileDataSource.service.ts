@@ -58,30 +58,48 @@ class FileDataSourceService {
     }
 
     async addFileDataSource(dataSource: FileDataSource): Promise<DefaultHttpResponse> {
-        dataSource.path = this.standardizePath(dataSource.path);
-        const [, validateErr] = this.validateDataSource(dataSource);
-        if (validateErr) {
-            return generateDefaultHttpResponse(validateErr);
-        }
-        const [fileContent, fileErr] = this.readFile(dataSource.path + dataSource.filename);
-        if (fileErr) {
-            return generateDefaultHttpResponse(fileErr);
-        }
         const UUID = generateUUID();
-        const [, solrErr] = await solrService.postToSolr(
-            fileContent, UUID, removeFileExtension(dataSource.filename), "file"
-        );
-        if (solrErr) {
-            return generateDefaultHttpResponse(solrErr);
+        let storedDataSource: StoredFileDataSource;
+        if (process.env.LOCAL_BACKEND) {
+            dataSource.path = this.standardizePath(dataSource.path);
+            const [, validateErr] = this.validateDataSource(dataSource);
+            if (validateErr) {
+                return generateDefaultHttpResponse(validateErr);
+            }
+            const [fileContent, fileErr] = this.readFile(dataSource.path + dataSource.filename);
+            if (fileErr) {
+                return generateDefaultHttpResponse(fileErr);
+            }
+            const [, solrErr] = await solrService.postToSolr(
+                fileContent, UUID, removeFileExtension(dataSource.filename), "file"
+            );
+            if (solrErr) {
+                return generateDefaultHttpResponse(solrErr);
+            }
+            storedDataSource = {
+                uuid: UUID,
+                filename: dataSource.filename,
+                path: dataSource.path,
+                lastModified: getLastModifiedDateOfFile(dataSource.path + dataSource.filename),
+                tag1: dataSource.tag1,
+                tag2: dataSource.tag2
+            };
+        } else {
+            const [, solrErr] = await solrService.postToSolr(
+                Buffer.from(dataSource.file), UUID, removeFileExtension(dataSource.filename), "file"
+            );
+            if (solrErr) {
+                return generateDefaultHttpResponse(solrErr);
+            }
+            storedDataSource = {
+                uuid: UUID,
+                filename: dataSource.filename,
+                path: "",
+                lastModified: getLastModifiedDateOfFile(dataSource.path + dataSource.filename),
+                tag1: dataSource.tag1,
+                tag2: dataSource.tag2
+            };
         }
-        const storedDataSource: StoredFileDataSource = {
-            uuid: UUID,
-            filename: dataSource.filename,
-            path: dataSource.path,
-            lastModified: getLastModifiedDateOfFile(dataSource.path + dataSource.filename),
-            tag1: dataSource.tag1,
-            tag2: dataSource.tag2
-        };
         const [success, repositoryErr] = fileDataSourceRepository.addDataSource(storedDataSource);
         if (repositoryErr) {
             return generateDefaultHttpResponse(repositoryErr);
