@@ -11,6 +11,10 @@ describe("Startup Electron App", () => {
     let win;
     let client;
 
+    console.log("-------------------------------")
+    console.log(process.env.DS_TEST_VIEWER_EMAIL)
+    console.log(process.env.DS_TEST_VIEWER_PW)
+
     test('Window Loads Properly', async () => {
         // Wait for dev server to start
         spectronTest = await testWithSpectron(spectron)
