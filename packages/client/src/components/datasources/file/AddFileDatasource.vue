@@ -256,6 +256,14 @@ export default {
     margin-top: 15px;
   }
 
+  .p-scrollpanel{
+    height: 45vh;
+    bottom: 2em;
+    padding-bottom: 1vh;
+    align-content: center;
+    margin-left:15px;
+  }
+
   .selection-list{
     display: block;
     margin-bottom: 2px;
