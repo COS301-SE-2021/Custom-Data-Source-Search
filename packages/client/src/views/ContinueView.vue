@@ -13,6 +13,7 @@
           Yes
         </Button>
         <Button
+            id="gotoSearch"
             @click="goToSearch"
             style="margin-right: 2%"
             class="p-button-lg p-button-outlined"
