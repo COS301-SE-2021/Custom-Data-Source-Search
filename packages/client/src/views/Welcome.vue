@@ -23,7 +23,7 @@
           ref="deleteOption"
           :model="items"
       />
-      <AddUserCard/>
+      <AddUserCard id="add-user-card"/>
     </div>
     <span id="tips-span">Tip: {{tips[0]}}</span>
     <DeleteUserAreYouSure

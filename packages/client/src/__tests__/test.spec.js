@@ -5,8 +5,7 @@ import spectron from 'spectron'
 import { testWithSpectron } from 'vue-cli-plugin-electron-builder'
 jest.setTimeout(50000)
 
-
-describe("Electron Test", () => {
+describe("Startup Electron App", () => {
 
     let spectronTest;
     let win;
@@ -34,9 +33,33 @@ describe("Electron Test", () => {
        // await spectronTest.stopServe();
     })
 
-    test('Window Works Properly', async () => {
+    test('Register A User', async () => {
 
-        // Window was created
+        const addUserButton = await client.$('#add-user-card');
+        addUserButton.click();
+
+        const nameField = await client.$('#Name');
+        nameField.setValue("Test Name");
+
+        const emailField = await client.$('#Email');
+        emailField.setValue("test@datasleutmail.com");
+
+        const passwordField = await client.$('#masterPassword');
+        passwordField.setValue("datasleuthtestingpassword123");
+
+        const checkPasswordField = await client.$('#masterPassCheck');
+        checkPasswordField.setValue("datasleuthtestingpassword123");
+
+        const vaultCheckBox = await client.$('.p-checkbox-box');
+        vaultCheckBox.click();
+
+        const registerButton = await client.$('#btnRegister');
+        registerButton.click();
+
+        const goToSearchButton = await client.$('#gotoSearch');
+        goToSearchButton.click();
+
+
         expect(await client.getWindowCount()).toBe(1)
         // It is not minimized
         expect(await win.isMinimized()).toBe(false)
