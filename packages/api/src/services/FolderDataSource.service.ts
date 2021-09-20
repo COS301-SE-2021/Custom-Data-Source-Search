@@ -103,7 +103,7 @@ class FolderDataSourceService {
     }
 
     getFilesInFolder(path: string, dotIgnore: string, depth: number): string[] {
-        let ignoreFolders: string[] = [".idea", ".git"];
+        let ignoreFolders: string[] = [".idea", ".git", "coverage", "node_modules"];
         let ignoreFiles: string[] = [];
         let ignoreFileTypes: string[] = [];
         for (let line of dotIgnore.split("\n")) {
@@ -147,8 +147,6 @@ class FolderDataSourceService {
         let results: string[] = [];
         try {
             for (let folderItem of fs.readdirSync(path)) {
-                console.log(ignoreFolders);
-                console.log(folderItem);
                 if (fs.lstatSync(path + folderItem).isDirectory() && ignoreFolders.indexOf(folderItem) === -1) {
                     this.getAllFilesRecursively(
                         path + folderItem + "/",
