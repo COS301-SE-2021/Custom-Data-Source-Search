@@ -26,7 +26,7 @@ describe("Startup Electron App", () => {
         win = spectronTest.app.browserWindow
         client = spectronTest.app.client
 
-        expect(process.env.DS_TEST_VIEWER_EMAIL.toEqual("datasleuth.test.viewer@gmail.com"))
+        expect(process.env.DS_TEST_VIEWER_EMAIL).toEqual("datasleuth.test.viewer@gmail.com")
 
         // Window was created
         expect(await client.getWindowCount()).toBe(1)
