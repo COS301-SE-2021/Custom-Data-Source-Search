@@ -14,7 +14,8 @@ class SolrService {
      * @param {string} type Specifies the datasource type
      * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
      */
-    async postToSolr(content: Buffer, id: string, sourceName: string, type: string) {
+    async postToSolr(content: Buffer, id: string, sourceName: string, type: string):
+        Promise<[StatusMessage, StatusMessage]> {
         if (content.length > 40000) {
             return [null, statusMessage(400, "File too large")];
         }
@@ -35,16 +36,10 @@ class SolrService {
                     }
                 });
         } catch (e) {
-            console.error("Posting to solr failed");
-            return [null, {
-                "code": 500,
-                "message": "Could not post document to solr"
-            }];
+            console.error("Posting to solr failed due to internal error");
+            return [null, statusMessage(500, "Could not post document to solr")];
         }
-        return [{
-            "code": 200,
-            "message": "Successfully posted document to Solr"
-        }, null];
+        return [statusMessage(200, "Successfully posted document to Solr"), null];
     }
 
     /**
