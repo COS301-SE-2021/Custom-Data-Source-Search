@@ -17,28 +17,43 @@ The project is still in the early phases of development.
 ### The DataSleuth Story
 See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/wiki/The-DataSleuth-Story) for more information on the design of the DataSleuth system; the workflow of the team behind it; and the story of how it all got where it is now. 
 
-### SRS
-[Demo 1 & 2](https://drive.google.com/file/d/1MwdbPOdbiG9-Ide3L_upt0Pc2YZa4peu/view?usp=sharing) <br>
-[Demo 3](https://drive.google.com/file/d/1lEBgKNgxTLHb0d_ejuXfIeiIBfncLL3V/view?usp=sharing)
-
-### DataSleuth Architecture
-[Demo 2](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing) <br>
-[Demo 3](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing)
+### Link to app
+[Demo 4]()
 
 ### User Manual
 [Demo 2](https://drive.google.com/file/d/1FNIe4R1prw5S8LBU3TC2LQrwWTPcDlGN/view?usp=sharing) <br>
-[Demo 3](https://drive.google.com/file/d/1UCCZ3P9yHKFJyMJIGbeTtff_dXmScWg5/view?usp=sharing)
+[Demo 3](https://drive.google.com/file/d/1UCCZ3P9yHKFJyMJIGbeTtff_dXmScWg5/view?usp=sharing) <br>
+[Demo 4]()
 
 ### Technical Installation Manual
 [Demo 3](https://drive.google.com/file/d/13QthV3B954L1MYAMRh953z_vycIcGOHf/view?usp=sharing)
+[Demo 4]()
+
+### Coding Standards
+[Demo 4]()
+
+### Testing Policy
+[Demo 4]()
+
+### SRS
+[Demo 1 & 2](https://drive.google.com/file/d/1MwdbPOdbiG9-Ide3L_upt0Pc2YZa4peu/view?usp=sharing) <br>
+[Demo 3](https://drive.google.com/file/d/1lEBgKNgxTLHb0d_ejuXfIeiIBfncLL3V/view?usp=sharing) <br>
+[Demo 4]()
+
+### DataSleuth Architecture
+[Demo 2](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing) <br>
+[Demo 3](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing) <br>
+[Demo 4](https://drive.google.com/file/d/1o9IXZrEjq9KT4kJHvTnU4FtpP6SPIqYJ/view?usp=sharing)
+
+### ProjectBoard
+[GitKraken](https://www.gitkraken.com/)
 
 ### Demos
 [Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing) <br>
 [Abstraction-Demo2](https://drive.google.com/file/d/1sbplUcJwGkIJPUxpzKIw-NadJCk9BQSa/view?usp=sharing) <br>
-[Abstraction-Demo3](https://drive.google.com/file/d/1Q0zyAji8Ceo6T7Lw79FhBnIyrd5RRxjB/view?usp=sharing)
+[Abstraction-Demo3](https://drive.google.com/file/d/1Q0zyAji8Ceo6T7Lw79FhBnIyrd5RRxjB/view?usp=sharing) <br>
+[Abstraction-Demo4]()
 
-### ProjectBoard
-[GitKraken](https://www.gitkraken.com/)
 
 | **Team Member**                                                                                                 | **Details**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                      |
 |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
