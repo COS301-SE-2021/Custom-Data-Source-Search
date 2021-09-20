@@ -97,7 +97,7 @@
   width : 25em;
   height : 2.4em;
   margin-top : 0;
-  margin-left: 135px;
+  margin-left: 15px;
   overflow: hidden;
   text-align: left;
 }

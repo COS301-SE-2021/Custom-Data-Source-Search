@@ -1,6 +1,6 @@
 export interface FileDataSource {
     filename: string;
-    file: string;
+    file: Buffer;
     path: string;
     tag1: string;
     tag2: string;
