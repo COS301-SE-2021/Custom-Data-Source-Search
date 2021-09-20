@@ -159,21 +159,11 @@ export default {
               reqObject = {
                 "filename": this.filenames[i],
                 "path": null,
-                "file": fs.readFileSync(this.paths[i] + this.filenames[i]).toString(),
+                "file": fs.readFileSync(this.paths[i] + this.filenames[i], "base64"),
                 "tag1": this.tag1,
                 "tag2": this.tag2
               };
-              if (reqObject.file.length > 40000) {
-                this.$toast.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: "File size is too large",
-                  life: 5000
-                });
-                this.submitting = false;
-                this.$emit("submitted");
-                return;
-              }
+              fs.writeFileSync(this.paths[i] + "copy_" + this.filenames[i], reqObject.file, {encoding: "base64"})
             } catch (e) {
               console.log(e)
             }

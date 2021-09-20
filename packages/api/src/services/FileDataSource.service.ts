@@ -85,10 +85,18 @@ class FileDataSourceService {
                 tag2: dataSource.tag2
             };
         } else {
+            const filePath: string = __dirname + "\\" + dataSource.filename;
+            fs.writeFileSync(filePath, dataSource.file, {encoding: "base64"});
+            const [fileContent, fileErr] = this.readFile(filePath);
+            if (fileErr) {
+                fs.unlinkSync(filePath);
+                return generateDefaultHttpResponse(fileErr);
+            }
             const [, solrErr] = await solrService.postToSolr(
-                Buffer.from(dataSource.file), UUID, removeFileExtension(dataSource.filename), "file"
+                fileContent, UUID, removeFileExtension(dataSource.filename), "file"
             );
             if (solrErr) {
+                fs.unlinkSync(filePath);
                 return generateDefaultHttpResponse(solrErr);
             }
             storedDataSource = {
@@ -99,6 +107,7 @@ class FileDataSourceService {
                 tag1: dataSource.tag1,
                 tag2: dataSource.tag2
             };
+            fs.unlinkSync(filePath);
         }
         const [success, repositoryErr] = fileDataSourceRepository.addDataSource(storedDataSource);
         if (repositoryErr) {

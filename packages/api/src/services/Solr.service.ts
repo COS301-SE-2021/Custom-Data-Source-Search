@@ -16,7 +16,7 @@ class SolrService {
      */
     async postToSolr(content: Buffer, id: string, sourceName: string, type: string):
         Promise<[StatusMessage, StatusMessage]> {
-        if (content.length > 40000) {
+        if (type === "folder" && content.length > 40000) {
             return [null, statusMessage(400, "File too large")];
         }
         let formData = new FormData();
@@ -39,6 +39,7 @@ class SolrService {
             console.error("Posting to solr failed due to internal error");
             return [null, statusMessage(500, "Could not post document to solr")];
         }
+        console.log("Returning success")
         return [statusMessage(200, "Successfully posted document to Solr"), null];
     }
 
