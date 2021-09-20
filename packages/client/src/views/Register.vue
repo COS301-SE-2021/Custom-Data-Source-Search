@@ -78,6 +78,7 @@
             </div>
             <div style="text-align: center; margin-top: 5%;">
               <Button
+                  id="btnRegister"
                   label="Register"
                   type="submit"
                   style="text-align: center;"

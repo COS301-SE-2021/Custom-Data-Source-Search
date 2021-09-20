@@ -22,7 +22,7 @@
             title="Backends"
             to="/backends"
             id="BackendIcon"
-            class="pi pi-th-large icon"
+            class="pi pi-sitemap icon"
             style="font-size:1.5rem"
             aria-hidden="true"
         />
@@ -31,7 +31,7 @@
             to="/admin"
             id="AdminIcon"
             v-if="getIsUserAdmin"
-            class="pi pi-sitemap"
+            class="pi pi-id-card"
             style="font-size:1.5rem"
           />
         <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
@@ -283,7 +283,7 @@
     padding: 10px;
   }
 
-  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .pi-sitemap{
+  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-sitemap, .pi-id-card{
     color: grey;
     padding: 20px 10px 10px;
   }
@@ -293,7 +293,7 @@
     padding: 10px 10px 10px;
   }
 
-  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .pi-sitemap:hover {
+  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-sitemap:hover, .pi-id-card:hover {
     color: #41B3B2;
   }
 
