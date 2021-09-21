@@ -57,18 +57,18 @@ export function checkRoleFor(type: string) {
             if (type === "add") {
                 for (let user of req.body.users) {
                     if (permissionGreater(user["role"], requestUserRole)) {
-                        res.status(401);
+                        res.status(403);
                         return res.send({"message": "Insufficient permissions to carry out action"});
                     }
                 }
             } else if (type === "role"){
                 if (permissionGreater(req.body.role, requestUserRole)) {
-                    res.status(401);
+                    res.status(403);
                     return res.send({"message": "Insufficient permissions to carry out action"});
                 }
                 for (let user of userRepository.getUsers(req.body.users)) {
                     if (permissionSufficient(user.role, requestUserRole)) {
-                        res.status(401);
+                        res.status(403);
                         return res.send({"message": "Insufficient permissions to carry out action"});
                     }
                 }
@@ -78,14 +78,14 @@ export function checkRoleFor(type: string) {
                         if (requestUserRole === "super") {
                             continue;
                         }
-                        res.status(401);
+                        res.status(403);
                         return res.send({"message": "Insufficient permissions to carry out action"});
                     }
                 }
             }
             return next();
         } catch (e) {
-            res.status(403);
+            res.status(401);
             return res.send({"message": "JWT is not signed correctly"});
         }
     }
