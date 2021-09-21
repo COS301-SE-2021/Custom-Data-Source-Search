@@ -263,6 +263,9 @@ const store = createStore({
       payload.userID = state.signedInUserId;
       this.commit("signInAUser", payload);
     },
+    setUserDetails: function (state, payload) {
+      state.users[state.signedInUserId] = payload.userData;
+    },
 
     /**
      * Sign out the specified user; delete all their decrypted keys from store.

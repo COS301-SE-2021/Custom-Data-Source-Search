@@ -1,4 +1,4 @@
-name: Integration Testing
+name: Vault E2E and Frontend Testing
 
 on:
   pull_request:
@@ -19,6 +19,9 @@ jobs:
         working-directory: packages/client
       - name: Run headless test
         uses: GabrielBB/xvfb-action@v1
+        env:
+          DS_TEST_VIEWER_EMAIL: ${{ secrets.DS_TEST_VIEWER_EMAIL }}
+          DS_TEST_VIEWER_PW: ${{ secrets.DS_TEST_VIEWER_EMAIL }}
         with:
-          run: npm test
+          run: npm run test:Vault-e2e
           working-directory: packages/client

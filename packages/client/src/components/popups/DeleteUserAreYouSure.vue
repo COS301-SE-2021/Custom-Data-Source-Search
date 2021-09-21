@@ -18,8 +18,8 @@
         </div>
       </div>
       <div class="button-holders">
-        <Button @click="closePopUp" class="p-button-text p-button-plain">Cancel</Button>
-        <Button @click="hasVault" class="p-button-danger">Delete</Button>
+        <Button  @click="closePopUp" class="p-button-text p-button-plain">Cancel</Button>
+        <Button id="confirm-user-deletion-btn" @click="hasVault" class="p-button-danger">Delete</Button>
       </div>
     </div>
     <div class="process-request-body" v-else>
@@ -45,7 +45,7 @@
           <strong>(You will require internet connection in order for this to be processed)</strong>
         </div>
         <div style="text-align: center">
-          <Button class="p-button-danger these-buttons" :disabled="!deleteVault" @click="deleteUser">Delete</Button>
+          <Button id="confirm-user-deletion-btn-vault" class="p-button-danger these-buttons" :disabled="!deleteVault" @click="deleteUser">Delete</Button>
           <Button class="p-button-text these-buttons" @click="closePopUp">Cancel</Button>
         </div>
       </div>

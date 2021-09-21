@@ -131,6 +131,7 @@
         </span>
         <div style="text-align: center; margin-top: 5%;">
           <Button
+              id="signin-remote-btn"
               label="Sign In"
               type="submit"
               style="text-align: center;"

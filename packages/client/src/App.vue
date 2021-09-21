@@ -41,7 +41,7 @@
               aria-hidden="true"
           />
         </div>
-        <div class="icon-container" title="User" @click="toggle">
+        <div id="user-profile-btn" class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
             <h3 class="name-initial-main">
               {{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}
@@ -149,7 +149,7 @@
     },
 
     mounted() {
-      this.interval = setInterval(() => this.checkSyncStatus(), 25000);
+      this.interval = setInterval(() => this.checkSyncStatus(), 14000);
     },
 
     methods: {
