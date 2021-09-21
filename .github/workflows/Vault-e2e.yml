@@ -1,4 +1,4 @@
-name: E2E and Frontend Testing
+name: Vault E2E and Frontend Testing
 
 on:
   pull_request:
