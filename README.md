@@ -1,6 +1,5 @@
 # Abstraction - Custom Data Source Search
 
-[![Coverage Status](https://coveralls.io/repos/github/COS301-SE-2021/Custom-Data-Source-Search/badge.svg?branch=development)](https://coveralls.io/github/COS301-SE-2021/Custom-Data-Source-Search?branch=development)
 [![Build Status](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search.svg?branch=development)](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Custom-Data-Source-Search&metric=alert_status)](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Custom-Data-Source-Search)
 [![Depfu](https://badges.depfu.com/badges/6e835e46e3121642adf08ae7b26aa0ad/overview.svg)](https://depfu.com/github/COS301-SE-2021/Custom-Data-Source-Search?project_id=27213)
@@ -27,13 +26,16 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 
 ### Technical Installation Manual
 [Demo 3](https://drive.google.com/file/d/13QthV3B954L1MYAMRh953z_vycIcGOHf/view?usp=sharing) <br>
-[Demo 4]()
+[Demo 4](https://drive.google.com/file/d/1ZzI9rAWObFpTkeTY14yin0JFZrTGhQWQ/view?usp=sharing)
 
 ### Coding Standards
 [Demo 4]()
 
 ### Testing Policy
 [Demo 4](https://drive.google.com/file/d/1g6Edz-TqytN68cGFMIAX21OeUMzvTXXk/view?usp=sharing)
+
+### Security Policy
+[Demo 4](https://drive.google.com/file/d/1iq3EQ0BrR9aqjqMLTQJRdk44Wx5BWxbC/view?usp=sharing)
 
 ### SRS
 [Demo 1 & 2](https://drive.google.com/file/d/1MwdbPOdbiG9-Ide3L_upt0Pc2YZa4peu/view?usp=sharing) <br>
