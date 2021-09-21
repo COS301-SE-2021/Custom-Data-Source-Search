@@ -144,6 +144,14 @@ class FolderDataSourceService {
         return files;
     }
 
+    isDirectory(path: string): boolean {
+        try {
+            return fs.lstatSync(path).isDirectory();
+        } catch (e) {
+            return false;
+        }
+    }
+
     getAllFilesRecursively(path: string, ignoreFolders: string[], depth: number): string[] {
         if (depth < 0) {
             return []
@@ -151,7 +159,7 @@ class FolderDataSourceService {
         let results: string[] = [];
         try {
             for (let folderItem of fs.readdirSync(path)) {
-                if (fs.lstatSync(path + folderItem).isDirectory() && ignoreFolders.indexOf(folderItem) === -1) {
+                if (this.isDirectory(path + folderItem) && ignoreFolders.indexOf(folderItem) === -1) {
                     this.getAllFilesRecursively(
                         path + folderItem + "/",
                         ignoreFolders,
