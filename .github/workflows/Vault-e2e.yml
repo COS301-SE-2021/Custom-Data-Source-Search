@@ -23,5 +23,5 @@ jobs:
           DS_TEST_VIEWER_EMAIL: ${{ secrets.DS_TEST_VIEWER_EMAIL }}
           DS_TEST_VIEWER_PW: ${{ secrets.DS_TEST_VIEWER_EMAIL }}
         with:
-          run: npm test:Vault-e2e
+          run: npm run test:Vault-e2e
           working-directory: packages/client
