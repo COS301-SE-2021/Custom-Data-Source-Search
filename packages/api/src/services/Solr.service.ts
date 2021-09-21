@@ -39,7 +39,6 @@ class SolrService {
             console.error("Posting to solr failed due to internal error");
             return [null, statusMessage(500, "Could not post document to solr")];
         }
-        console.log("Returning success")
         return [statusMessage(200, "Successfully posted document to Solr"), null];
     }
 

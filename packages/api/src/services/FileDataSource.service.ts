@@ -85,7 +85,7 @@ class FileDataSourceService {
                 tag2: dataSource.tag2
             };
         } else {
-            const filePath: string = __dirname + "\\" + dataSource.filename;
+            const filePath: string = __dirname + "/" + dataSource.filename;
             fs.writeFileSync(filePath, dataSource.file, {encoding: "base64"});
             const [fileContent, fileErr] = this.readFile(filePath);
             if (fileErr) {
