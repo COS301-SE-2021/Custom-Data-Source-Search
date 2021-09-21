@@ -11,6 +11,7 @@ describe('FileDataSourceService : addFileDataSource function', () => {
         //given
         let dataSource: FileDataSource = {
             "filename": "file.txt",
+            "file": Buffer.from("File Content"),
             "path": "valid/path/",
             "tag1": "tag",
             "tag2": "tag"
@@ -35,6 +36,7 @@ describe('FileDataSourceService : addFileDataSource function', () => {
         //given
         let dataSource: FileDataSource = {
             "filename": "file.txt",
+            "file": Buffer.from("File Content"),
             "path": "valid/path/",
             "tag1": "tag",
             "tag2": "tag"

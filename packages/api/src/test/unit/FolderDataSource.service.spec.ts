@@ -102,6 +102,7 @@ describe("Folder data source service: addFolderDataSource function", () => {
         jest.spyOn(folderDataSourceRepository, "addDataSource").mockImplementation(() => {
             return [null, null];
         });
+        jest.spyOn(folderDataSourceService, "getFilesInFolder").mockReturnValueOnce([]);
         const path: string = "test/path/";
         const dataSource: FolderDataSource = {
             path: path,
@@ -390,6 +391,9 @@ describe("Folder data source service: getFilesInFolder function", () => {
         jest.spyOn(fileDataSourceRepository, "getAllDataSources").mockImplementation(() => {
             return [[], null];
         });
+        jest.spyOn(folderDataSourceService, "isDirectory").mockImplementation(() => {
+            return false;
+        })
         const path: string = "testPath/";
         //when
         const results = folderDataSourceService.getFilesInFolder(path, "", 1);
