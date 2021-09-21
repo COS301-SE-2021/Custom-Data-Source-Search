@@ -8,7 +8,7 @@ import {StoredFileDataSource} from "../../models/FileDataSource.interface";
 import {castToStoredFileOverNetwork} from "../../general/generalFunctions";
 const request = require("supertest");
 const app = express();
-app.use("/filedatasources", fileDataSourceRouter); //routes
+app.use("/filedatasources", fileDataSourceRouter);
 try {
     fs.readFileSync(__dirname + `/../../../../../.env`);
     dotenv.config({path: __dirname + `/../../../../../.env`});
@@ -42,7 +42,7 @@ describe("Testing file datasource routes", () => {
             role: "viewer"
         };
         jest.spyOn(fileDataSourceRepository, "getAllDataSources")
-            .mockReturnValueOnce([repositoryResult, null])
+            .mockReturnValueOnce([repositoryResult, null]);
         const secret: string = process.env.JWT_SECRET_KEY;
         const token = jwt.sign(user, secret);
         //when
