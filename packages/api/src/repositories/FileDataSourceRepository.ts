@@ -1,4 +1,4 @@
-import {StoredFileDataSource, FileDataSource} from "../models/FileDataSource.interface";
+import {StoredFileDataSource} from "../models/FileDataSource.interface";
 import {StatusMessage} from "../models/response/general.interfaces";
 import {statusMessage} from "../general/generalFunctions";
 
@@ -9,7 +9,7 @@ class FileDataSourceRepository {
     /**
      * Store a new file datasource in db
      *
-     * @param {FileDataSource} dataSource
+     * @param {StoredFileDataSource} dataSource
      * @return {[StatusMessage, StatusMessage]}
      */
     addDataSource(dataSource: StoredFileDataSource): [StatusMessage, StatusMessage] {

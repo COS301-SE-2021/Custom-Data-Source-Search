@@ -58,7 +58,7 @@
     <Button
         v-else
         icon="pi pi-spin pi-spinner"
-        class="p-button-rounded p-button-text"
+        class="p-button-rounded p-button-text p-button-lg"
     />
   </ScrollPanel>
 </template>
@@ -117,8 +117,8 @@ export default {
     },
 
     async submitSelectedFiles(){
-      this.submitting = true;
       if(this.filenames.length!==0){
+        this.submitting = true;
         if(this.backend === 'Local'){
           for (let i = 0; i < this.filenames.length; i++) {
             let reqObject = {
@@ -151,24 +151,29 @@ export default {
           this.$emit("submitted");
         }
         else{
-          let fileStream;
           let backendID = this.$store.getters.getBackendIDViaName(this.backend);
           for (let i = 0; i < this.filenames.length; i++) {
-            let formData = new FormData();
-            fileStream = fs.readFileSync(this.paths[i] + this.filenames[i]);
-            formData.set('filename', this.filenames[i]);
-            formData.set('path', null);
-            formData.set('file', fileStream);
-            formData.set('tag1', this.tag1);
-            formData.set('tag2', this.tag2);
+            let reqObject
+            try {
+              console.log("Inside the try block")
+              reqObject = {
+                "filename": this.filenames[i],
+                "path": null,
+                "file": fs.readFileSync(this.paths[i] + this.filenames[i], "base64"),
+                "tag1": this.tag1,
+                "tag2": this.tag2
+              };
+              fs.writeFileSync(this.paths[i] + "copy_" + this.filenames[i], reqObject.file, {encoding: "base64"})
+            } catch (e) {
+              console.log(e)
+            }
             const headers = {
             "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID),
-            "Content-Type": "multipart/form-data"
             };
             await axios
                 .post(
                     `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                    formData, {headers}
+                    reqObject, {headers}
                 )
                 .then((resp) => {
                   this.$toast.add({
@@ -186,7 +191,7 @@ export default {
                   await axios
                     .post(
                       `http://${this.$store.getters.getBackendLinkUsingName(this.backend)}/filedatasources`,
-                      formData, {headers}
+                      reqObject, {headers}
                     )
                     .then((resp) => {
                       this.$toast.add({
@@ -258,17 +263,17 @@ export default {
     margin-top: 15px;
   }
 
-  .selection-list{
-    display: block;
-    margin-bottom: 2px;
-  }
-
   .p-scrollpanel{
     height: 45vh;
     bottom: 2em;
     padding-bottom: 1vh;
     align-content: center;
     margin-left:15px;
+  }
+
+  .selection-list{
+    display: block;
+    margin-bottom: 2px;
   }
 
   .back-button{

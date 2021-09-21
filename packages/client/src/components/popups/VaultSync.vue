@@ -36,7 +36,7 @@
 <script>
 import axios from "axios";
 import {mapGetters} from "vuex";
-import PasswordInputField from "../primeComponents/PasswordInputField";
+import PasswordInputField from "../customComponents/PasswordInputField";
 import {createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
 import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 import {createHash, pbkdf2Sync} from "crypto";

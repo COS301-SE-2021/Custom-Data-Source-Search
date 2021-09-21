@@ -11,6 +11,7 @@ import {
 import {DefaultHttpResponse} from "../models/response/general.interfaces";
 import solrService from "./Solr.service";
 import fileDataSourceService from "./FileDataSource.service";
+import {whiteList} from "../general/whiteList";
 
 class FolderDataSourceService {
 
@@ -55,7 +56,10 @@ class FolderDataSourceService {
             path: dataSource.path,
             tag1: dataSource.tag1,
             tag2: dataSource.tag2,
-            dotIgnore: dataSource.dotIgnore
+            dotIgnore: dataSource.dotIgnore.replace(
+                '# Files/folders to be ignored are accepted in a .gitignore format #',
+                ''
+            )
         }
         let [, e] = folderDataSourceRepository.addDataSource(storedFolderDatasource);
         if (e) {
@@ -100,7 +104,7 @@ class FolderDataSourceService {
     }
 
     getFilesInFolder(path: string, dotIgnore: string, depth: number): string[] {
-        let ignoreFolders: string[] = [];
+        let ignoreFolders: string[] = [".idea", ".git", "coverage", "node_modules"];
         let ignoreFiles: string[] = [];
         let ignoreFileTypes: string[] = [];
         for (let line of dotIgnore.split("\n")) {
@@ -108,16 +112,19 @@ class FolderDataSourceService {
                 continue;
             }
             if (line.indexOf("*") !== -1) {
-                ignoreFileTypes.push(line.replace("*", ""));
-            } else if (line.indexOf(".") !== -1) {
-                ignoreFiles.push(line);
+                ignoreFileTypes.push(line.replace("*", "").trim());
+            } else if (line.indexOf("/") !== -1) {
+                ignoreFolders.push(line.replace("/", "").trim());
             } else {
-                ignoreFolders.push(line);
+                ignoreFiles.push(line);
             }
         }
         let [separateFiles,] = fileDataSourceRepository.getAllDataSources();
         let files: string[] = [];
         this.getAllFilesRecursively(path, ignoreFolders, depth).forEach((filePath: string) => {
+            if (!whiteList.hasOwnProperty(filePath.split(".").pop().toLocaleLowerCase())) {
+                return;
+            }
             if (ignoreFileTypes.indexOf("." + filePath.split(".").pop()) !== -1) {
                 return;
             }
@@ -144,7 +151,7 @@ class FolderDataSourceService {
         let results: string[] = [];
         try {
             for (let folderItem of fs.readdirSync(path)) {
-                if (folderItem.indexOf(".") === -1 && ignoreFolders.indexOf(folderItem) === -1) {
+                if (fs.lstatSync(path + folderItem).isDirectory() && ignoreFolders.indexOf(folderItem) === -1) {
                     this.getAllFilesRecursively(
                         path + folderItem + "/",
                         ignoreFolders,
@@ -156,10 +163,10 @@ class FolderDataSourceService {
                     results.push(folderItem);
                 }
             }
-            return results;
         } catch (e) {
-            return [];
+            console.error(e);
         }
+        return results;
     }
 
     getSearchSnippet(snippet: string, dataSourceUUID: string): string {

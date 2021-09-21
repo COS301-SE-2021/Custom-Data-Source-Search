@@ -42,14 +42,13 @@
     <div class="info-div start-stop">
       <Button
           class="p-button-text start-backend p-button-plain inline"
-          style="float: left"
           label="Start Local Backend"
           icon="pi pi-play"
           @click="startLocalBackend"
       />
       <Button
           class="p-button-text stop-backend p-button-plain inline"
-          style="float: left; margin-left: 5em"
+          style="margin-left: 5em"
           label="Stop Local Backend"
           icon="pi pi-times"
           @click="stopLocalBackend"
@@ -302,10 +301,9 @@
   }
 
   .start-stop {
-    width: 600px;
+    width: 100%;
     position: fixed;
-    bottom: 0;
-    text-align: left;
+    margin-left: 40px;
   }
 
   .inline {

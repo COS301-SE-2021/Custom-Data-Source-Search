@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import jwt from "jsonwebtoken";
+import {isLocalBackend} from "../general/generalFunctions";
 
 /**
  * Middleware that authenticates user based on their JWT token
@@ -8,7 +9,7 @@ import jwt from "jsonwebtoken";
  */
 export function authUser(role: string) {
     return (req: Request, res: Response, next: Function) => {
-        if (process.env.LOCAL_BACKEND === "true") {
+        if (isLocalBackend()) {
             return next();
         }
         const auth: string = req.headers.authorization;

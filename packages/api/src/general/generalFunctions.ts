@@ -37,3 +37,7 @@ export function removeFileExtension(fileName: string): string {
     }
     return fileName.substring(0, lastIndex);
 }
+
+export function isLocalBackend(): boolean {
+    return process.env.LOCAL_BACKEND == "true";
+}

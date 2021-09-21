@@ -22,7 +22,7 @@
             title="Backends"
             to="/backends"
             id="BackendIcon"
-            class="pi pi-th-large icon"
+            class="pi pi-sitemap icon"
             style="font-size:1.5rem"
             aria-hidden="true"
         />
@@ -31,7 +31,7 @@
             to="/admin"
             id="AdminIcon"
             v-if="getIsUserAdmin"
-            class="pi pi-sitemap"
+            class="pi pi-id-card"
             style="font-size:1.5rem"
           />
         <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
@@ -102,11 +102,10 @@
   import ProfileDropdown from "@/components/landing/ProfileDropdown";
   import {mapGetters} from "vuex";
   import ReEnterMasterPassword from "./components/popups/ReEnterMasterPassword";
-  import CustomTooltip from "./components/primeComponents/CustomTooltip";
+  import CustomTooltip from "./components/customComponents/CustomTooltip";
   import axios from "axios";
-  import {createHash, pbkdf2Sync} from "crypto";
+  import {pbkdf2Sync} from "crypto";
   import VaultSync from "@/components/popups/VaultSync";
-  import {encryptJsonObject, generateMasterKey} from "@/store/Store";
 
   export default {
   components: {
@@ -171,7 +170,7 @@
           let reqObj = {
             email: user.info.email,
             fingerprint: dataFingerprint
-          }
+          };
           console.log("requestObject" + JSON.stringify(reqObj));
           axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
               {headers: {"Content-Type": "application/json"}})
@@ -271,14 +270,20 @@
 
   a:-webkit-any-link {
     text-decoration: none;
-    padding-left: 0.7em
+    margin-left: 0.3em;
+    padding-top: 0.5em;
+    margin-top: 0.4em;
+  }
+
+  a:focus {
+    outline-color: #41B3B2;
   }
 
   .icon {
     padding: 10px;
   }
 
-  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-th-large, .pi-sitemap{
+  .pi-search, .pi-list, .pi-user, .pi-cog, .pi-sitemap, .pi-id-card{
     color: grey;
     padding: 20px 10px 10px;
   }
@@ -288,7 +293,7 @@
     padding: 10px 10px 10px;
   }
 
-  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-th-large:hover, .pi-sitemap:hover {
+  .pi-search:hover, .pi-list:hover, .pi-cog:hover, .pi-user:hover, .pi-sitemap:hover, .pi-id-card:hover {
     color: #41B3B2;
   }
 

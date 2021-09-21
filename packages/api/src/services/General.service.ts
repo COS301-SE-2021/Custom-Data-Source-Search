@@ -35,7 +35,8 @@ class GeneralService {
             let response: any = await axios.get(
                 'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=' +
                 encodeURIComponent(searchString) +
-                '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false' +
+                '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200' +
+                '&hl.highlightMultiTerm=false' +
                 '&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>' +
                 '&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=10'
             );
@@ -307,7 +308,7 @@ class GeneralService {
                 array.push({
                     "id": webPageDataSource.uuid,
                     "location": webPageDataSource.url,
-                    "type": "github",
+                    "type": "webpage",
                     "tag1": webPageDataSource.tag1,
                     "tag2": webPageDataSource.tag2
                 });
@@ -319,7 +320,7 @@ class GeneralService {
                 array.push({
                     "id": gitHubDataSource.uuid,
                     "location": gitHubDataSource.repo,
-                    "type": "webpage",
+                    "type": "github",
                     "tag1": gitHubDataSource.tag1,
                     "tag2": gitHubDataSource.tag2
                 });

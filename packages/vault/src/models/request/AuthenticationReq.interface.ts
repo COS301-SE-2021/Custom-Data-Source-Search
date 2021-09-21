@@ -28,6 +28,10 @@ export interface SRPPushRequest {
     user_iv: string,
     user_authtag: string,
     user_salt: string,
+}
 
-
+export interface SRPDeleteRequest {
+    email : string,
+    A : bigint,
+    verificationMessage1 : bigint
 }
