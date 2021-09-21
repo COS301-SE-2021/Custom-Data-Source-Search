@@ -74,10 +74,7 @@ export function checkRoleFor(type: string) {
                 }
             } else if (type === "delete") {
                 for (let user of userRepository.getUsers(req.body.users)) {
-                    if (!permissionGreater(requestUserRole, user.role)) {
-                        if (requestUserRole === "super") {
-                            continue;
-                        }
+                    if (user.role === "super" || !permissionSufficient(requestUserRole, user.role)) {
                         res.status(403);
                         return res.send({"message": "Insufficient permissions to carry out action"});
                     }
