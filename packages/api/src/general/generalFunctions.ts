@@ -5,6 +5,7 @@ import {Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import {permissionGreater, permissionSufficient} from "../authentication/authentication";
 import userRepository from "../repositories/UserRepository";
+import {StoredFileDataSource} from "../models/FileDataSource.interface";
 
 export function generateUUID(): string {
     return randomBytes(16).toString("hex");
@@ -87,5 +88,16 @@ export function checkRoleFor(type: string) {
             res.status(403);
             return res.send({"message": "JWT is not signed correctly"});
         }
+    }
+}
+
+export function castToStoredFileOverNetwork(datasource: StoredFileDataSource) {
+    return {
+        uuid: datasource.uuid,
+        filename: datasource.filename,
+        path: datasource.path,
+        lastModified: datasource.lastModified.toJSON(),
+        tag1: datasource.tag1,
+        tag2: datasource.tag2
     }
 }
