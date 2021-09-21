@@ -38,7 +38,7 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 ### SRS
 [Demo 1 & 2](https://drive.google.com/file/d/1MwdbPOdbiG9-Ide3L_upt0Pc2YZa4peu/view?usp=sharing) <br>
 [Demo 3](https://drive.google.com/file/d/1lEBgKNgxTLHb0d_ejuXfIeiIBfncLL3V/view?usp=sharing) <br>
-[Demo 4]()
+[Demo 4](https://drive.google.com/file/d/1almo--j5-FduSUgPvdU74cl0yxPTH5WD/view?usp=sharing)
 
 ### DataSleuth Architecture
 [Demo 2](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing) <br>
