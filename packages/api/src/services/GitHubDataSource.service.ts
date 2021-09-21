@@ -64,9 +64,13 @@ class GitHubDataSourceService {
         })
         let branchName: string = "master";
         try {
-            branchName = (await axios.get(
+            for (let branch of (await axios.get(
                 "https://api.github.com/repos/" + dataSource.repo + "/branches"
-            )).data[0]["name"];
+            )).data) {
+                if (branch["name"] === "main" || branch["name"] === "master") {
+                    branchName = branch["name"];
+                }
+            }
         } catch (e) {
             console.error(e);
         }
