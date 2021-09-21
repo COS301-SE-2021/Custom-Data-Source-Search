@@ -12,6 +12,7 @@ import fileDataSourceService from "./services/FileDataSource.service";
 import fs from "fs";
 import {gitHubDataSourceRouter} from "./routers/GitHubDataSource.router";
 import userService from "./services/User.service";
+import bodyParser from "body-parser";
 
 try {
     fs.readFileSync(__dirname + `/../../../.env`);
@@ -30,7 +31,9 @@ const app = express();
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
 app.use("/general", generalRouter);
 app.use("/users", userRouter);
 app.use("/filedatasources", fileDataSourceRouter);

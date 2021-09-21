@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import userService from "../services/User.service";
 import {check} from "express-validator";
 import {authUser} from "../authentication/authentication";
+import {checkRoleFor} from "../general/generalFunctions";
 
 export const userRouter = express.Router();
 
@@ -34,7 +35,7 @@ userRouter.post("/", [check('users').isArray().custom((users: any) => {
             }
         }
     }
-})], authUser("admin"),  (req: Request, res: Response) => {
+})], authUser("admin"), checkRoleFor("add"), (req: Request, res: Response) => {
     const result = userService.addUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -42,7 +43,7 @@ userRouter.post("/", [check('users').isArray().custom((users: any) => {
 /**
  * Delete users from the system
  */
-userRouter.delete("/", authUser("super"), (req: Request, res: Response) => {
+userRouter.delete("/", authUser("admin"), checkRoleFor("delete"), (req: Request, res: Response) => {
     const result = userService.removeUser(req.body.users);
     res.status(result.code).send(result.body);
 });
@@ -50,7 +51,7 @@ userRouter.delete("/", authUser("super"), (req: Request, res: Response) => {
 /**
  * Set the role for users in the system
  */
-userRouter.post("/role", authUser("admin"), (req: Request, res: Response) => {
+userRouter.post("/role", authUser("admin"), checkRoleFor("role"), (req: Request, res: Response) => {
     const result = userService.setRole(req.body);
     res.status(result.code).send(result.body);
 });
@@ -74,7 +75,7 @@ userRouter.post("/revoke", authUser("super"), (req: Request, res: Response) => {
 /**
  * Logout all users from the system
  */
-userRouter.post("/global/logout", authUser("admin"), (req: Request, res: Response) => {
+userRouter.post("/global/logout", authUser("super"), (req: Request, res: Response) => {
     const result = userService.logoutAllUsers();
     res.status(result.code).send(result.body);
 });

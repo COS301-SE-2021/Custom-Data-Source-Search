@@ -61,7 +61,6 @@ class FileDataSourceService {
         const UUID = generateUUID();
         let storedDataSource: StoredFileDataSource;
         if (isLocalBackend()) {
-            console.log("Should not be here because it is remote");
             dataSource.path = this.standardizePath(dataSource.path);
             const [, validateErr] = this.validateDataSource(dataSource);
             if (validateErr) {
@@ -86,21 +85,29 @@ class FileDataSourceService {
                 tag2: dataSource.tag2
             };
         } else {
-            console.log("This is correct because remote");
+            const filePath: string = __dirname + "/" + dataSource.filename;
+            fs.writeFileSync(filePath, dataSource.file, {encoding: "base64"});
+            const [fileContent, fileErr] = this.readFile(filePath);
+            if (fileErr) {
+                fs.unlinkSync(filePath);
+                return generateDefaultHttpResponse(fileErr);
+            }
             const [, solrErr] = await solrService.postToSolr(
-                Buffer.from(dataSource.file), UUID, removeFileExtension(dataSource.filename), "file"
+                fileContent, UUID, removeFileExtension(dataSource.filename), "file"
             );
             if (solrErr) {
+                fs.unlinkSync(filePath);
                 return generateDefaultHttpResponse(solrErr);
             }
             storedDataSource = {
                 uuid: UUID,
                 filename: dataSource.filename,
                 path: "",
-                lastModified: getLastModifiedDateOfFile(dataSource.path + dataSource.filename),
+                lastModified: new Date(),
                 tag1: dataSource.tag1,
                 tag2: dataSource.tag2
             };
+            fs.unlinkSync(filePath);
         }
         const [success, repositoryErr] = fileDataSourceRepository.addDataSource(storedDataSource);
         if (repositoryErr) {
