@@ -46,6 +46,17 @@ describe("Testing endpoints for authentication and authorization", () => {
             .get("/filedatasources")
             .set('Authorization', 'Bearer ' + token);
         //then
+        expect(statusCode).toEqual(401);
+    });
+    it("Should return not allowed if user role is not sufficient", async () => {
+        //given
+        const secret: string = process.env.JWT_SECRET_KEY;
+        const token = jwt.sign(user, secret);
+        //when
+        const { statusCode } = await request(app)
+            .post("/filedatasources")
+            .set('Authorization', 'Bearer ' + token);
+        //then
         expect(statusCode).toEqual(403);
     });
 });
