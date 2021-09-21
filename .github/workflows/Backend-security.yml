@@ -14,7 +14,7 @@ jobs:
           node-version: 14
       - name: Install Dependencies
         run: npm ci
-        working-directory: packages/vault
+        working-directory: packages/client
       - name: Run Tests
         run: npm run test:Backend-security
-        working-directory: packages/vault
+        working-directory: packages/client
