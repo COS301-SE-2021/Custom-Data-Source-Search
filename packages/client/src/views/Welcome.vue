@@ -83,7 +83,13 @@
         deleteVaultFedIn: null,
         firstQuestionFedIn: true,
         randomId: null,
-        items: [
+        items: [{
+          label: 'Remove',
+          icon: 'pi pi-trash',
+          command: () => {
+            this.displayDeleteCheck = !this.displayDeleteCheck;
+          }
+        },
           {
             label: 'Sign Out',
             icon: 'pi pi-sign-out',
@@ -99,13 +105,6 @@
                   this.$router.push('/');
                 }
               })
-            }
-          },
-          {
-            label: 'Remove',
-            icon: 'pi pi-trash',
-            command: () => {
-              this.displayDeleteCheck = !this.displayDeleteCheck;
             }
           }
         ],

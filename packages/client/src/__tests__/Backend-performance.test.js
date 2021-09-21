@@ -21,9 +21,8 @@ describe("Vault Functionality", () => {
     let win;
     let client;
 
-
-    let email = "testing-v-" + randomBytes(5).toString('hex') + "@" + randomBytes(7).toString('hex') + ".com";
-    let password = randomBytes(14).toString('hex');
+    let email = process.env.DS_TEST_EDITOR_EMAIL
+    let password = process.env.DS_TEST_EDITOR_PW
 
     test('Window Loads Properly', async () => {
         // Wait for dev server to start
@@ -44,38 +43,48 @@ describe("Vault Functionality", () => {
         // App is loaded properly
     })
 
-    test('Register A User', async () => {
+
+
+    test('Sign In To Test User', async () => {
 
         const addUserButton = await client.$('#add-user-card');
-        addUserButton.click();
+        await addUserButton.click();
 
-        const nameField = await client.$('#Name');
-        nameField.setValue("Test Name");
+        const vEmailField = await client.$('#emailVault');
+        await vEmailField.setValue(email);
 
-        const emailField = await client.$('#Email');
-        emailField.setValue(email);
+        const passwordField = await client.$('#password');
+        await passwordField.setValue(password);
 
-        const passwordField = await client.$('#masterPassword');
-        passwordField.setValue(password);
+        const remoteSignInButton = await client.$('#signin-remote-btn');
+        await remoteSignInButton.click();
 
-        const checkPasswordField = await client.$('#masterPassCheck');
-        checkPasswordField.setValue(password);
+        let elem = await client.$('#sidebar');
+        let isExisting = await elem.isExisting();
 
-        const vaultCheckBox = await client.$('.p-checkbox-box');
-        vaultCheckBox.click();
+        expect(isExisting).toBe(true);
 
-        const registerButton = await client.$('#btnRegister');
-        registerButton.click();
+        await new Promise((r) => setTimeout(r, 3000));
 
-        const goToSearchButton = await client.$('#gotoSearch');
-        goToSearchButton.click();
-
-
-        expect(await client.getWindowCount()).toBe(1)
-        // It is not minimized
-        expect(await win.isMinimized()).toBe(false)
-
-         await spectronTest.stopServe();
     })
+
+    test('Search', async () => {
+
+        const search  = await client.$('input.p-inputtext.p-component');
+        await search.setValue("Orange");
+
+        const searchButton = await client.$('i.pi');
+        await searchButton.click();
+
+        const start = Date.now();
+
+        await new Promise((r) => setTimeout(r, 3000));
+
+        const end = Date.now();
+        console.log(`Execution time: ${end - start} ms`);
+
+        await spectronTest.stopServe();
+    })
+
 })
 

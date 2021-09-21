@@ -25,6 +25,7 @@
           @click="switchUser"
       />
       <Button
+          id="sign-out-btn"
           icon="pi pi-sign-out"
           label="Sign Out"
           class="p-button-text p-button-plain sign-out"
