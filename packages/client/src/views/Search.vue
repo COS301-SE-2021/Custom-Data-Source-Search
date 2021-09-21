@@ -254,7 +254,7 @@
        * @returns {string} string with any special control characters escaped
        */
       escapeSolrControlCharacters(query) {
-        return query.replace(/[{}\[\]+-^.:()]/gm, (match) => {
+        return query.replace(/[{}\[\]+\-^.:()]/gm, (match) => {
           return '\\' + match
         })
       },

@@ -35,7 +35,8 @@ class GeneralService {
             let response: any = await axios.get(
                 'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=' +
                 encodeURIComponent(searchString) +
-                '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200&hl.highlightMultiTerm=false' +
+                '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200' +
+                '&hl.highlightMultiTerm=false' +
                 '&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>' +
                 '&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=10'
             );
