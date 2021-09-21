@@ -12,7 +12,7 @@ class SolrService {
      * @param {string} id Id of datasource as stored in db
      * @param {string} sourceName
      * @param {string} type Specifies the datasource type
-     * @return {Promise<[{ code: number, message: string }, { code: number, message: string }]>}
+     * @return {Promise<[StatusMessage, StatusMessage]>}
      */
     async postToSolr(content: Buffer, id: string, sourceName: string, type: string):
         Promise<[StatusMessage, StatusMessage]> {

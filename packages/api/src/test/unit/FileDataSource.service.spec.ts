@@ -1,144 +1,67 @@
 import fileDataSourceService from "../../services/FileDataSource.service";
-import fs from "fs";
 import fileDataSourceRepository from "../../repositories/FileDataSourceRepository";
 import {FileDataSource} from "../../models/FileDataSource.interface";
+import solrService from "../../services/Solr.service";
+import {statusMessage} from "../../general/generalFunctions";
 
 const service = fileDataSourceService;
 
 describe('FileDataSourceService : addFileDataSource function', () => {
-    class TestError extends Error {
-        constructor(message: string, code: string) {
-            super(message);
-            this.code = code;
-        }
-
-        code: string;
-    }
-
     it('Should make a call to file repository to store valid datasource', async () => {
         //given
         let dataSource: FileDataSource = {
             "filename": "file.txt",
+            "file": Buffer.from("File Content"),
             "path": "valid/path/",
             "tag1": "tag",
             "tag2": "tag"
         }
-        jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(fileDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, null]});
+        jest.spyOn(fileDataSourceRepository, "addDataSource").mockImplementationOnce(() => {
+            return [statusMessage(200, "Success"), null]
+        });
+        jest.spyOn(solrService, "postToSolr").mockImplementationOnce(async () => {
+            return [statusMessage(200, "Success"), null];
+        });
+        jest.spyOn(fileDataSourceService, "validateDataSource").mockReturnValue(
+            [statusMessage(200, "Test"), null]
+        );
+        jest.spyOn(fileDataSourceService, "readFile").mockReturnValue([Buffer.from("file"), null]);
         //when
-        const [, error] = await service.addFileDataSource(dataSource);
-        expect(error).toEqual(null);
+        const result = await service.addFileDataSource(dataSource);
+        expect(result).toEqual({"body": {"message": "Success"}, "code": 200});
         //then
-        expect(fileDataSourceRepository.addDataSource).toBeCalledWith(dataSource);
+        expect(fileDataSourceRepository.addDataSource).toBeCalled();
     });
     it('Should return error with appropriate message when datasource already exists', async () => {
         //given
         let dataSource: FileDataSource = {
             "filename": "file.txt",
+            "file": Buffer.from("File Content"),
             "path": "valid/path/",
             "tag1": "tag",
             "tag2": "tag"
         }
-        jest.spyOn(fs, "readFileSync").mockReturnValue("Some unimportant content");
-        jest.spyOn(fileDataSourceRepository, "addDataSource").mockImplementation(async() => {return [null, {
+        jest.spyOn(solrService, "postToSolr").mockImplementationOnce(async () => {
+            return [statusMessage(200, "Success"), null];
+        });
+        jest.spyOn(fileDataSourceRepository, "addDataSource").mockImplementationOnce(() => {
+            return [null, {
+                "code": 400,
+                "message": "File datasource already exists"
+            }]
+        });
+        jest.spyOn(fileDataSourceService, "validateDataSource").mockReturnValue(
+            [statusMessage(200, "Test"), null]
+        );
+        jest.spyOn(fileDataSourceService, "readFile").mockReturnValue([Buffer.from("file"), null]);
+        //when
+        const result = await service.addFileDataSource(dataSource);
+        //then
+        expect(result).toEqual({
             "code": 400,
-            "message": "File datasource already exists"
-        }]});
-        //when
-        const [, error] = await service.addFileDataSource(dataSource);
-        //then
-        expect(error).toEqual({
-            "code": 400,
-            "message": "File datasource already exists"
-        });
-    });
-    it('Should throw FileReadingError with appropriate message when no file path is specified', async () => {
-        //given
-        let dataSource: FileDataSource = {
-            "filename": "file.txt",
-            "path": "",
-            "tag1": "tag",
-            "tag2": "tag"
-        }
-        //when
-        const [, error] = await service.addFileDataSource(dataSource);
-        //then
-        expect(error).toEqual({
-            "code": 400,
-            "message": "No file path"
-        });
-    });
-    it('Should throw FileReadingError with appropriate message when no file name is specified', async () => {
-        //given
-        let dataSource: FileDataSource = {
-            "filename": "",
-            "path": "/somePath",
-            "tag1": "tag",
-            "tag2": "tag"
-        }
-        //when
-        const [, error] = await service.addFileDataSource(dataSource);
-        //then
-        expect(error).toEqual({
-            "code": 400,
-            "message": "No file name"
-        });
-    });
-    it('Should throw correct error when readFileSync throws file not found error', async () => {
-        //given
-        let dataSource: FileDataSource = {
-            "filename": "file.txt",
-            "path": "/somePath",
-            "tag1": "tag",
-            "tag2": "tag"
-        }
-        jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
-            throw new TestError('TEST', 'ENOENT');
-        });
-        //when
-        const [, error] = await service.addFileDataSource(dataSource);
-        //then
-        expect(error).toEqual({
-            "code": 404,
-            "message": "File not found"
-        });
-    });
-    it('Should throw correct error when readFileSync throws access prohibited error', async () => {
-        //given
-        let dataSource: FileDataSource = {
-            "filename": "file.txt",
-            "path": "/somePath",
-            "tag1": "tag",
-            "tag2": "tag"
-        }
-        jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
-            throw new TestError('TEST', 'EACCES');
-        });
-        //when
-        const [, error] = await service.addFileDataSource(dataSource);
-        //then
-        expect(error).toEqual({
-            "code": 403,
-            "message": "Access forbidden"
-        });
-    });
-    it('Should pass on error when readFileSync throws error with unknown code', async () => {
-        //given
-        let dataSource: FileDataSource = {
-            "filename": "file.txt",
-            "path": "/somePath",
-            "tag1": "tag",
-            "tag2": "tag"
-        }
-        jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
-            throw new TestError('TEST', 'UNKNOWN');
-        });
-        //when
-        const [, error] = await service.addFileDataSource(dataSource);
-        //then
-        expect(error).toEqual({
-            "code": 500,
-            "message": "Unknown error"
+            "body": {
+                "message": "File datasource already exists"
+            }
         });
     });
 });
@@ -146,10 +69,12 @@ describe('FileDataSourceService : removeFileDataSource function', () => {
     it("Should return results returned by repository upon successful deletion of datasource", async () => {
         //given
         const message: string = "Successfully deleted File datasource";
-        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementation(async () => {return[{
-            "code": 204,
-            "message": message
-        }, null]});
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementationOnce(() => {
+            return [{
+                "code": 204,
+                "message": message
+            }, null]
+        });
         const id: string = "testUUID";
         //when
         const result = await fileDataSourceService.removeFileDataSource(id);
@@ -162,10 +87,12 @@ describe('FileDataSourceService : removeFileDataSource function', () => {
         //given
         const errorCode: number = 42;
         const errorMessage: string = "some error";
-        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementation(async () => {return[null, {
-            "code": errorCode,
-            "message": errorMessage
-        }]});
+        jest.spyOn(fileDataSourceRepository, "deleteDataSource").mockImplementationOnce(() => {
+            return [null, {
+                "code": errorCode,
+                "message": errorMessage
+            }]
+        });
         const id: string = "testUUID";
         //when
         const result = await fileDataSourceService.removeFileDataSource(id);
@@ -216,7 +143,7 @@ describe('FileDataSourceService : getAllFileDataSources function', () => {
         //then
         expect(result.code).toEqual(500);
         expect(result.body).toEqual({
-            "message": "Internal error"
+            "message": "some unknown error"
         });
     });
 });
@@ -238,10 +165,7 @@ describe('FileDataSourceService : getFileDataSource function', () => {
         //then
         expect(fileDataSourceRepository.getDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(200);
-        expect(result.body).toEqual({
-            "message": "Success",
-            "data": response
-        })
+        expect(result.body).toEqual(response)
     });
     it("Should return corresponding error returned by repository", () => {
         //given
@@ -257,6 +181,7 @@ describe('FileDataSourceService : getFileDataSource function', () => {
         //then
         expect(fileDataSourceRepository.getDataSource).toBeCalledWith(id);
         expect(result.code).toEqual(errorCode);
+        // @ts-ignore
         expect(result.body.message).toEqual(errorMessage);
     });
 });
