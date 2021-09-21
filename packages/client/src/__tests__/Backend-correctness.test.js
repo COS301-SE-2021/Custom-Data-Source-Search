@@ -15,7 +15,7 @@ try {
 } catch (e) {}
 
 
-describe("Backend Performance", () => {
+describe("Backend Correctness", () => {
 
     let spectronTest;
     let win;
@@ -68,7 +68,7 @@ describe("Backend Performance", () => {
 
     })
 
-    test('Test Search Time', async () => {
+    test('Search for relevant term', async () => {
 
         const search  = await client.$('input.p-inputtext.p-component');
         await search.setValue("Orange");
@@ -76,18 +76,25 @@ describe("Backend Performance", () => {
         const searchButton = await client.$('i.pi');
         await searchButton.click();
 
-        const start = Date.now();
+        let elem = await client.$('.result-card');
+        let isExisting = await elem.isExisting();
 
-        const resultCard = await client.$('.result-card');
-        await resultCard.waitForExist({ timeout: 10000 });
+        expect(isExisting).toBe(true);
+    })
 
-        const end = Date.now();
-        console.log(`Execution time: ${end - start} ms`);
+    test('Search for non-relevant term', async () => {
 
-        expect(end-start).toBeLessThanOrEqual(2000);
+        const search  = await client.$('input.p-inputtext.p-component');
+        await search.setValue("Plutonium");
+
+        const searchButton = await client.$('i.pi');
+        await searchButton.click();
+
+        let elem = await client.$('.result-card');
+        let isExisting = await elem.isExisting();
+
+        expect(isExisting).toBe(false);
 
         await spectronTest.stopServe();
     })
-
 })
-

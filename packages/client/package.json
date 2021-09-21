@@ -13,6 +13,8 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "test:Vault-e2e": "jest Vault-e2e.test.js --verbose --forceExit",
+    "test:Backend-correctness": "jest Backend-correctness.test.js --verbose --forceExit",
+    "test:Backend-security": "jest Backend-security.test.js --verbose --forceExit",
     "test:Backend-perf": "jest Backend-performance.test.js --verbose --forceExit",
     "electron:build:win": "vue-cli-service electron:build --win",
     "electron:build:linux": "vue-cli-service electron:build --linux",

@@ -15,7 +15,7 @@ try {
 } catch (e) {}
 
 
-describe("Vault Functionality", () => {
+describe("Vault Functionality and Security", () => {
 
     let spectronTest;
     let win;

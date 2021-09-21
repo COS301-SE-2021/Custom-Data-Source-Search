@@ -15,14 +15,14 @@ try {
 } catch (e) {}
 
 
-describe("Backend Performance", () => {
+describe("Backend Security", () => {
 
     let spectronTest;
     let win;
     let client;
 
-    let email = process.env.DS_TEST_EDITOR_EMAIL
-    let password = process.env.DS_TEST_EDITOR_PW
+    let email = process.env.DS_TEST_VIEWER_EMAIL
+    let password = process.env.DS_TEST_VIEWER_PW
 
     test('Window Loads Properly', async () => {
         // Wait for dev server to start
@@ -44,8 +44,7 @@ describe("Backend Performance", () => {
     })
 
 
-
-    test('Sign In To Test User', async () => {
+    test('Sign In To Viewer Test User', async () => {
 
         const addUserButton = await client.$('#add-user-card');
         await addUserButton.click();
@@ -68,26 +67,15 @@ describe("Backend Performance", () => {
 
     })
 
-    test('Test Search Time', async () => {
+    test('Try Access Admin as a user without Admin Rights', async () => {
 
-        const search  = await client.$('input.p-inputtext.p-component');
-        await search.setValue("Orange");
+        let elem = await client.$('#AdminIcon');
+        let isExisting = await elem.isExisting();
 
-        const searchButton = await client.$('i.pi');
-        await searchButton.click();
-
-        const start = Date.now();
-
-        const resultCard = await client.$('.result-card');
-        await resultCard.waitForExist({ timeout: 10000 });
-
-        const end = Date.now();
-        console.log(`Execution time: ${end - start} ms`);
-
-        expect(end-start).toBeLessThanOrEqual(2000);
+        expect(isExisting).toBe(false);
 
         await spectronTest.stopServe();
+
     })
 
 })
-
