@@ -29,7 +29,7 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 [Demo 4](https://drive.google.com/file/d/1ZzI9rAWObFpTkeTY14yin0JFZrTGhQWQ/view?usp=sharing)
 
 ### Coding Standards
-[Demo 4]()
+[Demo 4](https://drive.google.com/file/d/1tCRRplG2Eh8M5oaNiqr1qGtj4RnyWQy9/view?usp=sharing)
 
 ### Testing Policy
 [Demo 4](https://drive.google.com/file/d/1g6Edz-TqytN68cGFMIAX21OeUMzvTXXk/view?usp=sharing)
