@@ -23,7 +23,7 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 ### User Manual
 [Demo 2](https://drive.google.com/file/d/1FNIe4R1prw5S8LBU3TC2LQrwWTPcDlGN/view?usp=sharing) <br>
 [Demo 3](https://drive.google.com/file/d/1UCCZ3P9yHKFJyMJIGbeTtff_dXmScWg5/view?usp=sharing) <br>
-[Demo 4]()
+[Demo 4](https://drive.google.com/file/d/1o9IXZrEjq9KT4kJHvTnU4FtpP6SPIqYJ/view?usp=sharing)
 
 ### Technical Installation Manual
 [Demo 3](https://drive.google.com/file/d/13QthV3B954L1MYAMRh953z_vycIcGOHf/view?usp=sharing)
