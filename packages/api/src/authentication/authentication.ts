@@ -15,7 +15,7 @@ export function authUser(role: string) {
         const auth: string = req.headers.authorization;
         if (auth === undefined) {
             res.status(403);
-            return res.send("No JWT present");
+            return res.send({"message": "No JWT present"});
         }
         const token: string = auth.split(" ")[1];
         try {
@@ -24,23 +24,27 @@ export function authUser(role: string) {
                 return next();
             }
             res.status(401);
-            return res.send("Insufficient permissions to carry out action");
+            return res.send({"message": "Insufficient permissions to carry out action"});
         } catch (e) {
             res.status(403);
-            return res.send("JWT is not signed correctly");
+            return res.send({"message": "JWT is not signed correctly"});
         }
     }
 }
 
 /**
- * Test whether permission for user role is greater than that of required role
+ * Test whether permission for user role is greater or equal than that of required role
  *
  * @param {string} actualRole Actual user role
  * @param {string} requiredRole Role to compare against
  * @return {boolean}
  */
-function permissionSufficient(actualRole: string, requiredRole: string): boolean {
+export function permissionSufficient(actualRole: string, requiredRole: string): boolean {
     return (roleToInt(actualRole) >= roleToInt(requiredRole));
+}
+
+export function permissionGreater(actualRole: string, requiredRole: string): boolean {
+    return (roleToInt(actualRole) > roleToInt(requiredRole));
 }
 
 /**
