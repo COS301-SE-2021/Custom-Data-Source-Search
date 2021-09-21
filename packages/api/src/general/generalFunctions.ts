@@ -3,7 +3,8 @@ import fs from "fs";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
 import {Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {permissionSufficient} from "../authentication/authentication";
+import {permissionGreater, permissionSufficient} from "../authentication/authentication";
+import userRepository from "../repositories/UserRepository";
 
 export function generateUUID(): string {
     return randomBytes(16).toString("hex");
@@ -51,18 +52,34 @@ export function checkRoleFor(type: string) {
         const token: string = auth.split(" ")[1];
         try {
             const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
-            const userRole: string = decoded["role"];
+            const requestUserRole: string = decoded["role"];
             if (type === "add") {
                 for (let user of req.body.users) {
-                    if (permissionSufficient(user["role"], userRole)) {
+                    if (permissionGreater(user["role"], requestUserRole)) {
                         res.status(401);
                         return res.send({"message": "Insufficient permissions to carry out action"});
                     }
                 }
-            } else {
-                if (permissionSufficient(req.body.role, userRole)) {
+            } else if (type === "role"){
+                if (permissionGreater(req.body.role, requestUserRole)) {
                     res.status(401);
                     return res.send({"message": "Insufficient permissions to carry out action"});
+                }
+                for (let user of userRepository.getUsers(req.body.users)) {
+                    if (permissionSufficient(user.role, requestUserRole)) {
+                        res.status(401);
+                        return res.send({"message": "Insufficient permissions to carry out action"});
+                    }
+                }
+            } else if (type === "delete") {
+                for (let user of userRepository.getUsers(req.body.users)) {
+                    if (!permissionGreater(requestUserRole, user.role)) {
+                        if (requestUserRole === "super") {
+                            continue;
+                        }
+                        res.status(401);
+                        return res.send({"message": "Insufficient permissions to carry out action"});
+                    }
                 }
             }
             return next();

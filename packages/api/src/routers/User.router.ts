@@ -43,7 +43,7 @@ userRouter.post("/", [check('users').isArray().custom((users: any) => {
 /**
  * Delete users from the system
  */
-userRouter.delete("/", authUser("super"), (req: Request, res: Response) => {
+userRouter.delete("/", authUser("admin"), checkRoleFor("delete"), (req: Request, res: Response) => {
     const result = userService.removeUser(req.body.users);
     res.status(result.code).send(result.body);
 });

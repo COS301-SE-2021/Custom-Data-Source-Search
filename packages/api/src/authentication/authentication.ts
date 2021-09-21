@@ -33,7 +33,7 @@ export function authUser(role: string) {
 }
 
 /**
- * Test whether permission for user role is greater than that of required role
+ * Test whether permission for user role is greater or equal than that of required role
  *
  * @param {string} actualRole Actual user role
  * @param {string} requiredRole Role to compare against
@@ -41,6 +41,10 @@ export function authUser(role: string) {
  */
 export function permissionSufficient(actualRole: string, requiredRole: string): boolean {
     return (roleToInt(actualRole) >= roleToInt(requiredRole));
+}
+
+export function permissionGreater(actualRole: string, requiredRole: string): boolean {
+    return (roleToInt(actualRole) > roleToInt(requiredRole));
 }
 
 /**
