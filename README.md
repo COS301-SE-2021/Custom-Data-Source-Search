@@ -26,14 +26,14 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 [Demo 4](https://drive.google.com/file/d/1o9IXZrEjq9KT4kJHvTnU4FtpP6SPIqYJ/view?usp=sharing)
 
 ### Technical Installation Manual
-[Demo 3](https://drive.google.com/file/d/13QthV3B954L1MYAMRh953z_vycIcGOHf/view?usp=sharing)
+[Demo 3](https://drive.google.com/file/d/13QthV3B954L1MYAMRh953z_vycIcGOHf/view?usp=sharing) <br>
 [Demo 4]()
 
 ### Coding Standards
 [Demo 4]()
 
 ### Testing Policy
-[Demo 4]()
+[Demo 4](https://drive.google.com/file/d/1g6Edz-TqytN68cGFMIAX21OeUMzvTXXk/view?usp=sharing)
 
 ### SRS
 [Demo 1 & 2](https://drive.google.com/file/d/1MwdbPOdbiG9-Ide3L_upt0Pc2YZa4peu/view?usp=sharing) <br>
