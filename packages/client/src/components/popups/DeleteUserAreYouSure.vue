@@ -40,12 +40,34 @@
           <RadioButton name="deleteVault" id="deleteVault" value="deleteVault" v-model="deleteVault"/>
           <label for="deleteVault"> ALL instances of account</label>
         </div>
+        <div class="password-field" v-if="deleteVault === 'deleteVault'">
+            <span class="p-float-label">
+               <PasswordInputField
+                   id="password"
+                   style="width: 100%"
+                   @keyup.enter="doChecks"
+                   v-model="masterPass"
+                   :toggle-mask="true"
+                   :feedback="false"
+               />
+              <label for="password">Password</label>
+            </span>
+          <div v-if="passwordIncorrect" class="error-message">
+            <span class="error-message">Incorrect password.</span>
+          </div>
+        </div>
         <br>
         <div style="text-align: center">
           <strong>(You will require internet connection in order for this to be processed)</strong>
         </div>
         <div style="text-align: center">
-          <Button id="confirm-user-deletion-btn-vault" class="p-button-danger these-buttons" :disabled="!deleteVault" @click="deleteUser">Delete</Button>
+          <Button
+              id="confirm-user-deletion-btn-vault"
+              class="p-button-danger these-buttons"
+              :disabled="deleteVault !== 'deleteLocal'"
+              @click="deleteUser">
+            Delete
+          </Button>
           <Button class="p-button-text these-buttons" @click="closePopUp">Cancel</Button>
         </div>
       </div>
@@ -58,9 +80,11 @@ import {SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
 import axios from "axios";
 import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 import {pbkdf2Sync} from "crypto";
+import PasswordInputField from "../customComponents/PasswordInputField";
 
 export default {
         name: "DeleteUserAreYouSure",
+        components: {PasswordInputField},
         props: {
           show: Boolean,
           firstQuestionFedIn: Boolean,
@@ -76,9 +100,12 @@ export default {
         },
         data() {
           return {
-              display: this.show,
-              firstQuestion: true,
-              deleteVault: null
+            display: this.show,
+            firstQuestion: true,
+            deleteVault: null,
+            deleteLocal: null,
+            masterPass: null,
+            passwordIncorrect: false
           }
         },
         mounted() {
@@ -122,11 +149,6 @@ export default {
     max-width: 40em;
   }
 
-  span {
-    max-width: 1vw;
-    overflow-wrap: normal;
-  }
-
   .button-holders {
     float: right;
   }
@@ -160,4 +182,16 @@ export default {
     color: grey;
   }
 
+  input {
+    width: 100%;
+  }
+
+  .error-message {
+    color: #EF9A9A;
+    text-align: center;
+  }
+
+  .password-field{
+    margin-top: 10px;
+  }
 </style>
