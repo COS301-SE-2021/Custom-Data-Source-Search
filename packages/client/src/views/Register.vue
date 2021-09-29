@@ -150,13 +150,11 @@
   import Checkbox from 'primevue/checkbox';
   import PasswordInputField from "../components/customComponents/PasswordInputField";
   import axios from "axios";
-  import {createHash, pbkdf2Sync} from 'crypto';
+  import {pbkdf2Sync} from 'crypto';
   import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 
 
-  import {
-    createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,
-  } from "tssrp6a"
+  import {createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,} from "tssrp6a"
   import {mapGetters} from "vuex";
 
   const zxcvbn = require('zxcvbn');
@@ -414,8 +412,10 @@
           }
         }
         // Password Checks
-        if (!this.masterPassword || !this.masterPassCheck) {
-          this.errors.push("Password required");
+        if (!this.masterPassword) {
+          this.errors.push("Password is invalid");
+        } else if ( !this.masterPassCheck) {
+          this.errors.push("Password Required");
         } else if (this.masterPassword !== this.masterPassCheck) {
           this.errors.push('Your passwords do not match. Please repeat');
           this.masterPassword = null;
