@@ -118,19 +118,16 @@ export default {
                 this.paths[i] += "/";
               }
               console.log(this.paths);
+              document.getElementById("tag1").focus();
             }
           });
-      document.getElementById("browse").blur();
-      document.getElementById("tag1").focus();
     },
 
     nextInputFocus() {
-      document.getElementById("tag1").blur();
       document.getElementById("tag2").focus();
     },
 
     focusOnAdd() {
-      document.getElementById("tag2").blur();
       document.getElementById("Add").focus();
     },
 
