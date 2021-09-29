@@ -121,7 +121,8 @@
                     v-else label="Folder"
                     icon="pi pi-folder"
                     class="button p-button-raised p-button-text p-button-plain"
-                    @click="clicked=!clicked; type='Folder'" disabled="disabled"
+                    @click="clicked=!clicked; type='Folder'"
+                    disabled="disabled"
                 />
                 <Button
                     id="web-button"

@@ -8,6 +8,7 @@
     <span id="header">Select one or more Files to add to data sources</span>
     <br/>
     <Button
+        id="Browse"
         label="Browse"
         icon="pi pi-plus"
         class="p-button-raised p-button-text"
@@ -49,6 +50,7 @@
       </span>
     </div>
     <Button
+        id="Add"
         v-if="!submitting"
         label="Add"
         icon="pi pi-check"
@@ -64,8 +66,9 @@
 </template>
 
 <script>
-import axios from 'axios';
-const fs = require('fs')
+  import axios from 'axios';
+
+  const fs = require('fs');
 const FormData = require('form-data');
 const electron = require('@electron/remote');
 
@@ -113,7 +116,9 @@ export default {
               }
               console.log(this.paths);
             }
-          })
+          });
+      document.getElementById("Browse").blur();
+      document.getElementById("Add").focus();
     },
 
     async submitSelectedFiles(){
@@ -153,9 +158,9 @@ export default {
         else{
           let backendID = this.$store.getters.getBackendIDViaName(this.backend);
           for (let i = 0; i < this.filenames.length; i++) {
-            let reqObject
+            let reqObject;
             try {
-              console.log("Inside the try block")
+              console.log("Inside the try block");
               reqObject = {
                 "filename": this.filenames[i],
                 "path": null,
