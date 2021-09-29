@@ -154,7 +154,8 @@ class GeneralService {
                             case "github":
                                 let gitHubOccurrences: any[] = [];
                                 let [gitHubDataSource, gitHubErr] = gitHubDataSourceRepository.getRepoFromFile(key);
-                                if (gitHubErr) {
+                                let [fileInRepo, fileInRepoErr] = gitHubDataSourceRepository.getFileFromRepo(key);
+                                if (gitHubErr || fileInRepoErr) {
                                     continue;
                                 }
                                 // @ts-ignore
