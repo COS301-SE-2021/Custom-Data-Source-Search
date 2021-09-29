@@ -192,8 +192,7 @@ class FileDataSourceService {
     }
 
     getSearchSnippet(snippet: string, fileName: string) {
-        let temp: string[] = fileName.split('.');
-        let extension: string = temp[temp.length - 1];
+        let extension: string = fileName.split('.').pop();
         if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
             .indexOf(extension) != -1) {
             //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
