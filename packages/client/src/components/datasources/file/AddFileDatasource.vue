@@ -8,7 +8,7 @@
     <span id="header">Select one or more Files to add to data sources</span>
     <br/>
     <Button
-        id="Browse"
+        id="browse"
         label="Browse"
         icon="pi pi-plus"
         class="p-button-raised p-button-text"
@@ -37,6 +37,7 @@
             id="tag1"
             v-model="tag1"
             type="text"
+            @keyup.enter="nextInputFocus()"
         />
         <label for="tag1">Tag 1</label>
       </span>
@@ -45,6 +46,7 @@
             id="tag2"
             v-model="tag2"
             type="text"
+            @keyup.enter="focusOnAdd()"
         />
         <label for="tag2">Tag 2</label>
       </span>
@@ -56,6 +58,7 @@
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFiles()"
+        @keyup.enter="submitSelectedFiles()"
     />
     <Button
         v-else
@@ -117,7 +120,17 @@ export default {
               console.log(this.paths);
             }
           });
-      document.getElementById("Browse").blur();
+      document.getElementById("browse").blur();
+      document.getElementById("tag1").focus();
+    },
+
+    nextInputFocus() {
+      document.getElementById("tag1").blur();
+      document.getElementById("tag2").focus();
+    },
+
+    focusOnAdd() {
+      document.getElementById("tag2").blur();
       document.getElementById("Add").focus();
     },
 
@@ -160,7 +173,6 @@ export default {
           for (let i = 0; i < this.filenames.length; i++) {
             let reqObject;
             try {
-              console.log("Inside the try block");
               reqObject = {
                 "filename": this.filenames[i],
                 "path": null,
