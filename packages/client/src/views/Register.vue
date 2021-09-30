@@ -13,7 +13,7 @@
         <div style="font-size: xx-large; color: #f9f6ee; text-align: center">
           <span>Register</span>
         </div>
-        <form @submit="loadValues">
+        <form @submit.prevent="loadValues">
           <div class="input-fields" style="max-height: 20vh">
           <span class="p-float-label">
               <InputText
@@ -68,7 +68,8 @@
                   id="checkbox"
                   name="checkbox"
                   v-model="userDetails.backupVault"
-                  :binary="true"/>
+                  :binary="true"
+              />
               <label for="checkbox">Enable remote access to account?</label>
               <br>
               <span style="font-size: small;">
@@ -179,7 +180,7 @@
         vaultPassword: null,
         userDetails: {
             userName: null,
-            backupVault: null,
+            backupVault: false,
             masterEmail: null,
             hashToStore: null
         }
@@ -312,7 +313,6 @@
             })
       },
       async loadValues(){
-
         let passFormValidation = this.formValidationChecks();
         if (passFormValidation) {
           await this.$store.dispatch("addNewUser", {
@@ -387,6 +387,7 @@
         }
       },
       formValidationChecks() {
+        console.log("Backup vault: " + this.userDetails.backupVault);
         this.errors = [];
         //
         if (!this.userDetails.userName) {
