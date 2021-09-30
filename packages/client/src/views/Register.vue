@@ -208,45 +208,44 @@
        * Present errors on failure, create new user on success.
        */
       async retrieveVaultProfile(){
-
         const remoteEmail = this.vaultEmail;
         const remotePassword = this.vaultPassword;
         console.log("Attempting to fetch user profile from the vault...");
         const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
         const step1 = await client.step1(remoteEmail, remotePassword);
-
+        //
         const reqBody = {
           email: remoteEmail
-        }
+        };
         axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
             {headers: {"Content-Type": "application/json"}})
             .then(async (resp) => {
-
+              //
               console.log(resp.data);
               console.log("Salt: " + resp.data.salt);
               console.log("B: " + resp.data.B);
-
+              //
               const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
-
+              //
               const clientA = step2.A;
               const clientM1 = step2.M1;
-
+              //
               let reqObj = {
                 email: remoteEmail,
                 A: clientA,
                 verificationMessage1: clientM1
-              }
-
+              };
+              //
               let reqBody = JSON.stringify(reqObj, (key, value) =>
                   typeof value === 'bigint'
                       ? value.toString()
                       : value
               );
-
+              //
               axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                   {headers: {"Content-Type": "application/json"}})
                   .then(async (resp) => {
-
+                    //
                     console.log(resp.data);
                     //verify server
                     try {
@@ -254,20 +253,19 @@
                     } catch (e){
                       console.log(e);
                     }
-
                     //PHASE2
                     let reqObj = {
                       email: remoteEmail,
                       A: clientA,
                       verificationMessage1: clientM1
-                    }
-
+                    };
+                    //
                     let reqBody = JSON.stringify(reqObj, (key, value) =>
                         typeof value === 'bigint'
                             ? value.toString()
                             : value
                     );
-
+                    //
                     axios.post("https://datasleuthvault.nw.r.appspot.com/vault/pull", reqBody,
                         {headers: {"Content-Type": "application/json"}})
                         .then(async (resp) => {
@@ -277,15 +275,13 @@
                             iv: resp.data.data.user_iv,
                             authTag: resp.data.data.user_authtag,
                             data: resp.data.data.user_data
-                          }
+                          };
                           //NEED TO ADD USER HERE:
-                          //
                           const masterKey = generateMasterKey(remotePassword, resp.data.data.user_salt);
                           const unencryptedUserData = decryptJsonObject(masterKey, encryptedObj);
-
+                          //
                           this.$store.commit('addRemoteUserToLocalList', unencryptedUserData);
                           await this.$router.push({name: 'ContinueView'});
-
                         })
                         .catch((error) => {
                           this.$toast.add({
@@ -296,7 +292,6 @@
                           });
                           console.log(error);
                         })
-
                   })
                   .catch((error) => {
                     this.$toast.add({
@@ -317,7 +312,6 @@
               });
               console.log(error);
             })
-
       },
       async loadValues(){
 
@@ -329,7 +323,7 @@
             masterPassword: this.masterPassword,
             hasVault: this.userDetails.backupVault
           });
-
+          //
           if(this.userDetails.backupVault === true){
             const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
             const email = this.userDetails.masterEmail;
@@ -352,7 +346,7 @@
                  32,
                  'sha256'
              ).toString('hex');
-
+            //
             let reqObj = {
               email: this.userDetails.masterEmail,
               salt: saltAndVerifier.s,
@@ -362,14 +356,14 @@
               user_iv: encryptedInfo.iv,
               user_authtag: encryptedInfo.authTag,
               user_salt: userSalt
-            }
-
+            };
+            //
             let reqBody = JSON.stringify(reqObj, (key, value) =>
                 typeof value === 'bigint'
                     ? value.toString()
                     : value
             );
-
+            //
             axios.post("https://datasleuthvault.nw.r.appspot.com/vault/register", reqBody,
                 {headers: {"Content-Type": "application/json"}})
                 .then((resp) => {
@@ -380,7 +374,6 @@
                     life: 2500
                   });
                   console.log(resp.data);
-
                 })
                 .catch((error) => {
                   this.$toast.add({
