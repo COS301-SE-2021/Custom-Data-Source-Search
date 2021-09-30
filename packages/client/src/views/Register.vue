@@ -93,7 +93,6 @@
               </ul>
             </div>
           </div>
-          <SignIn :show="displaySignIn" @display-popup="showSignIn"></SignIn>
         </form>
       </div>
     </div>
@@ -175,7 +174,6 @@
         regexTester: null,
         masterPassCheck: null,
         masterPassword: null,
-        displaySignIn: false,
         notContinue: true,
         vaultEmail: null,
         vaultPassword: null,
@@ -420,14 +418,8 @@
         }
         return !this.errors.length;
       },
-      /**
-       * Display sign-in Popup
-       */
-      showSignIn() {
-        this.displaySignIn = !this.displaySignIn
-      },
       continue() {
-        this.notContinue = false;
+            this.notContinue = false;
       },
       back() {
         if (this.notContinue) {
