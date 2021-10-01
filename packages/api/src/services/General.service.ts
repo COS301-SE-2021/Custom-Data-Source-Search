@@ -153,8 +153,8 @@ class GeneralService {
                                 break;
                             case "github":
                                 let gitHubOccurrences: any[] = [];
-                                let [gitHubDataSource, gitHubErr] = gitHubDataSourceRepository.getRepoFromFile(key);
-                                if (gitHubErr) {
+                                let [fileInRepo, fileInRepoErr] = gitHubDataSourceRepository.getFileFromRepo(key);
+                                if (fileInRepoErr) {
                                     continue;
                                 }
                                 // @ts-ignore
@@ -168,8 +168,8 @@ class GeneralService {
                                 result.push({
                                     "id": key,
                                     "type": currentObject["datasource_type"],
-                                    "source": "https://github.com/" + gitHubDataSource["repo"],
-                                    "datasource_name": gitHubDataSource["repo"].split("/").pop(),
+                                    "source": fileInRepo["file_path"],
+                                    "datasource_name": fileInRepo["file_path"].split("/").pop(),
                                     "datasource_icon": '<svg fill="#ffffff" viewBox="0 0 24 24" width="28px" height="' +
                                         '28px"><path d="M10.9,2.1c-4.6,0.5-8.3,4.2-8.8,8.7c-0.5,4.7,2.2,8.9,6.3,10.5C' +
                                         '8.7,21.4,9,21.2,9,20.8v-1.6c0,0-0.4,0.1-0.9,0.1 c-1.4,0-2-1.2-2.1-1.9c-0.1-0' +
