@@ -332,7 +332,7 @@
           this.scrollFullFileLineIntoView(lineNumber);
           return;
         }
-        const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
+        const url = `http://${link}/general/fullfile?type=${type}&id=${id}&search_term=${searchTerm}`;
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
         };

@@ -27,7 +27,7 @@
           :key="i"
           :line_number="match_snippet.line_number"
           :snippet="match_snippet.snippet"
-          @click="emitSnippetClicked(match_snippet.line_number)"
+          @click="emitSnippetClicked(match_snippet.line_number, getSearchTerm(match_snippet.snippet))"
           @mousedown.right="toggleNumSnippetsToShow"
       />
     </div>
@@ -133,6 +133,12 @@ export default {
           this.source,
           searchTerm
       )
+    },
+
+    getSearchTerm(snippet) {
+      const startIndex = snippet.indexOf('<span style=\u0027background-color: #0073ff;color: white;\u0027>') + 64;
+      const endIndex = snippet.indexOf('</span>', startIndex);
+      return snippet.substring(startIndex, endIndex);
     },
 
     toggleNumSnippetsToShow() {
