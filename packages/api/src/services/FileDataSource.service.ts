@@ -10,6 +10,7 @@ import {
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
+import {whiteList} from "../general/whiteList";
 
 class FileDataSourceService {
 
@@ -193,8 +194,8 @@ class FileDataSourceService {
 
     getSearchSnippet(snippet: string, fileName: string) {
         let extension: string = fileName.split('.').pop();
-        if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
-            .indexOf(extension) != -1) {
+        whiteList.hasOwnProperty(extension.toLocaleLowerCase())
+        if (whiteList.hasOwnProperty(extension.toLocaleLowerCase())) {
             let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
             + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
             if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
