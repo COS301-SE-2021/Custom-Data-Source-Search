@@ -119,16 +119,21 @@
           />
           <label for="emailVault">Email</label>
         </span>
-        <span class="p-float-label">
-          <PasswordInputField
-              id="password"
-              style="width: 100%"
-              v-model="vaultPassword"
-              :feedback="false"
-              :toggle-mask="true"
-          />
-          <label for="password">Master Password</label>
-        </span>
+        <div>
+          <span class="p-float-label">
+            <PasswordInputField
+                id="password"
+                style="width: 100%"
+                v-model="vaultPassword"
+                :feedback="false"
+                :toggle-mask="true"
+            />
+            <label for="password">Master Password</label>
+          </span>
+          <div v-if="passwordIncorrect" class="error-message">
+            <span class="error-message">Incorrect password.</span>
+          </div>
+        </div>
         <div style="text-align: center; margin-top: 5%;">
           <Button
               id="signin-remote-btn"
@@ -181,6 +186,7 @@
         notContinue: true,
         vaultEmail: null,
         vaultPassword: null,
+        passwordIncorrect: false,
         userDetails: {
             userName: null,
             backupVault: null,
@@ -254,7 +260,14 @@
                     try {
                       const step3 = await step2.step3(BigInt(resp.data.vM2));
                     } catch (e){
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.response.data,
+                        life: 3000
+                      });
                       console.log(e);
+                      return;
                     }
 
                     //PHASE2
@@ -290,23 +303,13 @@
 
                         })
                         .catch((error) => {
-                          this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data,
-                            life: 3000
-                          });
+                          this.passwordIncorrect = true;
                           console.log(error);
                         })
 
                   })
                   .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data,
-                      life: 3000
-                    });
+                    this.passwordIncorrect = true;
                     console.log(error);
                   })
             })
@@ -472,6 +475,12 @@
   .p-checkbox {
     margin-right: 1em;
     text-align: left;
+  }
+
+  .error-message {
+    color: #EF9A9A;
+    text-align: center;
+    margin-top: 2px;
   }
 
   u {
