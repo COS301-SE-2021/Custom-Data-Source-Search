@@ -121,7 +121,7 @@ export default {
     /**
      * @param {number} lineNumber
      */
-    emitSnippetClicked(lineNumber) {
+    emitSnippetClicked(lineNumber, searchTerm) {
       this.$emit(
           'snippetClicked',
           this.link,
@@ -130,7 +130,8 @@ export default {
           this.backendId,
           lineNumber,
           this.lineNumbers,
-          this.source
+          this.source,
+          searchTerm
       )
     },
 

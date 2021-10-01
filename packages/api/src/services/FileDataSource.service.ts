@@ -195,8 +195,8 @@ class FileDataSourceService {
         let extension: string = fileName.split('.').pop();
         if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
             .indexOf(extension) != -1) {
-            //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
-            // + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
+            let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
+            + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
             if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
@@ -210,11 +210,24 @@ class FileDataSourceService {
             } catch (e) {
                 snippet = hljs.highlightAuto(snippet).value;
             }
-            /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
-            snippet = snippet.replace(
-                reg,
-                '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>'
-            );*/
+            const illegalHighlighting: string[] = ["class", "title", "d", "fill", "height", "style", "viewBox", "width",
+                "id", "code", "div", "em", "h1", "h2", "pre", "path", "span", "svg", "br", "[", "-", "_", "/", ":", ";",
+                ",", "#", ".", "]", "+", "<", ">", "="]
+            let safe: boolean = true;
+            illegalHighlighting.forEach((part) => {
+                if (searchTerm.indexOf(part) !== -1) {
+                    safe = false;
+                }
+            });
+            if (safe) {
+                let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
+                snippet = snippet.replace(
+                    reg,
+                    '<span style=\u0027background-color: #0073ff;color: white;\u0027>' +
+                    searchTerm +
+                    '</span>'
+                );
+            }
             snippet =
                 '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' +
                 snippet +

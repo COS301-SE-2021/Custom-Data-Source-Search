@@ -321,8 +321,9 @@
        * @param {number} lineNumber line number of the result snippet the user has clicked on
        * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
        * @param {string} source the location of the original datasource
+       * @param {string} searchTerm the search term that is highlighted inside the search snippet
        */
-      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source) {
+      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source, searchTerm) {
         if (type === "webpage"){
           this.openIframe(source);
           return;
