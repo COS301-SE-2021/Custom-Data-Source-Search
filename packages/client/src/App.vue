@@ -156,7 +156,6 @@
 
       checkSyncStatus(){
         if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
-          console.log("Checking Sync Status");
           const user = this.getUser(this.getSignedInUserId);
           const dataString = JSON.stringify(user);
           //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
@@ -171,12 +170,9 @@
             email: user.info.email,
             fingerprint: dataFingerprint
           };
-          console.log("requestObject" + JSON.stringify(reqObj));
           axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
               {headers: {"Content-Type": "application/json"}})
               .then((resp) => {
-                console.log("Out Of Sync: " +resp.data.isOutOfSync);
-
                 if(resp.data.isOutOfSync){
                   this.showOutOfSync();
                 }else {

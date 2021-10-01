@@ -126,6 +126,7 @@
               v-model="vaultPassword"
               :feedback="false"
               :toggle-mask="true"
+              @keyup.enter="focusSignIn"
           />
           <label for="password">Master Password</label>
         </span>
@@ -201,6 +202,10 @@
     },
 
     methods: {
+      focusSignIn() {
+        document.getElementById("signin-remote-btn").focus();
+      },
+
       /**
        * Ensure form filled in.
        *
@@ -209,7 +214,6 @@
       async retrieveVaultProfile(){
         const remoteEmail = this.vaultEmail;
         const remotePassword = this.vaultPassword;
-        console.log("Attempting to fetch user profile from the vault...");
         const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
         const step1 = await client.step1(remoteEmail, remotePassword);
         //
@@ -219,10 +223,6 @@
         axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
             {headers: {"Content-Type": "application/json"}})
             .then(async (resp) => {
-              //
-              console.log(resp.data);
-              console.log("Salt: " + resp.data.salt);
-              console.log("B: " + resp.data.B);
               //
               const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
               //
@@ -244,8 +244,6 @@
               axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                   {headers: {"Content-Type": "application/json"}})
                   .then(async (resp) => {
-                    //
-                    console.log(resp.data);
                     //verify server
                     try {
                       const step3 = await step2.step3(BigInt(resp.data.vM2));
@@ -268,7 +266,6 @@
                     axios.post("https://datasleuthvault.nw.r.appspot.com/vault/pull", reqBody,
                         {headers: {"Content-Type": "application/json"}})
                         .then(async (resp) => {
-                          console.log(resp.data.data);
                           //decrypt data
                           const encryptedObj =  {
                             iv: resp.data.data.user_iv,
@@ -371,7 +368,6 @@
                     detail: "User Added to Vault",
                     life: 2500
                   });
-                  console.log(resp.data);
                 })
                 .catch((error) => {
                   this.$toast.add({
@@ -387,7 +383,6 @@
         }
       },
       formValidationChecks() {
-        console.log("Backup vault: " + this.userDetails.backupVault);
         this.errors = [];
         //
         if (!this.userDetails.userName) {
