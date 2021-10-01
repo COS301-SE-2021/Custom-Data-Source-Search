@@ -136,6 +136,7 @@
         </div>
         <div style="text-align: center; margin-top: 5%;">
           <Button
+              v-if="signingIn === false"
               id="signin-remote-btn"
               label="Sign In"
               type="submit"
@@ -143,6 +144,7 @@
               class="p-button-md p-button-outlined"
               @click="retrieveVaultProfile"
           />
+          <i v-else class="pi pi-spin pi-spinner"></i>
         </div>
       </div>
     </div>
@@ -187,6 +189,7 @@
         vaultEmail: null,
         vaultPassword: null,
         passwordIncorrect: false,
+        signingIn: false,
         userDetails: {
             userName: null,
             backupVault: null,
@@ -216,7 +219,7 @@
        * Present errors on failure, create new user on success.
        */
       async retrieveVaultProfile(){
-
+        this.signingIn = this.vaultPassword !== null;
         const remoteEmail = this.vaultEmail;
         const remotePassword = this.vaultPassword;
         console.log("Attempting to fetch user profile from the vault...");
@@ -266,6 +269,7 @@
                         detail: e.response.data,
                         life: 3000
                       });
+                      this.signingIn = false;
                       console.log(e);
                       return;
                     }
@@ -304,12 +308,14 @@
                         })
                         .catch((error) => {
                           this.passwordIncorrect = true;
+                          this.signingIn = false;
                           console.log(error);
                         })
 
                   })
                   .catch((error) => {
                     this.passwordIncorrect = true;
+                    this.signingIn = false;
                     console.log(error);
                   })
             })
@@ -320,10 +326,11 @@
                 detail: 'Could not find user',
                 life: 3000
               });
+              this.signingIn = false;
               console.log(error);
             })
-
       },
+
       async loadValues(){
 
         let passFormValidation = this.formValidationChecks();
@@ -480,7 +487,12 @@
   .error-message {
     color: #EF9A9A;
     text-align: center;
-    margin-top: 2px;
+    margin-top: 5px;
+  }
+
+  .pi-spinner{
+    font-size: 1.5rem;
+    color: #41B3B2;
   }
 
   u {
