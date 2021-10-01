@@ -41,17 +41,17 @@
           <label for="deleteVault"> ALL instances of account</label>
         </div>
         <div class="password-field" v-if="deleteVault === 'deleteVault'">
-            <span class="p-float-label">
-               <PasswordInputField
-                   id="password"
-                   style="width: 100%"
-                   @keyup.enter="doChecks"
-                   v-model="masterPass"
-                   :toggle-mask="true"
-                   :feedback="false"
-               />
-              <label for="password">Password</label>
-            </span>
+          <span class="p-float-label">
+             <PasswordInputField
+                 id="password"
+                 style="width: 100%"
+                 @keyup.enter="deleteFromVault"
+                 v-model="masterPass"
+                 :toggle-mask="true"
+                 :feedback="false"
+             />
+            <label for="password">Password</label>
+          </span>
           <div v-if="passwordIncorrect" class="error-message">
             <span class="error-message">Incorrect password.</span>
           </div>
@@ -62,13 +62,19 @@
         </div>
         <div style="text-align: center">
           <Button
-              id="confirm-user-deletion-btn-vault"
-              class="p-button-danger these-buttons"
-              :disabled="deleteVault !== 'deleteLocal'"
+              v-if="deleteVault !== 'deleteLocal' && masterPass === null"
+              class="p-button-danger dialog-buttons"
+              :disabled=true
+              @click="deleteFromVault">
+            Delete
+          </Button>
+          <Button
+              v-else
+              class="p-button-danger dialog-buttons"
               @click="deleteUser">
             Delete
           </Button>
-          <Button class="p-button-text these-buttons" @click="closePopUp">Cancel</Button>
+          <Button class="p-button-text dialog-buttons" @click="closePopUp">Cancel</Button>
         </div>
       </div>
     </div>
@@ -84,7 +90,9 @@ import PasswordInputField from "../customComponents/PasswordInputField";
 
 export default {
         name: "DeleteUserAreYouSure",
+
         components: {PasswordInputField},
+
         props: {
           show: Boolean,
           firstQuestionFedIn: Boolean,
@@ -98,6 +106,7 @@ export default {
               hasVault: Boolean
           }
         },
+
         data() {
           return {
             display: this.show,
@@ -108,15 +117,18 @@ export default {
             passwordIncorrect: false
           }
         },
+
         mounted() {
           this.firstQuestion = this.firstQuestionFedIn;
           this.deleteVault = this.deleteVaultFedIn;
         },
+
         methods: {
           closePopUp() {
               this.display = false;
               this.firstQuestion = true;
           },
+
           hasVault() {
               if (this.user.hasVault) {
                   this.firstQuestion = false;
@@ -124,16 +136,23 @@ export default {
                   this.deleteUser();
               }
           },
+
           async deleteUser() {
             this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
             this.$emit("clearCurrentUser");
             this.closePopUp();
           },
+
           hide(){
             this.$emit('display-popup');
             this.display = false;
+          },
+
+          deleteFromVault(){
+
           }
         },
+
         watch: {
             show: function () {
                 this.display = this.show
@@ -174,7 +193,7 @@ export default {
     font-size: xx-large;
   }
 
-  .these-buttons {
+  .dialog-buttons {
     float: right;
   }
 
