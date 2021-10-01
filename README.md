@@ -19,7 +19,17 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 
 ### SRS
 [Demo 1 & 2](https://drive.google.com/file/d/1MwdbPOdbiG9-Ide3L_upt0Pc2YZa4peu/view?usp=sharing) <br>
-[Demo 3](https://drive.google.com/file/d/1lEBgKNgxTLHb0d_ejuXfIeiIBfncLL3V/view?usp=sharing)
+[Demo 3](https://drive.google.com/file/d/1lEBgKNgxTLHb0d_ejuXfIeiIBfncLL3V/view?usp=sharing) <br>
+[Demo 4](https://drive.google.com/file/d/1almo--j5-FduSUgPvdU74cl0yxPTH5WD/view?usp=sharing)
+
+### Coding Standard
+[Demo 4](https://drive.google.com/file/d/1tCRRplG2Eh8M5oaNiqr1qGtj4RnyWQy9/view?usp=sharing)
+
+### Security Policy
+[Demo 4](https://drive.google.com/file/d/1iq3EQ0BrR9aqjqMLTQJRdk44Wx5BWxbC/view?usp=sharing)
+
+### Testing Policy
+[Demo 4](https://drive.google.com/file/d/1g6Edz-TqytN68cGFMIAX21OeUMzvTXXk/view?usp=sharing)
 
 ### DataSleuth Architecture
 [Demo 2](https://drive.google.com/file/d/158Przv3j789JLmfjDx8aTx9TWKKO5yXt/view?usp=sharing) <br>
@@ -27,15 +37,18 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 
 ### User Manual
 [Demo 2](https://drive.google.com/file/d/1FNIe4R1prw5S8LBU3TC2LQrwWTPcDlGN/view?usp=sharing) <br>
-[Demo 3](https://drive.google.com/file/d/1UCCZ3P9yHKFJyMJIGbeTtff_dXmScWg5/view?usp=sharing)
+[Demo 3](https://drive.google.com/file/d/1UCCZ3P9yHKFJyMJIGbeTtff_dXmScWg5/view?usp=sharing) <br>
+[Demo 4](https://drive.google.com/file/d/1qV6pgHYHbY-J-i-7ytIuitwo7nWE4GBC/view?usp=sharing)
 
 ### Technical Installation Manual
-[Demo 3](https://drive.google.com/file/d/13QthV3B954L1MYAMRh953z_vycIcGOHf/view?usp=sharing)
+[Demo 3](https://drive.google.com/file/d/13QthV3B954L1MYAMRh953z_vycIcGOHf/view?usp=sharing) <br>
+[Demo 4](https://drive.google.com/file/d/1ZzI9rAWObFpTkeTY14yin0JFZrTGhQWQ/view?usp=sharing)
 
 ### Demos
 [Abstraction-Demo1](https://drive.google.com/file/d/1WIq43rK1QcAUI2rphf7WnFq0o-pYTh03/view?usp=sharing) <br>
 [Abstraction-Demo2](https://drive.google.com/file/d/1sbplUcJwGkIJPUxpzKIw-NadJCk9BQSa/view?usp=sharing) <br>
-[Abstraction-Demo3](https://drive.google.com/file/d/1Q0zyAji8Ceo6T7Lw79FhBnIyrd5RRxjB/view?usp=sharing)
+[Abstraction-Demo3](https://drive.google.com/file/d/1Q0zyAji8Ceo6T7Lw79FhBnIyrd5RRxjB/view?usp=sharing) <br>
+[Abstraction-Demo4](https://drive.google.com/file/d/1aiwqA_AXeCiGMqAdmiLQ3XKSaOOF1Epe/view?usp=sharing)
 
 ### ProjectBoard
 [GitKraken](https://www.gitkraken.com/)
