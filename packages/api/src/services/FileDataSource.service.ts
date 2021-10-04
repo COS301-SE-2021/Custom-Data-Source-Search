@@ -4,6 +4,7 @@ import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import hljs from "highlight.js";
 import solrService from "./Solr.service";
 import {
+    escapeRegExp,
     generateDefaultHttpResponse,
     generateUUID,
     getLastModifiedDateOfFile, isLocalBackend, removeFileExtension,
@@ -221,7 +222,7 @@ class FileDataSourceService {
                 }
             });
             if (safe) {
-                let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
+                let reg: RegExp = new RegExp(escapeRegExp(searchTerm), 'g');
                 snippet = snippet.replace(
                     reg,
                     '<span style=\u0027background-color: #0073ff;color: white;\u0027>' +
@@ -237,10 +238,6 @@ class FileDataSourceService {
             snippet = '<div>' + this.escapeAndHighlight(snippet) + '</div>';
         }
         return snippet;
-    }
-
-    escapeRegExp(string: string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     escapeAndHighlight(snippet: string) {

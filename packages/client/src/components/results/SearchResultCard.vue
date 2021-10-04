@@ -137,7 +137,7 @@ export default {
     },
 
     getSearchTerm(snippet) {
-      const startIndex = snippet.indexOf('<span style=\u0027background-color: #0073ff;color: white;\u0027>') + 64;
+      const startIndex = snippet.indexOf('<span style=\u0027background-color: #0073ff;color: white;\u0027>') + 54;
       const endIndex = snippet.indexOf('</span>', startIndex);
       return snippet.substring(startIndex, endIndex);
     },

@@ -8,6 +8,7 @@ import folderDataSourceService from "./FolderDataSource.service";
 import webPageDataSourceService from "./WebPageDataSource.service";
 import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
 import gitHubDataSourceService from "./GitHubDataSource.service";
+import {escapeRegExp} from "../general/generalFunctions";
 
 class GeneralService {
 
@@ -200,7 +201,7 @@ class GeneralService {
         }
     }
 
-    async getFullFile(type: string, id: string) {
+    async getFullFile(type: string, id: string, searchTerm: string) {
         try {
             let response: any = await axios.get(
                 'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=id%3A'
@@ -246,6 +247,13 @@ class GeneralService {
                     result = '<div>' + GeneralService.newLinesToBreaks(content.toString()) + '</div>';
                 }
             }
+            let reg: RegExp = new RegExp(escapeRegExp(searchTerm), 'g');
+            result = result.replace(
+                reg,
+                '<span style=" background-color: #0073ff;color: white; ">' +
+                searchTerm +
+                '</span>'
+            );
             return {
                 "code": 200,
                 "body": {

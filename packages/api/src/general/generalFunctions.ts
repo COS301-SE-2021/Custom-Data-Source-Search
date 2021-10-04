@@ -98,3 +98,7 @@ export function castToStoredFileOverNetwork(datasource: StoredFileDataSource) {
         tag2: datasource.tag2
     }
 }
+
+export function escapeRegExp(string: string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
