@@ -13,7 +13,7 @@
         <div style="font-size: xx-large; color: #f9f6ee; text-align: center">
           <span>Register</span>
         </div>
-        <form @submit="loadValues">
+        <form >
           <div class="input-fields" style="max-height: 20vh">
           <span class="p-float-label">
               <InputText
@@ -80,7 +80,6 @@
               <Button
                   id="btnRegister"
                   label="Register"
-                  type="submit"
                   style="text-align: center;"
                   class="p-button-md p-button-outlined"
                   @click="loadValues"
@@ -335,76 +334,109 @@
 
         let passFormValidation = this.formValidationChecks();
         if (passFormValidation) {
-          await this.$store.dispatch("addNewUser", {
-            name: this.userDetails.userName,
-            email: this.userDetails.masterEmail,
-            masterPassword: this.masterPassword,
-            hasVault: this.userDetails.backupVault
-          });
 
           if(this.userDetails.backupVault === true){
-            const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
-            const email = this.userDetails.masterEmail;
-            const password = this.masterPassword;
-            const saltAndVerifier = await createVerifierAndSalt(
-                srp6aNimbusRoutines,
-                email,
-                password,
-            );
-            const user = await this.getUser(this.getSignedInUserId);
-            //Registration Fields
-            const userSalt = user.info.salt;
-            const masterKey = generateMasterKey(password, userSalt);
-            const encryptedInfo = encryptJsonObject(masterKey, user);
-            const dataString = JSON.stringify(user);
-            const dataFingerprint = pbkdf2Sync(
-                 dataString,
-                 userSalt,
-                 10000,
-                 32,
-                 'sha256'
-             ).toString('hex');
 
-            let reqObj = {
-              email: this.userDetails.masterEmail,
-              salt: saltAndVerifier.s,
-              verifier: saltAndVerifier.v,
-              user_data: encryptedInfo.data,
-              fingerprint: dataFingerprint,
-              user_iv: encryptedInfo.iv,
-              user_authtag: encryptedInfo.authTag,
-              user_salt: userSalt
+            const cReqObj = {
+              email: this.userDetails.masterEmail
             }
 
-            let reqBody = JSON.stringify(reqObj, (key, value) =>
-                typeof value === 'bigint'
-                    ? value.toString()
-                    : value
-            );
+            const cReqBody = JSON.stringify(cReqObj);
 
-            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/register", reqBody,
+            //check if email exists
+            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", cReqBody,
                 {headers: {"Content-Type": "application/json"}})
-                .then((resp) => {
-                  this.$toast.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: "User Added to Vault",
-                    life: 2500
-                  });
-                  console.log(resp.data);
-
-                })
-                .catch((error) => {
+                .then(async (resp) => {
+                  console.log("Already Exists");
                   this.$toast.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: error.response.data.message,
+                    detail: "User already exists on Vault",
                     life: 3000
                   });
-                  console.log(error);
                 })
+                .catch(async (error) => {
+
+                  console.log(error);
+                  await this.$store.dispatch("addNewUser", {
+                    name: this.userDetails.userName,
+                    email: this.userDetails.masterEmail,
+                    masterPassword: this.masterPassword,
+                    hasVault: this.userDetails.backupVault
+                  });
+
+                  const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
+                  const email = this.userDetails.masterEmail;
+                  const password = this.masterPassword;
+                  const saltAndVerifier = await createVerifierAndSalt(
+                      srp6aNimbusRoutines,
+                      email,
+                      password,
+                  );
+
+
+                  const user = await this.getUser(this.getSignedInUserId);
+                  //Registration Fields
+                  const userSalt = user.info.salt;
+                  const masterKey = generateMasterKey(password, userSalt);
+                  const encryptedInfo = encryptJsonObject(masterKey, user);
+                  const dataString = JSON.stringify(user);
+                  const dataFingerprint = pbkdf2Sync(
+                      dataString,
+                      userSalt,
+                      10000,
+                      32,
+                      'sha256'
+                  ).toString('hex');
+
+                  let reqObj = {
+                    email: this.userDetails.masterEmail,
+                    salt: saltAndVerifier.s,
+                    verifier: saltAndVerifier.v,
+                    user_data: encryptedInfo.data,
+                    fingerprint: dataFingerprint,
+                    user_iv: encryptedInfo.iv,
+                    user_authtag: encryptedInfo.authTag,
+                    user_salt: userSalt
+                  }
+
+                  let reqBody = JSON.stringify(reqObj, (key, value) =>
+                      typeof value === 'bigint'
+                          ? value.toString()
+                          : value
+                  );
+
+                  axios.post("https://datasleuthvault.nw.r.appspot.com/vault/register", reqBody,
+                      {headers: {"Content-Type": "application/json"}})
+                      .then(async (resp) => {
+
+                        await this.$router.push({name: 'ContinueView'});
+                        console.log(resp.data);
+
+                      })
+                      .catch((error) => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error.response.data.message,
+                          life: 3000
+                        });
+                        console.log(error);
+                      })
+                })
+
+
+          } else {
+            await this.$store.dispatch("addNewUser", {
+              name: this.userDetails.userName,
+              email: this.userDetails.masterEmail,
+              masterPassword: this.masterPassword,
+              hasVault: this.userDetails.backupVault
+            });
+            await this.$router.push({name: 'ContinueView'});
+
           }
-          await this.$router.push({name: 'ContinueView'});
+
         }
       },
       formValidationChecks() {

@@ -62,9 +62,8 @@
         </div>
         <div style="text-align: center">
           <Button
-              v-if="deleteVault !== 'deleteLocal' && masterPass === null"
+              v-if="deleteVault !== 'deleteLocal'"
               class="p-button-danger dialog-buttons"
-              :disabled=true
               @click="deleteFromVault">
             Delete
           </Button>
@@ -87,6 +86,7 @@ import axios from "axios";
 import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 import {pbkdf2Sync} from "crypto";
 import PasswordInputField from "../customComponents/PasswordInputField";
+import {mapGetters} from "vuex";
 
 export default {
         name: "DeleteUserAreYouSure",
@@ -148,7 +148,103 @@ export default {
             this.display = false;
           },
 
-          deleteFromVault(){
+          async deleteFromVault(){
+            //1. challenge
+            console.log("Attempting to Delete profile on the vault...");
+            const userInfo = this.getUserInfo(this.user.id);
+            const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
+            const step1 = await client.step1(userInfo.email, this.masterPass);
+            console.log("passw: " + this.masterPass)
+
+            const reqBody = {
+              email: userInfo.email
+            }
+            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
+                {headers: {"Content-Type": "application/json"}})
+                .then(async (resp) => {
+
+                  console.log(resp.data);
+                  console.log("Salt: " + resp.data.salt);
+                  console.log("B: " + resp.data.B);
+
+                  const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
+
+                  const clientA = step2.A;
+                  const clientM1 = step2.M1;
+
+                  let reqObj = {
+                    email: userInfo.email,
+                    A: clientA,
+                    verificationMessage1: clientM1
+                  }
+
+                  let reqBody = JSON.stringify(reqObj, (key, value) =>
+                      typeof value === 'bigint'
+                          ? value.toString()
+                          : value
+                  );
+
+                  axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
+                      {headers: {"Content-Type": "application/json"}})
+                      .then(async (resp) => {
+
+                        console.log(resp.data);
+                        //verify server
+                        try {
+                          const step3 = await step2.step3(BigInt(resp.data.vM2));
+                        } catch (e){
+                          console.log(e);
+                        }
+
+                        //PHASE2
+                        let reqObj = {
+                          email: userInfo.email,
+                          A: clientA,
+                          verificationMessage1: clientM1
+                        }
+
+                        let reqBody = JSON.stringify(reqObj, (key, value) =>
+                            typeof value === 'bigint'
+                                ? value.toString()
+                                : value
+                        );
+
+                        axios.post("https://datasleuthvault.nw.r.appspot.com/vault/delete", reqBody,
+                            {headers: {"Content-Type": "application/json"}})
+                            .then((resp) => {
+                              console.log(resp.data.data);
+
+                              this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
+                              this.$emit("clearCurrentUser");
+                              this.closePopUp();
+
+                              this.$toast.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: "Successfully Deleted Profile From Vault",
+                                life: 2500
+                              });
+                            })
+                            .catch((error) => {
+                              this.passwordIncorrect = true;
+                              console.log(error);
+                            })
+
+                      })
+                      .catch((error) => {
+                        this.passwordIncorrect = true;
+                        console.log(error);
+                      })
+                })
+                .catch((error) => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data,
+                    life: 3000
+                  });
+                  console.log(error);
+                })
 
           }
         },
@@ -157,7 +253,16 @@ export default {
             show: function () {
                 this.display = this.show
             }
-        }
+        },
+  computed: {
+    ...mapGetters ([
+      'getUserInfo',
+      'getUserBackends',
+      'getSignedInUserId',
+      'getSignedIn',
+      'getUser'
+    ])
+  }
     }
 </script>
 

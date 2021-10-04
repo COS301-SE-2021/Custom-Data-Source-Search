@@ -10,7 +10,7 @@ class RegistrationService {
         console.log("Registering User");
         if(this.detailsAreValid(body)){
             const [userExists, UserExistsErr] = await vaultRepository.checkIfUserExists(body.email);
-            if(userExists) {
+            if(!userExists) {
                 const [data, err] = await vaultRepository.addUser(body);
                 if (err) {
                     return {

@@ -56,37 +56,47 @@ class AuthenticationService {
     }
 
     async challenge(body: SRPChallengeRequest): Promise<SRPChallengeResponse> {
-        if (this.challengeDetailsAreValid(body)){
-            const [emailData, emailErr] = await vaultRepository.getSaltAndVerifier(body.email);
-            if (emailErr) {
-                return {
-                    code: 400,
-                    message: emailErr
-                }
-            } else {
-                const s = BigInt(emailData.salt);
-                const v = BigInt(emailData.verifier)
-                const server = new SRPServerSession(new SRPRoutines(new SRPParameters()));
-                const serverStep1 = await server.step1(body.email, s, v);
-                const serializedServerStep1 = JSON.stringify(serverStep1);
-                //Store serialized sever state at this point
-                const [stateData , stateErr ] = await vaultRepository.storeServerState(body.email, serializedServerStep1)
-                if(stateErr){
+        if (this.challengeDetailsAreValid(body)) {
+
+            const [userExists, UserExistsErr] = await vaultRepository.checkIfUserExists(body.email);
+            if (userExists) {
+                const [emailData, emailErr] = await vaultRepository.getSaltAndVerifier(body.email);
+                if (emailErr) {
                     return {
-                        code : 400,
-                        message : "Internal Error"
+                        code: 400,
+                        message: emailErr
                     }
                 } else {
-                    return {
-                        code: 200,
-                        message: {
-                            salt: s,
-                            B: serverStep1.B
+                    const s = BigInt(emailData.salt);
+                    const v = BigInt(emailData.verifier)
+                    const server = new SRPServerSession(new SRPRoutines(new SRPParameters()));
+                    const serverStep1 = await server.step1(body.email, s, v);
+                    const serializedServerStep1 = JSON.stringify(serverStep1);
+                    //Store serialized sever state at this point
+                    const [stateData, stateErr] = await vaultRepository.storeServerState(body.email, serializedServerStep1)
+                    if (stateErr) {
+                        return {
+                            code: 400,
+                            message: "Internal Error"
+                        }
+                    } else {
+                        return {
+                            code: 200,
+                            message: {
+                                salt: s,
+                                B: serverStep1.B
+                            }
                         }
                     }
                 }
+
+            } else {
+                return {
+                    code: 403,
+                    message: "User Does Not Exist"
+                }
             }
-        } else {
+        }else {
             return {
                 code: 400,
                 message: "Details Invalid"
@@ -228,36 +238,45 @@ class AuthenticationService {
 
     async delete(body: SRPDeleteRequest): Promise<SRPDeleteResponse> {
         if(this.deleteDetailsAreValid(body)){
-            const [stateData, stateErr] = await vaultRepository.retrieveServerState(body.email);
-            if(stateErr){
-                return {
-                    code: 400,
-                    message: "Unable To Access Database"
+            const [userExists, UserExistsErr] = await vaultRepository.checkIfUserExists(body.email);
+            if(userExists) {
+
+                const [stateData, stateErr] = await vaultRepository.retrieveServerState(body.email);
+                if (stateErr) {
+                    return {
+                        code: 400,
+                        message: "Unable To Access Database"
+                    }
+                } else {
+                    const serverStep1 = SRPServerSessionStep1.fromState(
+                        new SRPRoutines(new SRPParameters()),
+                        JSON.parse(stateData.Step1State),);
+                    //Attempt Verification of User Credentials
+                    try {
+                        await serverStep1.step2(BigInt(body.A), BigInt(body.verificationMessage1));
+                    } catch (e) {
+                        return {
+                            code: 400,
+                            message: "Server Error"
+                        }
+                    }
+                    const [userData, error] = await vaultRepository.deleteUserData(body.email);
+                    if (error) {
+                        return {
+                            code: 400,
+                            message: "Database Error"
+                        }
+                    } else {
+                        return {
+                            code: 200,
+                            message: "Successfully Deleted User"
+                        }
+                    }
                 }
             } else {
-                const serverStep1 = SRPServerSessionStep1.fromState(
-                    new SRPRoutines(new SRPParameters()),
-                    JSON.parse(stateData.Step1State),);
-                //Attempt Verification of User Credentials
-                try {
-                    await serverStep1.step2(BigInt(body.A), BigInt(body.verificationMessage1));
-                } catch(e) {
-                    return {
-                        code : 400,
-                        message : "Server Error"
-                    }
-                }
-                const [userData, error] = await vaultRepository.deleteUserData(body.email);
-                if(error){
-                    return {
-                        code : 400,
-                        message : "Database Error"
-                    }
-                }else {
-                    return {
-                        code: 200,
-                        message: "Successfully Deleted User"
-                    }
+                return {
+                    code: 403,
+                    message: "User Does Not Exist"
                 }
             }
         } else {

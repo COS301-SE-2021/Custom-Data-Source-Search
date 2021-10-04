@@ -43,11 +43,11 @@ class VaultRepository {
             );
             let result;
 
-            result = data.rows[0] !== null;
+            result = data.rows.length !== 0;
             client.release();
             return[result, null]
         } catch (e){
-            console.log(e.stack);
+            console.log(e);
             return[null, e]
         }
     }
