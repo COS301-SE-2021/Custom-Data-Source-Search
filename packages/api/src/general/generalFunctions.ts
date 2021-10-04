@@ -102,3 +102,31 @@ export function castToStoredFileOverNetwork(datasource: StoredFileDataSource) {
 export function escapeRegExp(string: string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+export function highlightSearchTerms(content: string, searchTerms: string[]): string {
+    if (content === undefined) {
+        return "";
+    }
+    // Parts Of Regex
+    const validWord = "[\\w\\s\\-_/:;,#.]+"; // WARNING: NO closing tags allowed in here! {', ", >} are ILLEGAL here.
+    const validAttributeTypes = ["class", "title", "d", "fill", "height", "style", "viewBox", "width", "id"];
+    const validHtmlTags = ["code", "div", "em", "h1", "h2", "pre", "path", "span", "svg", "br"];
+    // Full Regex
+    const validAttribute = `(?:\\s(?:${validAttributeTypes.join("|")})=(?:"(?:${validWord})"|'(?:${validWord})'))*`;
+    //
+    let whitelist_production_line = [];
+    for (let i = 0; i < validHtmlTags.length; i++) {
+        whitelist_production_line.push(`<${validHtmlTags[i]}${validAttribute}>|<\/${validHtmlTags[i]}>`);
+    }
+    let whitelistRegex = new RegExp(whitelist_production_line.join("|"), "g");
+    let matches = content.match(whitelistRegex);
+    if (matches === null) {
+        return content;
+    } else {
+        let extractedContent: string = "";
+        let indices: number[] = [];
+        for (let match of matches) {
+            extractedContent += content.substr(0, content.indexOf(match))
+        }
+    }
+}
