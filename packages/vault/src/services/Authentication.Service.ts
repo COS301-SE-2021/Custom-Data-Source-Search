@@ -16,6 +16,7 @@ import {
 import vaultRepository from "../repository/Vault.Repository";
 
 class AuthenticationService {
+
     async compare(body: CompareRequest): Promise<CompareResponse>{
         if(this.compareDetailsAreValid(body)){
             const [data, err] = await vaultRepository.getFingerprint(body.email);
