@@ -241,12 +241,12 @@
                     .catch((e) => {
                       console.error(e);
                       if (e.toString().includes("500")) {
-                        this.$toast.add({
-                          severity: 'error',
-                          summary: 'Internal Server Error',
-                          detail: "Could not connect to server. Please ensure solr is running",
-                          life: 3000
-                        })
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Internal Server Error',
+                            detail: "Could not connect to server. Please ensure solr is running",
+                            life: 3000
+                          })
                       }
                     })
               })

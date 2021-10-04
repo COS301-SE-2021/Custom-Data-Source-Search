@@ -75,6 +75,7 @@
             },
             updateBackendLogin () {
                 this.storeThisUser();
+                let backendName;
                 for (let backend of this.$store.getters.unconnectedBackendObjects) {
                     this.$store.dispatch('backendLogin', backend.local);
                 }
