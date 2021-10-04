@@ -120,6 +120,7 @@ export default {
 
     /**
      * @param {number} lineNumber
+     * @param {string} searchTerm
      */
     emitSnippetClicked(lineNumber, searchTerm) {
       this.$emit(
