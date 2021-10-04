@@ -78,14 +78,6 @@
                 for (let backend of this.$store.getters.unconnectedBackendObjects) {
                     this.$store.dispatch('backendLogin', backend.local);
                 }
-                if (this.$store.getters.unconnectedBackendObjects) {
-                  this.$toast.add({
-                    severity: 'error',
-                    summary: 'Connection Failed',
-                    detail: "Please contact server provider",
-                    life: 2000
-                  });
-                }
             },
             storeAUser() {
                 if (this.masterPass === null) {
