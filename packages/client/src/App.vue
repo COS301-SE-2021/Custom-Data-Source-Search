@@ -41,6 +41,13 @@
               aria-hidden="true"
           />
         </div>
+        <div v-if="syncing" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
+          <i
+              class="fas fa-sync-alt"
+              style="font-size:1.2rem"
+              aria-hidden="true"
+          />
+        </div>
         <div id="user-profile-btn" class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
             <h3 class="name-initial-main">
@@ -67,18 +74,13 @@
             @action-to-Occur="showAskMasterPw"
             @close-dialog="closeDialog"
         />
-        <ReEnterMasterPassword
-            :show="displayVaultDialog"
-            :unconnected-backend-icon="true"
-            :header="'Sync Your Vault'"
-            :body="'Enter your master password to continue with sync'"
-            :vault="true"
-            @action-to-Occur="showAskMasterPw"
-            @sync-vault="toggleSync"
+        <VaultSync
+            :show="displayVaultSync"
             @close-dialog="closeDialog"
-        />
-
-        <VaultSync :show="displayVaultSync" @close-dialog="closeDialog"></VaultSync>
+            @password-confirmed="startSync"
+            @sync-complete="endSync"
+        >
+        </VaultSync>
       </div>
     </div>
     <div id="grid-div-2">
@@ -122,6 +124,7 @@
       displayPasswordDialog: false,
       displayVaultDialog: false,
       sync: false,
+      syncing: false,
       displayVaultSync: false,
       activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
       activePageNum: null,
@@ -203,6 +206,7 @@
 
       toggleSync(){
         this.sync = !this.sync;
+        this.syncing = !this.syncing;
       },
       showOutOfSync(){
         this.sync = true;
@@ -213,6 +217,14 @@
       closeDialog(){
         this.displayPasswordDialog = false;
         this.displayVaultSync = false;
+      },
+      startSync(){
+        this.displayVaultSync = false;
+        this.sync = false;
+        this.syncing = true;
+      },
+      endSync(){
+        this.syncing = false;
       }
     }
   }
