@@ -22,10 +22,15 @@ const store = createStore({
     signedInUserId: null,
     signedIn: null,
     users: [],
-    refresh: false
+    refresh: false,
+    fontSize: "Regular"
   },
 
   getters: {
+    getFontSize(state){
+      return state.fontSize;
+    },
+
     getRefreshState(state) {
       return state.refresh;
     },
@@ -212,6 +217,10 @@ const store = createStore({
             Object.assign(state, JSON.parse(localStorage.getItem('store')))
         );
       }
+    },
+
+    alterFontSize(state, payload){
+      state.fontSize = payload;
     },
 
     alterRefreshState(state) {
