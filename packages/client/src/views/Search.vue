@@ -574,6 +574,7 @@
 
   .pi-search {
     padding: 0;
+    font-size: 1rem !important;
   }
 
 

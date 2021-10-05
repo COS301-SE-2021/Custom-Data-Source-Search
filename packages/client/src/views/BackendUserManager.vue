@@ -1060,7 +1060,7 @@
   }
 
   ::v-deep(.p-dropdown) {
-    height: 36px;
+    height: 2.295rem;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
   }
