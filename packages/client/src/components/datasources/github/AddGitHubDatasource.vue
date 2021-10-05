@@ -10,25 +10,31 @@
     <div>
       <span>Enter your github username</span>
       <InputText
+          id="input1"
           class="input-fields"
           v-model="username"
           placeholder="GitHub username.."
+          @keyup.enter="focusOnNextInput( 'input2' )"
       />
     </div>
     <div>
       <span>Enter the target repo name</span>
       <InputText
+          id="input2"
           class="input-fields"
           v-model="repo"
           placeholder="Repo name..."
+          @keyup.enter="focusOnNextInput('input3')"
       />
     </div>
     <div>
       <span>Enter your access token</span>
       <InputText
+          id="input3"
           class="input-fields"
           v-model="token"
           placeholder="Token..."
+          @keyup.enter="focusOnNextInput('tag1')"
       />
     </div>
     <div>
@@ -39,6 +45,7 @@
             id="tag1"
             v-model="tag1"
             type="text"
+            @keyup.enter="focusOnNextInput('tag2')"
         />
         <label for="tag1">Tag 1</label>
       </span>
@@ -47,16 +54,19 @@
             id="tag2"
             v-model="tag2"
             type="text"
+            @keyup.enter="focusOnNextInput('Add')"
         />
         <label for="tag2">Tag 2</label>
       </span>
     </div>
     <Button
+        id="Add"
         v-if="!submitting"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitGitRepo"
+        @keyup.enter="submitGitRepo()"
     />
     <Button
         v-else
@@ -89,6 +99,10 @@ export default {
   },
 
   methods: {
+    focusOnNextInput(n) {
+      document.getElementById(n).focus();
+    },
+
     async submitGitRepo() {
       if(this.repo!==""){
         this.submitting = true;

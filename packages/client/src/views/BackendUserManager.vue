@@ -141,20 +141,6 @@
               </MultiSelect>
             </template>
           </Column>
-          <Column filterField="reg_key" :showFilterMenu="false" header="Registration Key" style="min-width:12rem">
-            <template #body="{data}">
-              {{data.reg_key}}
-            </template>
-            <template #filter="{filterModel,filterCallback}">
-              <InputText
-                  type="text"
-                  v-model="filterModel.value"
-                  @input="filterCallback()"
-                  class="p-column-filter"
-                  :placeholder="`Search by registration key`"
-              />
-            </template>
-          </Column>
         </DataTable>
       </div>
     </ScrollPanel>

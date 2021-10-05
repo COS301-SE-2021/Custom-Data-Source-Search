@@ -68,7 +68,8 @@
                   id="checkbox"
                   name="checkbox"
                   v-model="userDetails.backupVault"
-                  :binary="true"/>
+                  :binary="true"
+              />
               <label for="checkbox">Enable remote access to account?</label>
               <br>
               <span style="font-size: small;">
@@ -92,7 +93,6 @@
               </ul>
             </div>
           </div>
-          <SignIn :show="displaySignIn" @display-popup="showSignIn"></SignIn>
         </form>
       </div>
     </div>
@@ -126,6 +126,7 @@
                 v-model="vaultPassword"
                 :feedback="false"
                 :toggle-mask="true"
+                @keyup.enter="focusSignIn"
             />
             <label for="password">Master Password</label>
           </span>
@@ -156,13 +157,11 @@
   import Checkbox from 'primevue/checkbox';
   import PasswordInputField from "../components/customComponents/PasswordInputField";
   import axios from "axios";
-  import {createHash, pbkdf2Sync} from 'crypto';
+  import {pbkdf2Sync} from 'crypto';
   import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 
 
-  import {
-    createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,
-  } from "tssrp6a"
+  import {createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,} from "tssrp6a"
   import {mapGetters} from "vuex";
 
   const zxcvbn = require('zxcvbn');
@@ -183,7 +182,6 @@
         regexTester: null,
         masterPassCheck: null,
         masterPassword: null,
-        displaySignIn: false,
         notContinue: true,
         vaultEmail: null,
         vaultPassword: null,
@@ -191,7 +189,7 @@
         signingIn: false,
         userDetails: {
             userName: null,
-            backupVault: null,
+            backupVault: false,
             masterEmail: null,
             hashToStore: null
         }
@@ -212,6 +210,10 @@
     },
 
     methods: {
+      focusSignIn() {
+        document.getElementById("signin-remote-btn").focus();
+      },
+
       /**
        * Ensure form filled in.
        *
@@ -221,43 +223,36 @@
         this.signingIn = this.vaultPassword !== null;
         const remoteEmail = this.vaultEmail;
         const remotePassword = this.vaultPassword;
-        console.log("Attempting to fetch user profile from the vault...");
         const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
         const step1 = await client.step1(remoteEmail, remotePassword);
-
+        //
         const reqBody = {
           email: remoteEmail
-        }
+        };
         axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
             {headers: {"Content-Type": "application/json"}})
             .then(async (resp) => {
-
-              console.log(resp.data);
-              console.log("Salt: " + resp.data.salt);
-              console.log("B: " + resp.data.B);
-
+              //
               const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
-
+              //
               const clientA = step2.A;
               const clientM1 = step2.M1;
-
+              //
               let reqObj = {
                 email: remoteEmail,
                 A: clientA,
                 verificationMessage1: clientM1
-              }
-
+              };
+              //
               let reqBody = JSON.stringify(reqObj, (key, value) =>
                   typeof value === 'bigint'
                       ? value.toString()
                       : value
               );
-
+              //
               axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                   {headers: {"Content-Type": "application/json"}})
                   .then(async (resp) => {
-
-                    console.log(resp.data);
                     //verify server
                     try {
                       const step3 = await step2.step3(BigInt(resp.data.vM2));
@@ -272,45 +267,40 @@
                       console.log(e);
                       return;
                     }
-
                     //PHASE2
                     let reqObj = {
                       email: remoteEmail,
                       A: clientA,
                       verificationMessage1: clientM1
-                    }
-
+                    };
+                    //
                     let reqBody = JSON.stringify(reqObj, (key, value) =>
                         typeof value === 'bigint'
                             ? value.toString()
                             : value
                     );
-
+                    //
                     axios.post("https://datasleuthvault.nw.r.appspot.com/vault/pull", reqBody,
                         {headers: {"Content-Type": "application/json"}})
                         .then(async (resp) => {
-                          console.log(resp.data.data);
                           //decrypt data
                           const encryptedObj =  {
                             iv: resp.data.data.user_iv,
                             authTag: resp.data.data.user_authtag,
                             data: resp.data.data.user_data
-                          }
+                          };
                           //NEED TO ADD USER HERE:
-                          //
                           const masterKey = generateMasterKey(remotePassword, resp.data.data.user_salt);
                           const unencryptedUserData = decryptJsonObject(masterKey, encryptedObj);
-
+                          //
                           this.$store.commit('addRemoteUserToLocalList', unencryptedUserData);
                           await this.$router.push({name: 'ContinueView'});
-
                         })
                         .catch((error) => {
                           this.passwordIncorrect = true;
                           this.signingIn = false;
                           console.log(error);
                         })
-
                   })
                   .catch((error) => {
                     this.passwordIncorrect = true;
@@ -331,7 +321,6 @@
       },
 
       async loadValues(){
-
         let passFormValidation = this.formValidationChecks();
         if (passFormValidation) {
 
@@ -456,8 +445,10 @@
           }
         }
         // Password Checks
-        if (!this.masterPassword || !this.masterPassCheck) {
-          this.errors.push("Password required");
+        if (!this.masterPassword) {
+          this.errors.push("Password is invalid");
+        } else if ( !this.masterPassCheck) {
+          this.errors.push("Password Required");
         } else if (this.masterPassword !== this.masterPassCheck) {
           this.errors.push('Your passwords do not match. Please repeat');
           this.masterPassword = null;
@@ -469,14 +460,8 @@
         }
         return !this.errors.length;
       },
-      /**
-       * Display sign-in Popup
-       */
-      showSignIn() {
-        this.displaySignIn = !this.displaySignIn
-      },
       continue() {
-        this.notContinue = false;
+            this.notContinue = false;
       },
       back() {
         if (this.notContinue) {
