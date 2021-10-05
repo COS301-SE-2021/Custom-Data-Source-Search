@@ -37,14 +37,14 @@
         <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
               class="fas fa-sync-alt"
-              style="font-size:1.2rem"
+              style="font-size:1.2em"
               aria-hidden="true"
           />
         </div>
         <div v-if="syncing" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
               class="fas fa-sync-alt"
-              style="font-size:1.2rem"
+              style="font-size:1.2em"
               aria-hidden="true"
           />
         </div>
@@ -144,7 +144,24 @@
           'getSignedIn',
           'getUser',
           'getMasterKey'
-        ])
+        ]),
+      state(){
+          return this.$store.getters.getFontSize;
+      }
+    },
+
+    watch: {
+      state(newState){
+        if(newState === 'Large'){
+          document.documentElement.style.setProperty('--fontsize', '20px');
+        }
+        else if(newState === 'Small'){
+          document.documentElement.style.setProperty('--fontsize', '13px');
+        }
+        else if(newState === 'Regular'){
+          document.documentElement.style.setProperty('--fontsize', '16px');
+        }
+      }
     },
 
     beforeCreate() {
@@ -152,6 +169,16 @@
     },
 
     mounted() {
+      let s = this.$store.getters.getFontSize;
+      if(s === 'Large'){
+        document.documentElement.style.setProperty('--fontsize', '20px');
+      }
+      else if(s === 'Small'){
+        document.documentElement.style.setProperty('--fontsize', '13px');
+      }
+      else if(s === 'Regular'){
+        document.documentElement.style.setProperty('--fontsize', '16px');
+      }
       this.interval = setInterval(() => this.checkSyncStatus(), 14000);
     },
 
@@ -231,6 +258,10 @@
 </script>
 
 <style lang="scss">
+  :root{
+    --fontsize: 16px;
+  }
+
   html,
   body,
   #app {
@@ -243,6 +274,7 @@
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: var(--fontsize);
   }
 
   input {
@@ -294,6 +326,7 @@
   .pi-search, .pi-list, .pi-user, .pi-cog, .pi-sitemap, .pi-id-card{
     color: grey;
     padding: 20px 10px 10px;
+    font-size: 1.5em !important;
   }
 
   .unconnected-backend-warning{
@@ -390,12 +423,12 @@
   }
 
   #expiration-indicator {
-    font-size: 1.5rem;
+    font-size: 1.5em !important;
     color: #FFF59D;
     position: relative;
     display: inline-block;
-    margin-top : 0.5rem;
-    margin-bottom : 0.3rem;
+    margin-top : 0.5em;
+    margin-bottom : 0.3em;
   }
 
   #profile {
@@ -403,6 +436,7 @@
     margin-left: -53px;
     cursor: pointer;
     bottom: 5%;
+    font-size: 16px !important;
   }
 
   #overlay_panel {
@@ -411,6 +445,7 @@
 
   #sidebar {
     width: 3.5em;
+    font-size: 16px !important;
   }
 
   .pi-info-circle {
