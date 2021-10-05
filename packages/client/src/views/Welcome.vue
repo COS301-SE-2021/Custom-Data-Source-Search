@@ -1,7 +1,7 @@
 <template>
   <ConfirmDialog/>
   <div class="page">
-    <Toast position="bottom-left"/>
+    <Toast position="bottom-right"/>
     <div class="heading-and-info">
       <h1 class="header">Who's Sleuthing?</h1>
       <p class="description">
