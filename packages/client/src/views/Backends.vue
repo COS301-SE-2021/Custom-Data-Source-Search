@@ -88,6 +88,9 @@
                 noUserReq: null,
                 displayMasterPwInput: false,
                 newBackendBool: false,
+                startIcon: 'pi pi-play',
+                stopIcon: 'pi pi-times',
+                spinnerIcon: 'pi pi-spin pi-spinner',
 
                 newBackendObject: {
 
@@ -202,7 +205,6 @@
                                     });
                                 }
                             }
-
                         })
                 }
             },
@@ -220,6 +222,17 @@
                         {cwd: process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin"});
                     this.stopProcess.stdout.on("data", (data) => {
                         console.log(data.toString());
+                    });
+
+                    this.stopProcess.on('error', (err) => {
+                        if (err.toString().includes("Error: spawn cmd.exe")) {
+                            this.$toast.add({
+                              severity: 'error',
+                              summary: 'Error',
+                              detail: "Could not stop local backend",
+                              life: 3000
+                            })
+                        }
                     });
 
                     this.stopProcess.stderr.on("data", (data) => {
