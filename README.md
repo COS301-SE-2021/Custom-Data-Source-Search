@@ -51,7 +51,7 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 
 ## Team Abstraction
 
-| **Team Member** <img width=300/>  | **Details**          |  <img width=300/>  |
+| **Team Member** <br><img width=300/>  | **Details**         |  <img width=300/>  |
 |-----------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|-----------------|
 | ![Firstname Lastname](https://i.ibb.co/d0kSPY3/josua-circ.png "Josua Botha") <br/> **Josua Botha** | Team Lead. Interested in Software Architecture and writing beautiful code. Likes reading old books in front of the fire, and hikes the Drakensburg every now and then.  | [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/josua-botha-63417274/)  <br> [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Siocnarff)  |
 | ![Firstname Lastname](https://i.ibb.co/CPkw44n/lauren-circ.png "Lauren Rowe") <br/> **Lauren Rowe**             | Third year Computer Science student. Enjoys working on the frontend and creating enjoyable user experiences. Interests include gaming and going on adventures.  | [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lauren-rowe-63b15b18b/)  <br> [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LaurenRowe99)     |
