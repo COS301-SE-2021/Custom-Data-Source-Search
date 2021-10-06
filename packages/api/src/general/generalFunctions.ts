@@ -124,9 +124,14 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
         return content;
     } else {
         let extractedContent: string = "";
-        let indices: number[] = [];
-        for (let match of matches) {
-            extractedContent += content.substr(0, content.indexOf(match))
+        let indices: number[] = new Array(matches.length);
+        for (let i: number = 0; i < matches.length; i++) {
+            const index: number = content.indexOf(matches[i]);
+            extractedContent += content.substr(0, index);
+            content = content.substr(index + matches[i].length);
+            for (let j: number = i; j < matches.length; j++) {
+                indices[j] += index;
+            }
         }
     }
 }
