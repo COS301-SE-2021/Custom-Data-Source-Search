@@ -133,5 +133,30 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
                 indices[j] += index;
             }
         }
+        searchTerms.sort(function(a, b){
+            return b.length - a.length;
+        });
+        let positions: {start: number; end: number}[] = [];
+        for (let term of searchTerms) {
+            let index: number = extractedContent.indexOf(term);
+            while (index !== -1) {
+                if (!contained(positions, {start: index, end: term.length})) {
+                    positions.push({start: index, end: term.length});
+                }
+                index = extractedContent.indexOf(term, index + 1);
+            }
+        }
     }
+}
+
+function contained(positions: {start: number; end: number}[], newPosition: {start: number; end: number}): boolean {
+    for (let pos of positions) {
+        if (pos.start <= newPosition.start && newPosition.start <= pos.end) {
+            return true;
+        }
+        if (pos.start <= newPosition.end && newPosition.end <= pos.end) {
+            return true;
+        }
+    }
+    return false;
 }
