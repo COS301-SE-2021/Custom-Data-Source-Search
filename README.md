@@ -1,4 +1,6 @@
-# Abstraction - Custom Data Source Search
+<h1 align="center"> Abstraction - Custom Data Source Search </h1>
+
+<p align="center" ><img src="https://raw.githubusercontent.com/COS301-SE-2021/Custom-Data-Source-Search/master/docs/DS_Preview.gif" alt="HTTPie in action" width="80%"/> </p>
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Custom-Data-Source-Search&metric=alert_status)
 ](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Custom-Data-Source-Search) 
@@ -9,6 +11,8 @@
 ](https://coveralls.io/github/COS301-SE-2021/Custom-Data-Source-Search?branch=development) 
 ![GitHub open issues](https://img.shields.io/github/issues-raw/COS301-SE-2021/Custom-Data-Source-Search) 
 [![Build Status](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search.svg?branch=development)](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search)
+  
+ 
 
 
 
