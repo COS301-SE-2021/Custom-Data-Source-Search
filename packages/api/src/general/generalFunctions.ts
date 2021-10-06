@@ -61,7 +61,7 @@ export function checkRoleFor(type: string) {
                         return res.send({"message": "Insufficient permissions to carry out action"});
                     }
                 }
-            } else if (type === "role"){
+            } else if (type === "role") {
                 if (permissionGreater(req.body.role, requestUserRole)) {
                     res.status(403);
                     return res.send({"message": "Insufficient permissions to carry out action"});
@@ -133,10 +133,10 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
                 indices[j] += index;
             }
         }
-        searchTerms.sort(function(a, b){
+        searchTerms.sort(function (a, b) {
             return b.length - a.length;
         });
-        let positions: {start: number; end: number}[] = [];
+        let positions: { start: number; end: number }[] = [];
         for (let term of searchTerms) {
             let index: number = extractedContent.indexOf(term);
             while (index !== -1) {
@@ -149,7 +149,7 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
     }
 }
 
-function contained(positions: {start: number; end: number}[], newPosition: {start: number; end: number}): boolean {
+function contained(positions: { start: number; end: number }[], newPosition: { start: number; end: number }): boolean {
     for (let pos of positions) {
         if (pos.start <= newPosition.start && newPosition.start <= pos.end) {
             return true;
