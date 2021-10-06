@@ -591,7 +591,6 @@ const store = createStore({
       if (payload.id === 0) {
         return;
         // local backend, needs no login
-
       }
       let secretPair = getters.getBackendSecretPair(payload.id);
       if (secretPair === null) {
