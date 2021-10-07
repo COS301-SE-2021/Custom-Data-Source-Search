@@ -6,7 +6,10 @@ import solrService from "./Solr.service";
 import {
     generateDefaultHttpResponse,
     generateUUID,
-    getLastModifiedDateOfFile, highlightSearchTerms, isLocalBackend, removeFileExtension,
+    getLastModifiedDateOfFile,
+    highlightSearchTerms,
+    isLocalBackend,
+    removeFileExtension,
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
@@ -200,9 +203,7 @@ class FileDataSourceService {
         let extension: string = fileName.split('.').pop();
         whiteList.hasOwnProperty(extension.toLocaleLowerCase())
         if (whiteList.hasOwnProperty(extension.toLocaleLowerCase())) {
-            let searchTerm: string = snippet
-                .substring(snippet.indexOf(openTag) + openTag.length, snippet.indexOf(closeTag));
-            // let searchTerms: string[] = this.getSearchTerms(snippet, )
+            let searchTerms: string[] = this.getSearchTerms(snippet, searchTermIdentifier);
             if (snippet.indexOf(openTag) > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
@@ -216,7 +217,7 @@ class FileDataSourceService {
             } catch (e) {
                 snippet = hljs.highlightAuto(snippet).value;
             }
-            snippet = highlightSearchTerms(snippet, [searchTerm]);
+            snippet = highlightSearchTerms(snippet, searchTerms);
             snippet =
                 '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' +
                 snippet +
@@ -262,6 +263,31 @@ class FileDataSourceService {
                     return '&#039;';
             }
         })
+    }
+
+    private getSearchTerms(snippet: string, searchTermIdentifier: string): string[] {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
+        const combinedLength: number = openTag.length + closeTag.length;
+        let searchTerms: string[] = [];
+        let termIndices: number[] = [];
+        let index: number = snippet.indexOf(openTag);
+        while (index !== -1) {
+            searchTerms.push(snippet.substring(index + openTag.length, snippet.indexOf(closeTag, index)));
+            termIndices.push(index + openTag.length);
+            index = snippet.indexOf(openTag, index + 1);
+        }
+        let combinedTerms: string[] = [searchTerms[0]];
+        let combinedIndex: number = 0;
+        for (let index: number = 1; index < searchTerms.length; index++) {
+            if (termIndices[index - 1] + searchTerms[index - 1].length + combinedLength === termIndices[index]) {
+                combinedTerms[combinedIndex] += searchTerms[index];
+            } else {
+                combinedTerms.push(searchTerms[index]);
+                combinedIndex++;
+            }
+        }
+        return Array.from((new Set(combinedTerms).values()));
     }
 }
 

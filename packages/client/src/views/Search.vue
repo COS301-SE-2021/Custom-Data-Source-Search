@@ -402,6 +402,7 @@
         } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
           return this.escapeAllExceptMatches(content, matches);
         } else {
+          console.log(content)
           return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
         }
       },

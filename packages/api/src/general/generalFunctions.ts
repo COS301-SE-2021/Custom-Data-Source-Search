@@ -143,12 +143,16 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
         for (let term of searchTerms) {
             let index: number = extractedContent.indexOf(term);
             while (index !== -1) {
+                console.log(term);
                 if (!contained(positions, {start: index, end: index + term.length})) {
                     positions.push({start: index, end: index + term.length});
                 }
                 index = extractedContent.indexOf(term, index + 1);
             }
         }
+        positions.sort(function (a, b) {
+            return a.start - b.start;
+        })
         const openingLength: number = '<span style=\u0027background-color: #0073ff;color: white;\u0027>'.length;
         const closingLength: number = '</span>'.length;
         const extraLengthFromHighlighting: number = openingLength + closingLength;
@@ -169,6 +173,7 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
                         i++;
                     }
                     finalContent = insertHighlight(matchIndices[i-1], positions[posIndex].end, finalContent);
+                    matchIndices = updateIndicesFrom(i, matchIndices, extraLengthFromHighlighting);
                     updatePositionsFrom(posIndex + 1, positions, extraLengthFromHighlighting);
                     break;
                 } else if (matchIndices[i] >= positions[posIndex].end) {
@@ -215,11 +220,14 @@ function updateIndicesFrom(index: number, indices: number[], amount: number): nu
 function contained(positions: { start: number; end: number }[], newPosition: { start: number; end: number }): boolean {
     for (let pos of positions) {
         if (pos.start <= newPosition.start && newPosition.start <= pos.end) {
+            console.log("Contained");
             return true;
         }
         if (pos.start <= newPosition.end && newPosition.end <= pos.end) {
+            console.log("Contained");
             return true;
         }
     }
+    console.log("Not contained");
     return false;
 }
