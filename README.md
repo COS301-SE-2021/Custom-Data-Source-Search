@@ -36,7 +36,7 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
   <li><a href="https://drive.google.com/file/d/1almo--j5-FduSUgPvdU74cl0yxPTH5WD/view?usp=sharing">SRS</a></li>
   <li><a href="https://drive.google.com/file/d/1tCRRplG2Eh8M5oaNiqr1qGtj4RnyWQy9/view?usp=sharing">Coding Standard</a></li>
   <li><a href="https://drive.google.com/file/d/1iq3EQ0BrR9aqjqMLTQJRdk44Wx5BWxbC/view?usp=sharing">Security Policy</a></li>
-  <a href="https://drive.google.com/file/d/1g6Edz-TqytN68cGFMIAX21OeUMzvTXXk/view?usp=sharing">Testing Policy</a>
+  <li><a href="https://drive.google.com/file/d/1g6Edz-TqytN68cGFMIAX21OeUMzvTXXk/view?usp=sharing">Testing Policy</a></li>
 </ul>
 
 ##### Demo of DataSleuth
