@@ -126,6 +126,9 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
         let extractedContent: string = "";
         let matchIndices: number[] = new Array(matches.length);
         for (let i: number = 0; i < matches.length; i++) {
+            matchIndices[i] = 0;
+        }
+        for (let i: number = 0; i < matches.length; i++) {
             const index: number = content.indexOf(matches[i]);
             extractedContent += content.substr(0, index);
             content = content.substr(index + matches[i].length);
@@ -140,8 +143,8 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
         for (let term of searchTerms) {
             let index: number = extractedContent.indexOf(term);
             while (index !== -1) {
-                if (!contained(positions, {start: index, end: term.length})) {
-                    positions.push({start: index, end: term.length});
+                if (!contained(positions, {start: index, end: index + term.length})) {
+                    positions.push({start: index, end: index + term.length});
                 }
                 index = extractedContent.indexOf(term, index + 1);
             }

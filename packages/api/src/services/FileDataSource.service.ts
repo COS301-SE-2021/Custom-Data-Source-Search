@@ -4,10 +4,9 @@ import fileDataSourceRepository from "../repositories/FileDataSourceRepository";
 import hljs from "highlight.js";
 import solrService from "./Solr.service";
 import {
-    escapeRegExp,
     generateDefaultHttpResponse,
     generateUUID,
-    getLastModifiedDateOfFile, isLocalBackend, removeFileExtension,
+    getLastModifiedDateOfFile, highlightSearchTerms, isLocalBackend, removeFileExtension,
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
@@ -212,24 +211,7 @@ class FileDataSourceService {
             } catch (e) {
                 snippet = hljs.highlightAuto(snippet).value;
             }
-            const illegalHighlighting: string[] = ["class", "title", "d", "fill", "height", "style", "viewBox", "width",
-                "id", "code", "div", "em", "h1", "h2", "pre", "path", "span", "svg", "br", "[", "-", "_", "/", ":", ";",
-                ",", "#", ".", "]", "+", "<", ">", "="]
-            let safe: boolean = true;
-            illegalHighlighting.forEach((part) => {
-                if (searchTerm.indexOf(part) !== -1) {
-                    safe = false;
-                }
-            });
-            if (safe) {
-                let reg: RegExp = new RegExp(escapeRegExp(searchTerm), 'g');
-                snippet = snippet.replace(
-                    reg,
-                    '<span style=\u0027background-color: #0073ff;color: white;\u0027>' +
-                    searchTerm +
-                    '</span>'
-                );
-            }
+            snippet = highlightSearchTerms(snippet, [searchTerm]);
             snippet =
                 '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' +
                 snippet +
