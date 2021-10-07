@@ -54,7 +54,8 @@
         <div class="search-bar">
           <div class="search-div">
             <span class="p-input-icon-right">
-                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <i v-if="!loading" aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <i v-else aria-hidden="true" class="pi pi-spin pi-spinner"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
             <span class="advanced-search-toggle">
@@ -239,6 +240,14 @@
                     })
                     .catch((e) => {
                       console.error(e);
+                      if (e.toString().includes("500")) {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Internal Server Error',
+                            detail: "Could not connect to server. Please ensure solr is running",
+                            life: 3000
+                          })
+                      }
                     })
               })
         }
@@ -574,6 +583,7 @@
 
   .pi-search {
     padding: 0;
+    font-size: 1rem !important;
   }
 
 

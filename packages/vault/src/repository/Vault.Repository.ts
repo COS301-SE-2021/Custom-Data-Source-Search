@@ -34,6 +34,24 @@ class VaultRepository {
         }
     }
 
+    async checkIfUserExists(email: string){
+        try {
+            const client = await db.connect();
+            const data = await client.query(
+                'SELECT * FROM "Users" WHERE email = $1',
+                [email],
+            );
+            let result;
+
+            result = data.rows.length !== 0;
+            client.release();
+            return[result, null]
+        } catch (e){
+            console.log(e);
+            return[null, e]
+        }
+    }
+
     async getSaltAndVerifier(email: string){
         try {
             const client = await db.connect();
