@@ -185,24 +185,29 @@ class FileDataSourceService {
         return lineNum;
     }
 
-    getSnippetLineNumber(snippet: string, content: string): number {
-        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
-        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
+    getSnippetLineNumber(snippet: string, content: string, searchTermIdentifier: string): number {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
+        snippet = snippet.replace(new RegExp(openTag, "g"), '');
+        snippet = snippet.replace(new RegExp(closeTag, "g"), '');
         let snippetIndex: number = content.indexOf(snippet);
         return this.getLineNumber(snippetIndex, content);
     }
 
-    getSearchSnippet(snippet: string, fileName: string) {
+    getSearchSnippet(snippet: string, fileName: string, searchTermIdentifier: string) {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
         let extension: string = fileName.split('.').pop();
         whiteList.hasOwnProperty(extension.toLocaleLowerCase())
         if (whiteList.hasOwnProperty(extension.toLocaleLowerCase())) {
-            let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
-            + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
-            if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
+            let searchTerm: string = snippet
+                .substring(snippet.indexOf(openTag) + openTag.length, snippet.indexOf(closeTag));
+            // let searchTerms: string[] = this.getSearchTerms(snippet, )
+            if (snippet.indexOf(openTag) > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
+            snippet = snippet.replace(new RegExp(openTag, "g"), '');
+            snippet = snippet.replace(new RegExp(closeTag, "g"), '');
             while (snippet.indexOf('\n') == 0) {
                 snippet = snippet.substr(1, snippet.length);
             }
@@ -217,23 +222,25 @@ class FileDataSourceService {
                 snippet +
                 '</pre>';
         } else {
-            snippet = '<div>' + this.escapeAndHighlight(snippet) + '</div>';
+            snippet = '<div>' + this.escapeAndHighlight(snippet, searchTermIdentifier) + '</div>';
         }
         return snippet;
     }
 
-    escapeAndHighlight(snippet: string) {
+    escapeAndHighlight(snippet: string, searchTermIdentifier: string) {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
         let result: string = "";
-        let openIndex: number = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>");
-        let closeIndex: number = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
+        let openIndex: number = snippet.indexOf(openTag);
+        let closeIndex: number = snippet.indexOf(closeTag);
         while (openIndex != -1) {
             result += this.escapeHtml(snippet.substring(0, openIndex));
             result += '<span style=\u0027background-color: #0067e6;color: white;\u0027>';
             result += this.escapeHtml(snippet.substring(openIndex + 42, closeIndex));
             result += '</span>';
             snippet = snippet.substring(closeIndex + 43, snippet.length);
-            openIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>");
-            closeIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
+            openIndex = snippet.indexOf(openTag);
+            closeIndex = snippet.indexOf(closeTag);
         }
         result += snippet;
         result = '<div>' + result + '</div>';

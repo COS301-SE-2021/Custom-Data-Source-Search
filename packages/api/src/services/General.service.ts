@@ -8,7 +8,7 @@ import folderDataSourceService from "./FolderDataSource.service";
 import webPageDataSourceService from "./WebPageDataSource.service";
 import gitHubDataSourceRepository from "../repositories/GitHubDataSourceRepository";
 import gitHubDataSourceService from "./GitHubDataSource.service";
-import {escapeRegExp} from "../general/generalFunctions";
+import {escapeRegExp, generateUUID} from "../general/generalFunctions";
 
 class GeneralService {
 
@@ -33,13 +33,18 @@ class GeneralService {
 
     async searchAllDataSources(searchString: string): Promise<[any[], { code: number, message: string }]> {
         try {
+            const searchTermIdentifier: string = generateUUID();
             let response: any = await axios.get(
                 'http://localhost:' + process.env.SOLR_PORT + '/solr/files/select?q=' +
                 encodeURIComponent(searchString) +
                 '&q.op=OR&hl=true&hl.fl=content&hl.fragsize=200' +
                 '&hl.highlightMultiTerm=false' +
-                '&hl.simple.pre=<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>' +
-                '&hl.simple.post=<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>&hl.snippets=10'
+                '&hl.simple.pre=<' +
+                searchTermIdentifier +
+                'open>' +
+                '&hl.simple.post=<' +
+                searchTermIdentifier +
+                'close>&hl.snippets=10'
             );
             let docs: any[] = response["data"]["response"]["docs"];
             let result: any[] = [];
@@ -70,9 +75,13 @@ class GeneralService {
                                 for (let occurrence of value["content"]) {
                                     fileOccurrences.push({
                                         "line_number": fileDataSourceService
-                                            .getSnippetLineNumber(occurrence, currentObject["content"]),
+                                            .getSnippetLineNumber(
+                                                occurrence,
+                                                currentObject["content"],
+                                                searchTermIdentifier
+                                            ),
                                         "snippet": fileDataSourceService
-                                            .getSearchSnippet(occurrence, fileDataSource.filename)
+                                            .getSearchSnippet(occurrence, fileDataSource.filename, searchTermIdentifier)
                                     });
                                 }
                                 result.push({
@@ -97,8 +106,13 @@ class GeneralService {
                                 for (let occurrence of value["content"]) {
                                     webpageOccurrences.push({
                                         "line_number": fileDataSourceService
-                                            .getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": webPageDataSourceService.getSearchSnippet(occurrence)
+                                            .getSnippetLineNumber(
+                                                occurrence,
+                                                currentObject["content"],
+                                                searchTermIdentifier
+                                            ),
+                                        "snippet": webPageDataSourceService
+                                            .getSearchSnippet(occurrence, searchTermIdentifier)
                                     });
                                 }
                                 result.push({
@@ -132,8 +146,13 @@ class GeneralService {
                                 for (let occurrence of value["content"]) {
                                     folderOccurrences.push({
                                         "line_number": fileDataSourceService
-                                            .getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": folderDataSourceService.getSearchSnippet(occurrence, key)
+                                            .getSnippetLineNumber(
+                                                occurrence,
+                                                currentObject["content"],
+                                                searchTermIdentifier
+                                            ),
+                                        "snippet": folderDataSourceService
+                                            .getSearchSnippet(occurrence, key, searchTermIdentifier)
                                     });
                                 }
                                 let [folderFile, folderFileErr] = folderDataSourceRepository.getFileInFolder(key);
@@ -162,8 +181,13 @@ class GeneralService {
                                 for (let occurrence of value["content"]) {
                                     gitHubOccurrences.push({
                                         "line_number": fileDataSourceService
-                                            .getSnippetLineNumber(occurrence, currentObject["content"]),
-                                        "snippet": gitHubDataSourceService.getSearchSnippet(occurrence, key)
+                                            .getSnippetLineNumber(
+                                                occurrence,
+                                                currentObject["content"],
+                                                searchTermIdentifier
+                                            ),
+                                        "snippet": gitHubDataSourceService
+                                            .getSearchSnippet(occurrence, key, searchTermIdentifier)
                                     });
                                 }
                                 result.push({
