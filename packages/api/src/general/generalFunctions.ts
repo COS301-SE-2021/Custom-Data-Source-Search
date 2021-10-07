@@ -124,13 +124,13 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
         return content;
     } else {
         let extractedContent: string = "";
-        let indices: number[] = new Array(matches.length);
+        let matchIndices: number[] = new Array(matches.length);
         for (let i: number = 0; i < matches.length; i++) {
             const index: number = content.indexOf(matches[i]);
             extractedContent += content.substr(0, index);
             content = content.substr(index + matches[i].length);
             for (let j: number = i; j < matches.length; j++) {
-                indices[j] += index;
+                matchIndices[j] += index;
             }
         }
         searchTerms.sort(function (a, b) {
@@ -146,7 +146,59 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
                 index = extractedContent.indexOf(term, index + 1);
             }
         }
+        const openingLength: number = '<span style=\u0027background-color: #0073ff;color: white;\u0027>'.length;
+        const closingLength: number = '</span>'.length;
+        const extraLengthFromHighlighting: number = openingLength + closingLength;
+        let finalContent: string = extractedContent;
+        for (let posIndex: number = 0; posIndex < positions.length; posIndex++) {
+            for (let i: number = 0; i < matchIndices.length; i++) {
+                if (matchIndices[i] > positions[posIndex].start && matchIndices[i] < positions[posIndex].end) {
+                    finalContent = insertHighlight(positions[posIndex].start, matchIndices[i], finalContent);
+                    matchIndices = updateIndicesFrom(i, matchIndices, extraLengthFromHighlighting);
+                    positions[posIndex].end += extraLengthFromHighlighting;
+                    updatePositionsFrom(posIndex + 1, positions, extraLengthFromHighlighting);
+                    i++;
+                    while (i < matchIndices.length && matchIndices[i] < positions[posIndex].end) {
+                        finalContent = insertHighlight(matchIndices[i-1], matchIndices[i], finalContent);
+                        matchIndices = updateIndicesFrom(i, matchIndices, extraLengthFromHighlighting);
+                        positions[posIndex].end += extraLengthFromHighlighting;
+                        updatePositionsFrom(posIndex + 1, positions, extraLengthFromHighlighting);
+                        i++;
+                    }
+                    finalContent = insertHighlight(matchIndices[i-1], positions[posIndex].end, finalContent);
+                    updatePositionsFrom(posIndex + 1, positions, extraLengthFromHighlighting);
+                    break;
+                } else if (matchIndices[i] >= positions[posIndex].end) {
+                    finalContent = insertHighlight(positions[posIndex].start, positions[posIndex].end, finalContent);
+                    matchIndices = updateIndicesFrom(i, matchIndices, extraLengthFromHighlighting);
+                    updatePositionsFrom(posIndex + 1, positions, extraLengthFromHighlighting);
+                    break;
+                }
+            }
+        }
     }
+}
+
+function insertHighlight(startIndex: number, endIndex: number, content: string): string {
+    return content.substring(0, startIndex) +
+        '<span style=\u0027background-color: #0073ff;color: white;\u0027>' +
+        content.substring(startIndex, endIndex) +
+        '</span>' +
+        content.substr(endIndex);
+}
+
+function updatePositionsFrom(index: number, positions: { start: number; end: number }[], amount: number): void {
+    for (; index < positions.length; index++) {
+        positions[index].start += amount;
+        positions[index].end += amount;
+    }
+}
+
+function updateIndicesFrom(index: number, indices: number[], amount: number): number[] {
+    for (; index < indices.length; index++) {
+        indices[index] += amount;
+    }
+    return indices;
 }
 
 function contained(positions: { start: number; end: number }[], newPosition: { start: number; end: number }): boolean {
