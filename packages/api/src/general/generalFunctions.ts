@@ -176,6 +176,14 @@ export function highlightSearchTerms(content: string, searchTerms: string[]): st
                 }
             }
         }
+        let formattedFinalContent: string = "";
+        let startIndex: number = 0;
+        for (let matchIndex: number = 0; matchIndex < matches.length; matchIndex++) {
+            formattedFinalContent += finalContent.substring(startIndex, matchIndices[matchIndex]) + matches[matchIndex];
+            startIndex = matchIndices[matchIndex];
+        }
+        formattedFinalContent += finalContent.substr(startIndex);
+        return formattedFinalContent;
     }
 }
 
