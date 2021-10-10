@@ -13,32 +13,34 @@
       </div>
       <br>
     </div>
-    <div class="info-div">
-      <div class="backends-subheading">
-        <span><strong>Backends</strong></span>
-        <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
+      <div class="info-div">
+        <div class="backends-subheading">
+          <span><strong>Backends</strong></span>
+          <Button @click="newBackend" style="float: right" class="p-button p-button-outlined">Add Backend</Button>
+        </div>
+        <ScrollPanel id="main-scroll" style="max-width: 600px; height: 50vh;">
+        <div>
+          <AddBackendCard
+              v-if="newBackendBool"
+              :new-backend="newBackendBool"
+              :local="newBackendObject.local"
+              :connect="newBackendObject.connect"
+              :receive="newBackendObject.receive"
+              @save-new-backend="saveNewBackend()"
+              :user-index="getSignedInUserId"
+          />
+          <BackendCard
+              v-for="(backend) in getUserBackends(getSignedInUserId)"
+              :user-index="getSignedInUserId"
+              :backend-index="backend.local.id"
+              :local="backend.local"
+              :connect="backend.connect"
+              :receive="backend.receive"
+              :key="backend.local.id"
+          />
+        </div>
+        </ScrollPanel>
       </div>
-      <div>
-        <AddBackendCard
-            v-if="newBackendBool"
-            :new-backend="newBackendBool"
-            :local="newBackendObject.local"
-            :connect="newBackendObject.connect"
-            :receive="newBackendObject.receive"
-            @save-new-backend="saveNewBackend()"
-            :user-index="getSignedInUserId"
-        />
-        <BackendCard
-            v-for="(backend) in getUserBackends(getSignedInUserId)"
-            :user-index="getSignedInUserId"
-            :backend-index="backend.local.id"
-            :local="backend.local"
-            :connect="backend.connect"
-            :receive="backend.receive"
-            :key="backend.local.id"
-        />
-      </div>
-    </div>
   </div>
   <ReEnterMasterPassword
       :show="displayMasterPwInput"
@@ -181,5 +183,17 @@
   .inline {
     float: left;
     margin-left: 10%;
+  }
+  
+  @media only screen and (max-height: 605px) {
+    #main-scroll{
+      height: 40vh !important;
+    }
+  }
+
+  @media only screen and (max-height: 480px) {
+    #main-scroll{
+      height: 30vh !important;
+    }
   }
 </style>
