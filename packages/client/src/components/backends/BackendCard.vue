@@ -44,7 +44,7 @@
                     />
                 </div>
                   <Button
-                      v-if="backendIndex === 0 && !localActive"
+                      v-if="backendIndex === 0 && !localActive && !startingLocal"
                       id="start-local-backend"
                       class="p-button-text p-button-plain"
                       label="Start"
@@ -52,11 +52,27 @@
                       @click="startLocalBackend"
                   />
                   <Button
-                      v-else-if="backendIndex === 0 && localActive"
+                      v-else-if="backendIndex === 0 && !localActive && startingLocal"
+                      id="starting-local-backend"
+                      class="p-button-text p-button-plain"
+                      label="Starting..."
+                      icon="pi pi-spin pi-spinner"
+                      @click="startLocalBackend"
+                  />
+                  <Button
+                      v-else-if="backendIndex === 0 && localActive && !stoppingLocal"
                       id="stop-local-backend"
                       class="p-button-text p-button-plain"
                       label="Stop"
                       icon="pi pi-times"
+                      @click="stopLocalBackend"
+                  />
+                  <Button
+                      v-else-if="backendIndex === 0 && localActive && stoppingLocal"
+                      id="stopping-local-backend"
+                      class="p-button-text p-button-plain"
+                      label="Stopping..."
+                      icon="pi pi-spin pi-spinner"
                       @click="stopLocalBackend"
                   />
             </div>
@@ -110,6 +126,8 @@
         data () {
             return {
                 localActive: false,
+                startingLocal: false,
+                stoppingLocal: false,
                 localBackendBool: false,
                 displayBackendDeleteCheck: false,
                 tempNameNo: 0,
@@ -276,6 +294,7 @@
           },
 
           stopLocalBackend() {
+            this.stoppingLocal = true;
             const kill = require('kill-port');
             console.log("Stopping Local Backend");
             //log Current Working Directory
@@ -322,9 +341,11 @@
                     })
                   })
             }
+            this.stoppingLocal = false;
           },
 
           startLocalBackend() {
+            this.startingLocal = true;
             console.log("Starting Backend");
             //log Current Working Directory
             console.log(process.cwd());
@@ -388,6 +409,7 @@
 
                   })
             }
+            this.startingLocal = false;
           }
         }
     }
