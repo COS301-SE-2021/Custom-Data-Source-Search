@@ -22,10 +22,15 @@ const store = createStore({
     signedInUserId: null,
     signedIn: null,
     users: [],
-    refresh: false
+    refresh: false,
+    fontSize: "Regular"
   },
 
   getters: {
+    getFontSize(state){
+      return state.fontSize;
+    },
+
     getRefreshState(state) {
       return state.refresh;
     },
@@ -212,6 +217,10 @@ const store = createStore({
             Object.assign(state, JSON.parse(localStorage.getItem('store')))
         );
       }
+    },
+
+    alterFontSize(state, payload){
+      state.fontSize = payload;
     },
 
     alterRefreshState(state) {
@@ -582,7 +591,6 @@ const store = createStore({
       if (payload.id === 0) {
         return;
         // local backend, needs no login
-
       }
       let secretPair = getters.getBackendSecretPair(payload.id);
       if (secretPair === null) {
@@ -611,7 +619,7 @@ const store = createStore({
             })
           })
           .catch((err) => {
-            console.error(err)
+            console.error(err);
           })
     },
 

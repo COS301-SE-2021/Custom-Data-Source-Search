@@ -85,8 +85,8 @@ class WebPageDataSourceService {
         }
     }
 
-    getSearchSnippet(snippet: string) {
-        snippet = '<div>' + fileDataSourceService.escapeAndHighlight(snippet) + '</div>';
+    getSearchSnippet(snippet: string, searchTermIdentifier: string) {
+        snippet = '<div>' + fileDataSourceService.escapeAndHighlight(snippet, searchTermIdentifier) + '</div>';
         return snippet;
     }
 }

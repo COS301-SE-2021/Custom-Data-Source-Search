@@ -19,7 +19,8 @@ generalRouter.get("/", authUser("viewer"), async (req: Request, res: Response) =
 generalRouter.get("/fullfile", authUser("viewer"), async (req: Request, res: Response) => {
     const type: string = req.query.type.toString();
     const id: string = req.query.id.toString();
-    const result = await generalService.getFullFile(type, id);
+    const searchTerm: string = req.query.search_term.toString();
+    const result = await generalService.getFullFile(type, id, searchTerm);
     res.status(result.code).send(result.body);
 });
 

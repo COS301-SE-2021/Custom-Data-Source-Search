@@ -1,5 +1,6 @@
 <template>
   <div class="backends-box">
+    <Toast position="bottom-right"/>
     <div class="backends-heading">
       <span><h1>Backends</h1></span>
       <p class="backends-description">
@@ -152,10 +153,22 @@
                 //Implementation differs between Windows and Linux
                 if (process.platform === "win32") {
                     let spawn = require("child_process").spawn;
+                    //
+                    this.execProcess = spawn("cmd.exe", ["/c", "sleuthstart.bat"], {
+                      cwd: process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin"
+                    });
+                    this.execProcess.on('error', (err) => {
+                        if (err.toString().includes("Error: spawn cmd.exe")) {
+                            this.$toast.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: "Could not start local backend",
+                                life: 3000
+                            })
+                        }
+                    });
 
-                    this.execProcess = spawn("cmd.exe", ["/c", "sleuthstart.bat"],
-                        {cwd: process.cwd() + "\\resources\\res\\local_backend\\dataSleuthWindows\\bin"});
-
+                    //
                     this.execProcess.stdout.on("data", (data) => {
                         console.log(data.toString());
                         //On confirmation of server running
@@ -169,6 +182,7 @@
                         }
                     });
 
+                    //
                     this.execProcess.stderr.on("data", (data) => {
                         console.log(data.toString());
                     });
@@ -248,23 +262,25 @@
                     });
                 } else {
                     const {exec} = require("child_process");
-                    this.stopProcess = exec("bash sleuthstop.sh", {cwd: process.cwd() + "\\resources\\res\\local_backend\\dataSleuthLinux\\bin"}
-                        , (error, stdout, stderr) => {
-                            if (error) {
-                                console.log(`error: ${error.message}`);
-                                return;
+                    this.stopProcess = exec("bash sleuthstop.sh", {
+                        cwd: process.cwd() + "\\resources\\res\\local_backend\\dataSleuthLinux\\bin"
                             }
-                            if (stderr) {
-                                console.log(`stderr: ${stderr}`);
-                                return;
-                            }
-                            console.log(`stdout: ${stdout}`);
-                            console.log("Shutdown Script Finishes");
-                            kill(3001).then(() => {
-                                console.log("Port has been killed");
-                                console.log("Exit child exits with : " + code);
+                            , (error, stdout, stderr) => {
+                                if (error) {
+                                    console.log(`error: ${error.message}`);
+                                    return;
+                                }
+                                if (stderr) {
+                                    console.log(`stderr: ${stderr}`);
+                                    return;
+                                }
+                                console.log(`stdout: ${stdout}`);
+                                console.log("Shutdown Script Finishes");
+                                kill(3001).then(() => {
+                                    console.log("Port has been killed");
+                                    console.log("Exit child exits with : " + code);
+                                })
                             })
-                        })
                 }
             }
         }

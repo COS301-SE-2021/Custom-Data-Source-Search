@@ -40,13 +40,40 @@
           <RadioButton name="deleteVault" id="deleteVault" value="deleteVault" v-model="deleteVault"/>
           <label for="deleteVault"> ALL instances of account</label>
         </div>
+        <div class="password-field" v-if="deleteVault === 'deleteVault'">
+          <span class="p-float-label">
+             <PasswordInputField
+                 id="password"
+                 style="width: 100%"
+                 @keyup.enter="deleteFromVault"
+                 v-model="masterPass"
+                 :toggle-mask="true"
+                 :feedback="false"
+             />
+            <label for="password">Password</label>
+          </span>
+          <div v-if="passwordIncorrect" class="error-message">
+            <span class="error-message">Incorrect password.</span>
+          </div>
+        </div>
         <br>
         <div style="text-align: center">
           <strong>(You will require internet connection in order for this to be processed)</strong>
         </div>
         <div style="text-align: center">
-          <Button id="confirm-user-deletion-btn-vault" class="p-button-danger these-buttons" :disabled="!deleteVault" @click="deleteUser">Delete</Button>
-          <Button class="p-button-text these-buttons" @click="closePopUp">Cancel</Button>
+          <Button
+              v-if="deleteVault !== 'deleteLocal'"
+              class="p-button-danger dialog-buttons"
+              @click="deleteFromVault">
+            Delete
+          </Button>
+          <Button
+              v-else
+              class="p-button-danger dialog-buttons"
+              @click="deleteUser">
+            Delete
+          </Button>
+          <Button class="p-button-text dialog-buttons" @click="closePopUp">Cancel</Button>
         </div>
       </div>
     </div>
@@ -58,9 +85,14 @@ import {SRPClientSession, SRPParameters, SRPRoutines} from "tssrp6a";
 import axios from "axios";
 import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 import {pbkdf2Sync} from "crypto";
+import PasswordInputField from "../customComponents/PasswordInputField";
+import {mapGetters} from "vuex";
 
 export default {
         name: "DeleteUserAreYouSure",
+
+        components: {PasswordInputField},
+
         props: {
           show: Boolean,
           firstQuestionFedIn: Boolean,
@@ -74,22 +106,29 @@ export default {
               hasVault: Boolean
           }
         },
+
         data() {
           return {
-              display: this.show,
-              firstQuestion: true,
-              deleteVault: null
+            display: this.show,
+            firstQuestion: true,
+            deleteVault: null,
+            deleteLocal: null,
+            masterPass: null,
+            passwordIncorrect: false
           }
         },
+
         mounted() {
           this.firstQuestion = this.firstQuestionFedIn;
           this.deleteVault = this.deleteVaultFedIn;
         },
+
         methods: {
           closePopUp() {
               this.display = false;
               this.firstQuestion = true;
           },
+
           hasVault() {
               if (this.user.hasVault) {
                   this.firstQuestion = false;
@@ -97,21 +136,133 @@ export default {
                   this.deleteUser();
               }
           },
+
           async deleteUser() {
             this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
             this.$emit("clearCurrentUser");
             this.closePopUp();
           },
+
           hide(){
             this.$emit('display-popup');
             this.display = false;
+          },
+
+          async deleteFromVault(){
+            //1. challenge
+            console.log("Attempting to Delete profile on the vault...");
+            const userInfo = this.getUserInfo(this.user.id);
+            const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
+            const step1 = await client.step1(userInfo.email, this.masterPass);
+            console.log("passw: " + this.masterPass)
+
+            const reqBody = {
+              email: userInfo.email
+            }
+            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
+                {headers: {"Content-Type": "application/json"}})
+                .then(async (resp) => {
+
+                  console.log(resp.data);
+                  console.log("Salt: " + resp.data.salt);
+                  console.log("B: " + resp.data.B);
+
+                  const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
+
+                  const clientA = step2.A;
+                  const clientM1 = step2.M1;
+
+                  let reqObj = {
+                    email: userInfo.email,
+                    A: clientA,
+                    verificationMessage1: clientM1
+                  }
+
+                  let reqBody = JSON.stringify(reqObj, (key, value) =>
+                      typeof value === 'bigint'
+                          ? value.toString()
+                          : value
+                  );
+
+                  axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
+                      {headers: {"Content-Type": "application/json"}})
+                      .then(async (resp) => {
+
+                        console.log(resp.data);
+                        //verify server
+                        try {
+                          const step3 = await step2.step3(BigInt(resp.data.vM2));
+                        } catch (e){
+                          console.log(e);
+                        }
+
+                        //PHASE2
+                        let reqObj = {
+                          email: userInfo.email,
+                          A: clientA,
+                          verificationMessage1: clientM1
+                        }
+
+                        let reqBody = JSON.stringify(reqObj, (key, value) =>
+                            typeof value === 'bigint'
+                                ? value.toString()
+                                : value
+                        );
+
+                        axios.post("https://datasleuthvault.nw.r.appspot.com/vault/delete", reqBody,
+                            {headers: {"Content-Type": "application/json"}})
+                            .then((resp) => {
+                              console.log(resp.data.data);
+
+                              this.$store.commit("deleteUserFromLocalList", {user: this.user, deleteVault: this.deleteVault});
+                              this.$emit("clearCurrentUser");
+                              this.closePopUp();
+
+                              this.$toast.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: "Successfully Deleted Profile From Vault",
+                                life: 2500
+                              });
+                            })
+                            .catch((error) => {
+                              this.passwordIncorrect = true;
+                              console.log(error);
+                            })
+
+                      })
+                      .catch((error) => {
+                        this.passwordIncorrect = true;
+                        console.log(error);
+                      })
+                })
+                .catch((error) => {
+                  this.$toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error.response.data,
+                    life: 3000
+                  });
+                  console.log(error);
+                })
+
           }
         },
+
         watch: {
             show: function () {
                 this.display = this.show
             }
-        }
+        },
+  computed: {
+    ...mapGetters ([
+      'getUserInfo',
+      'getUserBackends',
+      'getSignedInUserId',
+      'getSignedIn',
+      'getUser'
+    ])
+  }
     }
 </script>
 
@@ -120,11 +271,6 @@ export default {
 
   .p-dialog-content {
     max-width: 40em;
-  }
-
-  span {
-    max-width: 1vw;
-    overflow-wrap: normal;
   }
 
   .button-holders {
@@ -152,7 +298,7 @@ export default {
     font-size: xx-large;
   }
 
-  .these-buttons {
+  .dialog-buttons {
     float: right;
   }
 
@@ -160,4 +306,16 @@ export default {
     color: grey;
   }
 
+  input {
+    width: 100%;
+  }
+
+  .error-message {
+    color: #EF9A9A;
+    text-align: center;
+  }
+
+  .password-field{
+    margin-top: 10px;
+  }
 </style>

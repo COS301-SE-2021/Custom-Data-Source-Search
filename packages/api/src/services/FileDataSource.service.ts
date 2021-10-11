@@ -6,10 +6,14 @@ import solrService from "./Solr.service";
 import {
     generateDefaultHttpResponse,
     generateUUID,
-    getLastModifiedDateOfFile, isLocalBackend, removeFileExtension,
+    getLastModifiedDateOfFile,
+    highlightSearchTerms,
+    isLocalBackend,
+    removeFileExtension,
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
+import {whiteList} from "../general/whiteList";
 
 class FileDataSourceService {
 
@@ -184,24 +188,27 @@ class FileDataSourceService {
         return lineNum;
     }
 
-    getSnippetLineNumber(snippet: string, content: string): number {
-        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
-        snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
+    getSnippetLineNumber(snippet: string, content: string, searchTermIdentifier: string): number {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
+        snippet = snippet.replace(new RegExp(openTag, "g"), '');
+        snippet = snippet.replace(new RegExp(closeTag, "g"), '');
         let snippetIndex: number = content.indexOf(snippet);
         return this.getLineNumber(snippetIndex, content);
     }
 
-    getSearchSnippet(snippet: string, fileName: string) {
+    getSearchSnippet(snippet: string, fileName: string, searchTermIdentifier: string) {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
         let extension: string = fileName.split('.').pop();
-        if (["java", "cpp", "js", "ts", "vue", "html", "css", "yml", "json", "xml", "py", "php"]
-            .indexOf(extension) != -1) {
-            //let searchTerm: string = snippet.substring(snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>")
-            // + 42, snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>"));
-            if (snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>") > snippet.indexOf("\n")) {
+        whiteList.hasOwnProperty(extension.toLocaleLowerCase())
+        if (whiteList.hasOwnProperty(extension.toLocaleLowerCase())) {
+            let searchTerms: string[] = this.getSearchTerms(snippet, searchTermIdentifier);
+            if (snippet.indexOf(openTag) > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);
             }
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>/g, '');
-            snippet = snippet.replace(/<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>/g, '');
+            snippet = snippet.replace(new RegExp(openTag, "g"), '');
+            snippet = snippet.replace(new RegExp(closeTag, "g"), '');
             while (snippet.indexOf('\n') == 0) {
                 snippet = snippet.substr(1, snippet.length);
             }
@@ -210,37 +217,31 @@ class FileDataSourceService {
             } catch (e) {
                 snippet = hljs.highlightAuto(snippet).value;
             }
-            /*let reg: RegExp = new RegExp(this.escapeRegExp(searchTerm), 'g');
-            snippet = snippet.replace(
-                reg,
-                '<span style=\u0027background-color: #0073ff;color: white;\u0027>' + searchTerm + '</span>'
-            );*/
+            snippet = highlightSearchTerms(snippet, searchTerms);
             snippet =
                 '<pre style="margin-top: 0;margin-bottom: 0; white-space: pre-wrap; word-wrap: break-word;">' +
                 snippet +
                 '</pre>';
         } else {
-            snippet = '<div>' + this.escapeAndHighlight(snippet) + '</div>';
+            snippet = '<div>' + this.escapeAndHighlight(snippet, searchTermIdentifier) + '</div>';
         }
         return snippet;
     }
 
-    escapeRegExp(string: string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-
-    escapeAndHighlight(snippet: string) {
+    escapeAndHighlight(snippet: string, searchTermIdentifier: string) {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
         let result: string = "";
-        let openIndex: number = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>");
-        let closeIndex: number = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
+        let openIndex: number = snippet.indexOf(openTag);
+        let closeIndex: number = snippet.indexOf(closeTag);
         while (openIndex != -1) {
             result += this.escapeHtml(snippet.substring(0, openIndex));
             result += '<span style=\u0027background-color: #0067e6;color: white;\u0027>';
             result += this.escapeHtml(snippet.substring(openIndex + 42, closeIndex));
             result += '</span>';
             snippet = snippet.substring(closeIndex + 43, snippet.length);
-            openIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154open>");
-            closeIndex = snippet.indexOf("<6b2f17de-2e79-4d28-899e-a3d02f9cb154close>");
+            openIndex = snippet.indexOf(openTag);
+            closeIndex = snippet.indexOf(closeTag);
         }
         result += snippet;
         result = '<div>' + result + '</div>';
@@ -262,6 +263,31 @@ class FileDataSourceService {
                     return '&#039;';
             }
         })
+    }
+
+    private getSearchTerms(snippet: string, searchTermIdentifier: string): string[] {
+        const openTag: string = '<' + searchTermIdentifier + 'open>';
+        const closeTag: string = '<' + searchTermIdentifier + 'close>';
+        const combinedLength: number = openTag.length + closeTag.length;
+        let searchTerms: string[] = [];
+        let termIndices: number[] = [];
+        let index: number = snippet.indexOf(openTag);
+        while (index !== -1) {
+            searchTerms.push(snippet.substring(index + openTag.length, snippet.indexOf(closeTag, index)));
+            termIndices.push(index + openTag.length);
+            index = snippet.indexOf(openTag, index + 1);
+        }
+        let combinedTerms: string[] = [searchTerms[0]];
+        let combinedIndex: number = 0;
+        for (let index: number = 1; index < searchTerms.length; index++) {
+            if (termIndices[index - 1] + searchTerms[index - 1].length + combinedLength === termIndices[index]) {
+                combinedTerms[combinedIndex] += searchTerms[index];
+            } else {
+                combinedTerms.push(searchTerms[index]);
+                combinedIndex++;
+            }
+        }
+        return Array.from((new Set(combinedTerms).values()));
     }
 }
 
