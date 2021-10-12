@@ -414,6 +414,8 @@
 
     methods: {
       updateTableData() {
+        this.isUserSelected = false
+        this.selectedUsers = null
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
         };
