@@ -43,11 +43,6 @@
                         @click="editBackend"
                     />
                 </div>
-                  <Accordion id="cli-info-accordion" v-if="localBackendBool">
-                    <AccordionTab v-for="tab in tabs" :key="tab.title" :header="tab.title">
-                      <p>{{tab.content}}</p>
-                    </AccordionTab>
-                  </Accordion>
                   <Button
                       v-if="backendIndex === 0 && !localActive && !startingLocal"
                       id="start-local-backend"
@@ -62,7 +57,6 @@
                       class="p-button-text p-button-plain"
                       label="Starting..."
                       icon="pi pi-spin pi-spinner"
-                      @click="startLocalBackend"
                   />
                   <Button
                       v-else-if="backendIndex === 0 && localActive && !stoppingLocal"
@@ -78,7 +72,6 @@
                       class="p-button-text p-button-plain"
                       label="Stopping..."
                       icon="pi pi-spin pi-spinner"
-                      @click="stopLocalBackend"
                   />
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
@@ -121,6 +114,8 @@
     import InputSwitch from 'primevue/inputswitch';
     import {mapGetters} from 'vuex';
     import BackendDeleteCheck from "../popups/BackendDeleteCheck";
+    import detect from "detect-port";
+
 
     export default {
         name: "backendCard",
@@ -130,9 +125,6 @@
         },
         data () {
             return {
-              tabs: [
-                {title: 'Title 1', content: 'Content 1'},
-              ],
                 localActive: false,
                 startingLocal: false,
                 stoppingLocal: false,
@@ -208,6 +200,10 @@
                 this.editBackendBool = true;
                 this.expand = false;
             }
+
+            //Check if running
+            this.interval = setInterval(() => this.checkIfRunning(), 1100);
+
         },
 
         methods: {
@@ -350,10 +346,12 @@
                   })
             }
             this.stoppingLocal = false;
+            this.localActive = false;
           },
 
           startLocalBackend() {
             this.startingLocal = true;
+           // this.localActive= true;
             console.log("Starting Backend");
             //log Current Working Directory
             console.log(process.cwd());
@@ -369,6 +367,8 @@
                 console.log(data.toString());
                 //On confirmation of server running
                 if (data.toString().includes("Listening on port 3001")) {
+                  this.startingLocal = false;
+
                   this.$toast.add({
                     severity: 'success',
                     summary: 'Success',
@@ -383,9 +383,11 @@
               });
               this.execProcess.on("exit", (code) => {
                 console.log("Exec Child exits with: " + code);
+                this.startingLocal = false;
+                this.stoppingLocal = false;
                 this.$toast.add({
-                  severity: 'success',
-                  summary: 'Success',
+                  severity: 'info',
+                  summary: 'Stopped',
                   detail: "The Local Backend has been stopped.",
                   life: 3000
                 });
@@ -417,7 +419,44 @@
 
                   })
             }
-            this.startingLocal = false;
+
+          },
+          async checkIfRunning(){
+            const detect = require('detect-port');
+
+            console.log("Checking if local backend is running")
+
+            const solr_port = 8983;
+            const backend_port = 3001;
+
+            detect(solr_port)
+                .then(_solr_port => {
+                  console.log(solr_port + " vs. " + _solr_port)
+                  if (solr_port === _solr_port) {
+
+                    this.localActive = false;
+
+                  } else {
+                    detect(backend_port)
+                        .then(_backend_port => {
+
+                          console.log(backend_port + " vs. " + _backend_port)
+                          if(backend_port === _backend_port) {
+                            this.localActive = false;
+
+                          } else {
+                            this.localActive = true;
+                          }
+                        })
+                        .catch(err => {
+                          console.log(err);
+                        });
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+
           }
         }
     }
