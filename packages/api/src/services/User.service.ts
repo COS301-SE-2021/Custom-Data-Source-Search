@@ -243,7 +243,7 @@ class UserService {
     }
 
     sendEncodedRegistrationKeyToUser(users: { uuid: string; }[]) {
-        const userResult = userRepository.getUsers(users);
+        const userResult: any[] = userRepository.getUsers(users);
         const pendingUsers = userRepository.getPendingUsers(userResult);
         for (let pendingUser of pendingUsers) {
             let encodedRegistrationKey: string = UserService.encodeRegistrationKey(
@@ -252,7 +252,11 @@ class UserService {
                 pendingUser["single_use_registration_token"],
                 pendingUser["secret"]
             );
-            this.sendEmail(pendingUser["email"], encodedRegistrationKey);
+            this.sendEmail(
+                pendingUser["email"],
+                encodedRegistrationKey,
+                userResult.find(user => user["email"] === pendingUser["email"])["first_name"]
+            );
         }
         if (pendingUsers.length !== users.length) {
             return {
@@ -270,7 +274,7 @@ class UserService {
         };
     }
 
-    private sendEmail(address: string, registrationToken: string) {
+    private sendEmail(address: string, registrationToken: string, name: string) {
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -282,8 +286,11 @@ class UserService {
         let mailOptions = {
             from: process.env.EMAIL_ADDRESS,
             to: address,
-            subject: 'Registration key for data sleuth',
-            text: registrationToken
+            subject: 'Registration key for DataSleuth',
+            text: `Dear ${name}\n\nPlease find below your registration token for the DataSleuth app:\n` +
+                registrationToken +
+                `\n\nYou can simply copy the token into the "Registration String" field in the app and click connect.` +
+                `\n\nHappy Sleuthing!!\nDataSleuth Team`
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
