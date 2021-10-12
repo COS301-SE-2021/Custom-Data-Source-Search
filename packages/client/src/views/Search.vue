@@ -213,10 +213,11 @@
         this.firstSearch = false;
         this.loading = true;
         this.searchResults = [];
-        for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
-          if (!backend.local.active) {
-            continue;
-          }
+        let backends = this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId).filter((b) => {
+          return b.local.active;
+        })
+        let numActiveBackends = backends.length;
+        for (let backend of backends) {
           const url = `http://${backend.connect.link}/general/?q=${
               encodeURIComponent(
                   this.advancedSearch ? q : this.escapeSolrControlCharacters(q)
@@ -227,7 +228,6 @@
               .get(url, {headers})
               .then((resp) => {
                 this.augmentAndSaveSearchResults(resp.data.searchResults, backend);
-                this.loading = false;
               })
               .catch(async () => {
                 await this.$store.dispatch("refreshJWTToken", {id: backend.local.id});
@@ -236,10 +236,10 @@
                     .get(url, {headers})
                     .then((resp) => {
                       this.augmentAndSaveSearchResults(resp.data.searchResults, backend);
-                      this.loading = false;
                     })
                     .catch((e) => {
-                      console.error(e);
+                      console.log("ERROR")
+                      console.log(e);
                       if (e.toString().includes("500")) {
                           this.$toast.add({
                             severity: 'error',
@@ -250,10 +250,17 @@
                       }
                     })
               })
+              .finally(() => {
+                console.log(numActiveBackends);
+                if(--numActiveBackends === 0) {
+                  this.firstSearch = false;
+                  this.loading = false;
+                  if (this.searchResults.length === 0) {
+                    this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+                  }
+                }
+              })
         }
-        // if (this.searchResults.length === 0) {
-        //   this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-        // }
       },
 
       /**
@@ -261,7 +268,7 @@
        * @returns {string} string with any special control characters escaped
        */
       escapeSolrControlCharacters(query) {
-        return query.replace(/[{}\[\]+\-^.:()]/gm, (match) => {
+        return query.replace(/[{}\[\]+\-^\\.:()]/gm, (match) => {
           return '\\' + match
         })
       },
