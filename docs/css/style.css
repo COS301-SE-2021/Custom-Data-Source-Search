@@ -1,8 +1,21 @@
-body{
+body {
    background: #242424;
 }
 
-.header{
+a {
+   text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    color: #00a0b4;
+}
+
+a:active {
+    color: #00a0b4;
+}
+
+.header {
     text-align: center;
     margin-top: 100px;
     font-family: "Trebuchet MS",sans-serif;
@@ -10,9 +23,54 @@ body{
     color: #3AA1A0;
 }
 
-.under-construction{
+.under-construction {
     text-align: center;
     font-family: "Trebuchet MS", sans-serif;
     font-size: 40px;
     color: #cfdbd5;
 }
+
+.navbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-family: 'Montserrat', sans-serif;
+    font-size: large;
+    height: fit-content;
+    color: white;
+    background-color: #1b1b1b;
+}
+
+.links-all {
+    float: right;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: fit-content;
+}
+
+.link-each {
+    font-size: small;
+    padding: 1em;
+    vertical-align: center;
+}
+
+.logo-name {
+    display: flex;
+    text-align: center;
+    vertical-align: center;
+}
+
+.data {
+    font-weight: bolder;
+}
+
+.sleuth {
+    font-weight: lighter;
+}
+
+.icon {
+    max-height: 1.8em;
+    margin-top: 0.8em;
+    margin-left: 1em;
+    margin-right: 0.5em;
+}
+
