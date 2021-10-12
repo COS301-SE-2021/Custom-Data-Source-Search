@@ -288,8 +288,8 @@
       mergeLists(a, b) {
         let newList = [];
         for (let i = 0; i < min([a.length, b.length]); i++) {
-          newList.push(a.pop())
-          newList.push(b.pop())
+          newList.push(a.shift())
+          newList.push(b.shift())
         }
         newList = newList.concat(a);
         newList = newList.concat(b);
@@ -508,7 +508,7 @@
 </script>
 
 <style scoped>
-  @import "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/ia-dark.min.css";
+  @import "./highlightjsdark.css";
 
   .search-bar {
     min-height: 100px;
