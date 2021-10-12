@@ -12,9 +12,6 @@
 ![GitHub open issues](https://img.shields.io/github/issues-raw/COS301-SE-2021/Custom-Data-Source-Search) 
 [![Build Status](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search.svg?branch=development)](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search)
   
- 
-
-
 
 ## Description
 DataSleuth is a custom data source search system. It aims to provide software developers 
@@ -24,9 +21,18 @@ websites and communication systems, all the way to user specific esoteric
 data sources that competent software developers can plug in to the system for themselves.<br>
 
 #### The DataSleuth Story
-See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/wiki/The-DataSleuth-Story) for more information on the design of the DataSleuth system; the workflow of the team behind it; and the story of how it all got where it is now. 
+See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/wiki/The-DataSleuth-Story) for more 
+information on the design of the DataSleuth system; the workflow of the team behind it; and the story of how it all got 
+where it is now. 
 
-### [Installable 🔎](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/releases/tag/v1.0.0)
+##[Quick Start Guide 🏠](https://cos301-se-2021.github.io/Custom-Data-Source-Search/)
+
+#### [Installable 🔎](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/releases/tag/v1.0.0)
+
+1. Download the latest release relevant to your Operating System
+2. Run The installer you have just downloaded and follow the prompts presented to you
+3. For further instructions on creating a user etc, please refer to the 
+[DataSleuth User Manual](https://drive.google.com/file/d/1qV6pgHYHbY-J-i-7ytIuitwo7nWE4GBC/view?usp=sharing)
 
 ## Documentation
 
