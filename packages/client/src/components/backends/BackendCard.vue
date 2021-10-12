@@ -43,6 +43,11 @@
                         @click="editBackend"
                     />
                 </div>
+                  <Accordion id="cli-info-accordion" v-if="localBackendBool">
+                    <AccordionTab v-for="tab in tabs" :key="tab.title" :header="tab.title">
+                      <p>{{tab.content}}</p>
+                    </AccordionTab>
+                  </Accordion>
                   <Button
                       v-if="backendIndex === 0 && !localActive && !startingLocal"
                       id="start-local-backend"
@@ -125,6 +130,9 @@
         },
         data () {
             return {
+              tabs: [
+                {title: 'Title 1', content: 'Content 1'},
+              ],
                 localActive: false,
                 startingLocal: false,
                 stoppingLocal: false,
@@ -440,7 +448,7 @@
     }
 
     .expanded-backend-info div {
-        max-height: 45px;
+        max-height: 180px;
     }
 
     .pi-circle-on, .pi-circle-off {
@@ -489,5 +497,10 @@
       grid-column-start: 3;
       float: right;
       color: #EF9A9A;
+    }
+
+    #cli-info-accordion{
+      grid-column-start: 1;
+      grid-column-end: 3;
     }
 </style>
