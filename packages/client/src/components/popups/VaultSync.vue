@@ -26,8 +26,26 @@
       </div>
     </div>
   <template #footer>
-    <Button type="button" icon="pi pi-arrow-down" class="p-button button-dialog" label="Pull" @click="pullFromVault" />
-    <Button type="button" icon="pi pi-arrow-up" class="p-button button-dialog" label="Push" @click="pushToVault" />
+    <Button
+        v-if="!checkingPull"
+        type="button"
+        icon="pi pi-arrow-down"
+        class="p-button button-dialog"
+        label="Pull"
+        @click="pullFromVault"
+    />
+    <Button v-else type="button" class="p-button button-dialog" label="Checking..."/>
+
+    <Button
+        v-if="!checkingPush"
+        type="button"
+        icon="pi pi-arrow-up"
+        class="p-button button-dialog"
+        label="Push"
+        @click="pushToVault"
+    />
+    <Button v-else type="button" class="p-button button-dialog" label="Checking..."/>
+
     <Button label="Cancel" class="p-button-text button-dialog" @click="closeDialog"/>
   </template>
   </Dialog>
@@ -56,6 +74,8 @@ export default {
       email: '',
       display: this.show,
       passwordIncorrect: false,
+      checkingPull: false,
+      checkingPush: false,
     }
   },
 
@@ -78,6 +98,7 @@ export default {
     },
 
     async pullFromVault(){
+      this.checkingPull = true;
       //1. challenge
       console.log("Attempting to Pull from the vault...");
       const userInfo = this.getUserInfo(this.getSignedInUserId);
@@ -116,7 +137,6 @@ export default {
             axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                 {headers: {"Content-Type": "application/json"}})
                 .then(async (resp) => {
-
                   console.log(resp.data);
                   //verify server
                   try {
@@ -124,6 +144,8 @@ export default {
                   } catch (e){
                     console.log(e);
                   }
+                  this.checkingPull = false;
+                  this.$emit('passwordConfirmed');
 
                   //PHASE2
                   let reqObj = {
@@ -161,8 +183,11 @@ export default {
                           detail: "Successfully Pulled From Vault",
                           life: 2500
                         });
+                        this.$emit('syncComplete');
                       })
                       .catch((error) => {
+                        this.checkingPull = false;
+                        this.masterPass = null;
                         this.$toast.add({
                           severity: 'error',
                           summary: 'Error',
@@ -174,6 +199,8 @@ export default {
 
                 })
                 .catch((error) => {
+                  this.checkingPull = false;
+                  this.masterPass = null;
                   this.$toast.add({
                     severity: 'error',
                     summary: 'Error',
@@ -184,6 +211,8 @@ export default {
                 })
           })
           .catch((error) => {
+            this.checkingPull = false;
+            this.masterPass = null;
             this.$toast.add({
               severity: 'error',
               summary: 'Error',
@@ -193,7 +222,9 @@ export default {
             console.log(error);
           })
     },
+
     async pushToVault(){
+      this.checkingPush = true;
       //1. challenge
       console.log("Attempting to Push to the vault...");
       const userInfo = this.getUserInfo(this.getSignedInUserId);
@@ -239,6 +270,9 @@ export default {
                   } catch (e){
                     console.log(e);
                   }
+                  this.checkingPush = false;
+                  this.$emit('passwordConfirmed');
+
                   //Authentication Details
                   const password = this.masterPass;
                   const user = await this.getUser(this.getSignedInUserId);
@@ -281,8 +315,11 @@ export default {
                           detail: "Successfully Pushed To Vault",
                           life: 2500
                         });
+                        this.$emit('syncComplete');
                       })
                       .catch((error) => {
+                        this.masterPass = null;
+                        this.checkingPush = false;
                         this.$toast.add({
                           severity: 'error',
                           summary: 'Error',
@@ -293,6 +330,8 @@ export default {
                       })
                 })
                 .catch((error) => {
+                  this.masterPass = null;
+                  this.checkingPush = false;
                   this.$toast.add({
                     severity: 'error',
                     summary: 'Error',
@@ -303,6 +342,8 @@ export default {
                 })
           })
           .catch((error) => {
+            this.masterPass = null;
+            this.checkingPush = false;
             this.$toast.add({
               severity: 'error',
               summary: 'Error',

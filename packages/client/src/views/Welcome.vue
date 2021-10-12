@@ -1,7 +1,7 @@
 <template>
   <ConfirmDialog/>
   <div class="page">
-    <Toast position="bottom-left"/>
+    <Toast position="bottom-right"/>
     <div class="heading-and-info">
       <h1 class="header">Who's Sleuthing?</h1>
       <p class="description">
@@ -83,7 +83,13 @@
         deleteVaultFedIn: null,
         firstQuestionFedIn: true,
         randomId: null,
-        items: [
+        items: [{
+          label: 'Remove',
+          icon: 'pi pi-trash',
+          command: () => {
+            this.displayDeleteCheck = !this.displayDeleteCheck;
+          }
+        },
           {
             label: 'Sign Out',
             icon: 'pi pi-sign-out',
@@ -99,13 +105,6 @@
                   this.$router.push('/');
                 }
               })
-            }
-          },
-          {
-            label: 'Remove',
-            icon: 'pi pi-trash',
-            command: () => {
-              this.displayDeleteCheck = !this.displayDeleteCheck;
             }
           }
         ],

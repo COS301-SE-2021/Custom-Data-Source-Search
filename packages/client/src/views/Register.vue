@@ -13,7 +13,7 @@
         <div style="font-size: xx-large; color: #f9f6ee; text-align: center">
           <span>Register</span>
         </div>
-        <form @submit="loadValues">
+        <form >
           <div class="input-fields" style="max-height: 20vh">
           <span class="p-float-label">
               <InputText
@@ -68,7 +68,8 @@
                   id="checkbox"
                   name="checkbox"
                   v-model="userDetails.backupVault"
-                  :binary="true"/>
+                  :binary="true"
+              />
               <label for="checkbox">Enable remote access to account?</label>
               <br>
               <span style="font-size: small;">
@@ -80,7 +81,6 @@
               <Button
                   id="btnRegister"
                   label="Register"
-                  type="submit"
                   style="text-align: center;"
                   class="p-button-md p-button-outlined"
                   @click="loadValues"
@@ -93,7 +93,6 @@
               </ul>
             </div>
           </div>
-          <SignIn :show="displaySignIn" @display-popup="showSignIn"></SignIn>
         </form>
       </div>
     </div>
@@ -119,24 +118,33 @@
           />
           <label for="emailVault">Email</label>
         </span>
-        <span class="p-float-label">
-          <PasswordInputField
-              id="password"
-              style="width: 100%"
-              v-model="vaultPassword"
-              :feedback="false"
-              :toggle-mask="true"
-          />
-          <label for="password">Master Password</label>
-        </span>
+        <div>
+          <span class="p-float-label">
+            <PasswordInputField
+                id="password"
+                style="width: 100%"
+                v-model="vaultPassword"
+                :feedback="false"
+                :toggle-mask="true"
+                @keyup.enter="focusSignIn"
+            />
+            <label for="password">Master Password</label>
+          </span>
+          <div v-if="passwordIncorrect" class="error-message">
+            <span class="error-message">Incorrect password.</span>
+          </div>
+        </div>
         <div style="text-align: center; margin-top: 5%;">
           <Button
+              v-if="signingIn === false"
+              id="signin-remote-btn"
               label="Sign In"
               type="submit"
               style="text-align: center;"
               class="p-button-md p-button-outlined"
               @click="retrieveVaultProfile"
           />
+          <i v-else class="pi pi-spin pi-spinner"></i>
         </div>
       </div>
     </div>
@@ -149,13 +157,11 @@
   import Checkbox from 'primevue/checkbox';
   import PasswordInputField from "../components/customComponents/PasswordInputField";
   import axios from "axios";
-  import {createHash, pbkdf2Sync} from 'crypto';
+  import {pbkdf2Sync} from 'crypto';
   import {decryptJsonObject, encryptJsonObject, generateMasterKey} from "@/store/Store";
 
 
-  import {
-    createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,
-  } from "tssrp6a"
+  import {createVerifierAndSalt, SRPClientSession, SRPParameters, SRPRoutines,} from "tssrp6a"
   import {mapGetters} from "vuex";
 
   const zxcvbn = require('zxcvbn');
@@ -176,13 +182,14 @@
         regexTester: null,
         masterPassCheck: null,
         masterPassword: null,
-        displaySignIn: false,
         notContinue: true,
         vaultEmail: null,
         vaultPassword: null,
+        passwordIncorrect: false,
+        signingIn: false,
         userDetails: {
             userName: null,
-            backupVault: null,
+            backupVault: false,
             masterEmail: null,
             hashToStore: null
         }
@@ -203,109 +210,101 @@
     },
 
     methods: {
+      focusSignIn() {
+        document.getElementById("signin-remote-btn").focus();
+      },
+
       /**
        * Ensure form filled in.
        *
        * Present errors on failure, create new user on success.
        */
       async retrieveVaultProfile(){
-
+        this.signingIn = this.vaultPassword !== null;
         const remoteEmail = this.vaultEmail;
         const remotePassword = this.vaultPassword;
-        console.log("Attempting to fetch user profile from the vault...");
         const client = new SRPClientSession(new SRPRoutines(new SRPParameters()));
         const step1 = await client.step1(remoteEmail, remotePassword);
-
+        //
         const reqBody = {
           email: remoteEmail
-        }
+        };
         axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", reqBody,
             {headers: {"Content-Type": "application/json"}})
             .then(async (resp) => {
-
-              console.log(resp.data);
-              console.log("Salt: " + resp.data.salt);
-              console.log("B: " + resp.data.B);
-
+              //
               const step2 = await step1.step2(BigInt(resp.data.salt), BigInt(resp.data.B));
-
+              //
               const clientA = step2.A;
               const clientM1 = step2.M1;
-
+              //
               let reqObj = {
                 email: remoteEmail,
                 A: clientA,
                 verificationMessage1: clientM1
-              }
-
+              };
+              //
               let reqBody = JSON.stringify(reqObj, (key, value) =>
                   typeof value === 'bigint'
                       ? value.toString()
                       : value
               );
-
+              //
               axios.post("https://datasleuthvault.nw.r.appspot.com/vault/authenticate", reqBody,
                   {headers: {"Content-Type": "application/json"}})
                   .then(async (resp) => {
-
-                    console.log(resp.data);
                     //verify server
                     try {
                       const step3 = await step2.step3(BigInt(resp.data.vM2));
                     } catch (e){
+                      this.$toast.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.response.data,
+                        life: 3000
+                      });
+                      this.signingIn = false;
                       console.log(e);
+                      return;
                     }
-
                     //PHASE2
                     let reqObj = {
                       email: remoteEmail,
                       A: clientA,
                       verificationMessage1: clientM1
-                    }
-
+                    };
+                    //
                     let reqBody = JSON.stringify(reqObj, (key, value) =>
                         typeof value === 'bigint'
                             ? value.toString()
                             : value
                     );
-
+                    //
                     axios.post("https://datasleuthvault.nw.r.appspot.com/vault/pull", reqBody,
                         {headers: {"Content-Type": "application/json"}})
                         .then(async (resp) => {
-                          console.log(resp.data.data);
                           //decrypt data
                           const encryptedObj =  {
                             iv: resp.data.data.user_iv,
                             authTag: resp.data.data.user_authtag,
                             data: resp.data.data.user_data
-                          }
+                          };
                           //NEED TO ADD USER HERE:
-                          //
                           const masterKey = generateMasterKey(remotePassword, resp.data.data.user_salt);
                           const unencryptedUserData = decryptJsonObject(masterKey, encryptedObj);
-
+                          //
                           this.$store.commit('addRemoteUserToLocalList', unencryptedUserData);
                           await this.$router.push({name: 'ContinueView'});
-
                         })
                         .catch((error) => {
-                          this.$toast.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: error.response.data,
-                            life: 3000
-                          });
+                          this.passwordIncorrect = true;
+                          this.signingIn = false;
                           console.log(error);
                         })
-
                   })
                   .catch((error) => {
-                    this.$toast.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: error.response.data,
-                      life: 3000
-                    });
+                    this.passwordIncorrect = true;
+                    this.signingIn = false;
                     console.log(error);
                   })
             })
@@ -316,84 +315,117 @@
                 detail: 'Could not find user',
                 life: 3000
               });
+              this.signingIn = false;
               console.log(error);
             })
-
       },
-      async loadValues(){
 
+      async loadValues(){
         let passFormValidation = this.formValidationChecks();
         if (passFormValidation) {
-          await this.$store.dispatch("addNewUser", {
-            name: this.userDetails.userName,
-            email: this.userDetails.masterEmail,
-            masterPassword: this.masterPassword,
-            hasVault: this.userDetails.backupVault
-          });
 
           if(this.userDetails.backupVault === true){
-            const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
-            const email = this.userDetails.masterEmail;
-            const password = this.masterPassword;
-            const saltAndVerifier = await createVerifierAndSalt(
-                srp6aNimbusRoutines,
-                email,
-                password,
-            );
-            const user = await this.getUser(this.getSignedInUserId);
-            //Registration Fields
-            const userSalt = user.info.salt;
-            const masterKey = generateMasterKey(password, userSalt);
-            const encryptedInfo = encryptJsonObject(masterKey, user);
-            const dataString = JSON.stringify(user);
-            const dataFingerprint = pbkdf2Sync(
-                 dataString,
-                 userSalt,
-                 10000,
-                 32,
-                 'sha256'
-             ).toString('hex');
 
-            let reqObj = {
-              email: this.userDetails.masterEmail,
-              salt: saltAndVerifier.s,
-              verifier: saltAndVerifier.v,
-              user_data: encryptedInfo.data,
-              fingerprint: dataFingerprint,
-              user_iv: encryptedInfo.iv,
-              user_authtag: encryptedInfo.authTag,
-              user_salt: userSalt
+            const cReqObj = {
+              email: this.userDetails.masterEmail
             }
 
-            let reqBody = JSON.stringify(reqObj, (key, value) =>
-                typeof value === 'bigint'
-                    ? value.toString()
-                    : value
-            );
+            const cReqBody = JSON.stringify(cReqObj);
 
-            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/register", reqBody,
+            //check if email exists
+            axios.post("https://datasleuthvault.nw.r.appspot.com/vault/challenge", cReqBody,
                 {headers: {"Content-Type": "application/json"}})
-                .then((resp) => {
-                  this.$toast.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: "User Added to Vault",
-                    life: 2500
-                  });
-                  console.log(resp.data);
-
-                })
-                .catch((error) => {
+                .then(async (resp) => {
+                  console.log("Already Exists");
                   this.$toast.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: error.response.data.message,
+                    detail: "User already exists on Vault",
                     life: 3000
                   });
-                  console.log(error);
                 })
+                .catch(async (error) => {
+
+                  console.log(error);
+                  await this.$store.dispatch("addNewUser", {
+                    name: this.userDetails.userName,
+                    email: this.userDetails.masterEmail,
+                    masterPassword: this.masterPassword,
+                    hasVault: this.userDetails.backupVault
+                  });
+
+                  const srp6aNimbusRoutines = new SRPRoutines(new SRPParameters());
+                  const email = this.userDetails.masterEmail;
+                  const password = this.masterPassword;
+                  const saltAndVerifier = await createVerifierAndSalt(
+                      srp6aNimbusRoutines,
+                      email,
+                      password,
+                  );
+
+
+                  const user = await this.getUser(this.getSignedInUserId);
+                  //Registration Fields
+                  const userSalt = user.info.salt;
+                  const masterKey = generateMasterKey(password, userSalt);
+                  const encryptedInfo = encryptJsonObject(masterKey, user);
+                  const dataString = JSON.stringify(user);
+                  const dataFingerprint = pbkdf2Sync(
+                      dataString,
+                      userSalt,
+                      10000,
+                      32,
+                      'sha256'
+                  ).toString('hex');
+
+                  let reqObj = {
+                    email: this.userDetails.masterEmail,
+                    salt: saltAndVerifier.s,
+                    verifier: saltAndVerifier.v,
+                    user_data: encryptedInfo.data,
+                    fingerprint: dataFingerprint,
+                    user_iv: encryptedInfo.iv,
+                    user_authtag: encryptedInfo.authTag,
+                    user_salt: userSalt
+                  }
+
+                  let reqBody = JSON.stringify(reqObj, (key, value) =>
+                      typeof value === 'bigint'
+                          ? value.toString()
+                          : value
+                  );
+
+                  axios.post("https://datasleuthvault.nw.r.appspot.com/vault/register", reqBody,
+                      {headers: {"Content-Type": "application/json"}})
+                      .then(async (resp) => {
+
+                        await this.$router.push({name: 'ContinueView'});
+                        console.log(resp.data);
+
+                      })
+                      .catch((error) => {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error.response.data.message,
+                          life: 3000
+                        });
+                        console.log(error);
+                      })
+                })
+
+
+          } else {
+            await this.$store.dispatch("addNewUser", {
+              name: this.userDetails.userName,
+              email: this.userDetails.masterEmail,
+              masterPassword: this.masterPassword,
+              hasVault: this.userDetails.backupVault
+            });
+            await this.$router.push({name: 'ContinueView'});
+
           }
-          await this.$router.push({name: 'ContinueView'});
+
         }
       },
       formValidationChecks() {
@@ -413,8 +445,10 @@
           }
         }
         // Password Checks
-        if (!this.masterPassword || !this.masterPassCheck) {
-          this.errors.push("Password required");
+        if (!this.masterPassword) {
+          this.errors.push("Password is invalid");
+        } else if ( !this.masterPassCheck) {
+          this.errors.push("Password Required");
         } else if (this.masterPassword !== this.masterPassCheck) {
           this.errors.push('Your passwords do not match. Please repeat');
           this.masterPassword = null;
@@ -426,14 +460,8 @@
         }
         return !this.errors.length;
       },
-      /**
-       * Display sign-in Popup
-       */
-      showSignIn() {
-        this.displaySignIn = !this.displaySignIn
-      },
       continue() {
-        this.notContinue = false;
+            this.notContinue = false;
       },
       back() {
         if (this.notContinue) {
@@ -471,6 +499,17 @@
   .p-checkbox {
     margin-right: 1em;
     text-align: left;
+  }
+
+  .error-message {
+    color: #EF9A9A;
+    text-align: center;
+    margin-top: 5px;
+  }
+
+  .pi-spinner{
+    font-size: 1.5rem;
+    color: #41B3B2;
   }
 
   u {

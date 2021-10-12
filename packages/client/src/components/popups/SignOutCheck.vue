@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="button-holders">
-            <Button @click="signOut" class="p-button-danger these-buttons">Sign Out</Button>
+            <Button id="confirm-sign-out" @click="signOut" class="p-button-danger these-buttons">Sign Out</Button>
             <Button @click="closePopUp" class="p-button-text p-button-plain these-buttons">Cancel</Button>
         </div>
     </Dialog>

@@ -5,14 +5,17 @@
     "name": "Team Abstraction",
     "email": "abstraction.tuks@gmail.com"
   },
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "test": "jest --verbose --forceExit",
+    "test:Vault-e2e": "jest Vault-e2e.test.js --verbose --forceExit",
+    "test:Backend-correctness": "jest Backend-correctness.test.js --verbose --forceExit",
+    "test:Backend-security": "jest Backend-security.test.js --verbose --forceExit",
+    "test:Backend-perf": "jest Backend-performance.test.js --verbose --forceExit",
     "electron:build:win": "vue-cli-service electron:build --win",
     "electron:build:linux": "vue-cli-service electron:build --linux",
     "electron:serve": "vue-cli-service electron:serve",
@@ -20,7 +23,7 @@
     "postuninstall": "electron-builder install-app-deps",
     "build-installer": "vue-cli-service electron:build --win && electron-builder "
   },
-  "main": "src/background.js",
+  "main": "background.js",
   "dependencies": {
     "aes-js": "^3.1.2",
     "axios": "^0.21.1",

@@ -121,7 +121,8 @@
                     v-else label="Folder"
                     icon="pi pi-folder"
                     class="button p-button-raised p-button-text p-button-plain"
-                    @click="clicked=!clicked; type='Folder'" disabled="disabled"
+                    @click="clicked=!clicked; type='Folder'"
+                    disabled="disabled"
                 />
                 <Button
                     id="web-button"
@@ -346,9 +347,6 @@
 
     mounted(){
       this.$refs.Global.$el.focus();
-      // this.$root.$on('globalUpdate', () => {
-      //       this.updateSources();
-      //     });
     },
 
     after(){
@@ -380,30 +378,33 @@
           this.loading = true;
           this.sources = [];
           for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
-            const url = `http://${backend.connect.link}/general/datasources`;
-            const headers = {
-              "Authorization": "Bearer " + backend.connect.keys.jwtToken
-            };
-            axios
-                .get(url, {headers})
-                .then((resp) => {
-                  this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name);
-                })
-                .catch(async () => {
-                  await this.$store.dispatch("refreshJWTToken", {id: backend.local.id});
-                  const headers = {
-                    "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
-                  };
-                  await axios
-                      .get(url, {headers})
-                      .then((resp) => {
-                        this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name);
-                      })
-                      .catch((e) => {
-                        console.error(e);
-                      })
-                })
+            if(backend.local.active){
+              const url = `http://${backend.connect.link}/general/datasources`;
+              const headers = {
+                "Authorization": "Bearer " + backend.connect.keys.jwtToken
+              };
+              axios
+                  .get(url, {headers})
+                  .then((resp) => {
+                    this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name);
+                  })
+                  .catch(async () => {
+                    await this.$store.dispatch("refreshJWTToken", {id: backend.local.id});
+                    const headers = {
+                      "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backend.local.id)
+                    };
+                    await axios
+                        .get(url, {headers})
+                        .then((resp) => {
+                          this.handleSuccess(resp.data.data, backend.connect.link, backend.local.id, backend.local.name);
+                        })
+                        .catch((e) => {
+                          console.error(e);
+                        })
+                  })
+            }
           }
+          this.loading = false;
         },
 
         /**
@@ -551,6 +552,7 @@
 
   .pi-search {
     padding: 0;
+    font-size: 1rem !important;
   }
 
   .button {

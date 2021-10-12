@@ -125,8 +125,11 @@ class GitHubDataSourceService {
             if (solrErr) {
                 continue;
             }
+            let filePathToStore: string = filePath.replace(repoName + "/", "");
+            filePathToStore = filePathToStore.substring(filePathToStore.split("/")[0].length + 1);
+            filePathToStore = "https://github.com/" + dataSource.repo + "/blob/" + branchName + "/" + filePathToStore;
             const fileFromRepo: FileFromRepo = {
-                filePath: filePath,
+                filePath: filePathToStore,
                 repoUUID: repoUUID,
                 UUID: fileFromRepoUUID
             }

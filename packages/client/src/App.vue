@@ -37,11 +37,18 @@
         <div v-if="sync" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
           <i
               class="fas fa-sync-alt"
-              style="font-size:1.2rem"
+              style="font-size:1.2em"
               aria-hidden="true"
           />
         </div>
-        <div class="icon-container" title="User" @click="toggle">
+        <div v-if="syncing" title="Sync Vault" class="refresh-container icon" @click="showVaultSyncDialog">
+          <i
+              class="fas fa-sync-alt"
+              style="font-size:1.2em"
+              aria-hidden="true"
+          />
+        </div>
+        <div id="user-profile-btn" class="icon-container" title="User" @click="toggle">
           <div class="image-ring-main">
             <h3 class="name-initial-main">
               {{ getUserInfo(getSignedInUserId).name.charAt(0).toUpperCase() }}
@@ -67,18 +74,13 @@
             @action-to-Occur="showAskMasterPw"
             @close-dialog="closeDialog"
         />
-        <ReEnterMasterPassword
-            :show="displayVaultDialog"
-            :unconnected-backend-icon="true"
-            :header="'Sync Your Vault'"
-            :body="'Enter your master password to continue with sync'"
-            :vault="true"
-            @action-to-Occur="showAskMasterPw"
-            @sync-vault="toggleSync"
+        <VaultSync
+            :show="displayVaultSync"
             @close-dialog="closeDialog"
-        />
-
-        <VaultSync :show="displayVaultSync" @close-dialog="closeDialog"></VaultSync>
+            @password-confirmed="startSync"
+            @sync-complete="endSync"
+        >
+        </VaultSync>
       </div>
     </div>
     <div id="grid-div-2">
@@ -122,6 +124,7 @@
       displayPasswordDialog: false,
       displayVaultDialog: false,
       sync: false,
+      syncing: false,
       displayVaultSync: false,
       activePage: ['SearchIcon', 'DataSourcesIcon', 'BackendIcon', 'AdminIcon'],
       activePageNum: null,
@@ -141,7 +144,24 @@
           'getSignedIn',
           'getUser',
           'getMasterKey'
-        ])
+        ]),
+      state(){
+          return this.$store.getters.getFontSize;
+      }
+    },
+
+    watch: {
+      state(newState){
+        if(newState === 'Large'){
+          document.documentElement.style.setProperty('--fontsize', '20px');
+        }
+        else if(newState === 'Small'){
+          document.documentElement.style.setProperty('--fontsize', '13px');
+        }
+        else if(newState === 'Regular'){
+          document.documentElement.style.setProperty('--fontsize', '16px');
+        }
+      }
     },
 
     beforeCreate() {
@@ -149,14 +169,23 @@
     },
 
     mounted() {
-      this.interval = setInterval(() => this.checkSyncStatus(), 25000);
+      let s = this.$store.getters.getFontSize;
+      if(s === 'Large'){
+        document.documentElement.style.setProperty('--fontsize', '20px');
+      }
+      else if(s === 'Small'){
+        document.documentElement.style.setProperty('--fontsize', '13px');
+      }
+      else if(s === 'Regular'){
+        document.documentElement.style.setProperty('--fontsize', '16px');
+      }
+      this.interval = setInterval(() => this.checkSyncStatus(), 14000);
     },
 
     methods: {
 
       checkSyncStatus(){
         if(this.$store.getters.getSignedIn === true && this.getUserInfo(this.getSignedInUserId).hasVault){
-          console.log("Checking Sync Status");
           const user = this.getUser(this.getSignedInUserId);
           const dataString = JSON.stringify(user);
           //const dataFingerprint = createHash('sha256').update(dataString).digest("hex");
@@ -171,12 +200,9 @@
             email: user.info.email,
             fingerprint: dataFingerprint
           };
-          console.log("requestObject" + JSON.stringify(reqObj));
           axios.post("https://datasleuthvault.nw.r.appspot.com/vault/compare", reqObj,
               {headers: {"Content-Type": "application/json"}})
               .then((resp) => {
-                console.log("Out Of Sync: " +resp.data.isOutOfSync);
-
                 if(resp.data.isOutOfSync){
                   this.showOutOfSync();
                 }else {
@@ -207,6 +233,7 @@
 
       toggleSync(){
         this.sync = !this.sync;
+        this.syncing = !this.syncing;
       },
       showOutOfSync(){
         this.sync = true;
@@ -217,12 +244,24 @@
       closeDialog(){
         this.displayPasswordDialog = false;
         this.displayVaultSync = false;
+      },
+      startSync(){
+        this.displayVaultSync = false;
+        this.sync = false;
+        this.syncing = true;
+      },
+      endSync(){
+        this.syncing = false;
       }
     }
   }
 </script>
 
 <style lang="scss">
+  :root{
+    --fontsize: 16px;
+  }
+
   html,
   body,
   #app {
@@ -235,6 +274,7 @@
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: var(--fontsize);
   }
 
   input {
@@ -286,6 +326,7 @@
   .pi-search, .pi-list, .pi-user, .pi-cog, .pi-sitemap, .pi-id-card{
     color: grey;
     padding: 20px 10px 10px;
+    font-size: 1.5em !important;
   }
 
   .unconnected-backend-warning{
@@ -382,12 +423,12 @@
   }
 
   #expiration-indicator {
-    font-size: 1.5rem;
+    font-size: 1.5em !important;
     color: #FFF59D;
     position: relative;
     display: inline-block;
-    margin-top : 0.5rem;
-    margin-bottom : 0.3rem;
+    margin-top : 0.5em;
+    margin-bottom : 0.3em;
   }
 
   #profile {
@@ -395,6 +436,7 @@
     margin-left: -53px;
     cursor: pointer;
     bottom: 5%;
+    font-size: 16px !important;
   }
 
   #overlay_panel {
@@ -403,6 +445,7 @@
 
   #sidebar {
     width: 3.5em;
+    font-size: 16px !important;
   }
 
   .pi-info-circle {

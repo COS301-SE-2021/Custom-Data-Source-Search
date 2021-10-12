@@ -8,6 +8,7 @@
     <span>Select one or more Folders to add as Data Sources</span>
     <br/>
     <Button
+        id="browse"
         label="Browse"
         icon="pi pi-plus"
         class="p-button-raised p-button-text"
@@ -39,12 +40,14 @@
             :min="0"
             mode="decimal"
             showButtons
+            @keyup.enter="focusOnIgnore()"
         />
       </div>
     </div>
     <div class="file-ignore">
       <span>Specify which files/sub-folders to ignore</span>
       <Textarea
+          id="ignore"
           v-model="ignore"
           rows="5"
           cols="40"
@@ -58,6 +61,7 @@
             id="tag1"
             v-model="tag1"
             type="text"
+            @keyup.enter="focusOnSecondInput()"
         />
         <label for="tag1">Tag 1</label>
       </span>
@@ -66,16 +70,19 @@
             id="tag2"
             v-model="tag2"
             type="text"
+            @keyup.enter="focusOnAdd"
         />
         <label for="tag2">Tag 2</label>
       </span>
     </div>
     <Button
         v-if="!submitting"
+        id="Add"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
         @click="submitSelectedFolders"
+        @keyup.enter="submitSelectedFolders"
     />
     <Button
         v-else
@@ -130,7 +137,24 @@ export default {
                 this.selectedFolders.push(temp);
               }
             }
-          })
+          });
+      document.getElementById("stacked").focus();
+    },
+
+    focusOnIgnore() {
+      document.getElementById("ignore").focus();
+    },
+
+    focusOnFirstInput() {
+      document.getElementById("tag1").focus();
+    },
+
+    focusOnSecondInput() {
+      document.getElementById("tag2").focus();
+    },
+
+    focusOnAdd() {
+      document.getElementById("Add").focus();
     },
 
     async submitSelectedFolders() {

@@ -1,0 +1,27 @@
+name: Backend Security Testing
+
+on:
+  pull_request:
+    branches: [ development ]
+
+jobs:
+  test-master-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set Up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: packages/client
+      - name: Run headless test
+        uses: GabrielBB/xvfb-action@v1
+        env:
+          DS_TEST_VIEWER_EMAIL: ${{ secrets.DS_TEST_VIEWER_EMAIL }}
+          DS_TEST_VIEWER_PW: ${{ secrets.DS_TEST_VIEWER_EMAIL }}
+        with:
+          run: npm run test:Backend-security
+          working-directory: packages/client

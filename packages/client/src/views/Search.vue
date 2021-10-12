@@ -54,7 +54,8 @@
         <div class="search-bar">
           <div class="search-div">
             <span class="p-input-icon-right">
-                <i aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <i v-if="!loading" aria-hidden="true" class="pi pi-search" @click="queryBackends(query)"/>
+                <i v-else aria-hidden="true" class="pi pi-spin pi-spinner"/>
                 <InputText v-model="query" placeholder="Sleuth..." size="70" @keyup.enter="queryBackends(query)"/>
             </span>
             <span class="advanced-search-toggle">
@@ -239,6 +240,14 @@
                     })
                     .catch((e) => {
                       console.error(e);
+                      if (e.toString().includes("500")) {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Internal Server Error',
+                            detail: "Could not connect to server. Please ensure solr is running",
+                            life: 3000
+                          })
+                      }
                     })
               })
         }
@@ -367,7 +376,7 @@
        * Security Note: NEVER allow any type of closing tags in the validWord regex snippet.
        * This would render the function unsafe.
        *
-       * @param {html} content suspect html
+       * @param {string} content suspect html
        * @returns {string} sanitised html
        */
       whitelistEscape(content) {
@@ -508,7 +517,7 @@
 </script>
 
 <style scoped>
-  @import "./highlightjsdark.css";
+  @import "ia-dark.min.css";
 
   .search-bar {
     min-height: 100px;
@@ -573,6 +582,7 @@
 
   .pi-search {
     padding: 0;
+    font-size: 1rem !important;
   }
 
 

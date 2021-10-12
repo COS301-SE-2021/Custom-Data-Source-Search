@@ -13,6 +13,7 @@
         id="input"
         v-model="dataSourceURI"
         placeholder="Add WebPage URL..."
+        @keyup.enter="focusOnNextInput('tag1')"
     />
     <div>
       <span>Add optional tags</span>
@@ -22,6 +23,7 @@
             id="tag1"
             v-model="tag1"
             type="text"
+            @keyup.enter="focusOnNextInput('tag2')"
         />
         <label for="tag1">Tag 1</label>
       </span>
@@ -30,12 +32,14 @@
             id="tag2"
             v-model="tag2"
             type="text"
+            @keyup.enter="focusOnNextInput('Add')"
         />
         <label for="tag2">Tag 2</label>
       </span>
     </div>
     <Button
         v-if="!submitting"
+        id="Add"
         label="Add"
         icon="pi pi-check"
         class="p-button-rounded p-button-text"
@@ -70,6 +74,10 @@ export default {
   },
 
   methods: {
+    focusOnNextInput(n) {
+      document.getElementById(n).focus();
+    },
+
     async submitWebpage() {
       if(this.dataSourceURI!==""){
         this.submitting = true;

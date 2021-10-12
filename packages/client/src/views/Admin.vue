@@ -7,7 +7,7 @@
     <div class="container">
       <div v-for="(backend) in getUserRemoteBackends" class="admin-select" >
         <AdminBackendCard
-            v-if="datasourceAdminStatus(backend.local.id)!=='viewer' && datasourceAdminStatus(backend.local.id)!=='editor'"
+            v-if="datasourceAdminStatus(backend.local.id)!=='viewer' && datasourceAdminStatus(backend.local.id)!=='editoFr'"
             :backend="backend"
         />
       </div>
