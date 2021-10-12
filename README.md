@@ -25,7 +25,7 @@ See the [Project Wiki](https://github.com/COS301-SE-2021/Custom-Data-Source-Sear
 information on the design of the DataSleuth system; the workflow of the team behind it; and the story of how it all got 
 where it is now. 
 
-##[Quick Start Guide 🏠](https://cos301-se-2021.github.io/Custom-Data-Source-Search/)
+## [Quick Start Guide 🏠](https://cos301-se-2021.github.io/Custom-Data-Source-Search/)
 
 #### [Installable 🔎](https://github.com/COS301-SE-2021/Custom-Data-Source-Search/releases/tag/v1.0.0)
 
