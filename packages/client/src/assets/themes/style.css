@@ -946,26 +946,26 @@
 }
 
 .p-inputswitch {
-    width: 2.75rem;
-    height: 1rem;
+    width: 2.75em;
+    height: 1em;
 }
 .p-inputswitch .p-inputswitch-slider {
     background: rgba(255, 255, 255, 0.3);
     transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s, background-size 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    border-radius: 0.5rem;
+    border-radius: 0.5em;
     width: 32px;
 }
 .p-inputswitch .p-inputswitch-slider:before {
     background: #bdbdbd;
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.2em;
+    height: 1.2em;
     left: -1px;
-    margin-top: -0.65rem;
+    margin-top: -0.65em;
     border-radius: 50%;
     transition-duration: 0.8s;
 }
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
-    transform: translateX(0.9rem);
+    transform: translateX(0.9em);
 }
 .p-inputswitch.p-focus .p-inputswitch-slider {
     outline: 0 none;
@@ -3238,8 +3238,8 @@
     background-color: #242424;
 }
 .p-divider.p-divider-horizontal {
-    margin: 1.25rem 0;
-    padding: 0 1.25rem;
+    margin: 1.25em 0;
+    padding: 0 1.25em;
 }
 .p-divider.p-divider-horizontal:before {
     border-top: 1px rgba(255, 255, 255, 0.12);
@@ -3501,18 +3501,18 @@
     box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12);
 }
 .p-overlaypanel .p-overlaypanel-content {
-    padding: 1rem;
+    padding: 1em;
 }
 .p-overlaypanel .p-overlaypanel-close {
     background: #41B3B2;
     color: #121212;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.5em;
+    height: 2.5em;
     transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
     border-radius: 50%;
     position: absolute;
-    top: -1.25rem;
-    right: -1.25rem;
+    top: -1.25em;
+    right: -1.25em;
 }
 .p-overlaypanel .p-overlaypanel-close:enabled:hover {
     background: #41B3B2;
@@ -5840,7 +5840,7 @@
 }
 
 .p-overlaypanel .p-overlaypanel-content {
-    padding: 1.5rem;
+    padding: 24px;
 }
 
 .p-paginator {

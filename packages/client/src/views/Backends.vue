@@ -1,5 +1,6 @@
 <template>
   <div class="backends-box">
+    <Toast position="bottom-right"/>
     <div class="backends-heading">
       <span><h1>Backends</h1></span>
       <p class="backends-description">
