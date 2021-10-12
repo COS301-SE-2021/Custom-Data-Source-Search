@@ -287,7 +287,7 @@ class UserService {
             from: process.env.EMAIL_ADDRESS,
             to: address,
             subject: 'Registration key for DataSleuth',
-            text: `Dear ${name}\n\nPlease find below your registration token for the DataSleuth app:\n` +
+            text: `Dear ${name},\n\nPlease find below your registration token for the DataSleuth app:\n` +
                 registrationToken +
                 `\n\nYou can simply copy the token into the "Registration String" field in the app and click connect.` +
                 `\n\nHappy Sleuthing!!\nDataSleuth Team`
