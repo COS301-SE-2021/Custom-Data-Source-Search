@@ -224,6 +224,7 @@
               )
           }`;
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
+          axios.defaults.timeout = 4000;
           axios
               .get(url, {headers})
               .then((resp) => {
@@ -238,15 +239,20 @@
                       this.augmentAndSaveSearchResults(resp.data.searchResults, backend);
                     })
                     .catch((e) => {
-                      console.log("ERROR")
-                      console.log(e);
                       if (e.toString().includes("500")) {
                           this.$toast.add({
                             severity: 'error',
-                            summary: 'Internal Server Error',
+                            summary: 'Error for ' + backend.local.name,
                             detail: "Could not connect to server. Please ensure solr is running",
                             life: 3000
                           })
+                      } else if (e.message.includes("timeout of")) {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error for ' + backend.local.name,
+                          detail:  "Could not connect. Server may be down?",
+                          life: 8000
+                        })
                       }
                     })
               })
