@@ -81,6 +81,39 @@ a:active {
     margin-right: 0.5em;
 }
 
+.software-name{
+    font-size: 100px;
+}
+
+.slogan{
+    font-size: 20px;
+}
+
+.btn {
+    margin-top: 10%;
+    background-color: #00a0b4;
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.btn:hover {
+    background-color: #00899b;
+}
+
+.scroll-prompt{
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    font-size: 20px;
+}
+
 #download, #quickstart, #about, #email
 {
     height: 100%;
@@ -92,5 +125,9 @@ a:active {
     margin: 0;
     background: #1b1b1b;
     height: 15%;
+}
+
+#download{
+    text-align: center;
 }
 
