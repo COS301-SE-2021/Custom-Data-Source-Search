@@ -350,6 +350,7 @@
           this.openIframe(source);
           return;
         }
+        this.iFrameLink = "";
         if (this.fullFileId === id) {
           this.scrollFullFileLineIntoView(lineNumber);
           return;
