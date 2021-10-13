@@ -120,6 +120,7 @@ a:active {
     margin-right: auto;
     width: 100%;
     font-size: 20px;
+    z-index: -2;
 }
 
 #download, #quickstart, #about, #email, #form-container {
@@ -364,13 +365,11 @@ textarea{
 }
 
 .info-div {
-    background-color: #1b1b1b;
     padding: 4em 2em;
     text-align: left;
 }
 
 .iframe-youtube-embed-box {
-    background-color: #1b1b1b;
     padding: 2em;
 }
 
@@ -381,6 +380,5 @@ textarea{
 .about {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    background-color: #1b1b1b;
     vertical-align: center;
 }
