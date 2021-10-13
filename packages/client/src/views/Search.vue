@@ -299,11 +299,6 @@
           r.backendId = backend.local.id;
         }
         this.searchResults = this.mergeLists(this.searchResults, results);
-        // below code required to force vue to detect changes
-        for (let result in this.searchResults) {
-          result.match_snippets.push(undefined);
-          result.match_snippets.pop();
-        }
       },
 
       /**
@@ -320,6 +315,7 @@
         }
         newList = newList.concat(a);
         newList = newList.concat(b);
+        console.log(newList);
         return newList;
       },
 
