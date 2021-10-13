@@ -264,7 +264,7 @@
                   if (this.searchResults.length === 0) {
                     this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
                   }
-                }git
+                }
               })
         }
       },
