@@ -48,6 +48,7 @@ a:active {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 2;
 }
 
 .links-all {
@@ -120,7 +121,6 @@ a:active {
     margin-right: auto;
     width: 100%;
     font-size: 20px;
-    z-index: -2;
 }
 
 #download, #quickstart, #about, #email, #form-container {
@@ -131,7 +131,10 @@ a:active {
 #about{
     align-content: center;
     text-align: center;
-    height: fit-content;
+    background-color: #1b1b1b;
+    width: 100%;
+    left: 0;
+    margin: 0;
 }
 
 #form {
@@ -381,5 +384,7 @@ textarea{
 .about {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    vertical-align: center;
+    margin-top: 100px;
+    margin-left: 10%;
+    margin-right: 10%;
 }
