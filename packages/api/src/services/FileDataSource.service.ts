@@ -13,7 +13,6 @@ import {
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
-import {whiteList} from "../general/whiteList";
 
 class FileDataSourceService {
 
@@ -201,7 +200,6 @@ class FileDataSourceService {
         const openTag: string = '<' + searchTermIdentifier + 'open>';
         const closeTag: string = '<' + searchTermIdentifier + 'close>';
         let extension: string = fileName.split('.').pop();
-        whiteList.hasOwnProperty(extension.toLocaleLowerCase())
         if (
             [
                 "ts",
@@ -245,7 +243,7 @@ class FileDataSourceService {
                 "clj",
                 "d",
                 "lgo"
-            ].indexOf(extension.toLocaleLowerCase()) != -1
+            ].indexOf(extension.toLowerCase()) !== -1
         ) {
             let searchTerms: string[] = this.getSearchTerms(snippet, searchTermIdentifier);
             if (snippet.indexOf(openTag) > snippet.indexOf("\n")) {
