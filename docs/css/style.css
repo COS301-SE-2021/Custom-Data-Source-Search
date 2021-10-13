@@ -73,7 +73,7 @@ a:active {
 }
 
 .data {
-    font-weight: bolder;
+    font-weight: 900;
 }
 
 .sleuth {
@@ -370,4 +370,8 @@ textarea{
 .iframe-youtube-embed-box {
     background-color: #1b1b1b;
     padding: 2em;
+}
+
+.remote-backend-input {
+    background-color: #d3d3d3;
 }
