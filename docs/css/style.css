@@ -359,3 +359,13 @@ textarea{
     70% { top: -0.3em; }
     100% { top: 0; }
 }
+
+.info-div {
+    max-width: 80%;
+    padding: 0 10% 2em 10%;
+}
+
+.iframe-youtube-embed-box {
+    background-color: #1b1b1b;
+    padding: 2em;
+}
