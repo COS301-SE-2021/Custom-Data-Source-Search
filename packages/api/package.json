@@ -46,7 +46,7 @@
     "@types/otplib": "^10.0.0",
     "@types/shelljs": "^0.8.9",
     "@types/supertest": "^2.0.11",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bcrypt": "^5.0.1",
     "better-sqlite3": "^7.4.3",
     "cheerio": "^1.0.0-rc.10",
