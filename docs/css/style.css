@@ -38,7 +38,6 @@ a:active {
 }
 
 .navbar {
-    position: fixed;
     display: grid;
     grid-template-columns: 4fr 2.5fr;
     font-family: 'Montserrat', sans-serif;
@@ -144,10 +143,53 @@ a:active {
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding-top: 0 !important;
+    background: right;
+    background-image: url("DSSplash.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .download-left-contents{
     grid-column-end: 2;
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.download-right-contents{
+    grid-column-start: 2;
+    grid-row-start: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.left-step{
+    clear: both;
+    margin-top: 150px;
+    margin-bottom: 20%;
+    margin-left: 15%;
+    text-align: left;
+    /*background-color: red;*/
+}
+
+.right-step{
+    clear: both;
+    margin-top: 20%;
+    margin-bottom: 20%;
+    margin-right: 15%;
+    text-align: right;
+    /*background-color: red;*/
+}
+
+.circular-step{
+    border: 3px solid black;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+}
+@media only screen and (max-width: 1240px) {
+    .download-left-contents{
+        grid-column-start: 1;
+        grid-column-end: 3;
+        text-align: center;
+    }
 }
