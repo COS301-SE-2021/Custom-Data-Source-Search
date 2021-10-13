@@ -1,5 +1,12 @@
+html{
+    height: 100%;
+}
+
 body {
-   background: #242424;
+    background: #242424;
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
+    color: #fffcf5;
 }
 
 a {
@@ -72,5 +79,18 @@ a:active {
     margin-top: 0.8em;
     margin-left: 1em;
     margin-right: 0.5em;
+}
+
+#download, #quickstart, #about, #email
+{
+    height: 100%;
+    padding-top: 70px !important;
+}
+
+#footer{
+    width: 100%;
+    margin: 0;
+    background: #1b1b1b;
+    height: 15%;
 }
 
