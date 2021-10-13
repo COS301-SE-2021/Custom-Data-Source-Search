@@ -77,18 +77,33 @@
 <div id="about">
     <h1>About appears here, explaining the system and providing a video</h1>
 </div>
-<div id="email">
-<!--    <h1>email form placed here</h1>-->
-    <iframe
-        id="email-iframe"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSeMTa7OGzqqVEphNPUg96gZfenDY-vAx0PX7wVNVXf3fY1nNQ/viewform?embedded=true"
-        width="640"
-        height="640"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="100"
-    >Loading…</iframe>
-</div>
+
+<!--    <h1>email form placed here </h1>-->
+
+    <div id="form-container">
+    <form id="form"
+            action="https://formspree.io/f/mrgrdnwz"
+            method="POST"
+    >
+        <label>
+            Your Name:
+            <input type="text" name="name">
+        </label>
+        <label>
+            Your Email Address:
+            <input type="email" name="email">
+        </label>
+        <br>
+        <label>
+            Optional Message (For any queries):
+            <textarea name="message"></textarea>
+        </label>
+        <br>
+        <!-- your other form fields go here -->
+        <button type="submit">Send</button>
+    </form>
+    </div>
+
 <div id="footer">
 
     <span>The footer items appear here - team name, date of creation, links etc</span>
