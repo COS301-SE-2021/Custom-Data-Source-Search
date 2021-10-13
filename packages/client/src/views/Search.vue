@@ -36,8 +36,8 @@
       </div>
       <div class="search-results container">
         <search-result-card
-            v-for="(r,i) in searchResults"
-            :key="i"
+            v-for="r in searchResults"
+            :key="r.id"
             :="r"
             :small=false
             @snippetClicked="goToLineFetchFileIfRequired"
@@ -286,7 +286,6 @@
        * @param backend backend info from store
        */
       augmentAndSaveSearchResults(results, backend) {
-        this.searchResults = [];
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -297,8 +296,7 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        let temp = this.searchResults;
-        this.searchResults = this.mergeLists(temp, results);
+        this.searchResults = this.mergeLists(this.searchResults, results);
       },
 
       /**
