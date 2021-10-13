@@ -224,7 +224,7 @@
               )
           }`;
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
-          axios.defaults.timeout = 4000;
+          axios.defaults.timeout = 8000;
           axios
               .get(url, {headers})
               .then((resp) => {
@@ -264,7 +264,7 @@
                   if (this.searchResults.length === 0) {
                     this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
                   }
-                }
+                }git
               })
         }
       },
@@ -286,6 +286,7 @@
        * @param backend backend info from store
        */
       augmentAndSaveSearchResults(results, backend) {
+        this.searchResults = [];
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
@@ -296,9 +297,8 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        let tempResults = this.searchResults;
-        this.searchResults = [];
-        this.searchResults = this.mergeLists(tempResults, results);
+        let temp = this.searchResults;
+        this.searchResults = this.mergeLists(temp, results);
       },
 
       /**
