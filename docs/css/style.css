@@ -45,7 +45,6 @@ a:active {
     font-size: large;
     color: white;
     background-color: #1b1b1b;
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -73,6 +72,7 @@ a:active {
 
 .data {
     font-weight: bolder;
+    color: white;
 }
 
 .sleuth {
@@ -131,12 +131,16 @@ a:active {
 }
 
 #footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
     margin: 0;
     background: #1b1b1b;
     height: 30%;
     position: absolute;
     left: 0;
+    padding: 3em;
+    color: #adadad;
 }
 
 #download {
@@ -150,4 +154,17 @@ a:active {
     grid-column-end: 2;
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.navbar-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.navbar-link-header {
+
+}
+
+.navbar-lastblock {
+    vertical-align: baseline;
 }
