@@ -43,6 +43,7 @@
                         @click="editBackend"
                     />
                 </div>
+                <span v-if="notLite">
                   <Button
                       v-if="backendIndex === 0 && !localActive && !startingLocal"
                       id="start-local-backend"
@@ -73,6 +74,7 @@
                       label="Stopping..."
                       icon="pi pi-spin pi-spinner"
                   />
+                </span>
             </div>
             <div class="edit-backend-info expanded-backend-info" v-if="editBackendBool">
                 <div><em>Name: </em></div>
@@ -125,6 +127,7 @@
         },
         data () {
             return {
+                notLite: false,
                 polling: null,
                 localActive: false,
                 startingLocal: false,

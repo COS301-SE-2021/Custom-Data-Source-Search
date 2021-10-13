@@ -21,10 +21,9 @@ module.exports = {
                     allowToChangeInstallationDirectory: true
                 },
                 linux: {
-                    target: ["deb", "pacman"],
+                    target: ["deb"],
                     icon: 'src/assets/DataSleuth.png',
                     category: "Utility"
-
                 }
             }
         }
