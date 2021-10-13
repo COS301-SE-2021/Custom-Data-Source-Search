@@ -236,3 +236,8 @@ a:active {
         text-align: center;
     }
 }
+
+
+.download-button:hover {
+    color: white;
+}
