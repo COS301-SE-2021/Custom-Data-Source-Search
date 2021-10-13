@@ -343,8 +343,9 @@
        * @param {number} lineNumber line number of the result snippet the user has clicked on
        * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
        * @param {string} source the location of the original datasource
+       * @param {string} searchTerm the search term that is highlighted inside the search snippet
        */
-      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source) {
+      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source, searchTerm) {
         if (type === "webpage"){
           this.openIframe(source);
           return;
@@ -353,7 +354,7 @@
           this.scrollFullFileLineIntoView(lineNumber);
           return;
         }
-        const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
+        const url = `http://${link}/general/fullfile?type=${type}&id=${id}&search_term=${searchTerm}`;
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
         };
@@ -414,6 +415,7 @@
         } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
           return this.escapeAllExceptMatches(content, matches);
         } else {
+          console.log(content)
           return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
         }
       },

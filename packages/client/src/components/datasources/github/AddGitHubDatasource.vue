@@ -132,6 +132,7 @@ export default {
               this.$emit("submitted");
             })
             .catch(async () => {
+              this.submitting = false;
               await this.$store.dispatch("refreshJWTToken", {id: backendID});
               const headers = {
                 "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendID)
@@ -152,6 +153,7 @@ export default {
                     this.$emit("submitted");
                   })
                   .catch((e) =>{
+                    this.submitting = false;
                     this.$toast.add({
                       severity: 'error',
                       summary: 'Error',

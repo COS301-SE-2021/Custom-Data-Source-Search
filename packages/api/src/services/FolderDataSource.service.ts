@@ -177,13 +177,13 @@ class FolderDataSourceService {
         return results;
     }
 
-    getSearchSnippet(snippet: string, dataSourceUUID: string): string {
+    getSearchSnippet(snippet: string, dataSourceUUID: string, searchTermIdentifier: string): string {
         const [result, err] = folderDataSourceRepository.getFileInFolder(dataSourceUUID);
         if (err) {
             return snippet;
         }
         const fileName: string = result["file_path"].split("/").pop();
-        return fileDataSourceService.getSearchSnippet(snippet, fileName);
+        return fileDataSourceService.getSearchSnippet(snippet, fileName, searchTermIdentifier);
     }
 }
 
