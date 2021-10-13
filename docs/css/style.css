@@ -120,9 +120,21 @@ a:active {
     font-size: 20px;
 }
 
-#download, #quickstart, #about, #email {
+#download, #quickstart, #about, #email, #form-container {
     height: 100%;
     padding-top: 50px !important;
+}
+
+#form {
+    width: 100%;
+    align-content: center;
+    text-align: center;
+}
+
+#form-container {
+    width: 100%;
+    align-content: center;
+    text-align: center;
 }
 
 #email-iframe {
@@ -246,4 +258,9 @@ a:active {
     .right-step{
         margin-bottom: 7%;
     }
+}
+
+
+.download-button:hover {
+    color: white;
 }

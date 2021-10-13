@@ -15,7 +15,7 @@
 <body>
 <div class="navbar">
     <div class="logo-name">
-        <img class="icon" src="assets/DataSleuth.ico">
+        <img alt="DataSleuth" class="icon" src="assets/DataSleuth.ico">
         <p class="data">Data</p><p class="sleuth">Sleuth</p>
     </div>
     <div class="links-all">
@@ -38,7 +38,13 @@
         <div class="slogan">
             <span>A way to sleuth all your favourite resources</span>
         </div>
-        <button class="btn"><i class="fa fa-download" aria-hidden="true"></i> Download</button>
+        <button class="btn"><i class="fa fa-download" aria-hidden="true">
+            <a
+                class="download-button"
+                href="https://github.com/COS301-SE-2021/Custom-Data-Source-Search/archive/refs/tags/v2.0.0.tar.gz"
+                download
+            />
+        </i> Download</button>
     </div>
     <div class="download-right-contents">
         <div class="left-step">
@@ -74,21 +80,45 @@
 <div id="about">
     <h1>About appears here, explaining the system and providing a video</h1>
 </div>
-<div id="email">
-    <iframe
-        id="email-iframe"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSeMTa7OGzqqVEphNPUg96gZfenDY-vAx0PX7wVNVXf3fY1nNQ/viewform?embedded=true"
-        width="640"
-        height="640"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="100"
-    >Loading…</iframe>
-</div>
-<div id="footer">
 
-    <span>The footer items appear here - team name, date of creation, links etc</span>
-    <span>Use a darker white than above</span>
+<!--    <h1>email form placed here </h1>-->
+
+    <div id="form-container">
+    <form id="form"
+            action="https://formspree.io/f/mrgrdnwz"
+            method="POST"
+    >
+        <label>
+            Your Name:
+            <input type="text" name="name">
+        </label>
+        <label>
+            Your Email Address:
+            <input type="email" name="email">
+        </label>
+        <br>
+        <label>
+            Optional Message (For any queries):
+            <textarea name="message"></textarea>
+        </label>
+        <br>
+        <!-- your other form fields go here -->
+        <button type="submit">Send</button>
+    </form>
+    </div>
+
+<div id="footer">
+    <div class="logo-name">
+        <img alt="Abstraction" class="icon" src="assets/Abstr_Icon_Light.png">
+        <p class="data">Abstraction</p>
+    </div>
+    <div class="footer-links">
+        <p class="footer-link-header">TEAM</p>
+        <p></p>
+    </div>
+    <div>
+        <span class="footer-lastblock">Oct 2021</span>
+    </div>
 </div>
 <script src="index.js"></script>
 </body>
