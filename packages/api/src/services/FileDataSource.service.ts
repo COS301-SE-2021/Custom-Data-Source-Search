@@ -13,7 +13,6 @@ import {
     statusMessage
 } from "../general/generalFunctions";
 import {DefaultHttpResponse, StatusMessage} from "../models/response/general.interfaces";
-import {whiteList} from "../general/whiteList";
 
 class FileDataSourceService {
 
@@ -152,7 +151,7 @@ class FileDataSourceService {
      * @async
      */
     async updateDatasources(): Promise<void> {
-        const [fileDataList, repositoryErr]  = fileDataSourceRepository.getAllDataSources();
+        const [fileDataList, repositoryErr] = fileDataSourceRepository.getAllDataSources();
         if (repositoryErr) {
             return;
         }
@@ -201,8 +200,51 @@ class FileDataSourceService {
         const openTag: string = '<' + searchTermIdentifier + 'open>';
         const closeTag: string = '<' + searchTermIdentifier + 'close>';
         let extension: string = fileName.split('.').pop();
-        whiteList.hasOwnProperty(extension.toLocaleLowerCase())
-        if (whiteList.hasOwnProperty(extension.toLocaleLowerCase())) {
+        if (
+            [
+                "ts",
+                "js",
+                "java",
+                "dart",
+                "php",
+                "py",
+                "cpp",
+                "vue",
+                "html",
+                "css",
+                "yml",
+                "json",
+                "xml",
+                "c",
+                "go",
+                "pl",
+                "swift",
+                "scala",
+                "r",
+                "m",
+                "h",
+                "ino",
+                "matlab",
+                "rs",
+                "kt",
+                "groovy",
+                "s",
+                "asm",
+                "jl",
+                "cobol",
+                "scm",
+                "vbs",
+                "hs",
+                "hack",
+                "ada",
+                "lua",
+                "lisp",
+                "sh",
+                "clj",
+                "d",
+                "lgo"
+            ].indexOf(extension.toLowerCase()) !== -1
+        ) {
             let searchTerms: string[] = this.getSearchTerms(snippet, searchTermIdentifier);
             if (snippet.indexOf(openTag) > snippet.indexOf("\n")) {
                 snippet = snippet.substring(snippet.indexOf("\n"), snippet.length);

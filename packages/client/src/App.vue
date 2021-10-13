@@ -98,7 +98,6 @@
   </div>
   <router-view v-else/>
 </template>
-
 <script>
   import OverlayPanel from 'primevue/overlaypanel';
   import ProfileDropdown from "@/components/landing/ProfileDropdown";

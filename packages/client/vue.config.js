@@ -22,7 +22,7 @@ module.exports = {
                 },
                 linux: {
                     target: ["deb", "pacman"],
-                    icon: 'src/assets/DataSleuth.ico',
+                    icon: 'src/assets/DataSleuth.png',
                     category: "Utility"
 
                 }

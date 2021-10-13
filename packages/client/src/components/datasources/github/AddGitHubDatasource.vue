@@ -152,6 +152,7 @@ export default {
                     this.$emit("submitted");
                   })
                   .catch((e) =>{
+                    this.submitting = false;
                     this.$toast.add({
                       severity: 'error',
                       summary: 'Error',
