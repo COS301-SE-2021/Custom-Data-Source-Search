@@ -38,13 +38,13 @@ a:active {
 }
 
 .navbar {
-    position: fixed;
     display: grid;
     grid-template-columns: 4fr 2.5fr;
     font-family: 'Montserrat', sans-serif;
     font-size: large;
     color: white;
     background-color: #1b1b1b;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -72,7 +72,6 @@ a:active {
 
 .data {
     font-weight: bolder;
-    color: white;
 }
 
 .sleuth {
@@ -131,16 +130,12 @@ a:active {
 }
 
 #footer {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
     margin: 0;
     background: #1b1b1b;
     height: 30%;
     position: absolute;
     left: 0;
-    padding: 3em;
-    color: #adadad;
 }
 
 #download {
@@ -148,6 +143,10 @@ a:active {
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding-top: 0 !important;
+    background: right;
+    background-image: url("DSSplash.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .download-left-contents{
@@ -156,15 +155,67 @@ a:active {
     margin-bottom: auto;
 }
 
-.navbar-links {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+.download-right-contents{
+    grid-column-start: 2;
+    grid-row-start: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 70px;
 }
 
-.navbar-link-header {
-
+.left-step{
+    clear: both;
+    margin-top: 150px;
+    margin-bottom: 20%;
+    margin-left: 15%;
+    text-align: left;
 }
 
-.navbar-lastblock {
-    vertical-align: baseline;
+.right-step{
+    clear: both;
+    margin-top: 20%;
+    margin-bottom: 20%;
+    margin-right: 15%;
+    text-align: right;
+}
+
+.circular-step-left{
+    border: 3px solid #242424;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    align-content: center;
+    display: inline-block;
+    font-size: 40px;
+    color: #242424;
+    margin-right: 30px;
+    margin-left: 100px;
+}
+
+.circular-step-right{
+    border: 3px solid #242424;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    align-content: center;
+    display: inline-block;
+    font-size: 40px;
+    color: #242424;
+    margin-left: 30px;
+}
+
+.step-content{
+    display: inline-block;
+    font-size: 25px;
+    color: #242424;
+}
+
+@media only screen and (max-width: 1240px) {
+    .download-left-contents{
+        grid-column-start: 1;
+        grid-column-end: 3;
+        text-align: center;
+    }
 }
