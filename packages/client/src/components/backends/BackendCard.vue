@@ -125,6 +125,7 @@
         },
         data () {
             return {
+                polling: null,
                 localActive: false,
                 startingLocal: false,
                 stoppingLocal: false,
@@ -202,11 +203,21 @@
             }
 
             //Check if running
-            this.interval = setInterval(() => this.checkIfRunning(), 1100);
+
+          if(this.backendIndex === 0){
+            this.pollData();
+          }
+            //this.interval = setInterval(() => this.checkIfRunning(), 1100);
 
         },
+        beforeUnmount() {
+          clearInterval(this.polling)
+       },
 
         methods: {
+          pollData(){
+            this.polling = setInterval(() => this.checkIfRunning(), 1100);
+          },
           showBackendDeleteCheck() {
               this.displayBackendDeleteCheck = !this.displayBackendDeleteCheck;
           },
@@ -536,6 +547,16 @@
       grid-column-start: 3;
       float: right;
       color: #EF9A9A;
+    }
+
+    #starting-local-backend{
+      grid-column-start: 3;
+      float: right;
+    }
+
+    #stopping-local-backend{
+      grid-column-start: 3;
+      float: right;
     }
 
     #cli-info-accordion{
