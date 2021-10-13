@@ -32,10 +32,9 @@ a:active {
 
 .navbar {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 4fr 2.5fr;
     font-family: 'Montserrat', sans-serif;
     font-size: large;
-    height: fit-content;
     color: white;
     background-color: #1b1b1b;
 }
@@ -50,7 +49,8 @@ a:active {
 .link-each {
     font-size: small;
     padding: 1em;
-    vertical-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .logo-name {
