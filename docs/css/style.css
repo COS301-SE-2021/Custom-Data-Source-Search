@@ -144,6 +144,7 @@ a:active {
     text-align: center;
     margin-right: auto;
     margin-left: auto;
+    height: 90%;
 }
 
 #email-iframe {
@@ -154,11 +155,10 @@ a:active {
     width: 100%;
     margin: 0;
     background: #1b1b1b;
-    height: 30%;
+    height: 100px;
     position: absolute;
     left: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
 }
 
 #download {
@@ -296,7 +296,6 @@ a:active {
 }
 
 .submit-button{
-    /*color: #242424;*/
     float: right;
     margin-top: 0;
     width: 100%;
@@ -320,6 +319,9 @@ textarea{
     margin-bottom: 40px;
 }
 
+.date-edited{
+    margin-top: 1em;
+}
 .bounce {
     display: inline-block;
     position: relative;
