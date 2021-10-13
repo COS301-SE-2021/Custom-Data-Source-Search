@@ -23,8 +23,8 @@
     </div>
     <div class="snippets">
       <search-result-card-match-snippet
-          v-for="(match_snippet, i) in snippetsOnDisplay"
-          :key="id + '_' + i"
+          v-for="match_snippet in snippetsOnDisplay"
+          :key="match_snippet.id"
           :line_number="match_snippet.line_number"
           :snippet="match_snippet.snippet"
           @click="emitSnippetClicked(match_snippet.line_number, getSearchTerm(match_snippet.snippet))"
