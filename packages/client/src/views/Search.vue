@@ -73,8 +73,8 @@
         </div>
         <div class="search-results container">
           <search-result-card
-              v-for="(r,i) in searchResults"
-              :key="i"
+              v-for="(r, i) in searchResults"
+              :key="{i}"
               :="r"
               :small=true
               @snippetClicked="goToLineFetchFileIfRequired"
@@ -110,6 +110,7 @@
   import IconSimpleExpandMore from "@/components/icons/IconSimpleExpandMore";
   import IconSimpleExpandLess from "@/components/icons/IconSimpleExpandLess";
   import {min} from "lodash/math";
+  import {randomBytes} from "crypto";
 
   /**
    * @typedef {Object} MatchSnippet
@@ -224,7 +225,7 @@
               )
           }`;
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
-          axios.defaults.timeout = 8000;
+          axios.defaults.timeout = 4000;
           axios
               .get(url, {headers})
               .then((resp) => {
@@ -289,6 +290,7 @@
         for (let r of results) {
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
+            match_snippet.id = randomBytes(16).toString("hex");
           }
           r.datasource_icon = this.whitelistEscape(r.datasource_icon);
           r.lineNumbers = this.extractLineNumbers(r.match_snippets);
