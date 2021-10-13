@@ -12,7 +12,7 @@
 ![GitHub open issues](https://img.shields.io/github/issues-raw/COS301-SE-2021/Custom-Data-Source-Search) 
 [![Build Status](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search.svg?branch=development)](https://travis-ci.com/COS301-SE-2021/Custom-Data-Source-Search)
 
-Please Note: Quality Gate is failing becuase they are not correctly detecting that some of our features will only be available on servers hosted **on our users's own machines.**
+Please Note: Quality Gate is failing becuase they are not correctly detecting that some of our features will only be available on servers hosted **on our users' own machines.**
 
 ## Description
 DataSleuth is a custom data source search system. It aims to provide software developers 
