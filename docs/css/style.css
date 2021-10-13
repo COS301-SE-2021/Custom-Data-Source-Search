@@ -130,6 +130,7 @@ a:active {
 #about{
     align-content: center;
     text-align: center;
+    height: fit-content;
 }
 
 #form {
@@ -363,8 +364,9 @@ textarea{
 }
 
 .info-div {
-    max-width: 80%;
-    padding: 0 10% 2em 10%;
+    background-color: #1b1b1b;
+    padding: 4em 2em;
+    text-align: left;
 }
 
 .iframe-youtube-embed-box {
@@ -373,5 +375,12 @@ textarea{
 }
 
 .remote-backend-input {
-    background-color: #d3d3d3;
+
+}
+
+.about {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    background-color: #1b1b1b;
+    vertical-align: center;
 }
