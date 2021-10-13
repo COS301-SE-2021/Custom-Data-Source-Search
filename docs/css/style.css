@@ -44,6 +44,10 @@ a:active {
     font-size: large;
     color: white;
     background-color: #1b1b1b;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
 }
 
 .links-all {
@@ -83,6 +87,7 @@ a:active {
 
 .software-name{
     font-size: 100px;
+    margin-top: 5%;
 }
 
 .slogan{
@@ -97,6 +102,7 @@ a:active {
     padding: 12px 30px;
     cursor: pointer;
     font-size: 20px;
+    border-radius: 5px;
 }
 
 .btn:hover {
@@ -117,17 +123,27 @@ a:active {
 #download, #quickstart, #about, #email
 {
     height: 100%;
-    padding-top: 70px !important;
+    padding-top: 50px !important;
 }
 
 #footer{
     width: 100%;
     margin: 0;
     background: #1b1b1b;
-    height: 15%;
+    height: 30%;
+    position: absolute;
+    left: 0;
 }
 
 #download{
     text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 0 !important;
 }
 
+.download-left-contents{
+    grid-column-end: 2;
+    margin-top: auto;
+    margin-bottom: auto;
+}
