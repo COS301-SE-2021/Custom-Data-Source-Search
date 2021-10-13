@@ -1,6 +1,5 @@
 <template>
     <div class="backend-info-card">
-        <Toast position="top-right"/>
         <div class="backend-info-sum">
             <div class="minimised-backend-info" >
                 <div style="cursor: pointer; margin-top: 0.1em;" @click="change">

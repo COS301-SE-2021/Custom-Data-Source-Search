@@ -1,0 +1,171 @@
+html{
+    height: 100%;
+}
+
+body {
+    background: #242424;
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
+    color: #fffcf5;
+}
+
+a {
+   text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    color: #00a0b4;
+}
+
+a:active {
+    color: #00a0b4;
+}
+
+.header {
+    text-align: center;
+    margin-top: 100px;
+    font-family: "Trebuchet MS",sans-serif;
+    font-size: 50px;
+    color: #3AA1A0;
+}
+
+.under-construction {
+    text-align: center;
+    font-family: "Trebuchet MS", sans-serif;
+    font-size: 40px;
+    color: #cfdbd5;
+}
+
+.navbar {
+    position: fixed;
+    display: grid;
+    grid-template-columns: 4fr 2.5fr;
+    font-family: 'Montserrat', sans-serif;
+    font-size: large;
+    color: white;
+    background-color: #1b1b1b;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.links-all {
+    float: right;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: fit-content;
+}
+
+.link-each {
+    font-size: small;
+    padding: 1em;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.logo-name {
+    display: flex;
+    text-align: center;
+    vertical-align: center;
+}
+
+.data {
+    font-weight: bolder;
+    color: white;
+}
+
+.sleuth {
+    font-weight: lighter;
+}
+
+.icon {
+    max-height: 1.8em;
+    margin-top: 0.8em;
+    margin-left: 1em;
+    margin-right: 0.5em;
+}
+
+.software-name{
+    font-size: 100px;
+    margin-top: 5%;
+}
+
+.slogan{
+    font-size: 20px;
+}
+
+.btn {
+    margin-top: 10%;
+    background-color: #00a0b4;
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #00899b;
+}
+
+.scroll-prompt {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    font-size: 20px;
+}
+
+#download, #quickstart, #about, #email {
+    height: 100%;
+    padding-top: 50px !important;
+}
+
+#email-iframe {
+    margin-left: 28%;
+}
+
+#footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    margin: 0;
+    background: #1b1b1b;
+    height: 30%;
+    position: absolute;
+    left: 0;
+    padding: 3em;
+    color: #adadad;
+}
+
+#download {
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 0 !important;
+}
+
+.download-left-contents{
+    grid-column-end: 2;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.navbar-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.navbar-link-header {
+
+}
+
+.navbar-lastblock {
+    vertical-align: baseline;
+}
