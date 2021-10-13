@@ -130,6 +130,7 @@ a:active {
 #about{
     align-content: center;
     text-align: center;
+    height: 90%;
 }
 
 #form {
