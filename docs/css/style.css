@@ -120,9 +120,21 @@ a:active {
     font-size: 20px;
 }
 
-#download, #quickstart, #about, #email {
+#download, #quickstart, #about, #email, #form-container {
     height: 100%;
     padding-top: 50px !important;
+}
+
+#form {
+    width: 100%;
+    align-content: center;
+    text-align: center;
+}
+
+#form-container {
+    width: 100%;
+    align-content: center;
+    text-align: center;
 }
 
 #email-iframe {
@@ -158,58 +170,63 @@ a:active {
 .download-right-contents{
     grid-column-start: 2;
     grid-row-start: 1;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 70px;
+    margin: auto;
+    align-content: center;
+    text-align: center;
 }
 
 .left-step{
     clear: both;
-    margin-top: 150px;
-    margin-bottom: 20%;
-    margin-left: 15%;
-    text-align: left;
+    /*margin-top: 150px;*/
+    margin-bottom: 12%;
+    /*margin-left: 15%;*/
+    /*text-align: left;*/
+    float: left;
 }
 
 .right-step{
     clear: both;
-    margin-top: 20%;
-    margin-bottom: 20%;
-    margin-right: 15%;
-    text-align: right;
+    margin-bottom: 12%;
+    float: right;
+    /*margin-bottom: 20%;*/
+    /*margin-right: 15%;*/
+    /*text-align: right;*/
 }
 
 .circular-step-left{
-    border: 3px solid #242424;
+    border: 3px solid white;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     text-align: center;
     align-content: center;
     display: inline-block;
-    font-size: 40px;
-    color: #242424;
-    margin-right: 30px;
+    font-size: 30px;
+    color: white;
+    margin-right: 12px;
     margin-left: 100px;
 }
 
 .circular-step-right{
-    border: 3px solid #242424;
+    border: 3px solid white;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     text-align: center;
     align-content: center;
     display: inline-block;
-    font-size: 40px;
-    color: #242424;
-    margin-left: 30px;
+    font-size: 30px;
+    color: white;
+    margin-left: 12px;
 }
 
+.step-number{
+    margin-top: 3px;
+}
 .step-content{
     display: inline-block;
-    font-size: 25px;
-    color: #242424;
+    font-size: 20px;
+    color: white;
 }
 
 @media only screen and (max-width: 1240px) {
