@@ -76,6 +76,9 @@
                 noUserReq: null,
                 displayMasterPwInput: false,
                 newBackendBool: false,
+                startIcon: 'pi pi-play',
+                stopIcon: 'pi pi-times',
+                spinnerIcon: 'pi pi-spin pi-spinner',
 
                 newBackendObject: {
 
