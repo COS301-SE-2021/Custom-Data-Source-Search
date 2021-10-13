@@ -157,7 +157,6 @@
         notDeleted: true,
         query: "",
         searchResults: [],
-        searchResultsBuffer: [],
         name: "Search",
         firstSearch: true,
         noPointer: false,
@@ -178,7 +177,7 @@
     },
 
     watch: {
-      state(newState){
+      state(){
         this.reRunQuery();
       }
     },
@@ -213,22 +212,23 @@
       async queryBackends(q) {
         this.firstSearch = false;
         this.loading = true;
-        this.searchResultsBuffer = [];
         this.searchResults = [];
-        for (let backend of this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId)) {
-          if (!backend.local.active) {
-            continue;
-          }
+        let backends = this.$store.getters.getUserBackends(this.$store.getters.getSignedInUserId).filter((b) => {
+          return b.local.active;
+        })
+        let numActiveBackends = backends.length;
+        for (let backend of backends) {
           const url = `http://${backend.connect.link}/general/?q=${
               encodeURIComponent(
                   this.advancedSearch ? q : this.escapeSolrControlCharacters(q)
               )
           }`;
           let headers = {"Authorization": "Bearer " + backend.connect.keys.jwtToken};
-          await axios
+          axios.defaults.timeout = 4000;
+          axios
               .get(url, {headers})
               .then((resp) => {
-                this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
+                this.augmentAndSaveSearchResults(resp.data.searchResults, backend);
               })
               .catch(async () => {
                 await this.$store.dispatch("refreshJWTToken", {id: backend.local.id});
@@ -236,18 +236,37 @@
                 await axios
                     .get(url, {headers})
                     .then((resp) => {
-                      this.augmentAndSaveSearchResults(resp.data.searchResults, backend)
+                      this.augmentAndSaveSearchResults(resp.data.searchResults, backend);
                     })
                     .catch((e) => {
-                      console.error(e);
+                      if (e.toString().includes("500")) {
+                          this.$toast.add({
+                            severity: 'error',
+                            summary: 'Error for ' + backend.local.name,
+                            detail: "Could not connect to server. Please ensure solr is running",
+                            life: 3000
+                          })
+                      } else if (e.message.includes("timeout of")) {
+                        this.$toast.add({
+                          severity: 'error',
+                          summary: 'Error for ' + backend.local.name,
+                          detail:  "Could not connect. Server may be down?",
+                          life: 8000
+                        })
+                      }
                     })
               })
+              .finally(() => {
+                console.log(numActiveBackends);
+                if(--numActiveBackends === 0) {
+                  this.firstSearch = false;
+                  this.loading = false;
+                  if (this.searchResults.length === 0) {
+                    this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
+                  }
+                }
+              })
         }
-        this.searchResults = this.searchResultsBuffer;
-        if (this.searchResults.length === 0) {
-          this.$toast.add({severity: 'warn', summary: 'No results', detail: "Try search again", life: 3000})
-        }
-        this.loading = false;
       },
 
       /**
@@ -255,7 +274,7 @@
        * @returns {string} string with any special control characters escaped
        */
       escapeSolrControlCharacters(query) {
-        return query.replace(/[{}\[\]+\-^.:()]/gm, (match) => {
+        return query.replace(/[{}\[\]+\-^\\.:()]/gm, (match) => {
           return '\\' + match
         })
       },
@@ -277,7 +296,9 @@
           r.backend_name = backend.local.name;
           r.backendId = backend.local.id;
         }
-        this.searchResultsBuffer = this.mergeLists(this.searchResultsBuffer, results);
+        let tempResults = this.searchResults;
+        this.searchResults = [];
+        this.searchResults = this.mergeLists(tempResults, results);
       },
 
       /**
@@ -289,8 +310,8 @@
       mergeLists(a, b) {
         let newList = [];
         for (let i = 0; i < min([a.length, b.length]); i++) {
-          newList.push(a.pop())
-          newList.push(b.pop())
+          newList.push(a.shift())
+          newList.push(b.shift())
         }
         newList = newList.concat(a);
         newList = newList.concat(b);
@@ -322,8 +343,9 @@
        * @param {number} lineNumber line number of the result snippet the user has clicked on
        * @param {[number]} lineNumbers line numbers of all the match snippets in the result source
        * @param {string} source the location of the original datasource
+       * @param {string} searchTerm the search term that is highlighted inside the search snippet
        */
-      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source) {
+      goToLineFetchFileIfRequired(link, type, id, backendId, lineNumber, lineNumbers, source, searchTerm) {
         if (type === "webpage"){
           this.openIframe(source);
           return;
@@ -332,7 +354,7 @@
           this.scrollFullFileLineIntoView(lineNumber);
           return;
         }
-        const url = `http://${link}/general/fullfile?type=${type}&id=${id}`;
+        const url = `http://${link}/general/fullfile?type=${type}&id=${id}&search_term=${searchTerm}`;
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(backendId)
         };
@@ -393,6 +415,7 @@
         } else if (this.confirmThatAllOpenedTagsAreClosed(matches)) {
           return this.escapeAllExceptMatches(content, matches);
         } else {
+          console.log(content)
           return "<div><h2>Data from server seems malformed. For your security it will not be displayed.</h2></div>"
         }
       },

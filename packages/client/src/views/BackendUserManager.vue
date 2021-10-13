@@ -414,6 +414,8 @@
 
     methods: {
       updateTableData() {
+        this.isUserSelected = false
+        this.selectedUsers = null
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID)
         };
@@ -692,6 +694,7 @@
         });
         let reqObj = {users: usersArr};
         let reqBody = JSON.stringify(reqObj);
+        reqBody = [new Set(reqObj)];
         const headers = {
           "Authorization": "Bearer " + this.$store.getters.getBackendJWTToken(this.backendID),
           "Content-Type": "application/json"
