@@ -125,6 +125,11 @@ a:active {
     padding-top: 50px !important;
 }
 
+#about{
+    align-content: center;
+    text-align: center;
+}
+
 #form {
     width: 100%;
     align-content: center;
@@ -223,6 +228,13 @@ a:active {
     color: white;
 }
 
+.extra-detail{
+    clear: both;
+    width: 80%;
+    text-align: justify;
+    margin-left: 20%;
+}
+
 @media only screen and (max-width: 1240px) {
     .download-left-contents{
         grid-column-start: 1;
@@ -258,9 +270,19 @@ a:active {
     .right-step{
         margin-bottom: 7%;
     }
+
+    .extra-detail{
+        margin-left: 0;
+        text-align: center;
+        width: 100%;
+    }
 }
 
 
 .download-button:hover {
     color: white;
+}
+
+label{
+    margin-bottom: 20px;
 }
