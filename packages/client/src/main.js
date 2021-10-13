@@ -46,6 +46,8 @@ import Textarea from 'primevue/textarea';
 import ContextMenu from "primevue/contextmenu";
 import RadioButton from "primevue/radiobutton";
 import Menu from 'primevue/menu';
+import Accordion from "primevue/accordion";
+import AccordionTab from "primevue/accordiontab";
 
 
 const app = createApp(App);
@@ -91,3 +93,5 @@ app.component('Textarea', Textarea);
 app.component('ContextMenu', ContextMenu);
 app.component('RadioButton', RadioButton);
 app.component('Menu', Menu);
+app.component('Accordion', Accordion);
+app.component('AccordionTab', AccordionTab);
