@@ -165,10 +165,7 @@ a:active {
 
 .left-step{
     clear: both;
-    /*margin-top: 150px;*/
     margin-bottom: 12%;
-    /*margin-left: 15%;*/
-    /*text-align: left;*/
     float: left;
 }
 
@@ -176,9 +173,6 @@ a:active {
     clear: both;
     margin-bottom: 12%;
     float: right;
-    /*margin-bottom: 20%;*/
-    /*margin-right: 15%;*/
-    /*text-align: right;*/
 }
 
 .circular-step-left{
@@ -222,5 +216,34 @@ a:active {
         grid-column-start: 1;
         grid-column-end: 3;
         text-align: center;
+    }
+
+    .download-right-contents{
+        margin-top: 0;
+        grid-row-start: 2;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        text-align: center;
+        margin-left: 25%;
+        margin-right: 25%;
+        padding: 10px;
+        background: rgba(36,36,36,0.2);
+        border-radius: 10px;
+    }
+
+    .circular-step-left, .circular-step-right{
+        margin: auto;
+    }
+
+    .scroll-prompt{
+        display: none;
+    }
+
+    .left-step{
+        margin-bottom: 7%
+    }
+
+    .right-step{
+        margin-bottom: 7%;
     }
 }
