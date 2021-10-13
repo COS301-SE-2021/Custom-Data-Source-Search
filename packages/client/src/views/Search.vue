@@ -290,6 +290,9 @@
           for (let match_snippet of r.match_snippets) {
             match_snippet.snippet = this.whitelistEscape(match_snippet.snippet);
           }
+          // need the following push and pop for vue to detect changes in snippet list
+          r.match_snippets.push(undefined)
+          r.match_snippets.pop()
           r.datasource_icon = this.whitelistEscape(r.datasource_icon);
           r.lineNumbers = this.extractLineNumbers(r.match_snippets);
           r.link = backend.connect.link;
