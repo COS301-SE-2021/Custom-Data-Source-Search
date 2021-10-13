@@ -38,6 +38,7 @@ a:active {
 }
 
 .navbar {
+    position: fixed;
     display: grid;
     grid-template-columns: 4fr 2.5fr;
     font-family: 'Montserrat', sans-serif;
@@ -109,7 +110,7 @@ a:active {
     background-color: #00899b;
 }
 
-.scroll-prompt{
+.scroll-prompt {
     position: absolute;
     bottom: 30px;
     left: 0;
@@ -120,13 +121,16 @@ a:active {
     font-size: 20px;
 }
 
-#download, #quickstart, #about, #email
-{
+#download, #quickstart, #about, #email {
     height: 100%;
     padding-top: 50px !important;
 }
 
-#footer{
+#email-iframe {
+    margin-left: 28%;
+}
+
+#footer {
     width: 100%;
     margin: 0;
     background: #1b1b1b;
@@ -135,7 +139,7 @@ a:active {
     left: 0;
 }
 
-#download{
+#download {
     text-align: center;
     display: grid;
     grid-template-columns: 1fr 1fr;
