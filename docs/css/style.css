@@ -65,9 +65,11 @@ a:active {
 }
 
 .logo-name {
-    display: flex;
-    text-align: center;
-    vertical-align: center;
+    display: inline-flex;
+}
+
+.footer-links{
+    grid-column-start: 2;
 }
 
 .data {
@@ -137,9 +139,11 @@ a:active {
 }
 
 #form-container {
-    width: 100%;
+    width: 60%;
     align-content: center;
     text-align: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 #email-iframe {
@@ -153,6 +157,8 @@ a:active {
     height: 30%;
     position: absolute;
     left: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 #download {
@@ -222,6 +228,7 @@ a:active {
 .step-number{
     margin-top: 3px;
 }
+
 .step-content{
     display: inline-block;
     font-size: 20px;
@@ -283,6 +290,72 @@ a:active {
     color: white;
 }
 
-label{
+.fields{
     margin-bottom: 20px;
+    text-align: justify;
+}
+
+.submit-button{
+    /*color: #242424;*/
+    float: right;
+    margin-top: 0;
+    width: 100%;
+}
+
+input{
+    width: 100%;
+    height: 20px;
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+textarea{
+    width: 100%;
+    height: 200px;
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+.form-heading{
+    margin-bottom: 40px;
+}
+
+.bounce {
+    display: inline-block;
+    position: relative;
+    -moz-animation: bounce 0.5s infinite linear;
+    -o-animation: bounce 0.5s infinite linear;
+    -webkit-animation: bounce 0.5s infinite linear;
+    animation: bounce 0.5s infinite linear;
+}
+
+@-webkit-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.2em; }
+    70% { top: -0.3em; }
+    100% { top: 0; }
+}
+@-moz-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.2em; }
+    70% { top: -0.3em; }
+    100% { top: 0; }
+}
+@-o-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.2em; }
+    70% { top: -0.3em; }
+    100% { top: 0; }
+}
+@-ms-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.2em; }
+    70% { top: -0.3em; }
+    100% { top: 0; }
+}
+@keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.2em; }
+    70% { top: -0.3em; }
+    100% { top: 0; }
 }

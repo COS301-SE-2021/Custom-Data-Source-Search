@@ -15,8 +15,10 @@
 <body>
 <div class="navbar">
     <div class="logo-name">
-        <img alt="DataSleuth" class="icon" src="assets/DataSleuth.ico">
-        <p class="data">Data</p><p class="sleuth">Sleuth</p>
+        <a href="#download">
+            <img alt="DataSleuth" class="icon" src="assets/DataSleuth.ico">
+        </a>
+            <p class="data">Data</p><p class="sleuth">Sleuth</p>
     </div>
     <div class="links-all">
         <a href="#quickstart" class="link-each">Quick Start</a>
@@ -26,7 +28,7 @@
         <a href="https://drive.google.com/file/d/1LkTb7nyWl4yDHMWl6UJxoQzqnlALx7sm/view?usp=sharing" class="link-each">
             Technical Guide
         </a>
-        <a href="" class="link-each">Repository</a>
+        <a href="https://github.com/COS301-SE-2021/Custom-Data-Source-Search" class="link-each">Repository</a>
     </div>
 </div>
 
@@ -71,7 +73,7 @@
         </div>
         <div class="extra-detail">
             For more details, refer to the user guide<br>
-            *<i>Note that the latest version of Java is required</i>
+            *<i>Note that the latest version of Java and Node is required</i>
         </div>
     </div>
     <div class="scroll-prompt">
@@ -86,32 +88,43 @@
 <!--    <h1>email form placed here </h1>-->
 
     <div id="form-container">
-        <h1>Test out remote servers by joining our own</h1>
+        <div class="form-heading">
+            <h1>Want to join our remote backend?</h1>
+            <span>This backend is designed for testing purposes. After submitting you will receive a key to register with</span>
+        </div>
     <form id="form"
             action="https://formspree.io/f/mrgrdnwz"
             method="POST">
-        <label>
-            Your Name:
-            <input type="text" name="name">
-        </label><br>
-        <label>
-            Your Email Address:
-            <input type="email" name="email">
-        </label><br>
-        <label>
-            Optional Message (For any queries):
-            <textarea name="message"></textarea>
-        </label>
-        <br>
+        <div class="fields">
+            <label>
+                Name*<br>
+                <input type="text" name="name">
+            </label>
+        </div>
+        <div class="fields">
+            <label>
+                Your Email Address*<br>
+                <input type="email" name="email">
+            </label>
+        </div>
+        <div class="fields">
+            <label class="fields">
+                Optional Message (For any queries)<br>
+                <textarea name="message"></textarea>
+            </label>
+        </div>
         <!-- your other form fields go here -->
-        <button type="submit">Send</button>
+        <div class="submit">
+            <button class="btn submit-button" type="submit">Submit Request</button>
+        </div>
     </form>
     </div>
 
 <div id="footer">
     <div class="logo-name">
+        <span style="margin-top: 1em; margin-left: 1em;">Developed by</span>
         <img alt="Abstraction" class="icon" src="assets/Abstr_Icon_Light.png">
-        <p class="data">Abstraction</p>
+        <p class="data">abstraction</p>
     </div>
     <div class="footer-links">
         <p class="footer-link-header">TEAM</p>
