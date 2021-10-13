@@ -83,7 +83,7 @@ a:active {
 .icon {
     max-height: 1.8em;
     margin-top: 0.8em;
-    margin-left: 1em;
+    margin-left: 0.5em;
     margin-right: 0.5em;
 }
 
@@ -131,7 +131,7 @@ a:active {
 #about{
     align-content: center;
     text-align: center;
-    height: 80%;
+    height: fit-content;
 }
 
 #form {
@@ -323,6 +323,7 @@ textarea{
 
 .date-edited{
     margin-top: 1em;
+    margin-left: 2.5em;
 }
 .bounce {
     display: inline-block;
