@@ -48,6 +48,7 @@ a:active {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 2;
 }
 
 .links-all {
@@ -130,7 +131,10 @@ a:active {
 #about{
     align-content: center;
     text-align: center;
-    height: fit-content;
+    background-color: #1b1b1b;
+    width: 100%;
+    left: 0;
+    margin: 0;
 }
 
 #form {
@@ -365,13 +369,11 @@ textarea{
 }
 
 .info-div {
-    background-color: #1b1b1b;
     padding: 4em 2em;
     text-align: left;
 }
 
 .iframe-youtube-embed-box {
-    background-color: #1b1b1b;
     padding: 2em;
 }
 
@@ -382,6 +384,7 @@ textarea{
 .about {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    background-color: #1b1b1b;
-    vertical-align: center;
+    margin-top: 100px;
+    margin-left: 10%;
+    margin-right: 10%;
 }
