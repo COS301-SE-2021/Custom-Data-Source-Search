@@ -279,9 +279,9 @@ class FileDataSourceService {
         while (openIndex != -1) {
             result += this.escapeHtml(snippet.substring(0, openIndex));
             result += '<span style=\u0027background-color: #0067e6;color: white;\u0027>';
-            result += this.escapeHtml(snippet.substring(openIndex + 42, closeIndex));
+            result += this.escapeHtml(snippet.substring(openIndex + openTag.length, closeIndex));
             result += '</span>';
-            snippet = snippet.substring(closeIndex + 43, snippet.length);
+            snippet = snippet.substring(closeIndex + closeTag.length, snippet.length);
             openIndex = snippet.indexOf(openTag);
             closeIndex = snippet.indexOf(closeTag);
         }
