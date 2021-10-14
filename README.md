@@ -2,7 +2,7 @@
 
 <p align="center" ><img src="https://raw.githubusercontent.com/COS301-SE-2021/Custom-Data-Source-Search/master/docs/DS_FINAL_README.gif" alt="HTTPie in action" width="90%"/> </p>
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=COS301-SE-2021_Custom-Data-Source-Search&metric=alert_status)
 ](https://sonarcloud.io/dashboard?id=COS301-SE-2021_Custom-Data-Source-Search) 
 [![Depfu](https://badges.depfu.com/badges/6e835e46e3121642adf08ae7b26aa0ad/overview.svg)
