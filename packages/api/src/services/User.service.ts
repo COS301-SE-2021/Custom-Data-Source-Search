@@ -1,13 +1,13 @@
 import userRepository from "../repositories/UserRepository";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import {generateUUID} from "../general/generalFunctions";
+import {generateUUID, isLocalBackend} from "../general/generalFunctions";
 import fs from "fs";
 
 class UserService {
 
     addInitialUser() {
-        if (userRepository.getAllUsers()[0]["results"].length === 0) {
+        if (!isLocalBackend() && userRepository.getAllUsers()[0]["results"].length === 0) {
             const user = JSON.parse(fs.readFileSync(__dirname + "/initialUser.json").toString());
             console.log(this.addUser([user]));
             console.log(userRepository.getAllUsers()[0]["results"]);
