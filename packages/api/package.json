@@ -56,7 +56,7 @@
     "express-validator": "^6.12.1",
     "global": "^4.4.0",
     "highlight.js": "^11.0.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "multer": "^1.4.3",
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.6.3",
